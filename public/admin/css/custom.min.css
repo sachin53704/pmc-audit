@@ -1,0 +1,80 @@
+#buttons-datatables_wrapper .dt-buttons button {
+    border: 1px solid #eee;
+    background-color: #8c68cd;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 3px;
+    transition: all 0.2s ease-in-out;
+}
+
+#buttons-datatables_wrapper .dt-buttons button:hover {
+    background-color: #7758ae;
+}
+
+#buttons-datatables_wrapper .dt-buttons {
+    float: right !important;
+    margin-bottom: 10px;
+}
+
+#buttons-datatables_wrapper #buttons-datatables_paginate {
+    float: right !important;
+    margin-top: -20px;
+}
+
+#buttons-datatables_wrapper #buttons-datatables_filter {
+    margin-left: 15px;
+    display: inline-flex;
+}
+
+#buttons-datatables_wrapper #buttons-datatables_length {
+    float: left;
+    display: flex;
+}
+
+#buttons-datatables_wrapper tbody button svg {
+    height: 16px;
+    width: 16px;
+}
+
+.roles-checkbox-group .form-check {
+    padding-left: 35px !important;
+}
+
+.roles-checkbox-group {
+    background-color: #9270d01c;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.roles-checkbox-group {
+    margin-left: 0px;
+}
+
+li .nav-link.active {
+    background-color: #f4efff;
+}
+#navbar-nav .nav-item{
+    position: unset;
+}
+#navbar-nav{
+    overflow-x: auto;
+    display: -webkit-box;
+}
+.cust-nav-scroll{
+    overflow-x: scroll;
+}
+#navbar-nav::-webkit-scrollbar {
+    /* width: 10px; */
+    height: 10px;
+}
+#navbar-nav::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(173, 173, 173);
+    border-radius: 10px;
+}
+#navbar-nav::-webkit-scrollbar-thumb {
+    background: #e2c4ff;
+    border-radius: 10px;
+}
+#navbar-nav::-webkit-scrollbar-thumb:hover {
+    background: #cc95ff;
+}
