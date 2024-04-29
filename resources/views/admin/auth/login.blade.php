@@ -29,14 +29,14 @@
                             <div class="row g-0">
                                 <div class="col-lg-6">
                                     <div class="p-lg-5 p-4 auth-one-bg h-100">
-                                        <div class="bg-overlay"></div>
+                                        {{-- <div class="bg-overlay"></div> --}}
                                         <div class="position-relative h-100 d-flex flex-column">
-                                            <div class="mb-4">
+                                            {{-- <div class="mb-4">
                                                 <a href="index.html" class="d-block text-center">
                                                     <img src="{{ asset('admin/images/logo-light.png') }}" alt="" height="180">
                                                 </a>
-                                            </div>
-                                            <div class="mt-auto">
+                                            </div> --}}
+                                            {{-- <div class="mt-auto">
                                                 <div class="mb-3">
                                                     <i class="ri-double-quotes-l display-4 text-success"></i>
                                                 </div>
@@ -55,31 +55,31 @@
                                                         @endforeach
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6">
                                     <div class="p-lg-5 p-4">
-                                        <div>
-                                            <h5 class="text-primary">Welcome Back !</h5>
-                                            <p class="text-muted">Sign in to continue to {{ config('app.name') }}.</p>
+                                        <div class="text-center">
+                                            <img src="{{ asset('admin/images/login-logo.png') }}" height="60%" width="60%" alt="">
+                                            <h5 class="text-white text-center pt-3">लॉगिन मध्ये आपले स्वागत आहे</h5>
                                         </div>
 
                                         <div class="mt-4">
                                             <form id="loginForm">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="username" class="form-label">Username</label>
+                                                    <label for="username" class="form-label">Username (वापरकर्तानाव)</label>
                                                     <input type="text" class="form-control" name="username" id="username" placeholder="Enter username">
                                                 </div>
 
                                                 <div class="mb-3">
-                                                    <div class="float-end">
+                                                    {{-- <div class="float-end">
                                                         <a href="auth-pass-reset-cover.html" class="text-muted">Forgot password?</a>
-                                                    </div>
-                                                    <label class="form-label" for="password-input">Password</label>
+                                                    </div> --}}
+                                                    <label class="form-label" for="password-input">Password (पासवर्ड)</label>
                                                     <div class="position-relative auth-pass-inputgroup mb-3">
                                                         <input type="password" class="form-control pe-5 password-input" placeholder="Enter password" id="password" name="password" >
                                                         <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
@@ -98,9 +98,9 @@
                                             </form>
                                         </div>
 
-                                        <div class="mt-5 text-center">
+                                        {{-- <div class="mt-5 text-center">
                                             <p class="mb-0">Don't have an account ? <a href="auth-signup-cover.html" class="fw-semibold text-primary text-decoration-underline"> Signup</a> </p>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
