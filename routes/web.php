@@ -74,6 +74,7 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
     Route::post('send-letter', [App\Http\Controllers\Admin\AuditorAuditController::class, 'sendLetter'] )->name('send-letter');
     Route::get('objection-create', [App\Http\Controllers\Admin\AuditorAuditController::class, 'createObjection'] )->name('objection.create');
     Route::post('objection-store', [App\Http\Controllers\Admin\AuditorAuditController::class, 'storeObjection'] )->name('objection.store');
+    Route::get('answered-questions', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answeredQuestions'] )->name('answered-questions');
 
 
 

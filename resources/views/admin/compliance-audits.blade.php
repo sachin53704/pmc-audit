@@ -90,16 +90,6 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                {{-- <div class="card-header">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="">
-                                <button id="addToTable" class="btn btn-primary">Add <i class="fa fa-plus"></i></button>
-                                <button id="btnCancel" class="btn btn-danger" style="display:none;">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">

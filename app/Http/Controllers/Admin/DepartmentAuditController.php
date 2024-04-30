@@ -37,7 +37,9 @@ class DepartmentAuditController extends Controller
 
     public function complianceInfo(Request $request, Audit $audit)
     {
-        $audit->load(['objections.approver' => fn($q) => $q->first()->append('full_name')]);
+        $audit->load(['objections' => fn($q) => $q->with([
+            'auditorApprover' => fn($q) => $q->first()?->append('full_name')
+        ])]);
 
         $innerHtml = '
                 <div class="mb-3 row">
@@ -75,7 +77,7 @@ class DepartmentAuditController extends Controller
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="approved_rejected_by_'.$key.'">Approved/Rejected By</label>
-                    <input type="text" name="approved_rejected_by_'.$key.'" class="form-control" value="'.$objection?->approver->full_name.'" readonly>
+                    <input type="text" name="approved_rejected_by_'.$key.'" class="form-control" value="'.$objection?->auditorApprover?->full_name.'" readonly>
                 </div>';
         }
 

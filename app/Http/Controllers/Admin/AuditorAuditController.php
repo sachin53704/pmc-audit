@@ -131,4 +131,18 @@ class AuditorAuditController extends Controller
             return $this->respondWithAjax($e, 'creating', 'objection');
         }
     }
+
+
+    public function answeredQuestions(Request $request)
+    {
+        $user = Auth::user();
+
+        $audits = Audit::query()
+                        ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
+                        ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
+                        ->latest()
+                        ->get();
+
+        return view('admin.answered-questions')->with(['audits' => $audits]);
+    }
 }

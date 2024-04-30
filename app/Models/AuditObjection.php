@@ -16,16 +16,20 @@ class AuditObjection extends BaseModel
     const OBJECTION_STATUS_MCA_APPROVED = 4;
     const OBJECTION_STATUS_MCA_REJECTED = 5;
 
-    protected $fillable = ['audit_id', 'objection_no', 'objection', 'answer', 'remark', 'status', 'approved_by'];
+    protected $fillable = ['audit_id', 'objection_no', 'objection', 'answer', 'remark', 'status', 'mca_remark', 'auditor_remark', 'approved_by_mca', 'approved_by_auditor'];
     protected $appends = [ 'status_name' ];
 
     public function audit()
     {
         return $this->belongsTo(Audit::class);
     }
-    public function approver()
+    public function mcaApprover()
     {
-        return $this->belongsTo(User::class, 'approved_by', 'id');
+        return $this->belongsTo(User::class, 'approved_by_mca', 'id');
+    }
+    public function auditorApprover()
+    {
+        return $this->belongsTo(User::class, 'approved_by_auditor', 'id');
     }
 
 
