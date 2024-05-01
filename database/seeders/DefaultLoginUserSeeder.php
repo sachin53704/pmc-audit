@@ -127,7 +127,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // DY Seeder ##
         $dyRole = Role::updateOrCreate(['name'=> 'DY MCA']);
-        $permissions = Permission::where('group', 'mca_audit')->whereNot('id', 28)->pluck('id','id');
+        $permissions = Permission::where('group', 'mca_audit')->whereNotIn('id', [26,27,28])->pluck('id','id');
         $dyRole->syncPermissions($permissions);
 
         $user = User::updateOrCreate([

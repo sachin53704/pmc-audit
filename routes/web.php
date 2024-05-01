@@ -63,6 +63,7 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
     // MCA / DY MCA Routes
     Route::get('audit/status/{status}', [App\Http\Controllers\Admin\MCAAuditController::class, 'statusWiseAuditList'] )->name('audit-list.status');
     Route::put('audit/status_change/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'auditStatusChange'] )->name('audit.status-change');
+    Route::get('assign-auditor', [App\Http\Controllers\Admin\MCAAuditController::class, 'assignAudiorList' ])->name('assign-auditor');
     Route::get('audit/{audit}/get-auditors', [App\Http\Controllers\Admin\MCAAuditController::class, 'getAuditors' ])->name('audit.get-auditors');
     Route::put('audit/{audit}/assign-auditor', [App\Http\Controllers\Admin\MCAAuditController::class, 'assignAuditor' ])->name('audit.assign-auditor');
 
@@ -75,6 +76,7 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
     Route::get('objection-create', [App\Http\Controllers\Admin\AuditorAuditController::class, 'createObjection'] )->name('objection.create');
     Route::post('objection-store', [App\Http\Controllers\Admin\AuditorAuditController::class, 'storeObjection'] )->name('objection.store');
     Route::get('answered-questions', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answeredQuestions'] )->name('answered-questions');
+    Route::get('answer-details/{audit}', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answerDetails'] )->name('answer-details');
 
 
 

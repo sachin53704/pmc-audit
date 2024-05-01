@@ -74,7 +74,7 @@
                             <ul class="nav nav-sm flex-column">
                                 @can('users.view')
                                     <li class="nav-item">
-                                        <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" data-key="t-horizontal">Users</a>
+                                        <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.index') ? 'active' : '' }}" data-key="t-horizontal">Users/Auditor</a>
                                     </li>
                                 @endcan
                                 @can('roles.view')
@@ -92,7 +92,7 @@
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('audit.index') ? 'active' : '' }}" href="{{ route('audit.index') }}" >
                             <i class="ri-pages-line"></i>
-                            <span data-key="t-dashboards">Upload Audit</span>
+                            <span data-key="t-dashboards">Upload Pogramme Audit</span>
                         </a>
                     </li>
                 @endcan
@@ -102,23 +102,23 @@
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('audit-list.status', ['status' => 'pending']) ? 'active' : '' }}" href="#sidebarLayouts" data-bs-toggle="collapse" role="button">
                             <i class="ri-file-list-3-line"></i>
-                            <span data-key="t-layouts">Audit List</span>
+                            <span data-key="t-layouts">Programme Audit List</span>
                         </a>
                         <div class="collapse menu-dropdown" id="sidebarLayouts">
                             <ul class="nav nav-sm flex-column">
                                 @can('audit_list.pending')
                                     <li class="nav-item">
-                                        <a href="{{ route('audit-list.status', ['status' => 'pending']) }}" class="nav-link {{ request()->is('audit/status/pending') ? 'active' : '' }}" data-key="t-horizontal">Pending Audit</a>
+                                        <a href="{{ route('audit-list.status', ['status' => 'pending']) }}" class="nav-link {{ request()->is('audit/status/pending') ? 'active' : '' }}" data-key="t-horizontal">Pending Programme Audit</a>
                                     </li>
                                 @endcan
                                 @can('audit_list.approved')
                                     <li class="nav-item">
-                                        <a href="{{ route('audit-list.status', ['status' => 'approved']) }}" class="nav-link {{ request()->is('audit/status/approved') ? 'active' : '' }}" data-key="t-horizontal">Approved Audit</a>
+                                        <a href="{{ route('audit-list.status', ['status' => 'approved']) }}" class="nav-link {{ request()->is('audit/status/approved') ? 'active' : '' }}" data-key="t-horizontal">Approved Programme Audit</a>
                                     </li>
                                 @endcan
                                 @can('audit_list.rejected')
                                     <li class="nav-item">
-                                        <a href="{{ route('audit-list.status', ['status' => 'rejected']) }}" class="nav-link {{ request()->is('audit/status/rejected') ? 'active' : '' }}" data-key="t-horizontal">Rejected Audit</a>
+                                        <a href="{{ route('audit-list.status', ['status' => 'rejected']) }}" class="nav-link {{ request()->is('audit/status/rejected') ? 'active' : '' }}" data-key="t-horizontal">Rejected Programme Audit</a>
                                     </li>
                                 @endcan
                             </ul>
@@ -127,11 +127,21 @@
                 @endcan
 
 
+                @can('audit_list.assign')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('assign-auditor') ? 'active' : '' }}" href="{{ route('assign-auditor') }}" >
+                            <i class="ri-pass-valid-line"></i>
+                            <span data-key="t-dashboards">Assign Auditor</span>
+                        </a>
+                    </li>
+                @endcan
+
+
                 @can('assigned_audit.view')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('assigned-audit.index') ? 'active' : '' }}" href="{{ route('assigned-audit.index') }}" >
                             <i class="ri-pass-valid-line"></i>
-                            <span data-key="t-dashboards">Assigned Audit</span>
+                            <span data-key="t-dashboards">Assigned Programme Audit</span>
                         </a>
                     </li>
                 @endcan

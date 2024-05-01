@@ -10,7 +10,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Edit Department</h4>
+                        <h4 class="card-title">Answered Questions</h4>
                     </div>
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
@@ -43,6 +43,7 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -56,6 +57,9 @@
                                         <td>{{ Str::limit($audit->remark, '85') }}</td>
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ $audit->status_name }}</span>
                                         </td>
                                         <td>
                                             <button class="btn btn-secondary edit-element px-2 py-1" title="View answered questions" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Answers</button>
@@ -79,7 +83,7 @@
             $("#buttons-datatables").on("click", ".edit-element", function(e) {
                 e.preventDefault();
                 var model_id = $(this).attr("data-id");
-                var url = "{{ route('compliance.info', ":model_id") }}";
+                var url = "{{ route('answer-details', ":model_id") }}";
 
                 $.ajax({
                     url: url.replace(':model_id', model_id),

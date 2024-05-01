@@ -24,7 +24,7 @@ class SendDepartmentLetterRequest extends FormRequest
         return [
             'audit_id' => 'required',
             'description' => 'required',
-            'letter_file' => 'required|mimes:png,jpg,jpeg',
+            'letter_file' => 'required|mimes:pdf,png,jpg,jpeg',
         ];
     }
 }

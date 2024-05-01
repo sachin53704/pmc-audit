@@ -21,8 +21,9 @@ return new class extends Migration
             $table->text('answer')->nullable();
             $table->text('remark')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
-            $table->text('mca_remark')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->text('auditor_remark')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('answered_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->text('mca_remark')->nullable();
+            $table->text('auditor_remark')->nullable();
             $table->foreignId('approved_by_mca')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('approved_by_auditor')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();

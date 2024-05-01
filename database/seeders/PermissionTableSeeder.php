@@ -193,7 +193,7 @@ class PermissionTableSeeder extends Seeder
                 'id' => 36,
                 'name' => 'answered-questions.view',
                 'group' => 'auditor_audit',
-            ],
+            ]
         ];
 
         foreach ($permissions as $permission)

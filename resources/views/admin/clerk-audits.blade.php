@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Audit</x-slot>
-    <x-slot name="heading">Audit</x-slot>
+    <x-slot name="title">Programme Audit List</x-slot>
+    <x-slot name="heading">Programme Audit List</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -12,7 +12,7 @@
                     @csrf
 
                     <div class="card-header">
-                        <h4 class="card-title">Upload Audit</h4>
+                        <h4 class="card-title">Add Programme Audit</h4>
                     </div>
                     <div class="card-body">
                         <div class="mb-3 row">
@@ -68,7 +68,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Edit Department</h4>
+                        <h4 class="card-title">Edit Programme Audit</h4>
                     </div>
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
@@ -171,10 +171,10 @@
                                         </td>
                                         <td>
                                             @if($audit->status == 3 || $audit->status == 1)
-                                                <button class="btn text-secondary edit-element px-2 py-1" title="Edit audit" data-id="{{ $audit->id }}"><i data-feather="edit"></i></button>
+                                                <button class="btn btn-secondary edit-element px-2 py-1" title="Edit audit" data-id="{{ $audit->id }}"><i data-feather="edit"></i></button>
                                             @endif
                                             @if($audit->status == 1)
-                                                <button class="btn text-danger rem-element px-2 py-1" title="Delete audit" data-id="{{ $audit->id }}"><i data-feather="trash-2"></i> </button>
+                                                <button class="btn btn-danger rem-element px-2 py-1" title="Delete audit" data-id="{{ $audit->id }}"><i data-feather="trash-2"></i> </button>
                                             @endif
                                         </td>
                                     </tr>

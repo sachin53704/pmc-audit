@@ -41,6 +41,8 @@ class DepartmentAuditController extends Controller
             'auditorApprover' => fn($q) => $q->first()?->append('full_name')
         ])]);
 
+        $isEditable = Auth::user()->hasRole(['Auditor']) ? 'readonly' : '';
+
         $innerHtml = '
                 <div class="mb-3 row">
                     <div class="col-md-6 mt-3">
@@ -63,12 +65,12 @@ class DepartmentAuditController extends Controller
                 </div>
                 <div class="col-md-3 mt-3">
                     <label class="col-form-label" for="compliance_'.$key.'">Compliance <span class="text-danger">*</span></label>
-                    <textarea name="compliance_'.$key.'" class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->answer.'</textarea>
+                    <textarea name="compliance_'.$key.'" '.$isEditable.' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->answer.'</textarea>
                     <span class="text-danger is-invalid compliance_'.$key.'_err"></span>
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="remark_'.$key.'">Remark <span class="text-danger">*</span></label>
-                    <input type="text" name="remark_'.$key.'" value="'.$objection->remark.'" class="form-control">
+                    <input type="text" name="remark_'.$key.'" '.$isEditable.' value="'.$objection->remark.'" class="form-control">
                     <span class="text-danger is-invalid remark_'.$key.'_err"></span>
                 </div>
                 <div class="col-md-2 mt-3">
@@ -118,20 +120,18 @@ class DepartmentAuditController extends Controller
         try
         {
             DB::beginTransaction();
-
-            $audit->update([
-                'status' => Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE,
-            ]);
+            $audit->update([ 'status' => Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE ]);
 
             for($i=0; $i<count($request->objection_id); $i++)
             {
                 $compParamName = 'compliance_'.$i;
                 $remParamName = 'remark_'.$i;
                 AuditObjection::where(['id' => $request->objection_id[$i]])
-                    ->update([
-                        'answer' => $request->{$compParamName},
-                        'remark' => $request->{$remParamName},
-                    ]);
+                        ->update([
+                            'answer' => $request->{$compParamName},
+                            'remark' => $request->{$remParamName},
+                            'answered_by' => Auth::user()->id,
+                        ]);
             }
             DB::commit();
 

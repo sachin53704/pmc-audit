@@ -8,6 +8,7 @@ use App\Models\Audit;
 use App\Models\User;
 use App\Models\UserAssignedAudit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,7 +20,10 @@ class MCAAuditController extends Controller
         $statusCode = constant("App\Models\Audit::$statusCode");
 
         $audits = Audit::query()
-                        ->where('status', $statusCode)->get();
+                        ->where('department_id', Auth::user()->department_id)
+                        ->when($statusCode == 2, fn($q) => $q->where('status', 2)->orWhere('status', '>=', 4) )
+                        ->when($statusCode != 2, fn($q) => $q->where('status', $statusCode))
+                        ->get();
 
         return view('admin.audit-list')->with(['status' => $status, 'audits' => $audits]);
     }
@@ -54,6 +58,23 @@ class MCAAuditController extends Controller
 
             return response()->json(['success'=> 'Programme audit approved successfully']);
         }
+    }
+
+
+    public function assignAudiorList(Request $request)
+    {
+        $status = 'approved';
+        $statusCode = strtoupper('AUDIT_STATUS_'.$status);
+        $statusCode = constant("App\Models\Audit::$statusCode");
+        $page_type = 'assign_auditor';
+
+        $audits = Audit::query()
+                        ->where('department_id', Auth::user()->department_id)
+                        ->when($statusCode == 2, fn($q) => $q->where('status', 2)->orWhere('status', '>=', 4) )
+                        ->when($statusCode != 2, fn($q) => $q->where('status', $statusCode))
+                        ->get();
+
+        return view('admin.audit-list')->with(['status' => $status, 'audits' => $audits, 'page_type' => $page_type]);
     }
 
 

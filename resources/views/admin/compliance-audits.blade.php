@@ -121,7 +121,7 @@
                                         </td>
                                         <td>
                                             {{-- @if($audit->status == 6 || $audit->status == 9  || $audit->status == 11) --}}
-                                                <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="edit"></i></button>
+                                                <button class="btn btn-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="edit"></i></button>
                                             {{-- @endif --}}
                                             {{-- @if($audit->status == 1)
                                                 <button class="btn text-danger rem-element px-2 py-1" title="Delete audit" data-id="{{ $audit->id }}"><i data-feather="trash-2"></i> </button>

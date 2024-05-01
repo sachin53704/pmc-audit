@@ -145,4 +145,80 @@ class AuditorAuditController extends Controller
 
         return view('admin.answered-questions')->with(['audits' => $audits]);
     }
+
+
+    public function answerDetails(Request $request, Audit $audit)
+    {
+        $audit->load(['objections' => fn($q) => $q->with([
+            'auditorApprover' => fn($q) => $q->first()?->append('full_name'),
+            'answeredBy' => fn($q) => $q->first()?->append('full_name')
+        ])]);
+
+        $isEditable = Auth::user()->hasRole(['Auditor']) ? 'readonly' : '';
+
+        $innerHtml = '
+                <div class="mb-3 row">
+                    <div class="col-md-6 mt-3">
+                        <label class="col-form-label" for="hmm_no">HMM No.</label>
+                        <input name="hmm_no" class="form-control" value="'.$audit->audit_no.'" readonly type="text">
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <label class="col-form-label" for="date">Date.</label>
+                        <input name="date" class="form-control" readonly type="date" value="'.$audit->date.'">
+                    </div>
+                </div>';
+
+        foreach($audit->objections as $key => $objection)
+        {
+            $innerHtml .= '
+                <hr class="my-2">
+                <input type="hidden" name="objection_id[]" value="'.$objection->id.'">
+                <div class="col-md-3 mt-3">
+                    <label class="col-form-label" for="objection_'.$key.'">Objection</label>
+                    <textarea name="objection_'.$key.'" id="objection_'.$key.'" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->objection.'</textarea>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="col-form-label" for="compliance_'.$key.'">Compliance <span class="text-danger">*</span></label>
+                    <textarea name="compliance_'.$key.'" '.$isEditable.' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->answer.'</textarea>
+                    <span class="text-danger is-invalid compliance_'.$key.'_err"></span>
+                </div>
+                <div class="col-md-2 mt-3">
+                    <label class="col-form-label" for="remark_'.$key.'">Remark <span class="text-danger">*</span></label>
+                    <input type="text" name="remark_'.$key.'" '.$isEditable.' value="'.$objection->remark.'" class="form-control">
+                    <span class="text-danger is-invalid remark_'.$key.'_err"></span>
+                </div>
+                <div class="col-md-2 mt-3">
+                    <label class="col-form-label" for="status_'.$key.'">Officer Name</label>
+                    <input type="text" name="status_'.$key.'" class="form-control" value="'.$objection?->status_name.'" readonly>
+                </div>
+                <div class="col-md-2 mt-3">
+                    <label class="col-form-label" for="officer_detail'.$key.'">Officer Detail</label>
+                    <input type="text" name="officer_detail'.$key.'" class="form-control" value="'.$objection?->answeredBy?->full_name.'" readonly>
+                </div>
+                <div class="col-md-2 mt-3">
+                    <label class="col-form-label" for="action'.$key.'">Approve/Reject</label>
+                    <select name="action_'.$key.'" class="form-control">
+                        <option vlaue="">Action</option>
+                        <option vlaue="1">Approve</option>
+                        <option vlaue="2">Reject</option>
+                    </select>
+                    <span class="text-danger is-invalid action_'.$key.'_err"></span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="col-form-label" for="action_remark'.$key.'">Approve/Reject Remark</label>
+                    <textarea name="action_remark_'.$key.'" class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->answer.'</textarea>
+                    <span class="text-danger is-invalid action_'.$key.'_err"></span>
+                </div>
+                <hr class="my-2">';
+        }
+
+
+        $response = [
+            'result' => 1,
+            'innerHtml' => $innerHtml,
+            'audit' => $audit,
+        ];
+
+        return $response;
+    }
 }

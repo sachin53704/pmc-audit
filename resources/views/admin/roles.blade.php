@@ -130,8 +130,8 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $role->name }}</td>
                                         <td>
-                                            <button class="edit-element btn text-secondary px-2 py-1" title="Edit Role" data-id="{{ $role->id }}"><i data-feather="edit"></i></button>
-                                            <button class="btn text-danger rem-element px-2 py-1" title="Delete Role" data-id="{{ $role->id }}"><i data-feather="trash-2"></i> </button>
+                                            <button class="edit-element btn btn-secondary px-2 py-1" title="Edit Role" data-id="{{ $role->id }}"><i data-feather="edit"></i></button>
+                                            <button class="btn btn-danger rem-element px-2 py-1" title="Delete Role" data-id="{{ $role->id }}"><i data-feather="trash-2"></i> </button>
                                         </td>
                                     </tr>
                                 @endforeach
