@@ -78,3 +78,7 @@ li .nav-link.active {
 #navbar-nav::-webkit-scrollbar-thumb:hover {
     background: #cc95ff;
 }
+
+.form-control[readonly], .form-control[readonly]:focus {
+    background-color: #eee;
+}

@@ -41,8 +41,6 @@ class DepartmentAuditController extends Controller
             'auditorApprover' => fn($q) => $q->first()?->append('full_name')
         ])]);
 
-        $isEditable = Auth::user()->hasRole(['Auditor']) ? 'readonly' : '';
-
         $innerHtml = '
                 <div class="mb-3 row">
                     <div class="col-md-6 mt-3">
@@ -57,6 +55,8 @@ class DepartmentAuditController extends Controller
 
         foreach($audit->objections as $key => $objection)
         {
+            $isEditable = in_array($objection->status, [2,4]) ? 'readonly' : '';
+
             $innerHtml .= '
                 <input type="hidden" name="objection_id[]" value="'.$objection->id.'">
                 <div class="col-md-3 mt-3">
