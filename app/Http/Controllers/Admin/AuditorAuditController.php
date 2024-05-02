@@ -252,17 +252,16 @@ class AuditorAuditController extends Controller
         try
         {
             DB::beginTransaction();
-            $audit->update([ 'status' => Audit::AUDIT_STATUS_AUDITOR_APPROVED_COMPLIANCE ]);
+            // $audit->update([ 'status' => Audit::AUDIT_STATUS_AUDITOR_APPROVED_COMPLIANCE ]);
 
             for($i=0; $i<count($request->objection_id); $i++)
             {
-                $compParamName = 'compliance_'.$i;
-                $remParamName = 'remark_'.$i;
+                $compParamName = 'action_'.$i;
+                $remParamName = 'action_remark_'.$i;
                 AuditObjection::where(['id' => $request->objection_id[$i]])
                         ->update([
-                            'answer' => $request->{$compParamName},
-                            'remark' => $request->{$remParamName},
                             'answered_by' => Auth::user()->id,
+                            'status' => AuditObjection::OBJECTION_STATUS_AUDITOR_APPROVED,
                         ]);
             }
             DB::commit();
