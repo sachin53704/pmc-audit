@@ -73,7 +73,7 @@ class AuditorAuditController extends Controller
 
         $audits = Audit::query()
                         ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
-                        ->where('status', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
+                        ->where('status', '>', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
                         ->get();
 
         return view('admin.create-objection')->with(['audits' => $audits]);
