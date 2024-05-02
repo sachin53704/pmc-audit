@@ -73,7 +73,7 @@ class DefaultLoginUserSeeder extends Seeder
             'gender' => 'male',
             'mobile' => '9999999993',
             'email' => 'department@gmail.com',
-            'department_id' => '3',
+            'department_id' => '1',
             'username' => 'department@gmail.com',
             'password' => Hash::make('12345678')
         ]);

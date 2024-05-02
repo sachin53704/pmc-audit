@@ -28,7 +28,7 @@ class DepartmentAuditController extends Controller
     {
         $authUser = Auth::user();
         $audits = Audit::query()
-                        ->where('status', Audit::AUDIT_STATUS_AUDITOR_ADDED_OBJECTION)
+                        ->where('status', '>=', Audit::AUDIT_STATUS_AUDITOR_ADDED_OBJECTION)
                         ->where('department_id', $authUser->department_id)
                         ->get();
 
