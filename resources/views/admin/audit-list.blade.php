@@ -37,10 +37,12 @@
                                             <span class="badge bg-secondary">{{ $audit->status_name }}</span>
                                         </td>
                                         <td>
-                                            @if($status == 'pending' && isset($page_type) && $page_type != 'assign_auditor')
+                                            @if($status == 'pending' && auth()->user()->hasRole(['MCA']))
                                                 <button class="btn btn-success approve-audit px-2 py-1" data-action="approve" title="Approve" data-id="{{ $audit->id }}"><i data-feather="x-circle"></i> Approve</button>
                                                 <button class="btn btn-danger reject-audit px-2 py-1" data-action="reject" title="Reject" data-id="{{ $audit->id }}"><i data-feather="check-circle"></i> Reject</button>
-                                            @elseif (isset($page_type) && $page_type == 'assign_auditor')
+                                            @endif
+                                            {{-- @if($status == 'pending' && isset($page_type) && $page_type != 'assign_auditor') --}}
+                                            @if (isset($page_type) && $page_type == 'assign_auditor')
                                                 @can('audit_list.assign')
                                                     <button class="btn btn-secondary assign-auditor px-2 py-1" title="Assign Auditor" data-id="{{ $audit->id }}"><i data-feather="user-check"></i> Assign Auditor</button>
                                                 @endcan

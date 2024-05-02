@@ -196,17 +196,17 @@ class AuditorAuditController extends Controller
                     <input type="text" name="officer_detail'.$key.'" class="form-control" value="'.$objection?->answeredBy?->full_name.'" readonly>
                 </div>
                 <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="action'.$key.'">Approve/Reject</label>
+                    <label class="col-form-label" for="action_'.$key.'">Approve/Reject</label>
                     <select name="action_'.$key.'" class="form-control">
-                        <option vlaue="">Action</option>
-                        <option vlaue="1">Approve</option>
-                        <option vlaue="2">Reject</option>
+                        <option value="">Action</option>
+                        <option value="1" '.($objection->status == 2 ? "selected" : "").'>Approve</option>
+                        <option value="2" '.($objection->status == 3 ? "selected" : "").'>Reject</option>
                     </select>
                     <span class="text-danger is-invalid action_'.$key.'_err"></span>
                 </div>
                 <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="action_remark'.$key.'">Approve/Reject Remark</label>
-                    <textarea name="action_remark_'.$key.'" class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->answer.'</textarea>
+                    <label class="col-form-label" for="action_remark_'.$key.'">Approve/Reject Remark</label>
+                    <textarea name="action_remark_'.$key.'" class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->auditor_remark.'</textarea>
                     <span class="text-danger is-invalid action_'.$key.'_err"></span>
                 </div>
                 <hr class="my-2">';
@@ -220,5 +220,56 @@ class AuditorAuditController extends Controller
         ];
 
         return $response;
+    }
+
+
+    public function approveAnswer(Request $request, Audit $audit)
+    {
+        $fieldArray['objection_id'] = 'required';
+        $fieldArray['date'] = 'required';
+        $fieldArray['hmm_no'] = 'required';
+        $messageArray['objection_id.required'] = 'Objection no not found';
+        $messageArray['date.required'] = 'Please enter date';
+        $messageArray['hmm_no.required'] = 'HMM No is missing';
+
+        for($i=0; $i<count($request->objection_id); $i++)
+        {
+            $fieldArray['objection_' . $i] = 'required';
+            $fieldArray['compliance_' . $i] = 'required';
+            $fieldArray['remark_' . $i] = 'required';
+            $messageArray['objection_' . $i . '.required'] = 'Please type objection';
+            $messageArray['compliance_' . $i . '.required'] = 'Please type compliance';
+            $messageArray['remark_' . $i . '.required'] = 'Please type remark';
+        }
+        $validator = Validator::make($request->all(), $fieldArray, $messageArray);
+
+        if($validator->fails())
+            return response()->json(['errors' => $validator->errors()], 422);
+
+
+        try
+        {
+            DB::beginTransaction();
+            $audit->update([ 'status' => Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE ]);
+
+            for($i=0; $i<count($request->objection_id); $i++)
+            {
+                $compParamName = 'compliance_'.$i;
+                $remParamName = 'remark_'.$i;
+                AuditObjection::where(['id' => $request->objection_id[$i]])
+                        ->update([
+                            'answer' => $request->{$compParamName},
+                            'remark' => $request->{$remParamName},
+                            'answered_by' => Auth::user()->id,
+                        ]);
+            }
+            DB::commit();
+
+            return response()->json(['success'=> 'Compliance updated successfully']);
+        }
+        catch(\Exception $e)
+        {
+            return $this->respondWithAjax($e, 'updating', 'compliance');
+        }
     }
 }
