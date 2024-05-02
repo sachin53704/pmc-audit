@@ -204,11 +204,9 @@
                 questionCounter--;
             }
         });
-    </script>
 
 
-    {{-- Submit Objection Form --}}
-    <script>
+        // Submit Objection Form
         $("#addForm").submit(function(e) {
             e.preventDefault();
             $("#addObjectionSubmit").prop('disabled', true);
@@ -249,6 +247,7 @@
 
         });
     </script>
+
 @endpush
 
 

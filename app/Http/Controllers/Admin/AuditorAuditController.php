@@ -235,12 +235,12 @@ class AuditorAuditController extends Controller
         {
             if($request->{'action_'.$i})
             {
-                $fieldArray['objection_' . $i] = 'required';
                 $fieldArray['compliance_' . $i] = 'required';
                 $fieldArray['remark_' . $i] = 'required';
-                $messageArray['objection_' . $i . '.required'] = 'Please type objection';
+                $fieldArray['action_remark_' . $i] = 'required';
                 $messageArray['compliance_' . $i . '.required'] = 'Please type compliance';
                 $messageArray['remark_' . $i . '.required'] = 'Please type remark';
+                $messageArray['action_remark_' . $i . '.required'] = 'Please type approve/reject remark';
             }
         }
         $validator = Validator::make($request->all(), $fieldArray, $messageArray);
@@ -252,7 +252,7 @@ class AuditorAuditController extends Controller
         try
         {
             DB::beginTransaction();
-            $audit->update([ 'status' => Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE ]);
+            $audit->update([ 'status' => Audit::AUDIT_STATUS_AUDITOR_APPROVED_COMPLIANCE ]);
 
             for($i=0; $i<count($request->objection_id); $i++)
             {

@@ -77,7 +77,7 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
     Route::post('objection-store', [App\Http\Controllers\Admin\AuditorAuditController::class, 'storeObjection'] )->name('objection.store');
     Route::get('answered-questions', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answeredQuestions'] )->name('answered-questions');
     Route::get('answer-details/{audit}', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answerDetails'] )->name('answer-details');
-    Route::post('approve-answers', [App\Http\Controllers\Admin\AuditorAuditController::class, 'approveAnswer'] )->name('approve-answers');
+    Route::put('approve-answers/{audit}', [App\Http\Controllers\Admin\AuditorAuditController::class, 'approveAnswer'] )->name('approve-answers');
 
 
 

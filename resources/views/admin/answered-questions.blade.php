@@ -111,7 +111,7 @@
         </script>
 
 
-        <!-- Update Compliance -->
+        <!-- Approve Reject Answers -->
         <script>
             $(document).ready(function() {
                 $("#editForm").submit(function(e) {
@@ -120,7 +120,7 @@
                     var formdata = new FormData(this);
                     formdata.append('_method', 'PUT');
                     var model_id = $('#edit_model_id').val();
-                    var url = "{{ route('compliance.update', ":model_id") }}";
+                    var url = "{{ route('approve-answers', ":model_id") }}";
                     //
                     $.ajax({
                         url: url.replace(':model_id', model_id),
