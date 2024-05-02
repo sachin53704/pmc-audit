@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests\Admin\SendDepartmentLetterRequest;
 use App\Models\Audit;
 use App\Models\AuditObjection;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,8 @@ class AuditorAuditController extends Controller
                         ->when($request->relations, fn($q) => $q->with($request->relations))
                         ->with('department')
                         ->where('id', $request->audit_id)->first();
+
+        $audit->obj_date = Carbon::parse($audit->obj_date)->format('Y-m-d');
 
         $response = [
             'result' => 1,
@@ -226,20 +229,19 @@ class AuditorAuditController extends Controller
     public function approveAnswer(Request $request, Audit $audit)
     {
         $fieldArray['objection_id'] = 'required';
-        $fieldArray['date'] = 'required';
-        $fieldArray['hmm_no'] = 'required';
         $messageArray['objection_id.required'] = 'Objection no not found';
-        $messageArray['date.required'] = 'Please enter date';
-        $messageArray['hmm_no.required'] = 'HMM No is missing';
 
         for($i=0; $i<count($request->objection_id); $i++)
         {
-            $fieldArray['objection_' . $i] = 'required';
-            $fieldArray['compliance_' . $i] = 'required';
-            $fieldArray['remark_' . $i] = 'required';
-            $messageArray['objection_' . $i . '.required'] = 'Please type objection';
-            $messageArray['compliance_' . $i . '.required'] = 'Please type compliance';
-            $messageArray['remark_' . $i . '.required'] = 'Please type remark';
+            if($request->{'action_'.$i})
+            {
+                $fieldArray['objection_' . $i] = 'required';
+                $fieldArray['compliance_' . $i] = 'required';
+                $fieldArray['remark_' . $i] = 'required';
+                $messageArray['objection_' . $i . '.required'] = 'Please type objection';
+                $messageArray['compliance_' . $i . '.required'] = 'Please type compliance';
+                $messageArray['remark_' . $i . '.required'] = 'Please type remark';
+            }
         }
         $validator = Validator::make($request->all(), $fieldArray, $messageArray);
 
