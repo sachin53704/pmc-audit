@@ -282,4 +282,22 @@ class MCAAuditController extends Controller
             return $this->respondWithAjax($e, 'taking', 'action');
         }
     }
+
+
+    public function finalReport(Request $request)
+    {
+        $user = Auth::user();
+
+        $audits = Audit::query()
+                        ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
+                        ->withCount([
+                            'objections as approved' => fn($q) => $q->where('status', 4),
+                            'objections as unapproved' => fn($q) => $q->where('status', 5),
+                        ])
+                        ->where('department_id', Auth::user()->department_id)
+                        ->latest()
+                        ->get();
+
+        return view('admin.final-report')->with(['audits' => $audits]);
+    }
 }

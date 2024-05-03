@@ -70,6 +70,7 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
     Route::get('draft-review', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftReview'] )->name('draft-review');
     Route::get('draft-answer-details/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftAnswerDetails'] )->name('draft-answer-details');
     Route::put('draft-approve-answers/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftApproveAnswer'] )->name('draft-approve-answers');
+    Route::get('final-report', [App\Http\Controllers\Admin\MCAAuditController::class, 'finalReport'] )->name('final-report');
 
 
 

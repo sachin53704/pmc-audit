@@ -197,6 +197,16 @@
                 @endcan
 
 
+                @can('report.final-report')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('final-report') ? 'active' : '' }}" href="{{ route('final-report') }}" >
+                            <i class="ri-draft-line"></i>
+                            <span data-key="t-dashboards">Final Report</span>
+                        </a>
+                    </li>
+                @endcan
+
+
             </ul>
         </div>
     </div>
