@@ -157,16 +157,6 @@
                 @endcan
 
 
-                @can('answered-questions.view')
-                    <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('answered-questions') ? 'active' : '' }}" href="{{ route('answered-questions') }}" >
-                            <i class="ri-pass-valid-line"></i>
-                            <span data-key="t-dashboards">Answered Questions</span>
-                        </a>
-                    </li>
-                @endcan
-
-
                 @can('department_letter.view')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('department-letter.index') ? 'active' : '' }}" href="{{ route('department-letter.index') }}" >
@@ -182,6 +172,26 @@
                         <a class="nav-link menu-link {{ request()->routeIs('compliance.create') ? 'active' : '' }}" href="{{ route('compliance.create') }}" >
                             <i class="ri-file-list-3-line"></i>
                             <span data-key="t-dashboards">HMM Questions</span>
+                        </a>
+                    </li>
+                @endcan
+
+
+                @can('answered-questions.view')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('answered-questions') ? 'active' : '' }}" href="{{ route('answered-questions') }}" >
+                            <i class="ri-pass-valid-line"></i>
+                            <span data-key="t-dashboards">Answered Questions</span>
+                        </a>
+                    </li>
+                @endcan
+
+
+                @can('draft-review.view')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('draft-review') ? 'active' : '' }}" href="{{ route('draft-review') }}" >
+                            <i class="ri-draft-line"></i>
+                            <span data-key="t-dashboards">Draft Review</span>
                         </a>
                     </li>
                 @endcan

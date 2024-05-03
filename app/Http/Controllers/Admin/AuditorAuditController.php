@@ -191,7 +191,7 @@ class AuditorAuditController extends Controller
                     <span class="text-danger is-invalid remark_'.$key.'_err"></span>
                 </div>
                 <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="status_'.$key.'">Officer Name</label>
+                    <label class="col-form-label" for="status_'.$key.'">Status</label>
                     <input type="text" name="status_'.$key.'" class="form-control" value="'.$objection?->status_name.'" readonly>
                 </div>
                 <div class="col-md-2 mt-3">
@@ -199,7 +199,7 @@ class AuditorAuditController extends Controller
                     <input type="text" name="officer_detail'.$key.'" class="form-control" value="'.$objection?->answeredBy?->full_name.'" readonly>
                 </div>
                 <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="action_'.$key.'">Approve/Reject</label>
+                    <label class="col-form-label" for="action_'.$key.'">Auditor Action</label>
                     <select name="action_'.$key.'" class="form-control">
                         <option value="">Action</option>
                         <option value="1" '.($objection->status == 2 ? "selected" : "").'>Approve</option>
@@ -208,9 +208,23 @@ class AuditorAuditController extends Controller
                     <span class="text-danger is-invalid action_'.$key.'_err"></span>
                 </div>
                 <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="action_remark_'.$key.'">Approve/Reject Remark</label>
+                    <label class="col-form-label" for="action_remark_'.$key.'">Auditor Remark</label>
                     <textarea name="action_remark_'.$key.'" class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->auditor_remark.'</textarea>
                     <span class="text-danger is-invalid action_'.$key.'_err"></span>
+                </div>
+                <div class="col-md-2 mt-3">
+                    <label class="col-form-label" for="mca_action_'.$key.'">MCA Action</label>
+                    <select name="mca_action_'.$key.'" readonly class="form-control">
+                        <option value="">Action</option>
+                        <option value="1" '.($objection->status == 4 ? "selected" : "").'>Approve</option>
+                        <option value="2" '.($objection->status == 5 ? "selected" : "").'>Reject</option>
+                    </select>
+                    <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="col-form-label" for="mca_action_remark_'.$key.'">MCA Remark</label>
+                    <textarea name="mca_action_remark_'.$key.'" readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->mca_remark.'</textarea>
+                    <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
                 </div>
                 <hr class="my-2">';
         }
@@ -270,11 +284,11 @@ class AuditorAuditController extends Controller
             }
             DB::commit();
 
-            return response()->json(['success'=> 'Compliance updated successfully']);
+            return response()->json(['success'=> 'Action successfully']);
         }
         catch(\Exception $e)
         {
-            return $this->respondWithAjax($e, 'updating', 'compliance');
+            return $this->respondWithAjax($e, 'taking', 'action');
         }
     }
 }

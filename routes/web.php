@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -66,6 +67,9 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
     Route::get('assign-auditor', [App\Http\Controllers\Admin\MCAAuditController::class, 'assignAudiorList' ])->name('assign-auditor');
     Route::get('audit/{audit}/get-auditors', [App\Http\Controllers\Admin\MCAAuditController::class, 'getAuditors' ])->name('audit.get-auditors');
     Route::put('audit/{audit}/assign-auditor', [App\Http\Controllers\Admin\MCAAuditController::class, 'assignAuditor' ])->name('audit.assign-auditor');
+    Route::get('draft-review', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftReview'] )->name('draft-review');
+    Route::get('draft-answer-details/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftAnswerDetails'] )->name('draft-answer-details');
+    Route::put('draft-approve-answers/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftApproveAnswer'] )->name('draft-approve-answers');
 
 
 

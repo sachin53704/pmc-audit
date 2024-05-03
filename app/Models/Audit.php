@@ -17,10 +17,11 @@ class Audit extends BaseModel
     const AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT = 5;
     const AUDIT_STATUS_AUDITOR_ADDED_OBJECTION = 6;
     const AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE = 7;
-    const AUDIT_STATUS_AUDITOR_APPROVED_COMPLIANCE = 8;
-    const AUDIT_STATUS_AUDITOR_REJECTED_COMPLIANCE = 9;
-    const AUDIT_STATUS_MCA_APPROVED_COMPLIANCE = 10;
-    const AUDIT_STATUS_MCA_REJECTED_COMPLIANCE = 11;
+    // BELOW STATUSES ARE NOT IN USE
+    // const AUDIT_STATUS_AUDITOR_APPROVED_COMPLIANCE = 8;
+    // const AUDIT_STATUS_AUDITOR_REJECTED_COMPLIANCE = 9;
+    // const AUDIT_STATUS_MCA_APPROVED_COMPLIANCE = 10;
+    // const AUDIT_STATUS_MCA_REJECTED_COMPLIANCE = 11;
 
     protected $fillable = ['department_id', 'audit_no', 'date', 'description', 'remark', 'file_path', 'status', 'reject_reason', 'dl_description', 'dl_file_path', 'obj_date', 'obj_subject'];
 
