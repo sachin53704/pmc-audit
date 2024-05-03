@@ -14,34 +14,34 @@ class FiscalYear extends BaseModel
     protected $fillable = ['name', 'from_year', 'to_year', 'created_by', 'updated_by', 'deleted_by'];
 
 
-    public static function booted()
-    {
-        static::creating(function (self $fiscalYear)
-        {
-            if(Auth::check())
-            {
-                $fiscalYear->update([
-                    'created_by'=> Auth::user()->id,
-                ]);
-            }
-        });
-        static::updating(function (self $fiscalYear)
-        {
-            if(Auth::check())
-            {
-                $fiscalYear->update([
-                    'updated_by'=> Auth::user()->id,
-                ]);
-            }
-        });
-        static::deleting(function (self $fiscalYear)
-        {
-            if(Auth::check())
-            {
-                $fiscalYear->update([
-                    'deleted_by'=> Auth::user()->id,
-                ]);
-            }
-        });
-    }
+    // public static function booted()
+    // {
+    //     static::creating(function (self $fiscalYear)
+    //     {
+    //         if(Auth::check())
+    //         {
+    //             $fiscalYear->update([
+    //                 'created_by'=> Auth::user()->id,
+    //             ]);
+    //         }
+    //     });
+    //     static::updating(function (self $fiscalYear)
+    //     {
+    //         if(Auth::check())
+    //         {
+    //             $fiscalYear->update([
+    //                 'updated_by'=> Auth::user()->id,
+    //             ]);
+    //         }
+    //     });
+    //     static::deleting(function (self $fiscalYear)
+    //     {
+    //         if(Auth::check())
+    //         {
+    //             $fiscalYear->update([
+    //                 'deleted_by'=> Auth::user()->id,
+    //             ]);
+    //         }
+    //     });
+    // }
 }

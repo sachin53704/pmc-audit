@@ -64,34 +64,34 @@ class User extends Authenticatable
     }
 
 
-    public static function booted()
-    {
-        static::creating(function (self $user)
-        {
-            if(Auth::check())
-            {
-                $user->update([
-                    'created_by'=> Auth::user()->id,
-                ]);
-            }
-        });
-        static::creating(function (self $user)
-        {
-            if(Auth::check())
-            {
-                $user->update([
-                    'updated_by'=> Auth::user()->id,
-                ]);
-            }
-        });
-        static::deleting(function (self $user)
-        {
-            if(Auth::check())
-            {
-                $user->update([
-                    'deleted_by'=> Auth::user()->id,
-                ]);
-            }
-        });
-    }
+    // public static function booted()
+    // {
+    //     static::creating(function (self $user)
+    //     {
+    //         if(Auth::check())
+    //         {
+    //             $user->update([
+    //                 'created_by'=> Auth::user()->id,
+    //             ]);
+    //         }
+    //     });
+    //     static::creating(function (self $user)
+    //     {
+    //         if(Auth::check())
+    //         {
+    //             $user->update([
+    //                 'updated_by'=> Auth::user()->id,
+    //             ]);
+    //         }
+    //     });
+    //     static::deleting(function (self $user)
+    //     {
+    //         if(Auth::check())
+    //         {
+    //             $user->update([
+    //                 'deleted_by'=> Auth::user()->id,
+    //             ]);
+    //         }
+    //     });
+    // }
 }
