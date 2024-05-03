@@ -66,7 +66,7 @@ class User extends Authenticatable
 
     public static function booted()
     {
-        static::created(function (self $user)
+        static::creating(function (self $user)
         {
             if(Auth::check())
             {
@@ -75,7 +75,7 @@ class User extends Authenticatable
                 ]);
             }
         });
-        static::updated(function (self $user)
+        static::creating(function (self $user)
         {
             if(Auth::check())
             {
