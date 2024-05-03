@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Audit</x-slot>
-    <x-slot name="heading">Audit</x-slot>
+    <x-slot name="title">HMM</x-slot>
+    <x-slot name="heading">HMM</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -31,6 +31,8 @@
                                         <th>Remark</th>
                                         <th>View File</th>
                                         <th>Status</th>
+                                        <th>View Letter</th>
+                                        <th>Letter Description</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -39,7 +41,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $audit->department?->name }}</td>
-                                            <td>{{ Carbon\Carbon::parse($audit->date)->format('d m Y') }}</td>
+                                            <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                             <td>{{ Str::limit($audit->description, '85') }}</td>
                                             <td>{{ Str::limit($audit->remark, '85') }}</td>
                                             <td>
@@ -48,6 +50,10 @@
                                             <td>
                                                 <span class="badge bg-secondary">{{ $audit->status_name }}</span>
                                             </td>
+                                            <td>
+                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                            </td>
+                                            <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                             <td>
                                                 <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-id="{{ $audit->id }}"><i data-feather="plus-circle"></i> Add Objection</button>
                                             </td>

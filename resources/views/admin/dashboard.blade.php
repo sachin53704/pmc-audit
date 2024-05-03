@@ -4,7 +4,7 @@
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
     <div class="row">
-        <div class="col-xxl-5">
+        {{-- <div class="col-xxl-5">
             <div class="d-flex flex-column h-100">
                 <div class="row h-100">
                     <div class="col-12">
@@ -302,7 +302,7 @@
                 <!-- end col-->
             </div>
             <!-- end row-->
-        </div>
+        </div> --}}
     </div>
 
 

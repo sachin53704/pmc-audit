@@ -18,6 +18,8 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
+                                    <th>View Letter</th>
+                                    <th>Letter Description</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -26,12 +28,16 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
-                                        <td>{{ Carbon\Carbon::parse($audit->date)->format('d m Y') }}</td>
+                                        <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td>{{ Str::limit($audit->description, '85') }}</td>
                                         <td>{{ Str::limit($audit->remark, '85') }}</td>
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
+                                        <td>
+                                            <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                        </td>
+                                        <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
                                             @can('send_letter.department')
                                                 <button class="btn btn-secondary send-dept-letter px-2 py-1" title="Send letter to department" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> Send Letter</button>

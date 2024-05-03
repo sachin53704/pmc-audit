@@ -110,7 +110,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
-                                        <td>{{ Carbon\Carbon::parse($audit->date)->format('d m Y') }}</td>
+                                        <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td>{{ Str::limit($audit->description, '85') }}</td>
                                         <td>{{ Str::limit($audit->remark, '85') }}</td>
                                         <td>
