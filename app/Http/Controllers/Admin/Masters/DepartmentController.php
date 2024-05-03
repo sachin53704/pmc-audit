@@ -43,11 +43,11 @@ class DepartmentController extends Controller
             Department::create( Arr::only( $input, Department::getFillables() ) );
             DB::commit();
 
-            return response()->json(['success'=> 'Office created successfully!']);
+            return response()->json(['success'=> 'Department created successfully!']);
         }
         catch(\Exception $e)
         {
-            return $this->respondWithAjax($e, 'creating', 'Office');
+            return $this->respondWithAjax($e, 'creating', 'Department');
         }
     }
 

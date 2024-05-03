@@ -16,7 +16,7 @@ class Department extends BaseModel
 
     public static function booted()
     {
-        static::created(function (self $department)
+        static::creating(function (self $department)
         {
             if(Auth::check())
             {
@@ -25,7 +25,7 @@ class Department extends BaseModel
                 ]);
             }
         });
-        static::updated(function (self $department)
+        static::updating(function (self $department)
         {
             if(Auth::check())
             {

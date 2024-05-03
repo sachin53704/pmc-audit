@@ -16,7 +16,7 @@ class FiscalYear extends BaseModel
 
     public static function booted()
     {
-        static::created(function (self $fiscalYear)
+        static::creating(function (self $fiscalYear)
         {
             if(Auth::check())
             {
@@ -25,7 +25,7 @@ class FiscalYear extends BaseModel
                 ]);
             }
         });
-        static::updated(function (self $fiscalYear)
+        static::updating(function (self $fiscalYear)
         {
             if(Auth::check())
             {
