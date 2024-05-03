@@ -50,7 +50,7 @@
                             <ul class="nav nav-sm flex-column">
                                 @can('fiscal_years.view')
                                     <li class="nav-item">
-                                        <a href="{{ route('fiscal_years.index') }}" class="nav-link {{ request()->routeIs('fiscal_years.index') ? 'active' : '' }}" data-key="t-horizontal">Fiscal Year</a>
+                                        <a href="{{ route('fiscal_years.index') }}" class="nav-link {{ request()->routeIs('fiscal_years.index') ? 'active' : '' }}" data-key="t-horizontal">Financial Year</a>
                                     </li>
                                 @endcan
                                 @can('departments.view')
