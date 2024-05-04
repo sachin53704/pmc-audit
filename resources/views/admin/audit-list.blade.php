@@ -43,9 +43,13 @@
                                             @endif
                                             {{-- @if($status == 'pending' && isset($page_type) && $page_type != 'assign_auditor') --}}
                                             @if (isset($page_type) && $page_type == 'assign_auditor')
-                                                @can('audit_list.assign')
-                                                    <button class="btn btn-secondary assign-auditor px-2 py-1" title="Assign Auditor" data-id="{{ $audit->id }}"><i data-feather="user-check"></i> Assign Auditor</button>
-                                                @endcan
+                                                @if($audit->assigned_auditors_count > 0)
+                                                    <button class="btn btn-secondary px-2 py-1" title="Auditor Assigned" disabled><i data-feather="user-check"></i> Auditor Assigned</button>
+                                                @else
+                                                    @can('audit_list.assign')
+                                                        <button class="btn btn-secondary assign-auditor px-2 py-1" title="Assign Auditor" data-id="{{ $audit->id }}"><i data-feather="user-check"></i> Assign Auditor</button>
+                                                    @endcan
+                                                @endif
                                             @else
                                             @endif
                                         </td>

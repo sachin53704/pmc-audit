@@ -21,6 +21,7 @@ class MCAAuditController extends Controller
         $statusCode = constant("App\Models\Audit::$statusCode");
 
         $audits = Audit::query()
+                        ->withCount('assignedAuditors as assigned_auditors_count')
                         // ->where('department_id', Auth::user()->department_id)
                         ->when($statusCode == 2, fn($q) => $q->where('status', 2)->orWhere('status', '>=', 4) )
                         ->when($statusCode != 2, fn($q) => $q->where('status', $statusCode))

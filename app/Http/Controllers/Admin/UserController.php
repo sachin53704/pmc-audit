@@ -49,7 +49,7 @@ class UserController extends Controller
             DB::beginTransaction();
             $input = $request->validated();
             $input['password'] = Hash::make($input['password']);
-            $input['department_id'] = $input['department_id'] ?? $input['home_department_id'];
+            $input['department_id'] = $input['department_id'] == null ? $input['home_department_id'] : $input['department_id'];
             $user = User::create( Arr::only( $input, Auth::user()->getFillable() ) );
             DB::table('model_has_roles')->insert(['role_id'=> $input['role'], 'model_type'=> 'App\Models\User', 'model_id'=> $user->id]);
             DB::commit();

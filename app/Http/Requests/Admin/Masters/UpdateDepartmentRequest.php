@@ -22,7 +22,7 @@ class UpdateDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:200|unique:departments,name,'.$this->id,
+            'name' => 'required|max:200',
             'is_audit' => 'required',
         ];
     }
