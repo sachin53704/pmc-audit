@@ -88,7 +88,7 @@ class MCAAuditController extends Controller
             <option value="">--Select Auditor--</option>';
             foreach($auditors as $auditor):
                 $is_select = in_array($auditor->id, $userAssignedAudit) ? "selected" : "";
-                $auditorsHtml .= '<option value="'.$auditor->id.'" '.$is_select.'>'.$auditor->full_name.'</option>';
+                $auditorsHtml .= '<option value="'.$auditor->id.'" '.$is_select.'>'.$auditor->full_name.'('.$auditor->auditor_no.')'.'</option>';
             endforeach;
         $auditorsHtml .= '</span>';
 
