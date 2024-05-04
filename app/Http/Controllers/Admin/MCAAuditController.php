@@ -21,7 +21,7 @@ class MCAAuditController extends Controller
         $statusCode = constant("App\Models\Audit::$statusCode");
 
         $audits = Audit::query()
-                        ->where('department_id', Auth::user()->department_id)
+                        // ->where('department_id', Auth::user()->department_id)
                         ->when($statusCode == 2, fn($q) => $q->where('status', 2)->orWhere('status', '>=', 4) )
                         ->when($statusCode != 2, fn($q) => $q->where('status', $statusCode))
                         ->get();
@@ -70,7 +70,7 @@ class MCAAuditController extends Controller
         $page_type = 'assign_auditor';
 
         $audits = Audit::query()
-                        ->where('department_id', Auth::user()->department_id)
+                        // ->where('department_id', Auth::user()->department_id)
                         ->when($statusCode == 2, fn($q) => $q->where('status', 2)->orWhere('status', '>=', 4) )
                         ->when($statusCode != 2, fn($q) => $q->where('status', $statusCode))
                         ->get();
@@ -133,7 +133,7 @@ class MCAAuditController extends Controller
         $audits = Audit::query()
                         ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
                         // ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
-                        ->where('department_id', Auth::user()->department_id)
+                        // ->where('department_id', Auth::user()->department_id)
                         ->latest()
                         ->get();
 
@@ -294,7 +294,7 @@ class MCAAuditController extends Controller
                             'objections as approved' => fn($q) => $q->where('status', 4),
                             'objections as unapproved' => fn($q) => $q->where('status', 5),
                         ])
-                        ->where('department_id', Auth::user()->department_id)
+                        // ->where('department_id', Auth::user()->department_id)
                         ->latest()
                         ->get();
 
