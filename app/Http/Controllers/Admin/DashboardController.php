@@ -17,11 +17,23 @@ class DashboardController extends Controller
 
         if($userRole->name == "Clerk")
         {
+            $totalAuditCount = Audit::where('department_id', $user->department_id)->count();
+            $approvedAuditCount = Audit::where('department_id', $user->department_id)->where(['status' => Audit::AUDIT_STATUS_APPROVED])->count();
+            $rejectedAuditCount = Audit::where('department_id', $user->department_id)->where(['status' => Audit::AUDIT_STATUS_REJECTED])->count();
+
+            return view('admin.dashboard.clerk')->with([
+                        'totalAuditCount' => $totalAuditCount,
+                        'approvedAuditCount' => $approvedAuditCount,
+                        'rejectedAuditCount' => $rejectedAuditCount
+                    ]);
+        }
+        if($userRole->name == "MCA" || $userRole->name == "DY MCA")
+        {
             $totalAuditCount = Audit::count();
             $approvedAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_APPROVED])->count();
             $rejectedAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_REJECTED])->count();
 
-            return view('admin.dashboard.clerk')->with([
+            return view('admin.dashboard.mca')->with([
                         'totalAuditCount' => $totalAuditCount,
                         'approvedAuditCount' => $approvedAuditCount,
                         'rejectedAuditCount' => $rejectedAuditCount
