@@ -32,16 +32,24 @@
                                         <td>{{ Str::limit($audit->description, '85') }}</td>
                                         <td>{{ Str::limit($audit->remark, '85') }}</td>
                                         <td>
-                                            <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                            @if($audit->file_path)
+                                                <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                            @endif
                                         </td>
                                         <td>
-                                            <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                            @if($audit->dl_file_path)
+                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                            @endif
                                         </td>
                                         <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
-                                            @can('send_letter.department')
-                                                <button class="btn btn-secondary send-dept-letter px-2 py-1" title="Send letter to department" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> Send Letter</button>
-                                            @endcan
+                                            @if($audit->dl_file_path)
+                                                <button class="btn btn-secondary px-2 py-1" title="letter is sent to department" disabled><i data-feather="file-text"></i> Letter Sent</button>
+                                            @else
+                                                @can('send_letter.department')
+                                                    <button class="btn btn-secondary send-dept-letter px-2 py-1" title="Send letter to department" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> Send Letter</button>
+                                                @endcan
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

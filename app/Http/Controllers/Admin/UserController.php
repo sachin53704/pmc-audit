@@ -24,7 +24,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::whereNot('id', Auth::user()->id)->latest()->get()->append('full_name');
+        $users = User::with('department')->whereNot('id', Auth::user()->id)->latest()->get()->append('full_name');
         $departments = Department::latest()->get();
         $roles = Role::orderBy('id', 'DESC')->whereNot('name', 'like', '%super%')->get();
 
@@ -48,8 +48,10 @@ class UserController extends Controller
         {
             DB::beginTransaction();
             $input = $request->validated();
+
             $input['password'] = Hash::make($input['password']);
-            $input['department_id'] = $input['department_id'] == null ? $input['home_department_id'] : $input['department_id'];
+            $input['department_id'] = $input['department_id'] ?? $input['home_department_id'];
+
             $user = User::create( Arr::only( $input, Auth::user()->getFillable() ) );
             DB::table('model_has_roles')->insert(['role_id'=> $input['role'], 'model_type'=> 'App\Models\User', 'model_id'=> $user->id]);
             DB::commit();

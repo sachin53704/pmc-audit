@@ -19,9 +19,9 @@ class AuditorAuditController extends Controller
         $user = Auth::user();
 
         $audits = Audit::query()
-                        ->where('status', Audit::AUDIT_STATUS_AUDITOR_ASSIGNED)
-                        ->latest()
+                        ->where('status', '>=', Audit::AUDIT_STATUS_AUDITOR_ASSIGNED)
                         ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
+                        ->latest()
                         ->get();
 
         return view('admin.assigned-audit-list')->with(['audits' => $audits]);
@@ -74,6 +74,7 @@ class AuditorAuditController extends Controller
         $audits = Audit::query()
                         ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
                         ->where('status', '>=', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
+                        ->latest()
                         ->get();
 
         return view('admin.create-objection')->with(['audits' => $audits]);
@@ -101,7 +102,6 @@ class AuditorAuditController extends Controller
         if($validator->fails())
             return response()->json(['errors' => $validator->errors()], 422);
 
-
         try
         {
             DB::beginTransaction();
@@ -119,9 +119,9 @@ class AuditorAuditController extends Controller
                 $objNoParamName = 'objection_no_'.$i;
 
                 AuditObjection::updateOrCreate([
-                    'objection_no' => $request->{$objNoParamName}
-                ],[
+                    'objection_no' => $request->{$objNoParamName},
                     'audit_id' => $audit->id,
+                ],[
                     'objection' => $request->{$reqParamName},
                 ]);
             }
@@ -174,10 +174,10 @@ class AuditorAuditController extends Controller
         foreach($audit->objections as $key => $objection)
         {
             $innerHtml .= '
-                <hr class="my-2">
+            <div class="row custm-card">
                 <input type="hidden" name="objection_id[]" value="'.$objection->id.'">
                 <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="objection_'.$key.'">Objection</label>
+                    <label class="col-form-label" for="objection_'.$key.'">(Objection '.$objection->objection_no.')</label>
                     <textarea name="objection_'.$key.'" id="objection_'.$key.'" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->objection.'</textarea>
                 </div>
                 <div class="col-md-3 mt-3">
@@ -226,7 +226,7 @@ class AuditorAuditController extends Controller
                     <textarea name="mca_action_remark_'.$key.'" readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->mca_remark.'</textarea>
                     <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
                 </div>
-                <hr class="my-2">';
+            </div>';
         }
 
 

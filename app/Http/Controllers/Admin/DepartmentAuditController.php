@@ -17,8 +17,9 @@ class DepartmentAuditController extends Controller
     {
         $authUser = Auth::user();
         $audits = Audit::query()
-                        ->where('status', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
+                        ->where('status', '>=', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
                         ->where('department_id', $authUser->department_id)
+                        ->latest()
                         ->get();
 
         return view('admin.department-letters')->with(['audits' => $audits]);
@@ -30,6 +31,7 @@ class DepartmentAuditController extends Controller
         $audits = Audit::query()
                         ->where('status', '>=', Audit::AUDIT_STATUS_AUDITOR_ADDED_OBJECTION)
                         ->where('department_id', $authUser->department_id)
+                        ->latest()
                         ->get();
 
         return view('admin.compliance-audits')->with(['audits' => $audits]);
@@ -58,28 +60,56 @@ class DepartmentAuditController extends Controller
             $isEditable = in_array($objection->status, [2,4]) ? 'readonly' : '';
 
             $innerHtml .= '
-                <input type="hidden" name="objection_id[]" value="'.$objection->id.'">
-                <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="objection_'.$key.'">Objection</label>
-                    <textarea name="objection_'.$key.'" id="objection_'.$key.'" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->objection.'</textarea>
-                </div>
-                <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="compliance_'.$key.'">Compliance <span class="text-danger">*</span></label>
-                    <textarea name="compliance_'.$key.'" '.$isEditable.' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->answer.'</textarea>
-                    <span class="text-danger is-invalid compliance_'.$key.'_err"></span>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="remark_'.$key.'">Remark <span class="text-danger">*</span></label>
-                    <input type="text" name="remark_'.$key.'" '.$isEditable.' value="'.$objection->remark.'" class="form-control">
-                    <span class="text-danger is-invalid remark_'.$key.'_err"></span>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="status_'.$key.'">Status</label>
-                    <input type="text" name="status_'.$key.'" class="form-control" value="'.$objection?->status_name.'" readonly>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="approved_rejected_by_'.$key.'">Approved/Rejected By</label>
-                    <input type="text" name="approved_rejected_by_'.$key.'" class="form-control" value="'.$objection?->auditorApprover?->full_name.'" readonly>
+                <div class="row custm-card">
+                    <input type="hidden" name="objection_id[]" value="'.$objection->id.'">
+                    <div class="col-md-3 mt-3">
+                        <label class="col-form-label" for="objection_'.$key.'">(Objection '.$objection->objection_no.')</label>
+                        <textarea name="objection_'.$key.'" id="objection_'.$key.'" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->objection.'</textarea>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <label class="col-form-label" for="compliance_'.$key.'">Compliance <span class="text-danger">*</span></label>
+                        <textarea name="compliance_'.$key.'" '.$isEditable.' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->answer.'</textarea>
+                        <span class="text-danger is-invalid compliance_'.$key.'_err"></span>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="remark_'.$key.'">Remark <span class="text-danger">*</span></label>
+                        <input type="text" name="remark_'.$key.'" '.$isEditable.' value="'.$objection->remark.'" class="form-control">
+                        <span class="text-danger is-invalid remark_'.$key.'_err"></span>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="status_'.$key.'">Status</label>
+                        <input type="text" name="status_'.$key.'" class="form-control" value="'.$objection?->status_name.'" readonly>
+                    </div>
+                    <div class="col-md-2"></div>
+
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="action_'.$key.'">Auditor Action</label>
+                        <select name="action_'.$key.'" readonly class="form-control">
+                            <option value="">Action</option>
+                            <option value="1" '.($objection->status == 2 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($objection->status == 3 ? "selected" : "").'>Reject</option>
+                        </select>
+                        <span class="text-danger is-invalid auditor_action_'.$key.'_err"></span>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <label class="col-form-label" for="auditor_action_remark_'.$key.'">Auditor Remark</label>
+                        <textarea name="auditor_action_remark_'.$key.'" readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->auditor_remark.'</textarea>
+                        <span class="text-danger is-invalid auditor_action_remark_'.$key.'_err"></span>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="mca_action_'.$key.'">MCA Action</label>
+                        <select name="mca_action_'.$key.'" readonly class="form-control">
+                            <option value="">Action</option>
+                            <option value="1" '.($objection->status == 4 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($objection->status == 5 ? "selected" : "").'>Reject</option>
+                        </select>
+                        <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
+                    </div>
+                    <div class="col-md-3 mt-3">
+                        <label class="col-form-label" for="mca_action_remark_'.$key.'">MCA Remark</label>
+                        <textarea name="mca_action_remark_'.$key.'" readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->mca_remark.'</textarea>
+                        <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
+                    </div>
                 </div>';
         }
 
@@ -104,12 +134,15 @@ class DepartmentAuditController extends Controller
 
         for($i=0; $i<count($request->objection_id); $i++)
         {
-            $fieldArray['objection_' . $i] = 'required';
-            $fieldArray['compliance_' . $i] = 'required';
-            $fieldArray['remark_' . $i] = 'required';
-            $messageArray['objection_' . $i . '.required'] = 'Please type objection';
-            $messageArray['compliance_' . $i . '.required'] = 'Please type compliance';
-            $messageArray['remark_' . $i . '.required'] = 'Please type remark';
+            if($request->{'compliance_'.$i} != null && $request->{'compliance_'.$i} != '')
+            {
+                $fieldArray['objection_' . $i] = 'required';
+                $fieldArray['compliance_' . $i] = 'required';
+                $fieldArray['remark_' . $i] = 'required';
+                $messageArray['objection_' . $i . '.required'] = 'Please type objection';
+                $messageArray['compliance_' . $i . '.required'] = 'Please type compliance';
+                $messageArray['remark_' . $i . '.required'] = 'Please type remark';
+            }
         }
         $validator = Validator::make($request->all(), $fieldArray, $messageArray);
 

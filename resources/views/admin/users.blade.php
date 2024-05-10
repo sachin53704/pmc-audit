@@ -251,6 +251,7 @@
                                     <th>Gender</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
+                                    <th>Department</th>
                                     <th>User Type</th>
                                     <th>Registered On</th>
                                     <th>Action</th>
@@ -264,6 +265,7 @@
                                         <td>{{ $user->gender }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->mobile }}</td>
+                                        <td>{{ $user->department?->name }}</td>
                                         <td>{{ $user->roles[0]?->name }}</td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($user->created_at)->format('d M, y h:i:s') }}

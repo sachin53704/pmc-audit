@@ -167,7 +167,7 @@
                             clonedSection.find('.form-label').text('Question ' + questionCounter);
                             clonedSection.find('.text-danger').removeClass('objection_'+(questionCounter-2)+'_err');
                             clonedSection.find('.text-danger').addClass('objection_'+(questionCounter-1)+'_err');
-                            clonedSection.find('input').attr('name', 'objection_no_'+(questionCounter-1)).val(questionCounter);
+                            clonedSection.find('input').attr('name', 'objection_no_'+(questionCounter-1)).attr('value', questionCounter);
                             clonedSection.find('textarea').attr('id', 'objection_'+(questionCounter-1));
                             clonedSection.find('textarea').attr('name', 'objection_'+(questionCounter-1));
                             $(".objSection").last().after(clonedSection);
@@ -196,7 +196,7 @@
             clonedSection.find('.form-label').text('Question ' + questionCounter);
             clonedSection.find('.text-danger').removeClass('objection_'+(questionCounter-2)+'_err');
             clonedSection.find('.text-danger').addClass('objection_'+(questionCounter-1)+'_err');
-            clonedSection.find('input').attr('name', 'objection_no_'+(questionCounter-1));
+            clonedSection.find('input').attr('name', 'objection_no_'+(questionCounter-1)).attr('value', questionCounter);
             clonedSection.find('textarea').attr('id', 'objection_'+(questionCounter-1));
             clonedSection.find('textarea').attr('name', 'objection_'+(questionCounter-1));
             $(".objSection").last().after(clonedSection);

@@ -44,6 +44,8 @@
                                     <th>Remark</th>
                                     <th>View File</th>
                                     <th>Status</th>
+                                    <th>View Letter</th>
+                                    <th>Letter Description</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -61,6 +63,10 @@
                                         <td>
                                             <span class="badge bg-secondary">{{ $audit->status_name }}</span>
                                         </td>
+                                        <td>
+                                            <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                        </td>
+                                        <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
                                             <button class="btn btn-secondary edit-element px-2 py-1" title="View answered questions" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Answers</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}

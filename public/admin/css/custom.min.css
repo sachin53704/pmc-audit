@@ -80,5 +80,16 @@ li .nav-link.active {
 }
 
 .form-control[readonly], .form-control[readonly]:focus {
-    background-color: #eee;
+    background-color: #efefef;
+}
+
+.custm-card .form-control{
+    border: 2px solid #cbb4fd !important;
+}
+.custm-card{
+    border-radius: 8px;
+    border: 2px solid #dfceff;
+    background-color: #f4efff;
+    padding-bottom: 15px;
+    margin-bottom: 8px;
 }

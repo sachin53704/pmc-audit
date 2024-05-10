@@ -73,7 +73,10 @@
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
 
-                        <div class="mb-3 row" id="objectionList">
+                        <div class="mb-3 row" >
+                            <div class="col-12" id="objectionList">
+
+                            </div>
                         </div>
 
                     </div>
@@ -102,6 +105,8 @@
                                     <th>Remark</th>
                                     <th>View File</th>
                                     <th>Status</th>
+                                    <th>View Letter</th>
+                                    <th>Letter Description</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -119,6 +124,12 @@
                                         <td>
                                             <span class="badge bg-secondary">{{ $audit->status_name }}</span>
                                         </td>
+                                        <td>
+                                            @if($audit->dl_file_path)
+                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                            @endif
+                                        </td>
+                                        <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
                                             {{-- @if($audit->status == 6 || $audit->status == 9  || $audit->status == 11) --}}
                                                 <button class="btn btn-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-plus"></i> Add Compliance</button>

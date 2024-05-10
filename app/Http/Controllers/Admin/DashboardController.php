@@ -29,14 +29,16 @@ class DashboardController extends Controller
         }
         if($userRole->name == "MCA" || $userRole->name == "DY MCA")
         {
-            $totalAuditCount = Audit::count();
+            $pendingAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_PENDING])->count();
             $approvedAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_APPROVED])->count();
             $rejectedAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_REJECTED])->count();
+            $draftAuditCount = Audit::where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)->count();
 
             return view('admin.dashboard.mca')->with([
-                        'totalAuditCount' => $totalAuditCount,
+                        'pendingAuditCount' => $pendingAuditCount,
                         'approvedAuditCount' => $approvedAuditCount,
-                        'rejectedAuditCount' => $rejectedAuditCount
+                        'rejectedAuditCount' => $rejectedAuditCount,
+                        'draftAuditCount' => $draftAuditCount
                     ]);
         }
 

@@ -50,7 +50,9 @@
                                                 <span class="badge bg-secondary">{{ $audit->status_name }}</span>
                                             </td>
                                             <td>
-                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                                @if($audit->dl_file_path)
+                                                    <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                                @endif
                                             </td>
                                             <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                             <td>
