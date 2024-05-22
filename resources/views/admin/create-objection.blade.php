@@ -67,7 +67,7 @@
         </div>
 
 
-    {{-- Send Department Letter Modal --}}
+    {{-- Add Objection Modal --}}
     <div class="modal fade" id="addObjectionModal" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <form action="" id="addForm">
@@ -108,7 +108,7 @@
                         <label class="col-12 col-form-label py-0" for="objection">Objections </label>
                         <hr class="mt-1 mb-2">
 
-                        <div class="mb-3">
+                        <div class="mb-3" id="objSection">
                             <div class="objSection row mt-2">
                                 <input type="hidden" name="objection_no_0" value="1">
                                 <div class="col-3">
@@ -125,7 +125,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Cancel</button>
                         <button class="btn btn-primary" id="addObjectionSubmit" type="submit">Submit</button>
                     </div>
                 </div>
@@ -159,6 +159,10 @@
                         $("#addObjectionModal #hmm_no").text(data.audit.audit_no);
                         $("#addObjectionModal [name='date']").val(data.audit.obj_date);
                         $("#addObjectionModal [name='subject']").val(data.audit.obj_subject);
+
+                        $(".objSection").remove();
+                        $("#objSection").html('<div class="objSection row mt-2"><input type="hidden" name="objection_no_0" value="1"><div class="col-3"><label class="form-label" >Question 1</label> <br></div><div class="col-sm-9"><textarea name="objection_0" id="objection_0" cols="10" rows="5" style="max-height: 100px; min-height:100px" class="form-control"></textarea><span class="text-danger is-invalid objection_0_err"></span></div></div>');
+                        questionCounter = 1;
 
                         for(let i=0; i<data.audit.objections.length; i++)
                         {

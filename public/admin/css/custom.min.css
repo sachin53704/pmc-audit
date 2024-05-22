@@ -81,10 +81,22 @@ li .nav-link.active {
 
 .form-control[readonly], .form-control[readonly]:focus {
     background-color: #efefef;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+/* select[readonly] option[value="1"]selected{ */
+/* select[readonly] option[value="1"][selected]{ */
+select[readonly]:has(> option[value="1"]:checked){
+    border: 2px solid #00cd00 !important;
+}
+
+select[readonly]:has(> option[value="2"]:checked){
+    border: 2px solid #ff3f3f !important;
 }
 
 .custm-card .form-control{
-    border: 2px solid #cbb4fd !important;
+    border: 2px solid #cbb4fd;
 }
 .custm-card{
     border-radius: 8px;

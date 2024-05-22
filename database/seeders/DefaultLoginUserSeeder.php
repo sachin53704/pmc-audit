@@ -61,7 +61,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // Department Seeder ##
         $departmentRole = Role::updateOrCreate(['name'=> 'Department']);
-        $permissions = Permission::where('group', 'department_audit')->pluck('id','id');
+        $permissions = Permission::where('group', 'department_audit')->orWhere('group', 'account_receipt')->pluck('id','id');
         $departmentRole->syncPermissions($permissions);
 
         $user = User::updateOrCreate([

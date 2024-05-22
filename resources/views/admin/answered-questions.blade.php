@@ -15,7 +15,10 @@
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
 
-                        <div class="mb-3 row" id="objectionList">
+                        <div class="mb-3 row">
+                            <div class="col-12" id="objectionList">
+
+                            </div>
                         </div>
 
                     </div>

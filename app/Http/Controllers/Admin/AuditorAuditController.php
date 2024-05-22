@@ -173,6 +173,7 @@ class AuditorAuditController extends Controller
 
         foreach($audit->objections as $key => $objection)
         {
+            $isAuditorReadonly = (($objection->auditor_action_status == 1 && ($objection->mca_action_status == 0 || $objection->mca_action_status == 1)) ? "readonly" : "");
             $innerHtml .= '
             <div class="row custm-card">
                 <input type="hidden" name="objection_id[]" value="'.$objection->id.'">
@@ -200,24 +201,24 @@ class AuditorAuditController extends Controller
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="action_'.$key.'">Auditor Action</label>
-                    <select name="action_'.$key.'" class="form-control">
+                    <select name="action_'.$key.'" class="form-control" '.$isAuditorReadonly.'>
                         <option value="">Action</option>
-                        <option value="1" '.($objection->status == 2 ? "selected" : "").'>Approve</option>
-                        <option value="2" '.($objection->status == 3 ? "selected" : "").'>Reject</option>
+                        <option value="1" '.($objection->auditor_action_status == 1 ? "selected" : "").'>Approve</option>
+                        <option value="2" '.($objection->auditor_action_status == 2 ? "selected" : "").'>Reject</option>
                     </select>
                     <span class="text-danger is-invalid action_'.$key.'_err"></span>
                 </div>
                 <div class="col-md-3 mt-3">
                     <label class="col-form-label" for="action_remark_'.$key.'">Auditor Remark</label>
-                    <textarea name="action_remark_'.$key.'" class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->auditor_remark.'</textarea>
+                    <textarea name="action_remark_'.$key.'" class="form-control" '.$isAuditorReadonly.' cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$objection->auditor_remark.'</textarea>
                     <span class="text-danger is-invalid action_'.$key.'_err"></span>
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="mca_action_'.$key.'">MCA Action</label>
                     <select name="mca_action_'.$key.'" readonly class="form-control">
                         <option value="">Action</option>
-                        <option value="1" '.($objection->status == 4 ? "selected" : "").'>Approve</option>
-                        <option value="2" '.($objection->status == 5 ? "selected" : "").'>Reject</option>
+                        <option value="1" '.($objection->mca_action_status == 1 ? "selected" : "").'>Approve</option>
+                        <option value="2" '.($objection->mca_action_status == 2 ? "selected" : "").'>Reject</option>
                     </select>
                     <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
                 </div>
@@ -277,6 +278,7 @@ class AuditorAuditController extends Controller
                     AuditObjection::where(['id' => $request->objection_id[$i]])
                             ->update([
                                 'status' => $request->{$actionParamName} == 1 ? AuditObjection::OBJECTION_STATUS_AUDITOR_APPROVED : AuditObjection::OBJECTION_STATUS_AUDITOR_REJECTED,
+                                'auditor_action_status' => $request->{$actionParamName},
                                 'auditor_remark' => $request->{$actionRemarkParamName},
                                 'approved_by_auditor' => Auth::user()->id
                             ]);

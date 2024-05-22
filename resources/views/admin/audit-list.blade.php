@@ -38,8 +38,8 @@
                                         </td>
                                         <td>
                                             @if($status == 'pending' && auth()->user()->hasRole(['MCA']))
-                                                <button class="btn btn-success approve-audit px-2 py-1" data-action="approve" title="Approve" data-id="{{ $audit->id }}"><i data-feather="x-circle"></i> Approve</button>
-                                                <button class="btn btn-danger reject-audit px-2 py-1" data-action="reject" title="Reject" data-id="{{ $audit->id }}"><i data-feather="check-circle"></i> Reject</button>
+                                                <button class="btn btn-success approve-audit px-2 py-1" data-action="approve" title="Approve" data-id="{{ $audit->id }}"><i data-feather="check-circle"></i> Approve</button>
+                                                <button class="btn btn-danger reject-audit px-2 py-1" data-action="reject" title="Reject" data-id="{{ $audit->id }}"><i data-feather="x-circle"></i> Reject</button>
                                             @endif
                                             {{-- @if($status == 'pending' && isset($page_type) && $page_type != 'assign_auditor') --}}
                                             @if (isset($page_type) && $page_type == 'assign_auditor')
@@ -105,7 +105,7 @@
     </div>
 
 
-    {{-- Assign Role Modal --}}
+    {{-- Reject Programme Audit Modal --}}
     <div class="modal fade" id="rejectAuditModal" role="dialog">
         <div class="modal-dialog" role="document">
             <form action="" id="rejectAuditForm">
@@ -196,6 +196,7 @@
                             swal("Successful!", data.success, "success")
                             .then((action) => {
                                 $("#assignAuditorModal").modal('hide');
+                                window.location.reload();
                             });
                         else
                             swal("Error!", data.error2, "error");

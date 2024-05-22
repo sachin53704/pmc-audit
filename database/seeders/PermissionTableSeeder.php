@@ -204,6 +204,26 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'report.final-report',
                 'group' => 'mca_audit',
             ],
+            [
+                'id' => 39,
+                'name' => 'receipt.view',
+                'group' => 'account_receipt',
+            ],
+            [
+                'id' => 40,
+                'name' => 'receipt.create',
+                'group' => 'account_receipt',
+            ],
+            [
+                'id' => 41,
+                'name' => 'payment-receipt.view',
+                'group' => 'account_receipt',
+            ],
+            [
+                'id' => 42,
+                'name' => 'payment-receipt.create',
+                'group' => 'account_receipt',
+            ],
         ];
 
         foreach ($permissions as $permission)

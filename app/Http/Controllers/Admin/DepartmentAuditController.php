@@ -86,8 +86,8 @@ class DepartmentAuditController extends Controller
                         <label class="col-form-label" for="action_'.$key.'">Auditor Action</label>
                         <select name="action_'.$key.'" readonly class="form-control">
                             <option value="">Action</option>
-                            <option value="1" '.($objection->status == 2 ? "selected" : "").'>Approve</option>
-                            <option value="2" '.($objection->status == 3 ? "selected" : "").'>Reject</option>
+                            <option value="1" '.($objection->auditor_action_status == 1 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($objection->auditor_action_status == 2 ? "selected" : "").'>Reject</option>
                         </select>
                         <span class="text-danger is-invalid auditor_action_'.$key.'_err"></span>
                     </div>
@@ -100,8 +100,8 @@ class DepartmentAuditController extends Controller
                         <label class="col-form-label" for="mca_action_'.$key.'">MCA Action</label>
                         <select name="mca_action_'.$key.'" readonly class="form-control">
                             <option value="">Action</option>
-                            <option value="1" '.($objection->status == 4 ? "selected" : "").'>Approve</option>
-                            <option value="2" '.($objection->status == 5 ? "selected" : "").'>Reject</option>
+                            <option value="1" '.($objection->mca_action_status == 1 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($objection->mca_action_status == 2 ? "selected" : "").'>Reject</option>
                         </select>
                         <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
                     </div>
@@ -164,6 +164,10 @@ class DepartmentAuditController extends Controller
                             'answer' => $request->{$compParamName},
                             'remark' => $request->{$remParamName},
                             'answered_by' => Auth::user()->id,
+                            'auditor_action_status' => 0,
+                            // 'auditor_remark' => null,
+                            'mca_action_status' => 0,
+                            // 'mca_remark' => null,
                         ]);
             }
             DB::commit();

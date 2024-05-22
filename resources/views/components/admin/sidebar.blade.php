@@ -207,6 +207,26 @@
                 @endcan
 
 
+                @can('receipt.view')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('receipts.index') ? 'active' : '' }}" href="{{ route('receipts.index') }}" >
+                            <i class="ri-pages-line"></i>
+                            <span data-key="t-dashboards">Upload Receipt</span>
+                        </a>
+                    </li>
+                @endcan
+
+
+                @can('payment-receipt.view')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.index') ? 'active' : '' }}" href="{{ route('payment-receipts.index') }}" >
+                            <i class="ri-pages-line"></i>
+                            <span data-key="t-dashboards">Upload Payment Receipt</span>
+                        </a>
+                    </li>
+                @endcan
+
+
             </ul>
         </div>
     </div>

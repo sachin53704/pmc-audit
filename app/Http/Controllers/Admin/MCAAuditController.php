@@ -147,10 +147,13 @@ class MCAAuditController extends Controller
 
     public function draftAnswerDetails(Request $request, Audit $audit)
     {
-        $audit->load(['objections' => fn($q) => $q->with([
-            'mcaApprover' => fn($q) => $q->first()?->append('full_name'),
-            'answeredBy' => fn($q) => $q->first()?->append('full_name')
-        ])]);
+        $audit->load(['objections' => fn($q) => $q
+                    ->where('auditor_action_status', 1)
+                    ->with([
+                        'mcaApprover' => fn($q) => $q->first()?->append('full_name'),
+                        'answeredBy' => fn($q) => $q->first()?->append('full_name')
+                    ])
+                ]);
 
         $innerHtml = '
                 <div class="mb-3 row">
@@ -197,8 +200,8 @@ class MCAAuditController extends Controller
                         <label class="col-form-label" for="action_'.$key.'">Approve/Reject</label>
                         <select name="action_'.$key.'" readonly class="form-control">
                             <option value="">Action</option>
-                            <option value="1" '.($objection->status == 2 ? "selected" : "").'>Approve</option>
-                            <option value="2" '.($objection->status == 3 ? "selected" : "").'>Reject</option>
+                            <option value="1" '.($objection->auditor_action_status == 1 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($objection->auditor_action_status == 2 ? "selected" : "").'>Reject</option>
                         </select>
                         <span class="text-danger is-invalid action_'.$key.'_err"></span>
                     </div>
@@ -211,8 +214,8 @@ class MCAAuditController extends Controller
                         <label class="col-form-label" for="mca_action_'.$key.'">MCA Action</label>
                         <select name="mca_action_'.$key.'" '.$isEditable.' class="form-control">
                             <option value="">Action</option>
-                            <option value="1" '.($objection->status == 4 ? "selected" : "").'>Approve</option>
-                            <option value="2" '.($objection->status == 5 ? "selected" : "").'>Reject</option>
+                            <option value="1" '.($objection->mca_action_status == 1 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($objection->mca_action_status == 2 ? "selected" : "").'>Reject</option>
                         </select>
                         <span class="text-danger is-invalid mca_action_'.$key.'_err"></span>
                     </div>
@@ -272,6 +275,7 @@ class MCAAuditController extends Controller
                     AuditObjection::where(['id' => $request->objection_id[$i]])
                             ->update([
                                 'status' => $request->{$actionParamName} == 1 ? AuditObjection::OBJECTION_STATUS_MCA_APPROVED : AuditObjection::OBJECTION_STATUS_MCA_REJECTED,
+                                'mca_action_status' => $request->{$actionParamName},
                                 'mca_remark' => $request->{$actionRemarkParamName},
                                 'approved_by_mca' => Auth::user()->id
                             ]);
@@ -279,7 +283,7 @@ class MCAAuditController extends Controller
             }
             DB::commit();
 
-            return response()->json(['success'=> 'Action successfully']);
+            return response()->json(['success'=> 'Action successful']);
         }
         catch(\Exception $e)
         {

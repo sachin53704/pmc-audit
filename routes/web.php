@@ -92,6 +92,10 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
     Route::get('compliance-info/{audit}', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'complianceInfo'] )->name('compliance.info');
     Route::put('compliance-update/{audit}', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'updateCompliance'] )->name('compliance.update');
 
+        // Account Department Routes
+        Route::resource('receipts', App\Http\Controllers\Admin\AccountReceiptController::class );
+        Route::resource('payment-receipts', App\Http\Controllers\Admin\AccountPaymentReceiptController::class );
+
 
 
     // Users Roles n Permissions
