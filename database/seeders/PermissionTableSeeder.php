@@ -224,6 +224,56 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'payment-receipt.create',
                 'group' => 'account_receipt',
             ],
+            [
+                'id' => 43,
+                'name' => 'receipt.pending-list',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 44,
+                'name' => 'receipt.approve-list',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 45,
+                'name' => 'receipt.reject-list',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 46,
+                'name' => 'receipt.approve',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 47,
+                'name' => 'receipt.reject',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 48,
+                'name' => 'payment-receipt.pending-list',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 49,
+                'name' => 'payment-receipt.approve-list',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 50,
+                'name' => 'payment-receipt.reject-list',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 51,
+                'name' => 'payment-receipt.approve',
+                'group' => 'dy_auditor',
+            ],
+            [
+                'id' => 52,
+                'name' => 'payment-receipt.reject',
+                'group' => 'dy_auditor',
+            ],
         ];
 
         foreach ($permissions as $permission)

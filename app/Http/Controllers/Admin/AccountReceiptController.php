@@ -100,31 +100,31 @@ class AccountReceiptController extends Controller
     {
         $receipt->load('subreceipts');
         $fileHtml = '
-            <a  class="btn btn-primary btn-md px-2 mt-2" href="'.asset($receipt->file).'" target="_blank" >View File</a>
+            <a class="btn btn-primary btn-md px-2 mt-2" href="'.asset($receipt->file).'" target="_blank" >View File</a>
         ';
 
         $subreceiptHtml = '';
         foreach($receipt->subreceipts as $key => $subreceipt)
         {
-            $subreceiptHtml = '
+            $subreceiptHtml .= '
                 <div class="row editReceiptSection custm-card mx-1">
                     <div class="col-12 mt-2">
                         <strong>Sub Receipt '.($key+1).'</strong>
                     </div>
                     <div class="col-md-4 mt-2">
-                        <label class="col-form-label" for="detail_0">Detail <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px">'.$subreceipt->receipt_detail.'</textarea>
-                        <span class="text-danger is-invalid detail_0_err"></span>
+                        <label class="col-form-label" for="detail_'.$key.'">Detail <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="detail_'.$key.'" style="max-height: 100px; min-height: 100px">'.$subreceipt->receipt_detail.'</textarea>
+                        <span class="text-danger is-invalid detail_'.$key.'_err"></span>
                     </div>
                     <div class="col-md-4 mt-2">
-                        <label class="col-form-label" for="amount_0">Amount <span class="text-danger">*</span></label>
-                        <input class="form-control" name="amount_0" type="number" value="'.$subreceipt->amount.'" placeholder="Enter Amount">
-                        <span class="text-danger is-invalid amount_0_err"></span>
+                        <label class="col-form-label" for="amount_'.$key.'">Amount <span class="text-danger">*</span></label>
+                        <input class="form-control" name="amount_'.$key.'" type="number" value="'.$subreceipt->amount.'" placeholder="Enter Amount">
+                        <span class="text-danger is-invalid amount_'.$key.'_err"></span>
                     </div>
                     <div class="col-md-3 mt-2">
-                        <label class="col-form-label" for="sub_receipt_0">Upload Sub-Receipt<span class="text-danger">*</span></label>
-                        <input type="file" name="sub_receipt_0" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                        <span class="text-danger is-invalid sub_receipt_0_err"></span>
+                        <label class="col-form-label" for="sub_receipt_'.$key.'">Upload Sub-Receipt<span class="text-danger">*</span></label>
+                        <input type="file" name="sub_receipt_'.$key.'" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                        <span class="text-danger is-invalid sub_receipt_'.$key.'_err"></span>
                     </div>
                     <div class="col-md-1 mt-2">
                         <div class="card">
@@ -133,8 +133,7 @@ class AccountReceiptController extends Controller
                             </div>
                         </div>
                     </div>
-                </div>
-            ';
+                </div>';
         }
 
 
@@ -149,43 +148,288 @@ class AccountReceiptController extends Controller
     }
 
 
-    public function update(UpdateAuditRequest $request, Audit $audit)
+    public function update(Request $request, Receipt $receipt)
     {
+        $fieldArray['description'] = 'required';
+        $fieldArray['from_date'] = 'required';
+        $fieldArray['to_date'] = 'required';
+        $fieldArray['amount'] = 'required';
+        $messageArray['description.required'] = 'Receipt description is required';
+        $messageArray['from_date.required'] = 'From date is required';
+        $messageArray['to_date.required'] = 'To date is required';
+        $messageArray['amount.required'] = 'Amount is required';
+
+        for($i=0; $i<$request->subreceiptCount; $i++)
+        {
+            if($request->{'amount_'.$i})
+            {
+                $fieldArray['detail_'.$i] = 'required';
+                $fieldArray['amount_'.$i] = 'required';
+                $messageArray['detail_'.$i.'.required'] = 'Please type details';
+                $messageArray['amount_'.$i.'.required'] = 'Please type amount';
+            }
+        }
+        $validator = Validator::make($request->all(), $fieldArray, $messageArray);
+
+        if($validator->fails())
+            return response()->json(['errors' => $validator->errors()], 422);
+
         try
         {
-            $input = $request->validated();
-            if($request->file)
-            {
-                $input['file_path'] = $request->file ? 'storage/file/'.$request->file->store('', 'file') : $audit->file_path;
-                if(Storage::disk('file')->exists($audit->file_path))
-                    Storage::disk('file')->delete($audit->file_path);
-            }
-            if( $audit->reject_reason != null )
-            {
-                $input['status'] = 1;
-            }
-            $audit->update( Arr::only( $input, Audit::getFillables() ) );
+            $input = $validator->validated();
+            $input['user_id'] = Auth::id();
+            $input['file'] = $request->receipt ? 'storage/file/'.$request->receipt->store('', 'file') : $receipt->file;
 
-            return response()->json(['success'=> 'Audit file updated successfully!']);
+            DB::beginTransaction();
+            $receipt->update( Arr::only( $input, Receipt::getFillables()) );
+            $receipt->load('subreceipts');
+
+            foreach($receipt->subreceipts as $key => $subreceipt)
+            {
+                if($request->{'amount_'.$key})
+                {
+                    SubReceipt::where(['id' => $subreceipt->id])
+                                ->update([
+                                    'receipt_detail' => $request->{'detail_'.$key},
+                                    'amount' => $request->{'amount_'.$key},
+                                    'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt->file,
+                                ]);
+                }
+            }
+            DB::commit();
+            return response()->json(['success'=> 'Receipt updated successfully!']);
         }
         catch(\Exception $e)
         {
-            return $this->respondWithAjax($e, 'updating', 'Audit file');
+            return $this->respondWithAjax($e, 'updating', 'receipt');
         }
     }
 
 
-    public function destroy(Audit $audit)
+    public function destroy(Receipt $receipt)
     {
         try
         {
-            $audit->delete();
+            $receipt->delete();
 
-            return response()->json(['success'=> 'Audit file deleted successfully!']);
+            return response()->json(['success'=> 'Receipt deleted successfully!']);
         }
         catch(\Exception $e)
         {
-            return $this->respondWithAjax($e, 'deleting', 'Audit file');
+            return $this->respondWithAjax($e, 'deleting', 'receipt');
+        }
+    }
+
+
+    public function pendingReceipts(Request $request)
+    {
+        $userRole = Auth::user()->roles[0]->name;
+        $receipts = [];
+
+        if($userRole == 'DY Auditor')
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('status', 1))->get();
+        }
+        else if($userRole == 'DY MCA')
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 1))->get();
+        }
+        else
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 1))->get();
+        }
+
+        return view('admin.pending-receipts')->with(['receipts' => $receipts]);
+    }
+
+    public function approvedReceipts(Request $request)
+    {
+        $userRole = Auth::user()->roles[0]->name;
+        $receipts = [];
+
+        if($userRole == 'DY Auditor')
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 1))->get();
+        }
+        else if($userRole == 'DY MCA')
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 1))->get();
+        }
+        else
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 1))->get();
+        }
+
+        return view('admin.approved-receipts')->with(['receipts' => $receipts]);
+    }
+
+    public function rejectedReceipts(Request $request)
+    {
+        $userRole = Auth::user()->roles[0]->name;
+        $receipts = [];
+
+        if($userRole == 'DY Auditor')
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 2))->get();
+        }
+        else if($userRole == 'DY MCA')
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 2))->get();
+        }
+        else
+        {
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 2))->get();
+        }
+
+        return view('admin.rejected-receipts')->with(['receipts' => $receipts]);
+    }
+
+
+    public function receiptInfo(Request $request, Receipt $receipt)
+    {
+        $receipt->load('subreceipts');
+        $fileHtml = '
+            <a class="btn btn-primary btn-md px-2 mt-2" href="'.asset($receipt->file).'" target="_blank" >View File</a>
+        ';
+
+        $roleName = Auth::user()->roles[0]->name;
+        $roleWiseColumn = str_replace(' ', '_', strtolower($roleName));
+
+        $subreceiptHtml = '';
+        foreach($receipt->subreceipts as $key => $subreceipt)
+        {
+            $isEditable = $subreceipt->{$roleWiseColumn.'_status'} == 1 ? "readonly" : "";
+            $actionFieldName = 'action_'.$key;
+            $remarkFieldName = 'action_remark_'.$key;
+
+            $subreceiptHtml .= '
+                <div class="row editReceiptSection custm-card mx-1">
+                    <input type="hidden" name="subreceipt_id[]" value="'.$subreceipt->id.'">
+                    <div class="col-12 mt-2">
+                        <strong>Sub Receipt '.($key+1).'</strong>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="col-form-label" for="detail_'.$key.'">Detail <span class="text-danger">*</span></label>
+                        <textarea class="form-control" readonly name="detail_'.$key.'" style="max-height: 100px; min-height: 100px">'.$subreceipt->receipt_detail.'</textarea>
+                        <span class="text-danger is-invalid detail_'.$key.'_err"></span>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="col-form-label" for="amount_'.$key.'">Amount <span class="text-danger">*</span></label>
+                        <input class="form-control" readonly name="amount_'.$key.'" type="number" value="'.$subreceipt->amount.'" placeholder="Enter Amount">
+                        <span class="text-danger is-invalid amount_'.$key.'_err"></span>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <div class="card mb-0 mt-4">
+                            <div class="card-body">
+                                <a href="'.asset($subreceipt->file).'" target="_blank">View File</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="action_'.$key.'">DY Auditor Action</label>
+                        <select name="'.($roleName == "DY Auditor" ? $actionFieldName : "").'" '.($roleName == "DY Auditor" ? $isEditable : "readonly").' class="form-control">
+                            <option value="">Action</option>
+                            <option value="1" '.($subreceipt->dy_auditor_status == 1 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($subreceipt->dy_auditor_status == 2 ? "selected" : "").'>Reject</option>
+                        </select>
+                        <span class="text-danger is-invalid '.($roleName == "DY Auditor" ? $actionFieldName."_err" : "").'"></span>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="action_remark_'.$key.'">DY Auditor Remark</label>
+                        <textarea name="'.($roleName == "DY Auditor" ? $remarkFieldName : "").'" '.($roleName == "DY Auditor" ? $isEditable : "readonly").' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$subreceipt->dy_auditor_remark.'</textarea>
+                        <span class="text-danger is-invalid '.($roleName == "DY Auditor" ? $remarkFieldName."_err" : "").'"></span>
+                    </div>
+
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="action_'.$key.'">DY MCA Action</label>
+                        <select name="'.($roleName == "DY MCA" ? $actionFieldName : "").'" class="form-control" '.($roleName == "DY MCA" ? $isEditable : "readonly").'>
+                            <option value="">Action</option>
+                            <option value="1" '.($subreceipt->dy_mca_status == 1 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($subreceipt->dy_mca_status == 2 ? "selected" : "").'>Reject</option>
+                        </select>
+                        <span class="text-danger is-invalid '.($roleName == "DY MCA" ? $actionFieldName."_err" : "").'"></span>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="action_remark_'.$key.'">DY MCA Remark</label>
+                        <textarea name="'.($roleName == "DY MCA" ? $remarkFieldName : "").'" '.($roleName == "DY MCA" ? $isEditable : "readonly").' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$subreceipt->dy_mca_remark.'</textarea>
+                        <span class="text-danger is-invalid '.($roleName == "DY MCA" ? $remarkFieldName."_err" : "").'"></span>
+                    </div>
+
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="action_'.$key.'">MCA Action</label>
+                        <select name="'.($roleName == "MCA" ? $actionFieldName : "").'" class="form-control" '.($roleName == "MCA" ? $isEditable : "readonly").'>
+                            <option value="">Action</option>
+                            <option value="1" '.($subreceipt->mca_status == 1 ? "selected" : "").'>Approve</option>
+                            <option value="2" '.($subreceipt->mca_status == 2 ? "selected" : "").'>Reject</option>
+                        </select>
+                        <span class="text-danger is-invalid '.($roleName == "MCA" ? $actionFieldName."_err" : "").'"></span>
+                    </div>
+                    <div class="col-md-2 mt-3">
+                        <label class="col-form-label" for="action_remark_'.$key.'">MCA Remark</label>
+                        <textarea name="'.($roleName == "MCA" ? $remarkFieldName : "").'" '.($roleName == "MCA" ? $isEditable : "readonly").' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$subreceipt->mca_remark.'</textarea>
+                        <span class="text-danger is-invalid '.($roleName == "MCA" ? $remarkFieldName."_err" : "").'"></span>
+                    </div>
+                </div>';
+        }
+
+
+        $response = [
+            'result' => 1,
+            'subreceiptHtml' => $subreceiptHtml,
+            'receipt' => $receipt,
+            'fileHtml' => $fileHtml,
+        ];
+
+        return $response;
+    }
+
+
+    public function approveReceipts(Request $request, Receipt $receipt)
+    {
+        $fieldArray['subreceipt_id'] = 'required';
+        $messageArray['subreceipt_id.required'] = 'Receipt id no not found';
+
+        for($i=0; $i<count($request->subreceipt_id); $i++)
+        {
+            if($request->{'action_'.$i})
+            {
+                $fieldArray['action_remark_' . $i] = 'required';
+                $messageArray['action_remark_' . $i . '.required'] = 'Please type approve/reject remark';
+            }
+        }
+        $validator = Validator::make($request->all(), $fieldArray, $messageArray);
+
+        if($validator->fails())
+            return response()->json(['errors' => $validator->errors()], 422);
+
+
+        try
+        {
+            DB::beginTransaction();
+
+            for($i=0; $i<count($request->subreceipt_id); $i++)
+            {
+                if($request->{'action_'.$i})
+                {
+                    $actionParamName = 'action_'.$i;
+                    $actionRemarkParamName = 'action_remark_'.$i;
+                    SubReceipt::where(['id' => $request->subreceipt_id[$i]])
+                            ->update([
+                                'status' => $request->{$actionParamName} == 1 ? SubReceipt::STATUS_DY_AUDITOR_APPROVED : SubReceipt::STATUS_DY_AUDITOR_REJECTED,
+                                'dy_auditor_status' => $request->{$actionParamName},
+                                'dy_auditor_remark' => $request->{$actionRemarkParamName},
+                                'action_by_dy_auditor' => Auth::user()->id
+                            ]);
+                }
+            }
+            DB::commit();
+
+            return response()->json(['success'=> 'Action successfully']);
+        }
+        catch(\Exception $e)
+        {
+            return $this->respondWithAjax($e, 'taking', 'action');
         }
     }
 

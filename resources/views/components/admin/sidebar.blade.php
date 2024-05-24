@@ -197,6 +197,7 @@
                 @endcan
 
 
+
                 @can('report.final-report')
                     <li class="nav-item">
                         <a class="nav-link menu-link {{ request()->routeIs('final-report') ? 'active' : '' }}" href="{{ route('final-report') }}" >
@@ -206,25 +207,55 @@
                     </li>
                 @endcan
 
+                @if(auth()->user()->department_id == 1 )
+                    @can('receipt.view')
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('receipts.index') ? 'active' : '' }}" href="{{ route('receipts.index') }}" >
+                                <i class="ri-pages-line"></i>
+                                <span data-key="t-dashboards">Upload Receipt</span>
+                            </a>
+                        </li>
+                    @endcan
 
-                @can('receipt.view')
+                    @can('payment-receipt.view')
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.index') ? 'active' : '' }}" href="{{ route('payment-receipts.index') }}" >
+                                <i class="ri-pages-line"></i>
+                                <span data-key="t-dashboards">Upload Payment Receipt</span>
+                            </a>
+                        </li>
+                    @endcan
+                @endif
+
+
+                @can('receipt.pending-list')
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('receipts.index') ? 'active' : '' }}" href="{{ route('receipts.index') }}" >
+                        <a class="nav-link menu-link {{ request()->routeIs('receipts.pending-list') ? 'active' : '' }}" href="{{ route('receipts.pending-list') }}" >
                             <i class="ri-pages-line"></i>
-                            <span data-key="t-dashboards">Upload Receipt</span>
+                            <span data-key="t-dashboards">Pending Receipts</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('receipt.approve-list')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('receipts.approved-list') ? 'active' : '' }}" href="{{ route('receipts.approved-list') }}" >
+                            <i class="ri-pages-line"></i>
+                            <span data-key="t-dashboards">Approved Receipts</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('receipt.reject-list')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link {{ request()->routeIs('receipts.rejected-list') ? 'active' : '' }}" href="{{ route('receipts.rejected-list') }}" >
+                            <i class="ri-pages-line"></i>
+                            <span data-key="t-dashboards">Rejected Receipts</span>
                         </a>
                     </li>
                 @endcan
 
 
-                @can('payment-receipt.view')
-                    <li class="nav-item">
-                        <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.index') ? 'active' : '' }}" href="{{ route('payment-receipts.index') }}" >
-                            <i class="ri-pages-line"></i>
-                            <span data-key="t-dashboards">Upload Payment Receipt</span>
-                        </a>
-                    </li>
-                @endcan
 
 
             </ul>

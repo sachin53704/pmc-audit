@@ -105,7 +105,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // MCA Seeder ##
         $mcaRole = Role::updateOrCreate(['name'=> 'MCA']);
-        $permissions = Permission::where('group', 'mca_audit')->pluck('id','id');
+        $permissions = Permission::where('group', 'mca_audit')->orWhere(fn($q) => $q->whereBetween('id', [43,52]))->pluck('id','id');
         $mcaRole->syncPermissions($permissions);
 
         $user = User::updateOrCreate([
@@ -125,9 +125,9 @@ class DefaultLoginUserSeeder extends Seeder
 
 
 
-        // DY Seeder ##
+        // DY MCA Seeder ##
         $dyRole = Role::updateOrCreate(['name'=> 'DY MCA']);
-        $permissions = Permission::where('group', 'mca_audit')->whereNotIn('id', [26,27,28])->pluck('id','id');
+        $permissions = Permission::where('group', 'mca_audit')->orWhere(fn($q) => $q->whereBetween('id', [43,52]))->pluck('id','id');
         $dyRole->syncPermissions($permissions);
 
         $user = User::updateOrCreate([
@@ -210,6 +210,28 @@ class DefaultLoginUserSeeder extends Seeder
             'password' => Hash::make('12345678')
         ]);
         $user->assignRole([$agRole->id]);
+
+
+
+        // Dy-Auditor Seeder ##
+        $dyAuditorRole = Role::updateOrCreate(['name'=> 'DY Auditor']);
+        $permissions = Permission::where('group', 'dy_auditor')->pluck('id','id');
+        $dyAuditorRole->syncPermissions($permissions);
+
+        $user = User::updateOrCreate([
+            'email' => 'dyauditor@gmail.com'
+        ],[
+            'first_name' => 'DY',
+            'middle_name' => 'Auditor',
+            'last_name' => '',
+            'gender' => 'male',
+            'mobile' => '9999912345',
+            'auditor_no' => '123485',
+            'username' => 'dyauditor@gmail.com',
+            'email' => 'dyauditor@gmail.com',
+            'password' => Hash::make('12345678')
+        ]);
+        $user->assignRole([$dyAuditorRole->id]);
 
     }
 }

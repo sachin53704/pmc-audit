@@ -267,7 +267,6 @@ class AuditorAuditController extends Controller
         try
         {
             DB::beginTransaction();
-            // $audit->update([ 'status' => Audit::AUDIT_STATUS_AUDITOR_APPROVED_COMPLIANCE ]);
 
             for($i=0; $i<count($request->objection_id); $i++)
             {

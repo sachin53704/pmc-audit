@@ -126,10 +126,16 @@
                                 <input class="form-control" name="amount" type="number" placeholder="Enter Amount">
                                 <span class="text-danger is-invalid amount_err"></span>
                             </div>
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="receipt">Upload Receipt<span class="text-danger">*</span></label>
+                            <div class="col-md-3 mt-3">
+                                <label class="col-form-label" for="receipt">Upload Receipt</label>
                                 <input type="file" name="receipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
                                 <span class="text-danger is-invalid receipt_err"></span>
+                            </div>
+                            <div class="col-md-1 mt-3">
+                                <div class="card">
+                                    <div class="card-body" id="editImageSection">
+                                    </div>
+                                </div>
                             </div>
 
                                 <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
@@ -140,31 +146,11 @@
                                     </div>
 
                                     <div class="col-12" id="editReceiptSection">
-                                        <div class="row editReceiptSection custm-card mx-1">
-                                            <div class="col-12 mt-2">
-                                                <strong>Sub Receipt 1</strong>
-                                            </div>
-                                            <div class="col-md-4 mt-2">
-                                                <label class="col-form-label" for="detail_0">Detail <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px"></textarea>
-                                                <span class="text-danger is-invalid detail_0_err"></span>
-                                            </div>
-                                            <div class="col-md-4 mt-2">
-                                                <label class="col-form-label" for="amount_0">Amount <span class="text-danger">*</span></label>
-                                                <input class="form-control" name="amount_0" type="number" placeholder="Enter Amount">
-                                                <span class="text-danger is-invalid amount_0_err"></span>
-                                            </div>
-                                            <div class="col-md-4 mt-2">
-                                                <label class="col-form-label" for="sub_receipt_0">Upload Sub-Receipt<span class="text-danger">*</span></label>
-                                                <input type="file" name="sub_receipt_0" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                                                <span class="text-danger is-invalid sub_receipt_0_err"></span>
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-end mb-3">
-                                            <div class="col-md-6 col-sm-12">
-                                                <button type="button" class="btn btn-danger remove float-start w-25 mt-2 mx-1">Remove</button>
-                                                <button type="button" class="btn btn-primary add-more w-25 float-end mt-2 mx-1">Add More</button>
-                                            </div>
+                                    </div>
+                                    <div class="row justify-content-end mb-3">
+                                        <div class="col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-danger editFormRemove float-start w-25 mt-2 mx-1">Remove</button>
+                                            <button type="button" class="btn btn-primary add-more-edit w-25 float-end mt-2 mx-1">Add More</button>
                                         </div>
                                     </div>
                                 </div>
@@ -206,7 +192,7 @@
                                     <th>To Date</th>
                                     <th>Amount</th>
                                     <th>View Receipt</th>
-                                    <th>View SubReceipts</th>
+                                    {{-- <th>View SubReceipts</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -221,16 +207,14 @@
                                         <td>
                                             <a href="{{ asset($receipt->file) }}" target="_blank" class="btn btn-primary btn-sm">View Receipt</a>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <a data-id="{{ asset($receipt->id) }}" class="btn view-subreceipt btn-secondary btn-sm">View Sub Receipt</a>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             @if($receipt->status < 2)
                                                 <button class="btn btn-secondary edit-element px-2 py-1" title="Edit receipt" data-id="{{ $receipt->id }}"><i data-feather="edit"></i></button>
                                                 <button class="btn btn-danger rem-element px-2 py-1" title="Delete receipt" data-id="{{ $receipt->id }}"><i data-feather="trash-2"></i> </button>
                                             @endif
-                                            {{-- @if($receipt->status < 2)
-                                            @endif --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -326,6 +310,7 @@
 
         <!-- Edit -->
         <script>
+            var editFormCounter = 1;
             $("#buttons-datatables").on("click", ".edit-element", function(e) {
                 e.preventDefault();
                 var model_id = $(this).attr("data-id");
@@ -341,12 +326,14 @@
                         editFormBehaviour();
                         if (!data.error)
                         {
-                            $("#editForm input[name='edit_model_id']").val(data.audit.id);
-                            $("#editForm select[name='department_id']").html(data.departmentHtml);
-                            $("#editForm input[name='date']").val(data.audit.date);
-                            $("#editForm .edit_file").html(data.fileHtml);
-                            $("#editForm textarea[name='description']").val(data.audit.description);
-                            $("#editForm textarea[name='remark']").val(data.audit.remark);
+                            $("#editForm input[name='edit_model_id']").val(data.receipt.id);
+                            $("#editForm textarea[name='description']").val(data.receipt.description);
+                            $("#editForm input[name='from_date']").val(data.receipt.from_date);
+                            $("#editForm input[name='to_date']").val(data.receipt.to_date);
+                            $("#editForm input[name='amount']").val(data.receipt.amount);
+                            $("#editForm #editReceiptSection").html(data.subreceiptHtml);
+                            $("#editForm #editImageSection").html(data.fileHtml);
+                            editFormCounter = data.receipt.subreceipts.length;
                         }
                         else
                         {
@@ -358,11 +345,44 @@
                     },
                 });
             });
-        </script>
 
+            $(document).ready(function(){
+                $(".add-more-edit").click(function(e){
+                    e.preventDefault();
 
-        <!-- Update -->
-        <script>
+                    var newSection = `<div class="row editReceiptSection custm-card mx-1">
+                                        <div class="col-12 mt-2 mt-2">
+                                            <strong>Sub Receipt ${editFormCounter+1}</strong>
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label class="col-form-label" for="detail_${editFormCounter}">Detail <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" name="detail_${editFormCounter}" style="max-height: 100px; min-height: 100px"></textarea>
+                                            <span class="text-danger is-invalid detail_${editFormCounter}_err"></span>
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label class="col-form-label" for="amount_${editFormCounter}">Amount <span class="text-danger">*</span></label>
+                                            <input class="form-control" name="amount_${editFormCounter}" type="number" placeholder="Enter Amount">
+                                            <span class="text-danger is-invalid amount_${editFormCounter}_err"></span>
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label class="col-form-label" for="sub_receipt_${editFormCounter}">Upload Sub-Receipt<span class="text-danger">*</span></label>
+                                            <input type="file" name="sub_receipt_${editFormCounter}" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                            <span class="text-danger is-invalid sub_receipt_${editFormCounter}_err"></span>
+                                        </div>
+                                    </div>`;
+
+                    $(".editReceiptSection").last().after(newSection);
+                    editFormCounter++;
+                });
+
+                $(document).on("click", ".editFormRemove", function(){
+                    if($(".editReceiptSection").length > 1){
+                        $(".editReceiptSection").last().remove();
+                        editFormCounter--;
+                    }
+                });
+            });
+
             $(document).ready(function() {
                 $("#editForm").submit(function(e) {
                     e.preventDefault();
@@ -405,6 +425,7 @@
                 });
             });
         </script>
+
 
 
         <!-- Delete -->
@@ -453,6 +474,9 @@
                 });
             });
         </script>
+
+
+
     @endpush
 
 </x-admin.layout>

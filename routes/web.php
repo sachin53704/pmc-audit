@@ -96,6 +96,21 @@ Route::middleware(['auth','PreventBackHistory'])->group(function()
         Route::resource('receipts', App\Http\Controllers\Admin\AccountReceiptController::class );
         Route::resource('payment-receipts', App\Http\Controllers\Admin\AccountPaymentReceiptController::class );
 
+        // DY AUDITOR Routes
+        Route::get('receipts/status/pending-list', [App\Http\Controllers\Admin\AccountReceiptController::class, 'pendingReceipts'] )->name('receipts.pending-list');
+        Route::get('receipts/status/approved-list', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approvedReceipts'] )->name('receipts.approved-list');
+        Route::get('receipts/status/rejected-list', [App\Http\Controllers\Admin\AccountReceiptController::class, 'rejectedReceipts'] )->name('receipts.rejected-list');
+        Route::get('receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'] )->name('receipts.info');
+        Route::put('approve-receipts/{audit}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'] )->name('approve-receipts');
+
+        // DY MCA ROUTES
+        Route::get('dy-mca-receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'] )->name('receipts.info');
+        Route::put('dy-mca-approve-receipts/{audit}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'] )->name('approve-receipts');
+
+        // MCA ROUTES
+        Route::get('mca-receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'] )->name('receipts.info');
+        Route::put('mca-approve-receipts/{audit}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'] )->name('approve-receipts');
+
 
 
     // Users Roles n Permissions
