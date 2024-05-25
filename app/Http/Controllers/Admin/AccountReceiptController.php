@@ -184,16 +184,17 @@ class AccountReceiptController extends Controller
             $receipt->update( Arr::only( $input, Receipt::getFillables()) );
             $receipt->load('subreceipts');
 
-            foreach($receipt->subreceipts as $key => $subreceipt)
+            for($key=0; $key<$request->subreceiptCount; $key++)
             {
                 if($request->{'amount_'.$key})
                 {
-                    SubReceipt::where(['id' => $subreceipt->id])
-                                ->update([
-                                    'receipt_detail' => $request->{'detail_'.$key},
-                                    'amount' => $request->{'amount_'.$key},
-                                    'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt->file,
-                                ]);
+                    $subreceipt = array_key_exists($key, $receipt->subreceipts) ? $receipt->subreceipts[$key] : '';
+                    SubReceipt::updateOrCreate(['id' => $subreceipt?->id],
+                            [
+                                'receipt_detail' => $request->{'detail_'.$key},
+                                'amount' => $request->{'amount_'.$key},
+                                'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt?->file,
+                            ]);
                 }
             }
             DB::commit();
