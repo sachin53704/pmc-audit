@@ -287,12 +287,23 @@ class AccountReceiptController extends Controller
 
     public function receiptInfo(Request $request, Receipt $receipt)
     {
-        $receipt->load('subreceipts');
+        $roleName = Auth::user()->roles[0]->name;
+        if($roleName == 'DY MCA')
+        {
+            $receipt->load(['subreceipts'=> fn($q) => $q->where('dy_auditor_status', 1)]);
+        }
+        else if($roleName == 'MCA')
+        {
+            $receipt->load(['subreceipts'=> fn($q) => $q->where('dy_mca_status', 1)]);
+        }
+        else
+        {
+            $receipt->load('subreceipts');
+        }
         $fileHtml = '
             <a class="btn btn-primary btn-md px-2 mt-2" href="'.asset($receipt->file).'" target="_blank" >View File</a>
         ';
 
-        $roleName = Auth::user()->roles[0]->name;
         $roleWiseColumn = str_replace(' ', '_', strtolower($roleName));
 
         $subreceiptHtml = '';
@@ -406,8 +417,12 @@ class AccountReceiptController extends Controller
 
         try
         {
-            DB::beginTransaction();
+            $roleName = Auth::user()->roles[0]->name;
+            $roleWiseColumn = str_replace(' ', '_', strtolower($roleName));
+            $approveConst = 'STATUS_'.strtoupper($roleWiseColumn).'_APPROVED';
+            $rejectConst = 'STATUS_'.strtoupper($roleWiseColumn).'_REJECTED';
 
+            DB::beginTransaction();
             for($i=0; $i<count($request->subreceipt_id); $i++)
             {
                 if($request->{'action_'.$i})
@@ -416,10 +431,10 @@ class AccountReceiptController extends Controller
                     $actionRemarkParamName = 'action_remark_'.$i;
                     SubReceipt::where(['id' => $request->subreceipt_id[$i]])
                             ->update([
-                                'status' => $request->{$actionParamName} == 1 ? SubReceipt::STATUS_DY_AUDITOR_APPROVED : SubReceipt::STATUS_DY_AUDITOR_REJECTED,
-                                'dy_auditor_status' => $request->{$actionParamName},
-                                'dy_auditor_remark' => $request->{$actionRemarkParamName},
-                                'action_by_dy_auditor' => Auth::user()->id
+                                'status' => $request->{$actionParamName} == 1 ? constant("App\Models\SubReceipt::$approveConst") : constant("App\Models\SubReceipt::$rejectConst"),
+                                $roleWiseColumn.'_status' => $request->{$actionParamName},
+                                $roleWiseColumn.'_remark' => $request->{$actionRemarkParamName},
+                                'action_by_'.$roleWiseColumn => Auth::user()->id
                             ]);
                 }
             }
