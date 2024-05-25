@@ -389,6 +389,8 @@
                     $("#editSubmit").prop('disabled', true);
                     var formdata = new FormData(this);
                     formdata.append('_method', 'PUT');
+                    formdata.append('subreceiptCount', editFormCounter);
+
                     var model_id = $('#edit_model_id').val();
                     var url = "{{ route('receipts.update', ":model_id") }}";
                     //
