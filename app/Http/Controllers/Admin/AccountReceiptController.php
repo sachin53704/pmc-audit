@@ -188,12 +188,13 @@ class AccountReceiptController extends Controller
             {
                 if($request->{'amount_'.$key})
                 {
-                    $subreceipt = array_key_exists($key, $receipt->subreceipts) ? $receipt->subreceipts[$key] : '';
-                    SubReceipt::updateOrCreate(['id' => $subreceipt?->id],
+                    $subreceipt = $receipt->subreceipts[$key] ?? '';
+
+                    SubReceipt::updateOrCreate(['id' => $subreceipt['id']],
                             [
                                 'receipt_detail' => $request->{'detail_'.$key},
                                 'amount' => $request->{'amount_'.$key},
-                                'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt?->file,
+                                'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
                             ]);
                 }
             }
