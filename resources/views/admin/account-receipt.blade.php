@@ -38,9 +38,9 @@
                                 <span class="text-danger is-invalid amount_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="receipt">Upload Receipt<span class="text-danger">*</span></label>
-                                <input type="file" name="receipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                                <span class="text-danger is-invalid receipt_err"></span>
+                                <label class="col-form-label" for="receipt_file">Upload Receipt<span class="text-danger">*</span></label>
+                                <input type="file" name="receipt_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                <span class="text-danger is-invalid receipt_file_err"></span>
                             </div>
 
                                 <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
@@ -127,9 +127,9 @@
                                 <span class="text-danger is-invalid amount_err"></span>
                             </div>
                             <div class="col-md-3 mt-3">
-                                <label class="col-form-label" for="receipt">Upload Receipt</label>
-                                <input type="file" name="receipt" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                                <span class="text-danger is-invalid receipt_err"></span>
+                                <label class="col-form-label" for="receipt_file">Upload Receipt</label>
+                                <input type="file" name="receipt_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                <span class="text-danger is-invalid receipt_file_err"></span>
                             </div>
                             <div class="col-md-1 mt-3">
                                 <div class="card">

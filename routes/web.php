@@ -37,11 +37,13 @@ Route::middleware(['guest','PreventBackHistory'])->group(function()
 
 
 // Authenticated users
-Route::middleware(['auth','PreventBackHistory'])->group(function()
+Route::middleware(['auth','PreventBackHistory', 'confirm-login-type'])->group(function()
 {
 
     // Auth Routes
     Route::get('home', fn () => redirect()->route('dashboard'))->name('home');
+    Route::get('show-login-types', [App\Http\Controllers\Admin\AuthController::class, 'showLoginTypes'])->name('show-login-types');
+    Route::get('confirm-login-type/{type}', [App\Http\Controllers\Admin\AuthController::class, 'confirmLoginType'])->name('confirm-login-type');
     Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::post('logout', [App\Http\Controllers\Admin\AuthController::class, 'Logout'])->name('logout');
     Route::get('change-theme-mode', [App\Http\Controllers\Admin\DashboardController::class, 'changeThemeMode'])->name('change-theme-mode');

@@ -54,6 +54,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareAliases = [
         'PreventBackHistory' => \App\Http\Middleware\PreventBackHistory::class,
+        'confirm-login-type' => \App\Http\Middleware\ConfirmLoginType::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,

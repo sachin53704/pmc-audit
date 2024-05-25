@@ -53,6 +53,17 @@
                 </div>
 
 
+                <div class="ms-1 header-item d-none d-sm-flex justify-content-end">
+                    <select name="change-view-mode" class="form-control" style="background-color: #8c68cd; color: #fff;" id="change-view-mode">
+                        <option value="">Select view mode</option>
+                        <option value="1" {{ session('LOGIN_TYPE') == '1' ? 'selected' : '' }}>Pogramme Audit</option>
+                        <option value="2" {{ session('LOGIN_TYPE') == '2' ? 'selected' : '' }}>Receipt/Payment</option>
+                    </select>
+                    {{-- <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen">
+                        <i class="bx bx-fullscreen fs-22"></i>
+                    </button> --}}
+                </div>
+
                 <div class="ms-1 header-item d-none d-sm-flex">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen">
                         <i class="bx bx-fullscreen fs-22"></i>
@@ -153,7 +164,25 @@
                         console.log("something whent wrong while changing theme color");
                     },
                 });
+            });
 
+            $("#change-view-mode").change(function(e){
+                e.preventDefault();
+                var id = $(this).val();
+                $.ajax({
+                    url: "{{ route('confirm-login-type', ":model_id") }}".replace(':model_id', id),
+                    type: 'GET',
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                    },
+                    success: function(data, textStatus, jqXHR)
+                    {
+                        window.location.reload();
+                    },
+                    error: function(error, jqXHR, textStatus, errorThrown) {
+                        console.log("something whent wrong while changing theme color");
+                    },
+                });
             });
 
         });

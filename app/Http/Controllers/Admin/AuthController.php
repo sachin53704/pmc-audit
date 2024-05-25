@@ -55,11 +55,9 @@ class AuthController extends Controller
                 if(!auth()->attempt(['email' => $username, 'password' => $password], $remember_me))
                     return response()->json(['error2'=> 'Your entered credentials are invalid']);
 
-                $userType = '';
-                if( $user->hasRole(['User']) )
-                    $userType = 'user';
+                $userType = $user->roles[0]->name;
 
-                return response()->json(['success'=> 'login successful', 'user_type'=> $userType ]);
+                return response()->json(['success'=> 'login successful', 'user_type'=> $userType, 'user' => $user ]);
             }
             catch(\Exception $e)
             {
@@ -79,6 +77,18 @@ class AuthController extends Controller
         auth()->logout();
 
         return redirect()->route('login');
+    }
+
+    public function showLoginTypes(Request $request)
+    {
+        return view('admin.auth.show-login-types');
+    }
+
+    public function confirmLoginType(Request $request, $type)
+    {
+        session()->put('LOGIN_TYPE', $type == 1 ? $type : 2);
+
+        return redirect()->route('dashboard');
     }
 
 

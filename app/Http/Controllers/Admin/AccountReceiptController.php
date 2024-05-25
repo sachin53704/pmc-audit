@@ -178,7 +178,7 @@ class AccountReceiptController extends Controller
         {
             $input = $validator->validated();
             $input['user_id'] = Auth::id();
-            $input['file'] = $request->receipt ? 'storage/file/'.$request->receipt->store('', 'file') : $receipt->file;
+            $input['file'] = $request->receipt_file ? 'storage/file/'.$request->receipt_file->store('', 'file') : $receipt->file;
 
             DB::beginTransaction();
             $receipt->update( Arr::only( $input, Receipt::getFillables()) );

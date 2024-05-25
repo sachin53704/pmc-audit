@@ -150,9 +150,19 @@
             contentType: false,
             processData: false,
             success: function(data) {
-                if (!data.error && !data.error2) {
+                if (!data.error && !data.error2)
+                {
+                    if( ['DY Auditor', 'DY MCA', 'MCA'].includes(data.user_type) || data.user.department_id == '1')
+                    {
+                        window.location.href = "{{ route('show-login-types') }}";
+                    }
+                    else
+                    {
                         window.location.href = '{{ route('dashboard') }}';
-                } else {
+                    }
+                }
+                else
+                {
                     if (data.error2) {
                         swal("Error!", data.error2, "error");
                         $("#loginForm_submit").prop('disabled', false);
