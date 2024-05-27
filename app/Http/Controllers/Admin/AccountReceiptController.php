@@ -90,9 +90,129 @@ class AccountReceiptController extends Controller
     }
 
 
-    public function show(string $id)
+    public function show(Receipt $receipt)
     {
-        //
+
+    }
+
+
+    public function receiptDetails(Receipt $receipt)
+    {
+        $receipt->load('subreceipts');
+
+        $receiptHtml = '
+                <div class="col-md-4 mt-3">
+                    <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
+                    <textarea class="form-control" readonly name="description" style="max-height: 100px; min-height:100px">'.$receipt->description.'</textarea>
+                    <span class="text-danger is-invalid description_err"></span>
+                </div>
+                <div class="col-md-4 mt-3">
+                    <label class="col-form-label" for="from_date">From Date <span class="text-danger">*</span></label>
+                    <input class="form-control" readonly name="from_date" type="date" onclick="this.showPicker()" value="'.$receipt->from_date.'" placeholder="Select From Date">
+                    <span class="text-danger is-invalid from_date_err"></span>
+                </div>
+                <div class="col-md-4 mt-3">
+                    <label class="col-form-label" for="to_date">To Date <span class="text-danger">*</span></label>
+                    <input class="form-control" readonly name="to_date" type="date" onclick="this.showPicker()" value="'.$receipt->to_date.'" placeholder="Select To Date">
+                    <span class="text-danger is-invalid to_date_err"></span>
+                </div>
+                <div class="col-md-4 mt-3">
+                    <label class="col-form-label" for="amount">Amount <span class="text-danger">*</span></label>
+                    <input class="form-control" readonly name="amount" type="number" value="'.$receipt->amount.'" placeholder="Enter Amount">
+                    <span class="text-danger is-invalid amount_err"></span>
+                </div>
+                <div class="col-md-4 mt-3">
+                    <div class="card">
+                        <div class="card-body" id="editImageSection">
+                            <a href="'.asset($receipt->file).'" class="btn btn-primary" target="_blank">View File</a>
+                        </div>
+                    </div>
+                </div>';
+
+        $receiptHtml .= '<div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
+                            <div class="col-12 mt-3">
+                                <div class="alert alert-primary">
+                                    <strong>Sub-Receipts Detail</strong>
+                                </div>
+                            </div>
+                            <div class="col-12">';
+
+        foreach($receipt->subreceipts as $key => $subreceipt)
+        {
+                            $receiptHtml .= '
+                                <div class="row custm-card mx-1">
+                                    <div class="col-12 mt-2">
+                                        <strong>Sub Receipt '.($key+1).'</strong>
+                                    </div>
+                                    <div class="col-md-4 mt-2">
+                                        <label class="col-form-label" for="detail_'.$key.'">Detail <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" readonly name="detail_'.$key.'" style="max-height: 100px; min-height: 100px">'.$subreceipt->receipt_detail.'</textarea>
+                                    </div>
+                                    <div class="col-md-4 mt-2">
+                                        <label class="col-form-label" for="amount_'.$key.'">Amount <span class="text-danger">*</span></label>
+                                        <input class="form-control" readonly name="amount_'.$key.'" type="number" value="'.$subreceipt->amount.'" placeholder="Enter Amount">
+                                    </div>
+                                    <div class="col-md-4 mt-2">
+                                        <div class="card mb-0 mt-4">
+                                            <div class="card-body">
+                                                <a href="'.asset($subreceipt->file).'" target="_blank">View File</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-2 mt-3">
+                                        <label class="col-form-label" for="action_'.$key.'">DY Auditor Action</label>
+                                        <select readonly class="form-control">
+                                            <option value="">Action</option>
+                                            <option value="1" '.($subreceipt->dy_auditor_status == 1 ? "selected" : "").'>Approve</option>
+                                            <option value="2" '.($subreceipt->dy_auditor_status == 2 ? "selected" : "").'>Reject</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mt-3">
+                                        <label class="col-form-label">DY Auditor Remark</label>
+                                        <textarea readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$subreceipt->dy_auditor_remark.'</textarea>
+                                    </div>
+
+                                    <div class="col-md-2 mt-3">
+                                        <label class="col-form-label" >DY MCA Action</label>
+                                        <select class="form-control" readonly>
+                                            <option value="">Action</option>
+                                            <option value="1" '.($subreceipt->dy_mca_status == 1 ? "selected" : "").'>Approve</option>
+                                            <option value="2" '.($subreceipt->dy_mca_status == 2 ? "selected" : "").'>Reject</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mt-3">
+                                        <label class="col-form-label">DY MCA Remark</label>
+                                        <textarea readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$subreceipt->dy_mca_remark.'</textarea>
+                                    </div>
+
+                                    <div class="col-md-2 mt-3">
+                                        <label class="col-form-label" for="action_'.$key.'">MCA Action</label>
+                                        <select class="form-control" readonly>
+                                            <option value="">Action</option>
+                                            <option value="1" '.($subreceipt->mca_status == 1 ? "selected" : "").'>Approve</option>
+                                            <option value="2" '.($subreceipt->mca_status == 2 ? "selected" : "").'>Reject</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mt-3">
+                                        <label class="col-form-label" for="action_remark_'.$key.'">MCA Remark</label>
+                                        <textarea readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">'.$subreceipt->mca_remark.'</textarea>
+                                    </div>
+                                </div>';
+        }
+        $receiptHtml .= '
+                            </div>
+                        </div>';
+
+
+        $response = [
+            'result' => 1,
+            'receipt' => $receipt,
+            'receiptHtml' => $receiptHtml,
+        ];
+
+        return $response;
     }
 
 
@@ -190,8 +310,9 @@ class AccountReceiptController extends Controller
                 {
                     $subreceipt = $receipt->subreceipts[$key] ?? '';
 
-                    SubReceipt::updateOrCreate(['id' => $subreceipt['id']],
+                    SubReceipt::updateOrCreate(['id' => $subreceipt['id'] ?? ''],
                             [
+                                'receipt_id' => $receipt->id,
                                 'receipt_detail' => $request->{'detail_'.$key},
                                 'amount' => $request->{'amount_'.$key},
                                 'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
@@ -199,6 +320,7 @@ class AccountReceiptController extends Controller
                 }
             }
             DB::commit();
+
             return response()->json(['success'=> 'Receipt updated successfully!']);
         }
         catch(\Exception $e)

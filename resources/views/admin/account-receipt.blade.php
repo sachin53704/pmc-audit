@@ -43,42 +43,42 @@
                                 <span class="text-danger is-invalid receipt_file_err"></span>
                             </div>
 
-                                <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
-                                    <div class="col-12 mt-3">
-                                        <div class="alert alert-primary">
-                                            <strong>Add Sub-Receipts</strong>
+                            <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
+                                <div class="col-12 mt-3">
+                                    <div class="alert alert-primary">
+                                        <strong>Add Sub-Receipts</strong>
+                                    </div>
+                                </div>
+
+                                <div class="col-12" id="receiptSection">
+                                    <div class="row receiptSection custm-card mx-1">
+                                        <div class="col-12 mt-2">
+                                            <strong>Sub Receipt 1</strong>
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label class="col-form-label" for="detail_0">Detail <span class="text-danger">*</span></label>
+                                            <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px"></textarea>
+                                            <span class="text-danger is-invalid detail_0_err"></span>
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label class="col-form-label" for="amount_0">Amount <span class="text-danger">*</span></label>
+                                            <input class="form-control" name="amount_0" type="number" placeholder="Enter Amount">
+                                            <span class="text-danger is-invalid amount_0_err"></span>
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label class="col-form-label" for="sub_receipt_0">Upload Sub-Receipt<span class="text-danger">*</span></label>
+                                            <input type="file" name="sub_receipt_0" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                            <span class="text-danger is-invalid sub_receipt_0_err"></span>
                                         </div>
                                     </div>
-
-                                    <div class="col-12" id="receiptSection">
-                                        <div class="row receiptSection custm-card mx-1">
-                                            <div class="col-12 mt-2">
-                                                <strong>Sub Receipt 1</strong>
-                                            </div>
-                                            <div class="col-md-4 mt-2">
-                                                <label class="col-form-label" for="detail_0">Detail <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px"></textarea>
-                                                <span class="text-danger is-invalid detail_0_err"></span>
-                                            </div>
-                                            <div class="col-md-4 mt-2">
-                                                <label class="col-form-label" for="amount_0">Amount <span class="text-danger">*</span></label>
-                                                <input class="form-control" name="amount_0" type="number" placeholder="Enter Amount">
-                                                <span class="text-danger is-invalid amount_0_err"></span>
-                                            </div>
-                                            <div class="col-md-4 mt-2">
-                                                <label class="col-form-label" for="sub_receipt_0">Upload Sub-Receipt<span class="text-danger">*</span></label>
-                                                <input type="file" name="sub_receipt_0" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                                                <span class="text-danger is-invalid sub_receipt_0_err"></span>
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-end mb-3">
-                                            <div class="col-md-6 col-sm-12">
-                                                <button type="button" class="btn btn-danger remove float-start w-25 mt-2 mx-1">Remove</button>
-                                                <button type="button" class="btn btn-primary add-more w-25 float-end mt-2 mx-1">Add More</button>
-                                            </div>
+                                    <div class="row justify-content-end mb-3">
+                                        <div class="col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-danger remove float-start w-25 mt-2 mx-1">Remove</button>
+                                            <button type="button" class="btn btn-primary add-more w-25 float-end mt-2 mx-1">Add More</button>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
                         </div>
                     </div>
@@ -138,22 +138,22 @@
                                 </div>
                             </div>
 
-                                <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
-                                    <div class="col-12 mt-3">
-                                        <div class="alert alert-primary">
-                                            <strong>Add Sub-Receipts</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12" id="editReceiptSection">
-                                    </div>
-                                    <div class="row justify-content-end mb-3">
-                                        <div class="col-md-6 col-sm-12">
-                                            <button type="button" class="btn btn-danger editFormRemove float-start w-25 mt-2 mx-1">Remove</button>
-                                            <button type="button" class="btn btn-primary add-more-edit w-25 float-end mt-2 mx-1">Add More</button>
-                                        </div>
+                            <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
+                                <div class="col-12 mt-3">
+                                    <div class="alert alert-primary">
+                                        <strong>Add Sub-Receipts</strong>
                                     </div>
                                 </div>
+
+                                <div class="col-12" id="editReceiptSection">
+                                </div>
+                                <div class="row justify-content-end mb-3">
+                                    <div class="col-md-6 col-sm-12">
+                                        <button type="button" class="btn btn-danger editFormRemove float-start w-25 mt-2 mx-1">Remove</button>
+                                        <button type="button" class="btn btn-primary add-more-edit w-25 float-end mt-2 mx-1">Add More</button>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -192,7 +192,7 @@
                                     <th>To Date</th>
                                     <th>Amount</th>
                                     <th>View Receipt</th>
-                                    {{-- <th>View SubReceipts</th> --}}
+                                    <th>View Details</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -207,11 +207,11 @@
                                         <td>
                                             <a href="{{ asset($receipt->file) }}" target="_blank" class="btn btn-primary btn-sm">View Receipt</a>
                                         </td>
-                                        {{-- <td>
-                                            <a data-id="{{ asset($receipt->id) }}" class="btn view-subreceipt btn-secondary btn-sm">View Sub Receipt</a>
-                                        </td> --}}
                                         <td>
-                                            @if($receipt->status < 2)
+                                            <a data-id="{{ $receipt->id }}" class="btn view-detail btn-secondary btn-sm">View Sub Receipt</a>
+                                        </td>
+                                        <td>
+                                            @if ($receipt->status < 2)
                                                 <button class="btn btn-secondary edit-element px-2 py-1" title="Edit receipt" data-id="{{ $receipt->id }}"><i data-feather="edit"></i></button>
                                                 <button class="btn btn-danger rem-element px-2 py-1" title="Delete receipt" data-id="{{ $receipt->id }}"><i data-feather="trash-2"></i> </button>
                                             @endif
@@ -227,12 +227,72 @@
     </div>
 
 
+
+    <div class="modal fade" id="receiptInfoModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" >Receipt Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row" id="receiptDetailSect">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     @push('scripts')
+
+        <!-- Get Detail -->
+        <script>
+            $("#buttons-datatables").on("click", ".view-detail", function(e) {
+                e.preventDefault();
+                var model_id = $(this).attr("data-id");
+                var url2 = "{{ route('receipts.details', ':model_id') }}";
+
+                $.ajax({
+                    url: url2.replace(':model_id', model_id),
+                    type: 'GET',
+                    data: {
+                        '_token': "{{ csrf_token() }}"
+                    },
+                    success: function(data, textStatus, jqXHR) {
+                        console.log(data);
+                        if (!data.error)
+                        {
+                            $("#receiptDetailSect").html(data.receiptHtml)
+                            $("#receiptInfoModal").modal("show");
+                        }
+                        else
+                        {
+                            swal('Error!', data.error, 'error');
+                        }
+                    },
+                    error: function(error, jqXHR, textStatus, errorThrown) {
+                        swal('Error!', "Some thing went wrong", 'error');
+                    },
+                });
+            });
+        </script>
+
+
         {{-- Add more script --}}
         <script>
             var addFormCounter = 1;
-            $(document).ready(function(){
-                $(".add-more").click(function(e){
+            $(document).ready(function() {
+                $(".add-more").click(function(e) {
                     e.preventDefault();
 
                     var newSection = `<div class="row receiptSection custm-card  mx-1">
@@ -260,8 +320,8 @@
                     addFormCounter++;
                 });
 
-                $(document).on("click", ".remove", function(){
-                    if($(".receiptSection").length > 1){
+                $(document).on("click", ".remove", function() {
+                    if ($(".receiptSection").length > 1) {
                         $(".receiptSection").last().remove();
                         addFormCounter--;
                     }
@@ -281,14 +341,13 @@
                     data: formdata,
                     contentType: false,
                     processData: false,
-                    success: function(data)
-                    {
+                    success: function(data) {
                         $("#addSubmit").prop('disabled', false);
                         if (!data.error2)
                             swal("Successful!", data.success, "success")
-                                .then((action) => {
-                                    window.location.reload();
-                                });
+                            .then((action) => {
+                                window.location.reload();
+                            });
                         else
                             swal("Error!", data.error2, "error");
                     },
@@ -314,7 +373,7 @@
             $("#buttons-datatables").on("click", ".edit-element", function(e) {
                 e.preventDefault();
                 var model_id = $(this).attr("data-id");
-                var url = "{{ route('receipts.edit', ":model_id") }}";
+                var url = "{{ route('receipts.edit', ':model_id') }}";
 
                 $.ajax({
                     url: url.replace(':model_id', model_id),
@@ -324,8 +383,7 @@
                     },
                     success: function(data, textStatus, jqXHR) {
                         editFormBehaviour();
-                        if (!data.error)
-                        {
+                        if (!data.error) {
                             $("#editForm input[name='edit_model_id']").val(data.receipt.id);
                             $("#editForm textarea[name='description']").val(data.receipt.description);
                             $("#editForm input[name='from_date']").val(data.receipt.from_date);
@@ -334,9 +392,7 @@
                             $("#editForm #editReceiptSection").html(data.subreceiptHtml);
                             $("#editForm #editImageSection").html(data.fileHtml);
                             editFormCounter = data.receipt.subreceipts.length;
-                        }
-                        else
-                        {
+                        } else {
                             swal('Error!', data.error, 'error');
                         }
                     },
@@ -346,8 +402,8 @@
                 });
             });
 
-            $(document).ready(function(){
-                $(".add-more-edit").click(function(e){
+            $(document).ready(function() {
+                $(".add-more-edit").click(function(e) {
                     e.preventDefault();
 
                     var newSection = `<div class="row editReceiptSection custm-card mx-1">
@@ -375,8 +431,8 @@
                     editFormCounter++;
                 });
 
-                $(document).on("click", ".editFormRemove", function(){
-                    if($(".editReceiptSection").length > 1){
+                $(document).on("click", ".editFormRemove", function() {
+                    if ($(".editReceiptSection").length > 1) {
                         $(".editReceiptSection").last().remove();
                         editFormCounter--;
                     }
@@ -392,7 +448,7 @@
                     formdata.append('subreceiptCount', editFormCounter);
 
                     var model_id = $('#edit_model_id').val();
-                    var url = "{{ route('receipts.update', ":model_id") }}";
+                    var url = "{{ route('receipts.update', ':model_id') }}";
                     //
                     $.ajax({
                         url: url.replace(':model_id', model_id),
@@ -400,14 +456,13 @@
                         data: formdata,
                         contentType: false,
                         processData: false,
-                        success: function(data)
-                        {
+                        success: function(data) {
                             $("#editSubmit").prop('disabled', false);
                             if (!data.error2)
                                 swal("Successful!", data.success, "success")
-                                    .then((action) => {
-                                        window.location.href = '{{ route('receipts.index') }}';
-                                    });
+                                .then((action) => {
+                                    window.location.href = '{{ route('receipts.index') }}';
+                                });
                             else
                                 swal("Error!", data.error2, "error");
                         },
@@ -435,50 +490,45 @@
             $("#buttons-datatables").on("click", ".rem-element", function(e) {
                 e.preventDefault();
                 swal({
-                    title: "Are you sure to delete this audit file?",
-                    // text: "Make sure if you have filled Vendor details before proceeding further",
-                    icon: "info",
-                    buttons: ["Cancel", "Confirm"]
-                })
-                .then((justTransfer) =>
-                {
-                    if (justTransfer)
-                    {
-                        var model_id = $(this).attr("data-id");
-                        var url = "{{ route('audit.destroy', ":model_id") }}";
+                        title: "Are you sure to delete this audit file?",
+                        // text: "Make sure if you have filled Vendor details before proceeding further",
+                        icon: "info",
+                        buttons: ["Cancel", "Confirm"]
+                    })
+                    .then((justTransfer) => {
+                        if (justTransfer) {
+                            var model_id = $(this).attr("data-id");
+                            var url = "{{ route('audit.destroy', ':model_id') }}";
 
-                        $.ajax({
-                            url: url.replace(':model_id', model_id),
-                            type: 'POST',
-                            data: {
-                                '_method': "DELETE",
-                                '_token': "{{ csrf_token() }}"
-                            },
-                            success: function(data, textStatus, jqXHR) {
-                                if (!data.error && !data.error2) {
-                                    swal("Success!", data.success, "success")
-                                        .then((action) => {
-                                            window.location.reload();
-                                        });
-                                } else {
-                                    if (data.error) {
-                                        swal("Error!", data.error, "error");
+                            $.ajax({
+                                url: url.replace(':model_id', model_id),
+                                type: 'POST',
+                                data: {
+                                    '_method': "DELETE",
+                                    '_token': "{{ csrf_token() }}"
+                                },
+                                success: function(data, textStatus, jqXHR) {
+                                    if (!data.error && !data.error2) {
+                                        swal("Success!", data.success, "success")
+                                            .then((action) => {
+                                                window.location.reload();
+                                            });
                                     } else {
-                                        swal("Error!", data.error2, "error");
+                                        if (data.error) {
+                                            swal("Error!", data.error, "error");
+                                        } else {
+                                            swal("Error!", data.error2, "error");
+                                        }
                                     }
-                                }
-                            },
-                            error: function(error, jqXHR, textStatus, errorThrown) {
-                                swal("Error!", "Something went wrong", "error");
-                            },
-                        });
-                    }
-                });
+                                },
+                                error: function(error, jqXHR, textStatus, errorThrown) {
+                                    swal("Error!", "Something went wrong", "error");
+                                },
+                            });
+                        }
+                    });
             });
         </script>
-
-
-
     @endpush
 
 </x-admin.layout>
