@@ -226,6 +226,7 @@ class AccountReceiptController extends Controller
         $subreceiptHtml = '';
         foreach($receipt->subreceipts as $key => $subreceipt)
         {
+            $isReadonly = $subreceipt->dy_auditor_status != 1 ? '' : 'readonly';
             $subreceiptHtml .= '
                 <div class="row editReceiptSection custm-card mx-1">
                     <div class="col-12 mt-2">
@@ -233,17 +234,17 @@ class AccountReceiptController extends Controller
                     </div>
                     <div class="col-md-4 mt-2">
                         <label class="col-form-label" for="detail_'.$key.'">Detail <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="detail_'.$key.'" style="max-height: 100px; min-height: 100px">'.$subreceipt->receipt_detail.'</textarea>
+                        <textarea class="form-control" '.$isReadonly.' name="detail_'.$key.'" style="max-height: 100px; min-height: 100px">'.$subreceipt->receipt_detail.'</textarea>
                         <span class="text-danger is-invalid detail_'.$key.'_err"></span>
                     </div>
                     <div class="col-md-4 mt-2">
                         <label class="col-form-label" for="amount_'.$key.'">Amount <span class="text-danger">*</span></label>
-                        <input class="form-control" name="amount_'.$key.'" type="number" value="'.$subreceipt->amount.'" placeholder="Enter Amount">
+                        <input class="form-control" '.$isReadonly.' name="amount_'.$key.'" type="number" value="'.$subreceipt->amount.'" placeholder="Enter Amount">
                         <span class="text-danger is-invalid amount_'.$key.'_err"></span>
                     </div>
                     <div class="col-md-3 mt-2">
                         <label class="col-form-label" for="sub_receipt_'.$key.'">Upload Sub-Receipt<span class="text-danger">*</span></label>
-                        <input type="file" name="sub_receipt_'.$key.'" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                        <input type="file" '.$isReadonly.' name="sub_receipt_'.$key.'" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
                         <span class="text-danger is-invalid sub_receipt_'.$key.'_err"></span>
                     </div>
                     <div class="col-md-1 mt-2">

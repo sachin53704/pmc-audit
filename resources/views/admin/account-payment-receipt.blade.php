@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Receipt List</x-slot>
-    <x-slot name="heading">Receipt List</x-slot>
+    <x-slot name="title">Payment Receipt List</x-slot>
+    <x-slot name="heading">Payment Receipt List</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -12,7 +12,7 @@
                     @csrf
 
                     <div class="card-header">
-                        <h4 class="card-title">Add Receipt</h4>
+                        <h4 class="card-title">Add Payment Receipt</h4>
                     </div>
                     <div class="card-body">
                         <div class="mb-3 row">
@@ -260,7 +260,7 @@
             $("#buttons-datatables").on("click", ".view-detail", function(e) {
                 e.preventDefault();
                 var model_id = $(this).attr("data-id");
-                var url2 = "{{ route('receipts.details', ':model_id') }}";
+                var url2 = "{{ route('payment-receipts.details', ':model_id') }}";
 
                 $.ajax({
                     url: url2.replace(':model_id', model_id),
@@ -269,7 +269,6 @@
                         '_token': "{{ csrf_token() }}"
                     },
                     success: function(data, textStatus, jqXHR) {
-                        console.log(data);
                         if (!data.error)
                         {
                             $("#receiptDetailSect").html(data.receiptHtml)
@@ -336,7 +335,7 @@
                 var formdata = new FormData(this);
                 formdata.append('subreceiptCount', addFormCounter);
                 $.ajax({
-                    url: '{{ route('receipts.store') }}',
+                    url: '{{ route('payment-receipts.store') }}',
                     type: 'POST',
                     data: formdata,
                     contentType: false,
@@ -373,7 +372,7 @@
             $("#buttons-datatables").on("click", ".edit-element", function(e) {
                 e.preventDefault();
                 var model_id = $(this).attr("data-id");
-                var url = "{{ route('receipts.edit', ':model_id') }}";
+                var url = "{{ route('payment-receipts.edit', ':model_id') }}";
 
                 $.ajax({
                     url: url.replace(':model_id', model_id),
@@ -448,7 +447,7 @@
                     formdata.append('subreceiptCount', editFormCounter);
 
                     var model_id = $('#edit_model_id').val();
-                    var url = "{{ route('receipts.update', ':model_id') }}";
+                    var url = "{{ route('payment-receipts.update', ':model_id') }}";
                     //
                     $.ajax({
                         url: url.replace(':model_id', model_id),
@@ -498,7 +497,7 @@
                     .then((justTransfer) => {
                         if (justTransfer) {
                             var model_id = $(this).attr("data-id");
-                            var url = "{{ route('receipts.destroy', ':model_id') }}";
+                            var url = "{{ route('payment-receipts.destroy', ':model_id') }}";
 
                             $.ajax({
                                 url: url.replace(':model_id', model_id),

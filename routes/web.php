@@ -98,13 +98,21 @@ Route::middleware(['auth','PreventBackHistory', 'confirm-login-type'])->group(fu
         Route::resource('receipts', App\Http\Controllers\Admin\AccountReceiptController::class );
         Route::resource('payment-receipts', App\Http\Controllers\Admin\AccountPaymentReceiptController::class );
 
-        // DY AUDITOR Routes
+        // RECEIPT APPROVE/REJECT Routes
         Route::get('receipts/status/pending-list', [App\Http\Controllers\Admin\AccountReceiptController::class, 'pendingReceipts'] )->name('receipts.pending-list');
         Route::get('receipts/status/approved-list', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approvedReceipts'] )->name('receipts.approved-list');
         Route::get('receipts/status/rejected-list', [App\Http\Controllers\Admin\AccountReceiptController::class, 'rejectedReceipts'] )->name('receipts.rejected-list');
         Route::get('receipts/details/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptDetails'] )->name('receipts.details');
         Route::get('receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'] )->name('receipts.info');
-        Route::put('approve-receipts/{audit}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'] )->name('approve-receipts');
+        Route::put('approve-receipts/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'] )->name('approve-receipts');
+
+        // PAYMENT RECEIPT APPROVE/REJECT Routes
+        Route::get('payment-receipts/status/pending-list', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'pendingReceipts'] )->name('payment-receipts.pending-list');
+        Route::get('payment-receipts/status/approved-list', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'approvedReceipts'] )->name('payment-receipts.approved-list');
+        Route::get('payment-receipts/status/rejected-list', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'rejectedReceipts'] )->name('payment-receipts.rejected-list');
+        Route::get('payment-receipts/details/{receipt}', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'receiptDetails'] )->name('payment-receipts.details');
+        Route::get('receipt-info/{payment_receipt}', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'receiptInfo'] )->name('payment-receipts.info');
+        Route::put('approve-payment-receipts/{payment_receipt}', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'approveReceipts'] )->name('approve-payment-receipts');
 
         // // DY MCA ROUTES
         // Route::get('dy-mca-receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'] )->name('receipts.info');
