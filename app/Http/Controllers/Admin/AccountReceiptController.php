@@ -21,9 +21,9 @@ class AccountReceiptController extends Controller
                                 'subreceipts as dy_auditor_approved_count' => fn($q) => $q->where('dy_auditor_status', 1),
                                 'subreceipts as dy_auditor_rejected_count' => fn($q) => $q->where('dy_auditor_status', 2),
                                 'subreceipts as dy_mca_approved_count' => fn($q) => $q->where('dy_mca_status', 1),
-                                'subreceipts as dy_mca_reject_count' => fn($q) => $q->where('dy_mca_status', 2),
+                                'subreceipts as dy_mca_rejected_count' => fn($q) => $q->where('dy_mca_status', 2),
                                 'subreceipts as mca_approved_count' => fn($q) => $q->where('mca_status', 1),
-                                'subreceipts as mca_reject_count' => fn($q) => $q->where('mca_status', 2),
+                                'subreceipts as mca_rejected_count' => fn($q) => $q->where('mca_status', 2),
                             ])
                             ->get();
 
@@ -326,9 +326,9 @@ class AccountReceiptController extends Controller
                                 'receipt_detail' => $request->{'detail_'.$key},
                                 'amount' => $request->{'amount_'.$key},
                                 'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
-                                'dy_auditor_status' => $subreceipt['dy_auditor_status'] == 2 ? 0 : 1,
-                                'dy_mca_status' => $subreceipt['dy_mca_status'] == 2 ? 0 : 1,
-                                'mca_status' => $subreceipt['mca_status'] == 2 ? 0 : 1,
+                                'dy_auditor_status' => $subreceipt['dy_auditor_status'] == 2 ? 0 : $subreceipt['dy_auditor_status'],
+                                'dy_mca_status' => $subreceipt['dy_mca_status'] == 2 ? 0 : $subreceipt['dy_mca_status'],
+                                'mca_status' => $subreceipt['mca_status'] == 2 ? 0 : $subreceipt['mca_status'],
                             ]);
                 }
             }
