@@ -9,10 +9,10 @@
                 <div class="card-body my-5">
                     <div class="row my-5">
                         <div class="col-6 text-center">
-                            <a href="{{ route('confirm-login-type', 1) }}" class="btn btn-primary btn-lg">View Programme Audit</a>
+                            <a href="{{ route('confirm-login-type', 1) }}" class="btn btn-primary btn-lg p-4">View Programme Audit</a>
                         </div>
                         <div class="col-6 text-center">
-                            <a href="{{ route('confirm-login-type', 2) }}" class="btn btn-primary btn-lg">View Receipts</a>
+                            <a href="{{ route('confirm-login-type', 2) }}" class="btn btn-primary btn-lg p-4">View Receipts</a>
                         </div>
                     </div>
                 </div>
