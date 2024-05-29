@@ -34,12 +34,12 @@ class AccountReceiptController extends Controller
         $fieldArray['from_date'] = 'required';
         $fieldArray['to_date'] = 'required';
         $fieldArray['amount'] = 'required';
-        $fieldArray['receipt'] = 'required';
+        $fieldArray['receipt_file'] = 'required';
         $messageArray['description.required'] = 'Receipt description is required';
         $messageArray['from_date.required'] = 'From date is required';
         $messageArray['to_date.required'] = 'To date is required';
         $messageArray['amount.required'] = 'Amount is required';
-        $messageArray['receipt.required'] = 'Receipt is required';
+        $messageArray['receipt_file.required'] = 'Receipt is required';
 
         for($i=0; $i<$request->subreceiptCount; $i++)
         {
@@ -63,7 +63,7 @@ class AccountReceiptController extends Controller
         {
             $input = $validator->validated();
             $input['user_id'] = Auth::id();
-            $input['file'] = 'storage/file/'.$request->receipt->store('', 'file');
+            $input['file'] = 'storage/file/'.$request->receipt_file->store('', 'file');
 
             DB::beginTransaction();
             $receipt = Receipt::create( Arr::only( $input, Receipt::getFillables()) );
