@@ -330,6 +330,8 @@ class AccountPaymentReceiptController extends Controller
                                 'amount' => $request->{'amount_'.$key},
                                 'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
                                 'dy_auditor_status' => $subreceipt['dy_auditor_status'] == 2 ? 0 : 1,
+                                'dy_mca_status' => $subreceipt['dy_mca_status'] == 2 ? 0 : 1,
+                                'mca_status' => $subreceipt['mca_status'] == 2 ? 0 : 1,
                             ]);
                 }
             }

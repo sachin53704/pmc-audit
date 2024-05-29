@@ -207,9 +207,9 @@
                                         <td>{{ $receipt->amount }}</td>
                                         <td>
                                             <strong class="text-success">DY Auditor Approved Count : {{ $receipt->dy_auditor_approved_count }}</strong> <br>
-                                            <strong class="text-danger">DY Auditor Reject Count : {{ $receipt->dy_auditor_rejected_count }}</strong>
+                                            <strong class="text-danger">DY Auditor Reject Count : {{ $receipt->dy_auditor_rejected_count }}</strong><br>
                                             <strong class="text-success">DY MCA Approved Count : {{ $receipt->dy_mca_approved_count }}</strong> <br>
-                                            <strong class="text-danger">DY MCA Reject Count : {{ $receipt->dy_mca_rejected_count }}</strong>
+                                            <strong class="text-danger">DY MCA Reject Count : {{ $receipt->dy_mca_rejected_count }}</strong><br>
                                             <strong class="text-success">MCA Approved Count : {{ $receipt->mca_approved_count }}</strong> <br>
                                             <strong class="text-danger">MCA Reject Count : {{ $receipt->mca_rejected_count }}</strong>
                                         </td>
