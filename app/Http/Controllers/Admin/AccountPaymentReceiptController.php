@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Controller;
 use App\Models\PaymentReceipt;
-use App\Models\Receipt;
 use App\Models\SubPaymentReceipt;
-use App\Models\SubReceipt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +16,12 @@ class AccountPaymentReceiptController extends Controller
 
     public function index()
     {
-        $receipts = PaymentReceipt::get();
+        $receipts = PaymentReceipt::query()
+                                    ->withCount([
+                                        'subreceipts as rejected_count' => fn($q) => $q->where('dy_auditor_status', 2),
+                                        'subreceipts as approved_count' => fn($q) => $q->where('dy_auditor_status', 1)
+                                    ])
+                                    ->get();
 
         return view('admin.account-payment-receipt')->with(['receipts' => $receipts]);
     }
@@ -322,6 +325,7 @@ class AccountPaymentReceiptController extends Controller
                                 'receipt_detail' => $request->{'detail_'.$key},
                                 'amount' => $request->{'amount_'.$key},
                                 'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
+                                'dy_auditor_status' => 0,
                             ]);
                 }
             }

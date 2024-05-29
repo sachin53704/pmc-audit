@@ -191,6 +191,7 @@
                                     <th>From Date</th>
                                     <th>To Date</th>
                                     <th>Amount</th>
+                                    <th>Status</th>
                                     <th>View Receipt</th>
                                     <th>View Details</th>
                                     <th>Action</th>
@@ -204,6 +205,10 @@
                                         <td>{{ $receipt->from_date }}</td>
                                         <td>{{ $receipt->to_date }}</td>
                                         <td>{{ $receipt->amount }}</td>
+                                        <td>
+                                            <strong class="text-success">Approved Subreceipts : {{ $receipt->approved_count }}</strong> <br>
+                                            <strong class="text-danger">Rejected Subreceipts : {{ $receipt->rejected_count }}</strong>
+                                        </td>
                                         <td>
                                             <a href="{{ asset($receipt->file) }}" target="_blank" class="btn btn-primary btn-sm">View Receipt</a>
                                         </td>

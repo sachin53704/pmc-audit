@@ -16,7 +16,12 @@ class AccountReceiptController extends Controller
 
     public function index()
     {
-        $receipts = Receipt::get();
+        $receipts = Receipt::query()
+                            ->withCount([
+                                'subreceipts as rejected_count' => fn($q) => $q->where('dy_auditor_status', 2),
+                                'subreceipts as approved_count' => fn($q) => $q->where('dy_auditor_status', 1)
+                            ])
+                            ->get();
 
         return view('admin.account-receipt')->with(['receipts' => $receipts]);
     }
@@ -317,6 +322,7 @@ class AccountReceiptController extends Controller
                                 'receipt_detail' => $request->{'detail_'.$key},
                                 'amount' => $request->{'amount_'.$key},
                                 'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
+                                'dy_auditor_status' => 0,
                             ]);
                 }
             }
