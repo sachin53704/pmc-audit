@@ -372,11 +372,11 @@ class AccountPaymentReceiptController extends Controller
         }
         else if($userRole == 'DY MCA')
         {
-            $receipts = PaymentReceipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 0))->get();
+            $receipts = PaymentReceipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_auditor_status'=> 1, 'dy_mca_status' => 0]))->get();
         }
         else
         {
-            $receipts = PaymentReceipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 0))->get();
+            $receipts = PaymentReceipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_mca_status'=> 1, 'mca_status' => 0]))->get();
         }
 
         return view('admin.pending-payment-receipts')->with(['receipts' => $receipts]);
