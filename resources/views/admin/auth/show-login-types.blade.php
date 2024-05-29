@@ -6,8 +6,8 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body">
-                    <div class="row">
+                <div class="card-body my-5">
+                    <div class="row my-5">
                         <div class="col-6 text-center">
                             <a href="{{ route('confirm-login-type', 1) }}" class="btn btn-primary btn-lg">View Programme Audit</a>
                         </div>
