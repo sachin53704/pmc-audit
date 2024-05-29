@@ -362,7 +362,7 @@ class AccountPaymentReceiptController extends Controller
 
         if($userRole == 'DY Auditor')
         {
-            $receipts = PaymentReceipt::withWhereHas('subreceipts', fn($q) => $q->where('status', 1))->get();
+            $receipts = PaymentReceipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 0))->get();
         }
         else if($userRole == 'DY MCA')
         {
