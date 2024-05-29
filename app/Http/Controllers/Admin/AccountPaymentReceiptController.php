@@ -325,7 +325,7 @@ class AccountPaymentReceiptController extends Controller
                                 'receipt_detail' => $request->{'detail_'.$key},
                                 'amount' => $request->{'amount_'.$key},
                                 'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
-                                'dy_auditor_status' => 0,
+                                'dy_auditor_status' => $subreceipt['dy_auditor_status'] == 2 ? 0 : 1,
                             ]);
                 }
             }
@@ -444,7 +444,7 @@ class AccountPaymentReceiptController extends Controller
         $subreceiptHtml = '';
         foreach($receipt->subreceipts as $key => $subreceipt)
         {
-            $isEditable = $subreceipt->{$roleWiseColumn.'_status'} == 1 ? "readonly" : "";
+            $isEditable = $subreceipt->{$roleWiseColumn.'_status'} != 0 ? "readonly" : "";
             $actionFieldName = 'action_'.$key;
             $remarkFieldName = 'action_remark_'.$key;
 
