@@ -18,8 +18,12 @@ class AccountReceiptController extends Controller
     {
         $receipts = Receipt::query()
                             ->withCount([
-                                'subreceipts as rejected_count' => fn($q) => $q->where('dy_auditor_status', 2),
-                                'subreceipts as approved_count' => fn($q) => $q->where('dy_auditor_status', 1)
+                                'subreceipts as dy_auditor_approved_count' => fn($q) => $q->where('dy_auditor_status', 1),
+                                'subreceipts as dy_auditor_rejected_count' => fn($q) => $q->where('dy_auditor_status', 2),
+                                'subreceipts as dy_mca_approved_count' => fn($q) => $q->where('dy_mca_status', 1),
+                                'subreceipts as dy_mca_reject_count' => fn($q) => $q->where('dy_mca_status', 2),
+                                'subreceipts as mca_approved_count' => fn($q) => $q->where('mca_status', 1),
+                                'subreceipts as mca_reject_count' => fn($q) => $q->where('mca_status', 2),
                             ])
                             ->get();
 
@@ -231,7 +235,7 @@ class AccountReceiptController extends Controller
         $subreceiptHtml = '';
         foreach($receipt->subreceipts as $key => $subreceipt)
         {
-            $isReadonly = $subreceipt->dy_auditor_status != 1 ? '' : 'readonly';
+            $isReadonly = $subreceipt->dy_auditor_status != 1 || $subreceipt->dy_mca_status == 2 || $subreceipt->mca_status == 2 ? '' : 'readonly';
             $subreceiptHtml .= '
                 <div class="row editReceiptSection custm-card mx-1">
                     <div class="col-12 mt-2">
