@@ -177,7 +177,7 @@
                     },
                     success: function(data, textStatus, jqXHR)
                     {
-                        window.location.url = "{{ route('dashboard') }}";
+                        window.location.href = "{{ route('dashboard') }}";
                     },
                     error: function(error, jqXHR, textStatus, errorThrown) {
                         console.log("something whent wrong while changing theme color");
