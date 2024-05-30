@@ -325,7 +325,7 @@ class AccountPaymentReceiptController extends Controller
 
                     SubPaymentReceipt::updateOrCreate(['id' => $subreceipt['id'] ?? ''],
                             [
-                                'receipt_id' => $receipt->id,
+                                'payment_receipt_id' => $receipt->id,
                                 'receipt_detail' => $request->{'detail_'.$key},
                                 'amount' => $request->{'amount_'.$key},
                                 'file' => $request->{'sub_receipt_'.$key} ? 'storage/file/'.$request->{'sub_receipt_'.$key}->store('', 'file') : $subreceipt['file'],
