@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class PaymentReceipt extends Model
+class PaymentReceipt extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
