@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Pending Receipts</x-slot>
-    <x-slot name="heading">Pending Receipts</x-slot>
+    <x-slot name="title">Pending Payment Receipts</x-slot>
+    <x-slot name="heading">Pending Payment Receipts</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -10,7 +10,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Receipt Details</h4>
+                        <h4 class="card-title">Payment Receipt Details</h4>
                     </div>
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
@@ -117,7 +117,7 @@
             $("#buttons-datatables").on("click", ".edit-element", function(e) {
                 e.preventDefault();
                 var model_id = $(this).attr("data-id");
-                var url = "{{ route('receipts.info', ":model_id") }}";
+                var url = "{{ route('payment-receipts.info', ":model_id") }}";
 
                 $.ajax({
                     url: url.replace(':model_id', model_id),
@@ -159,7 +159,7 @@
                     var formdata = new FormData(this);
                     formdata.append('_method', 'PUT');
                     var model_id = $('#edit_model_id').val();
-                    var url = "{{ route('approve-receipts', ":model_id") }}";
+                    var url = "{{ route('approve-payment-receipts', ":model_id") }}";
                     //
                     $.ajax({
                         url: url.replace(':model_id', model_id),

@@ -264,7 +264,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.pending-list') ? 'active' : '' }}" href="{{ route('payment-receipts.pending-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Payment Pending Receipts</span>
+                                    <span data-key="t-dashboards">Pending Payment Receipts</span>
                                 </a>
                             </li>
                         @endcan
@@ -273,7 +273,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.approved-list') ? 'active' : '' }}" href="{{ route('payment-receipts.approved-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Payment Approved Receipts</span>
+                                    <span data-key="t-dashboards">Approved Payment Receipts</span>
                                 </a>
                             </li>
                         @endcan
@@ -282,7 +282,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.rejected-list') ? 'active' : '' }}" href="{{ route('payment-receipts.rejected-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Payment Rejected Receipts</span>
+                                    <span data-key="t-dashboards">Rejected Payment Receipts</span>
                                 </a>
                             </li>
                         @endcan

@@ -30,7 +30,7 @@ class PaymentReceipt extends BaseModel
 
     public function subreceipts()
     {
-        return $this->hasMany(SubPaymentReceipt::class);
+        return $this->hasMany(SubPaymentReceipt::class, 'payment_receipt_id', 'id');
     }
 
 
