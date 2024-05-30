@@ -25,6 +25,7 @@ class AccountReceiptController extends Controller
                                 'subreceipts as mca_approved_count' => fn($q) => $q->where('mca_status', 1),
                                 'subreceipts as mca_rejected_count' => fn($q) => $q->where('mca_status', 2),
                             ])
+                            ->latest()
                             ->get();
 
         return view('admin.account-receipt')->with(['receipts' => $receipts]);
@@ -365,15 +366,15 @@ class AccountReceiptController extends Controller
 
         if($userRole == 'DY Auditor')
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 0))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 0))->latest()->get();
         }
         else if($userRole == 'DY MCA')
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_auditor_status'=> 1, 'dy_mca_status' => 0]))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_auditor_status'=> 1, 'dy_mca_status' => 0]))->latest()->get();
         }
         else
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_mca_status'=> 1, 'mca_status' => 0]))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_mca_status'=> 1, 'mca_status' => 0]))->latest()->get();
         }
 
         return view('admin.pending-receipts')->with(['receipts' => $receipts]);
@@ -386,15 +387,15 @@ class AccountReceiptController extends Controller
 
         if($userRole == 'DY Auditor')
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 1))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 1))->latest()->get();
         }
         else if($userRole == 'DY MCA')
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 1))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 1))->latest()->get();
         }
         else
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 1))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 1))->latest()->get();
         }
 
         return view('admin.approved-receipts')->with(['receipts' => $receipts]);
@@ -407,15 +408,15 @@ class AccountReceiptController extends Controller
 
         if($userRole == 'DY Auditor')
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 2))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 2))->latest()->get();
         }
         else if($userRole == 'DY MCA')
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 2))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 2))->latest()->get();
         }
         else
         {
-            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 2))->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 2))->latest()->get();
         }
 
         return view('admin.rejected-receipts')->with(['receipts' => $receipts]);

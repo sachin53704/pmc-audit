@@ -118,7 +118,7 @@ class DashboardController extends Controller
             $pendingPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 0)->groupBy('payment_receipt_id')->count();
             $approvedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 1)->groupBy('payment_receipt_id')->count();
             $rejectedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 2)->groupBy('payment_receipt_id')->count();
-
+            // dd($approvedPaymentReceipts);
             return view('admin.dashboard.dy-auditor')->with([
                         'pendingReceipts' => $pendingReceipts,
                         'approvedReceipts' => $approvedReceipts,
