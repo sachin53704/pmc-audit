@@ -18,14 +18,14 @@ class PaymentReceipt extends BaseModel
 
     protected $fillable = ['user_id', 'description', 'from_date', 'to_date', 'amount', 'file', 'status', 'created_by', 'updated_by', 'deleted_by'];
 
-    protected $appends = ['status_name'];
+    // protected $appends = ['status_name'];
 
 
-    public function getStatusNameAttribute()
-    {
-        $statusName = collect([['id'=>1, 'name'=>'pending'], ['id'=>2, 'name'=>'approved'], ['id'=>3, 'name'=>'rejected']]);
-        return $statusName->where('id', $this->status)->first()['name'];
-    }
+    // public function getStatusNameAttribute()
+    // {
+    //     $statusName = collect([['id'=>1, 'name'=>'pending'], ['id'=>2, 'name'=>'approved'], ['id'=>3, 'name'=>'rejected']]);
+    //     return $statusName->where('id', $this->status)->first()['name'];
+    // }
 
 
     public function subreceipts()
