@@ -39,13 +39,13 @@ class DashboardController extends Controller
             $draftAuditCount = Audit::where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)->count();
 
             $columnName = strtolower(str_replace(' ', '_', $userRole->name));
-            $pendingReceipts = SubReceipt::where($columnName.'_status', 0)->count();
-            $approvedReceipts = SubReceipt::where($columnName.'_status', 1)->count();
-            $rejectedReceipts = SubReceipt::where($columnName.'_status', 2)->count();
+            $pendingReceipts = SubReceipt::where($columnName.'_status', 0)->groupBy('receipt_id')->count();
+            $approvedReceipts = SubReceipt::where($columnName.'_status', 1)->groupBy('receipt_id')->count();
+            $rejectedReceipts = SubReceipt::where($columnName.'_status', 2)->groupBy('receipt_id')->count();
 
-            $pendingPaymentReceipts = SubPaymentReceipt::where($columnName.'_status', 0)->count();
-            $approvedPaymentReceipts = SubPaymentReceipt::where($columnName.'_status', 1)->count();
-            $rejectedPaymentReceipts = SubPaymentReceipt::where($columnName.'_status', 2)->count();
+            $pendingPaymentReceipts = SubPaymentReceipt::where($columnName.'_status', 0)->groupBy('payment_receipt_id')->count();
+            $approvedPaymentReceipts = SubPaymentReceipt::where($columnName.'_status', 1)->groupBy('payment_receipt_id')->count();
+            $rejectedPaymentReceipts = SubPaymentReceipt::where($columnName.'_status', 2)->groupBy('payment_receipt_id')->count();
 
             return view('admin.dashboard.mca')->with([
                         'pendingAuditCount' => $pendingAuditCount,
@@ -64,8 +64,33 @@ class DashboardController extends Controller
         {
             $totalDepartmentLetters = Audit::where('department_id', $user->department_id)->whereNot('dl_file_path', null)->count();
 
+            $pendingReceipts = '';
+            $approvedReceipts = '';
+            $rejectedReceipts = '';
+            $pendingPaymentReceipts = '';
+            $approvedPaymentReceipts = '';
+            $rejectedPaymentReceipts = '';
+
+            if($user->department_id == 1)
+            {
+                $pendingReceipts = SubReceipt::where('dy_auditor_status', 0)->groupBy('receipt_id')->count();
+                $approvedReceipts = SubReceipt::where('dy_auditor_status', 1)->groupBy('receipt_id')->count();
+                $rejectedReceipts = SubReceipt::where('dy_auditor_status', 2)->groupBy('receipt_id')->count();
+
+                $pendingPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 0)->groupBy('payment_receipt_id')->count();
+                $approvedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 1)->groupBy('payment_receipt_id')->count();
+                $rejectedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 2)->groupBy('payment_receipt_id')->count();
+            }
+
             return view('admin.dashboard.department')->with([
-                        'totalDepartmentLetters' => $totalDepartmentLetters
+                        'user' => $user,
+                        'totalDepartmentLetters' => $totalDepartmentLetters,
+                        'pendingReceipts' => $pendingReceipts,
+                        'approvedReceipts' => $approvedReceipts,
+                        'rejectedReceipts' => $rejectedReceipts,
+                        'pendingPaymentReceipts' => $pendingPaymentReceipts,
+                        'approvedPaymentReceipts' => $approvedPaymentReceipts,
+                        'rejectedPaymentReceipts' => $rejectedPaymentReceipts,
                     ]);
         }
         elseif($userRole->name == "Auditor")
@@ -86,13 +111,13 @@ class DashboardController extends Controller
         }
         elseif($userRole->name == "DY Auditor")
         {
-            $pendingReceipts = SubReceipt::where('dy_auditor_status', 0)->count();
-            $approvedReceipts = SubReceipt::where('dy_auditor_status', 1)->count();
-            $rejectedReceipts = SubReceipt::where('dy_auditor_status', 2)->count();
+            $pendingReceipts = SubReceipt::where('dy_auditor_status', 0)->groupBy('receipt_id')->count();
+            $approvedReceipts = SubReceipt::where('dy_auditor_status', 1)->groupBy('receipt_id')->count();
+            $rejectedReceipts = SubReceipt::where('dy_auditor_status', 2)->groupBy('receipt_id')->count();
 
-            $pendingPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 0)->count();
-            $approvedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 1)->count();
-            $rejectedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 2)->count();
+            $pendingPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 0)->groupBy('payment_receipt_id')->count();
+            $approvedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 1)->groupBy('payment_receipt_id')->count();
+            $rejectedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 2)->groupBy('payment_receipt_id')->count();
 
             return view('admin.dashboard.dy-auditor')->with([
                         'pendingReceipts' => $pendingReceipts,
