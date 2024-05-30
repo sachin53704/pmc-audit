@@ -82,7 +82,7 @@ class AccountPaymentReceiptController extends Controller
                 if($request->{'amount_'.$i})
                 {
                     SubPaymentReceipt::create([
-                        'receipt_id' => $receipt->id,
+                        'payment_receipt_id' => $receipt->id,
                         'receipt_detail' => $request->{'detail_'.$i},
                         'amount' => $request->{'amount_'.$i},
                         'file' => 'storage/file/'.$request->{'sub_receipt_'.$i}->store('', 'file'),
