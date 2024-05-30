@@ -209,6 +209,7 @@
                             </li>
                         @endcan
                     @else
+
                         @if(auth()->user()->department_id == 1 )
                             @can('receipt.view')
                                 <li class="nav-item">
@@ -253,6 +254,35 @@
                                 <a class="nav-link menu-link {{ request()->routeIs('receipts.rejected-list') ? 'active' : '' }}" href="{{ route('receipts.rejected-list') }}" >
                                     <i class="ri-pages-line"></i>
                                     <span data-key="t-dashboards">Rejected Receipts</span>
+                                </a>
+                            </li>
+                        @endcan
+
+
+
+                        @can('payment-receipt.pending-list')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.pending-list') ? 'active' : '' }}" href="{{ route('payment-receipts.pending-list') }}" >
+                                    <i class="ri-pages-line"></i>
+                                    <span data-key="t-dashboards">Payment Pending Receipts</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('payment-receipt.approve-list')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.approved-list') ? 'active' : '' }}" href="{{ route('payment-receipts.approved-list') }}" >
+                                    <i class="ri-pages-line"></i>
+                                    <span data-key="t-dashboards">Payment Approved Receipts</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('payment-receipt.reject-list')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.rejected-list') ? 'active' : '' }}" href="{{ route('payment-receipts.rejected-list') }}" >
+                                    <i class="ri-pages-line"></i>
+                                    <span data-key="t-dashboards">Payment Rejected Receipts</span>
                                 </a>
                             </li>
                         @endcan
