@@ -560,6 +560,10 @@ class AccountReceiptController extends Controller
             $rejectConst = 'STATUS_'.strtoupper($roleWiseColumn).'_REJECTED';
 
             DB::beginTransaction();
+
+            $receipt->status = 2;
+            $receipt->save();
+
             for($i=0; $i<count($request->subreceipt_id); $i++)
             {
                 if($request->{'action_'.$i})

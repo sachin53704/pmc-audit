@@ -220,8 +220,8 @@
                                             <a data-id="{{ $receipt->id }}" class="btn view-detail btn-secondary btn-sm">View Sub Receipt</a>
                                         </td>
                                         <td>
-                                            @if ($receipt->status < 2)
                                                 <button class="btn btn-secondary edit-element px-2 py-1" title="Edit receipt" data-id="{{ $receipt->id }}"><i data-feather="edit"></i></button>
+                                            @if ($receipt->status < 2)
                                                 <button class="btn btn-danger rem-element px-2 py-1" title="Delete receipt" data-id="{{ $receipt->id }}"><i data-feather="trash-2"></i> </button>
                                             @endif
                                         </td>

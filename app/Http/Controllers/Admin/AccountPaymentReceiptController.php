@@ -564,6 +564,10 @@ class AccountPaymentReceiptController extends Controller
             $rejectConst = 'STATUS_'.strtoupper($roleWiseColumn).'_REJECTED';
 
             DB::beginTransaction();
+
+            $payment_receipt->status = 2;
+            $payment_receipt->save();
+
             for($i=0; $i<count($request->subreceipt_id); $i++)
             {
                 if($request->{'action_'.$i})
