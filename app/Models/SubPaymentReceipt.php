@@ -20,7 +20,7 @@ class SubPaymentReceipt extends Model
 
 
     protected $fillable = [
-        'receipt_id',
+        'payment_receipt_id',
         'receipt_detail',
         'amount',
         'file',
