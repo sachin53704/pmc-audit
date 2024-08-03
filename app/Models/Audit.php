@@ -23,7 +23,7 @@ class Audit extends BaseModel
     // const AUDIT_STATUS_MCA_APPROVED_COMPLIANCE = 10;
     // const AUDIT_STATUS_MCA_REJECTED_COMPLIANCE = 11;
 
-    protected $fillable = ['department_id', 'audit_no', 'date', 'description', 'remark', 'file_path', 'status', 'reject_reason', 'dl_description', 'dl_file_path', 'obj_date', 'obj_subject'];
+    protected $fillable = ['department_id', 'audit_no', 'date', 'description', 'remark', 'file_path', 'status', 'reject_reason', 'dl_description', 'dl_file_path', 'obj_date', 'obj_subject', 'dymca_status', 'dymca_remark', 'mca_status', 'mca_remark'];
 
     protected $appends = ['status_name'];
 
@@ -60,10 +60,9 @@ class Audit extends BaseModel
     {
         $auditNo = '';
 
-        do{
-            $auditNo = 'PMC'.date('m').date('d').sprintf("%05d", mt_rand(10000, 99999));
-        }
-        while(self::where('audit_no', $auditNo)->exists());
+        do {
+            $auditNo = 'PMC' . date('m') . date('d') . sprintf("%05d", mt_rand(10000, 99999));
+        } while (self::where('audit_no', $auditNo)->exists());
 
         return $auditNo;
     }

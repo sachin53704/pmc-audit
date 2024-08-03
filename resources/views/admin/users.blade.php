@@ -35,7 +35,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="gender">Gender <span class="text-danger">*</span></label>
-                                <select name="gender" class="form-control" >
+                                <select name="gender" class="form-select" >
                                     <option value="">Select Gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -59,7 +59,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="role">Select User Type / Role <span class="text-danger">*</span></label>
-                                <select class="js-example-basic-single form-control col-sm-12" id="role" name="role">
+                                <select class="js-example-basic-single form-select col-sm-12" id="role" name="role">
                                     <option value="">--Select Role--</option>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -76,7 +76,7 @@
 
                             <div class="col-md-4 mt-3 department_field d-none">
                                 <label class="col-form-label" for="department_id">Department <span class="text-danger">*</span></label>
-                                <select name="department_id" class="form-control">
+                                <select name="department_id" class="form-select">
                                     <option value="">Select Department</option>
                                     @foreach ($departments->where('is_audit', 0) as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -87,7 +87,7 @@
 
                             <div class="col-md-4 mt-3 home_department_field d-none">
                                 <label class="col-form-label" for="home_department_id">Home Department <span class="text-danger">*</span></label>
-                                <select name="home_department_id" class="form-control">
+                                <select name="home_department_id" class="form-select">
                                     <option value="">Select Home Department</option>
                                     @foreach ($departments->where('is_audit', 1) as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -156,7 +156,7 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="gender">Gender <span class="text-danger">*</span></label>
-                                <select name="gender" class="form-control" >
+                                <select name="gender" class="form-select" >
                                     <option value="">Select Gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -177,7 +177,7 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="role">Select User Type / Role <span class="text-danger">*</span></label>
-                                <select class="js-example-basic-single form-control col-sm-12" name="role">
+                                <select class="js-example-basic-single form-select col-sm-12" name="role">
                                     <option value="">--Select Role--</option>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -192,7 +192,7 @@
                             </div>
                             <div class="col-md-4 mt-3 department_field d-none">
                                 <label class="col-form-label" for="department_id">Department <span class="text-danger">*</span></label>
-                                <select name="department_id" class="form-control">
+                                <select name="department_id" class="form-select">
                                     <option value="">Select Department</option>
                                     @foreach ($departments->where('is_audit', 0) as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -202,7 +202,7 @@
                             </div>
                             <div class="col-md-4 mt-3 home_department_field d-none">
                                 <label class="col-form-label" for="home_department_id">Home Department <span class="text-danger">*</span></label>
-                                <select name="home_department_id" class="form-control">
+                                <select name="home_department_id" class="form-select">
                                     <option value="">Select Home Department</option>
                                     @foreach ($departments->where('is_audit', 1) as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>

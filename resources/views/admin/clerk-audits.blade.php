@@ -19,7 +19,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="department_id">Department <span class="text-danger">*</span></label>
-                                <select name="department_id" class="form-control">
+                                <select name="department_id" class="form-select" required>
                                     <option value="">Select Department</option>
                                     @foreach ($departments->where('is_audit', 0) as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -29,22 +29,22 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date">
+                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="file">File Upload<span class="text-danger">*</span></label>
-                                <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                <input type="file" name="file" class="form-control" required accept=".pdf,.jpg,.jpeg,.png">
                                 <span class="text-danger is-invalid file_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" ></textarea>
+                                <textarea class="form-control" name="description" required></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="remark">Remark <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="remark" ></textarea>
+                                <textarea class="form-control" name="remark" required></textarea>
                                 <span class="text-danger is-invalid remark_err"></span>
                             </div>
 
@@ -76,7 +76,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="department_id">Department <span class="text-danger">*</span></label>
-                                <select name="department_id" class="form-control">
+                                <select name="department_id" class="form-select" required>
                                     <option value="">Select Department</option>
                                     @foreach ($departments->where('is_audit', 0) as $department)
                                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -86,7 +86,7 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date">
+                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-1 mt-3">
@@ -99,12 +99,12 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" ></textarea>
+                                <textarea class="form-control" name="description" required></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="remark">Remark <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="remark" ></textarea>
+                                <textarea class="form-control" name="remark" required></textarea>
                                 <span class="text-danger is-invalid remark_err"></span>
                             </div>
 
@@ -145,8 +145,8 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
-                                    <th>Status</th>
-                                    <th>Reject Reason</th>
+                                    <th>Dy MCA Reject Reason</th>
+                                    <th>MCA Reject Reason</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -162,18 +162,22 @@
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                        </td>
-                                        <td>
-                                            @if ($audit->status == 3)
-                                                <p>{{ Str::limit($audit->reject_reason, 85) }}</p>
+                                            @if ($audit->dymca_status == "3")
+                                                <p>{{ Str::limit($audit->dymca_remark, 85) }}</p>
+                                            @else
+                                            -
                                             @endif
                                         </td>
                                         <td>
-                                            @if($audit->status == 3 || $audit->status == 1)
+                                            @if ($audit->mca_status == "3")
+                                                <p>{{ Str::limit($audit->mca_remark, 85) }}</p>
+                                            @else
+                                            -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if(($audit->dymca_status == 1 || $audit->dymca_status == 3) || ($audit->mca_status && $audit->mca_status == "3"))
                                                 <button class="btn btn-secondary edit-element px-2 py-1" title="Edit audit" data-id="{{ $audit->id }}"><i data-feather="edit"></i></button>
-                                            @endif
-                                            @if($audit->status == 1)
                                                 <button class="btn btn-danger rem-element px-2 py-1" title="Delete audit" data-id="{{ $audit->id }}"><i data-feather="trash-2"></i> </button>
                                             @endif
                                         </td>

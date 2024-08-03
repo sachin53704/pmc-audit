@@ -54,7 +54,7 @@
 
 
                 <div class="ms-1 header-item d-none d-sm-flex justify-content-end">
-                    <select name="change-view-mode" class="form-control" style="background-color: #8c68cd; color: #fff;" id="change-view-mode">
+                    <select name="change-view-mode" class="form-select" style="background-color: #8c68cd; color: #fff;" id="change-view-mode">
                         <option value="">Select view mode</option>
                         <option value="1" {{ session('LOGIN_TYPE') == '1' ? 'selected' : '' }}>Programme Audit</option>
                         <option value="2" {{ session('LOGIN_TYPE') == '2' ? 'selected' : '' }}>Receipt/Payment</option>

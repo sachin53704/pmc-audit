@@ -18,7 +18,9 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
+                                    @if(Request()->status == "pending" || Request()->status == "rejected")
                                     <th>Status</th>
+                                    @endif
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -33,11 +35,19 @@
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
+                                        @if(Request()->status == "pending" || Request()->status == "rejected")
                                         <td>
+                                            @if($audit->dymca_status == 3)
+                                            {{ $audit->dymca_remark }}
+                                            @elseif($audit->mca_status == 3)
+                                            {{ $audit->mca_remark }}
+                                            @else
                                             <span class="badge bg-secondary">{{ $audit->status_name }}</span>
+                                            @endif
                                         </td>
+                                        @endif
                                         <td>
-                                            @if($status == 'pending' && auth()->user()->hasRole(['MCA']))
+                                            @if(Auth::user()->hasRole('MCA') && $audit->mca_status == "1" || Auth::user()->hasRole('DY MCA') && $audit->dymca_status == "1")
                                                 <button class="btn btn-success approve-audit px-2 py-1" data-action="approve" title="Approve" data-id="{{ $audit->id }}"><i data-feather="check-circle"></i> Approve</button>
                                                 <button class="btn btn-danger reject-audit px-2 py-1" data-action="reject" title="Reject" data-id="{{ $audit->id }}"><i data-feather="x-circle"></i> Reject</button>
                                             @endif
@@ -87,7 +97,7 @@
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label" for="auditor_id">Auditor : </label>
                             <div class="col-sm-9" style="max-height: 60px">
-                                <select class="js-example-basic-single form-control" multiple name="auditor_id[]" id="auditor_id">
+                                <select class="js-example-basic-single form-select" multiple name="auditor_id[]" id="auditor_id">
                                     <option value="">--Select Auditor--</option>
                                 </select>
                                 <span class="text-danger is-invalid auditor_id_err"></span>
