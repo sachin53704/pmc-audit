@@ -18,12 +18,12 @@ class AccountReceiptController extends Controller
     {
         $receipts = Receipt::query()
             ->withCount([
-                'subreceipts as dy_auditor_approved_count' => fn ($q) => $q->where('dy_auditor_status', 1),
-                'subreceipts as dy_auditor_rejected_count' => fn ($q) => $q->where('dy_auditor_status', 2),
-                'subreceipts as dy_mca_approved_count' => fn ($q) => $q->where('dy_mca_status', 1),
-                'subreceipts as dy_mca_rejected_count' => fn ($q) => $q->where('dy_mca_status', 2),
-                'subreceipts as mca_approved_count' => fn ($q) => $q->where('mca_status', 1),
-                'subreceipts as mca_rejected_count' => fn ($q) => $q->where('mca_status', 2),
+                'subreceipts as dy_auditor_approved_count' => fn($q) => $q->where('dy_auditor_status', 1),
+                'subreceipts as dy_auditor_rejected_count' => fn($q) => $q->where('dy_auditor_status', 2),
+                'subreceipts as dy_mca_approved_count' => fn($q) => $q->where('dy_mca_status', 1),
+                'subreceipts as dy_mca_rejected_count' => fn($q) => $q->where('dy_mca_status', 2),
+                'subreceipts as mca_approved_count' => fn($q) => $q->where('mca_status', 1),
+                'subreceipts as mca_rejected_count' => fn($q) => $q->where('mca_status', 2),
             ])
             ->latest()
             ->get();
@@ -93,9 +93,7 @@ class AccountReceiptController extends Controller
     }
 
 
-    public function show(Receipt $receipt)
-    {
-    }
+    public function show(Receipt $receipt) {}
 
 
     public function receiptDetails(Receipt $receipt)
@@ -347,11 +345,11 @@ class AccountReceiptController extends Controller
         $receipts = [];
 
         if ($userRole == 'DY Auditor') {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where('dy_auditor_status', 0))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 0))->latest()->get();
         } else if ($userRole == 'DY MCA') {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where(['dy_auditor_status' => 1, 'dy_mca_status' => 0]))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_auditor_status' => 1, 'dy_mca_status' => 0]))->latest()->get();
         } else {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where(['dy_mca_status' => 1, 'mca_status' => 0]))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where(['dy_mca_status' => 1, 'mca_status' => 0]))->latest()->get();
         }
 
         return view('admin.pending-receipts')->with(['receipts' => $receipts]);
@@ -363,11 +361,11 @@ class AccountReceiptController extends Controller
         $receipts = [];
 
         if ($userRole == 'DY Auditor') {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where('dy_auditor_status', 1))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 1))->latest()->get();
         } else if ($userRole == 'DY MCA') {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where('dy_mca_status', 1))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 1))->latest()->get();
         } else {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where('mca_status', 1))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 1))->latest()->get();
         }
 
         return view('admin.approved-receipts')->with(['receipts' => $receipts]);
@@ -379,11 +377,11 @@ class AccountReceiptController extends Controller
         $receipts = [];
 
         if ($userRole == 'DY Auditor') {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where('dy_auditor_status', 2))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_auditor_status', 2))->latest()->get();
         } else if ($userRole == 'DY MCA') {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where('dy_mca_status', 2))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('dy_mca_status', 2))->latest()->get();
         } else {
-            $receipts = Receipt::withWhereHas('subreceipts', fn ($q) => $q->where('mca_status', 2))->latest()->get();
+            $receipts = Receipt::withWhereHas('subreceipts', fn($q) => $q->where('mca_status', 2))->latest()->get();
         }
 
         return view('admin.rejected-receipts')->with(['receipts' => $receipts]);
@@ -394,14 +392,14 @@ class AccountReceiptController extends Controller
     {
         $roleName = Auth::user()->roles[0]->name;
         if ($roleName == 'DY MCA') {
-            $receipt->load(['subreceipts' => fn ($q) => $q->where('dy_auditor_status', 1)]);
+            $receipt->load(['subreceipts' => fn($q) => $q->where('dy_auditor_status', 1)]);
         } else if ($roleName == 'MCA') {
-            $receipt->load(['subreceipts' => fn ($q) => $q->where('dy_mca_status', 1)]);
+            $receipt->load(['subreceipts' => fn($q) => $q->where('dy_mca_status', 1)]);
         } else {
             $receipt->load('subreceipts');
         }
         $fileHtml = '
-            <a class="btn btn-primary btn-md px-2 mt-2" href="' . asset($receipt->file) . '" target="_blank" >View File</a>
+            <a class="btn btn-md px-2 mt-2" href="' . asset($receipt->file) . '" target="_blank" >View File</a>
         ';
 
         $roleWiseColumn = str_replace(' ', '_', strtolower($roleName));
@@ -434,7 +432,7 @@ class AccountReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">DY Auditor Action</label>
-                        <select name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select">
+                        <select name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select dyaditorAction">
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->dy_auditor_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->dy_auditor_status == 2 ? "selected" : "") . '>Reject</option>
@@ -449,7 +447,7 @@ class AccountReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">DY MCA Action</label>
-                        <select name="' . ($roleName == "DY MCA" ? $actionFieldName : "") . '" class="form-select" ' . ($roleName == "DY MCA" ? $isEditable : "readonly") . '>
+                        <select name="' . ($roleName == "DY MCA" ? $actionFieldName : "") . '" class="form-select dymcaAction" ' . ($roleName == "DY MCA" ? $isEditable : "readonly") . '>
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->dy_mca_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->dy_mca_status == 2 ? "selected" : "") . '>Reject</option>
@@ -464,7 +462,7 @@ class AccountReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">MCA Action</label>
-                        <select name="' . ($roleName == "MCA" ? $actionFieldName : "") . '" class="form-select" ' . ($roleName == "MCA" ? $isEditable : "readonly") . '>
+                        <select name="' . ($roleName == "MCA" ? $actionFieldName : "") . '" class="form-select mcaAction" ' . ($roleName == "MCA" ? $isEditable : "readonly") . '>
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->mca_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->mca_status == 2 ? "selected" : "") . '>Reject</option>

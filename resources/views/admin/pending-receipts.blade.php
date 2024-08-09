@@ -47,8 +47,21 @@
                             <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
                                 <div class="col-12 mt-3">
                                     <div class="alert alert-primary">
-                                        <strong>Sub-Receipts</strong>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-6">
+                                                <strong>Sub-Receipts</strong>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-6">
+                                                <select class="form-select w-50 changeSubReceiptStatus">
+                                                    <option value="">Select</option>
+                                                    <option value="1">Approve</option>
+                                                    <option value="2">Reject</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    
                                 </div>
 
                                 <div class="col-12" id="subreceiptSection">
@@ -193,6 +206,30 @@
 
                 });
             });
+        </script>
+
+
+        <script>
+            $(document).ready(function(){
+                $('body').on('change', '.changeSubReceiptStatus', function(){
+                    let status = $(this).val();
+                    
+                    @if(Auth::user()->hasRole("DY Auditor"))
+                        let statusClass = ".dyaditorAction";
+                    @elseif(Auth::user()->hasRole('DY MCA'))
+                        let statusClass = ".dymcaAction";
+                    @elseif(Auth::user()->hasRole('MCA'))
+                        let statusClass = ".mcaAction";
+                    @endif
+                    if(status == "1"){
+                        $('body').find(statusClass).val(1).change();
+                    }else if(status == "2"){
+                        $('body').find(statusClass).val(2).change();
+                    }else{
+                        $('body').find(statusClass).val("").change();
+                    }
+                })
+            })
         </script>
     @endpush
 

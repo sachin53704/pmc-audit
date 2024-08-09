@@ -274,10 +274,34 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'payment-receipt.reject',
                 'group' => 'dy_auditor',
             ],
+            [
+                'id' => 53,
+                'name' => 'diary.index',
+                'group' => 'diary',
+            ],
+            [
+                'id' => 54,
+                'name' => 'diary.create',
+                'group' => 'diary',
+            ],
+            [
+                'id' => 55,
+                'name' => 'diary.edit',
+                'group' => 'diary',
+            ],
+            [
+                'id' => 56,
+                'name' => 'diary.delete',
+                'group' => 'diary',
+            ],
+            [
+                'id' => 57,
+                'name' => 'diary.view',
+                'group' => 'diary',
+            ],
         ];
 
-        foreach ($permissions as $permission)
-        {
+        foreach ($permissions as $permission) {
             Permission::updateOrCreate([
                 'id' => $permission['id']
             ], [

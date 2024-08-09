@@ -55,12 +55,17 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     {
-        return ($this->first_name).($this->middle_name ? ' '.$this->middle_name : '').($this->last_name ? ' '.$this->last_name : '');
+        return ($this->first_name) . ($this->middle_name ? ' ' . $this->middle_name : '') . ($this->last_name ? ' ' . $this->last_name : '');
     }
 
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
+
+    public function diaries()
+    {
+        return $this->hasMany(Diary::class, 'user_id', 'id');
     }
 
 

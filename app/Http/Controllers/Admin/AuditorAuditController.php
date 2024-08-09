@@ -20,7 +20,7 @@ class AuditorAuditController extends Controller
 
         $audits = Audit::query()
             ->where('status', '>=', Audit::AUDIT_STATUS_AUDITOR_ASSIGNED)
-            ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
+            ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
             ->latest()
             ->get();
 
@@ -31,8 +31,10 @@ class AuditorAuditController extends Controller
     public function getAuditInfo(Request $request)
     {
         $audit = Audit::query()
-            ->when($request->relations, fn ($q) => $q->with($request->relations))
-            ->with('department')
+            ->when($request->relations, fn($q) => $q->with([$request->relations => function ($q) {
+                $q->where('user_id', Auth::user()->id);
+            }]))
+            ->with(['department'])
             ->where('id', $request->audit_id)->first();
 
         $audit->obj_date = Carbon::parse($audit->obj_date)->format('Y-m-d');
@@ -69,7 +71,7 @@ class AuditorAuditController extends Controller
         $user = Auth::user();
 
         $audits = Audit::query()
-            ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
+            ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
             ->where('status', '>=', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
             ->latest()
             ->get();
@@ -115,6 +117,7 @@ class AuditorAuditController extends Controller
                 AuditObjection::updateOrCreate([
                     'objection_no' => $request->{$objNoParamName},
                     'audit_id' => $audit->id,
+                    'user_id' => Auth::user()->id,
                 ], [
                     'objection' => $request->{$reqParamName},
                 ]);
@@ -134,7 +137,7 @@ class AuditorAuditController extends Controller
 
         $audits = Audit::query()
             ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
-            ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
+            ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
             ->latest()
             ->get();
 
@@ -144,9 +147,9 @@ class AuditorAuditController extends Controller
 
     public function answerDetails(Request $request, Audit $audit)
     {
-        $audit->load(['objections' => fn ($q) => $q->with([
-            'auditorApprover' => fn ($q) => $q->first()?->append('full_name'),
-            'answeredBy' => fn ($q) => $q->first()?->append('full_name')
+        $audit->load(['objections' => fn($q) => $q->where('user_id', Auth::user()->id)->with([
+            'auditorApprover' => fn($q) => $q->first()?->append('full_name'),
+            'answeredBy' => fn($q) => $q->first()?->append('full_name')
         ])]);
 
         $isEditable = Auth::user()->hasRole(['Auditor']) ? 'readonly' : '';

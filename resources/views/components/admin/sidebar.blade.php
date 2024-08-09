@@ -100,6 +100,15 @@
                             </li>
                         @endcan
 
+                        @can('diary.index')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('diary.index') ? 'active' : '' }}" href="{{ route('diary.index') }}" >
+                                    <i class="ri-pages-line"></i>
+                                    <span data-key="t-dashboards">Diary</span>
+                                </a>
+                            </li>
+                        @endcan
+
 
                         @canany(['audit_list.pending', 'audit_list.approved', 'audit_list.rejected'])
                             <li class="nav-item">
