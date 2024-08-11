@@ -299,6 +299,21 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'diary.view',
                 'group' => 'diary',
             ],
+            [
+                'id' => 58,
+                'name' => 'report.para-audit',
+                'group' => 'report',
+            ],
+            [
+                'id' => 59,
+                'name' => 'report.complience-answer',
+                'group' => 'report',
+            ],
+            [
+                'id' => 60,
+                'name' => 'report.department',
+                'group' => 'report',
+            ],
         ];
 
         foreach ($permissions as $permission) {

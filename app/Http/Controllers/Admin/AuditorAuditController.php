@@ -195,7 +195,7 @@ class AuditorAuditController extends Controller
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="action_' . $key . '">Auditor Action</label>
-                    <select name="action_' . $key . '" class="form-control" ' . $isAuditorReadonly . '>
+                    <select name="action_' . $key . '" class="form-select" ' . $isAuditorReadonly . '>
                         <option value="">Action</option>
                         <option value="1" ' . ($objection->auditor_action_status == 1 ? "selected" : "") . '>Approve</option>
                         <option value="2" ' . ($objection->auditor_action_status == 2 ? "selected" : "") . '>Reject</option>
@@ -209,7 +209,7 @@ class AuditorAuditController extends Controller
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="mca_action_' . $key . '">MCA Action</label>
-                    <select name="mca_action_' . $key . '" readonly class="form-control">
+                    <select name="mca_action_' . $key . '" readonly class="form-select">
                         <option value="">Action</option>
                         <option value="1" ' . ($objection->mca_action_status == 1 ? "selected" : "") . '>Approve</option>
                         <option value="2" ' . ($objection->mca_action_status == 2 ? "selected" : "") . '>Reject</option>

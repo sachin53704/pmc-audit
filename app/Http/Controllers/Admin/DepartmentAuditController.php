@@ -40,7 +40,7 @@ class DepartmentAuditController extends Controller
     public function complianceInfo(Request $request, Audit $audit)
     {
         $audit->load(['objections' => fn($q) => $q->whereNotNull('user_id')->with([
-            'auditorApprover' => fn($q) => $q->first()?->append('full_name')
+            'user', 'auditorApprover' => fn($q) => $q->first()?->append('full_name')
         ])]);
 
         $innerHtml = '
@@ -61,7 +61,10 @@ class DepartmentAuditController extends Controller
             $innerHtml .= '
                 <div class="row custm-card">
                     <input type="hidden" name="objection_id[]" value="' . $objection->id . '">
-                    <div class="col-md-3 mt-3">
+                    <div class="col-12 mt-3">
+                        <h5>'.$objection?->user?->first_name.' '.$objection?->user?->middle_name. ' '.$objection?->user?->last_name.'('.$objection?->user?->auditor_no.')'.'</h5>
+                    </div>
+                    <div class="col-md-3">
                         <label class="col-form-label" for="objection_' . $key . '">(Objection ' . $objection->objection_no . ')</label>
                         <textarea name="objection_' . $key . '" id="objection_' . $key . '" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $objection->objection . '</textarea>
                     </div>

@@ -23,6 +23,12 @@ class AuditObjection extends BaseModel
     {
         return $this->belongsTo(Audit::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function answeredBy()
     {
         return $this->belongsTo(User::class, 'answered_by', 'id');

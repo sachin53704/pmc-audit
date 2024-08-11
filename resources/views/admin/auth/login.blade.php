@@ -19,9 +19,9 @@
 
 <body>
 
-    <div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+    <div class="auth-page-wrapper auth-bg-cover pt-5 d-flex justify-content-center align-items-center min-vh-100">
         <div class="bg-overlay"></div>
-        <div class="auth-page-content overflow-hidden pt-lg-5">
+        <div class="auth-page-content overflow-hidden">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -114,7 +114,7 @@
         </div>
 
 
-        <footer class="footer">
+        {{-- <footer class="footer">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -124,7 +124,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

@@ -168,7 +168,6 @@
                             </li>
                         @endcan
 
-
                         @can('department_letter.view')
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('department-letter.index') ? 'active' : '' }}" href="{{ route('department-letter.index') }}" >
@@ -209,14 +208,43 @@
                         @endcan
 
 
-                        @can('report.final-report')
+
+                        @canany(['report.final-report'])
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('final-report') ? 'active' : '' }}" href="{{ route('final-report') }}" >
-                                    <i class="ri-draft-line"></i>
-                                    <span data-key="t-dashboards">Final Report</span>
+                                <a class="nav-link menu-link {{ request()->routeIs('final-report') || request()->routeIs('departments.index') || request()->routeIs('complience-answer-report') ? 'active' : '' }}" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                                    <i class="ri-layout-3-line"></i>
+                                    <span data-key="t-layouts">Report</span>
                                 </a>
+                                <div class="collapse menu-dropdown" id="sidebarLayouts">
+                                    <ul class="nav nav-sm flex-column">
+                                        @can('report.final-report')
+                                            <li class="nav-item">
+                                                <a href="{{ route('final-report') }}" class="nav-link {{ request()->routeIs('final-report') ? 'active' : '' }}" data-key="t-horizontal">Final Report</a>
+                                            </li>
+                                        @endcan
+                                        @can('report.para-audit')
+                                        {{-- hmm not get objection answer --}}
+                                            <li class="nav-item">
+                                                <a href="{{ route('para-audit-report') }}" class="nav-link {{ request()->routeIs('para-audit-report') ? 'active' : '' }}" data-key="t-horizontal">Para Audit Report</a>
+                                            </li>
+                                        @endcan
+                                        @can('report.complience-answer')
+                                        {{-- hmm get objection answer --}}
+                                            <li class="nav-item">
+                                                <a href="{{ route('complience-answer-report') }}" class="nav-link {{ request()->routeIs('complience-answer-report') ? 'active' : '' }}" data-key="t-horizontal">Complience Answer Report</a>
+                                            </li>
+                                        @endcan
+                                        @can('report.department')
+                                        {{-- hmm get objection answer --}}
+                                            <li class="nav-item">
+                                                <a href="{{ route('cdepartment-program-audit') }}" class="nav-link {{ request()->routeIs('cdepartment-program-audit') ? 'active' : '' }}" data-key="t-horizontal">Department Program Audit Report</a>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </div>
                             </li>
-                        @endcan
+                        @endcanany
+
                     @else
 
                         @if(auth()->user()->department_id == 1 )

@@ -71,7 +71,12 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('draft-review', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftReview'])->name('draft-review');
     Route::get('draft-answer-details/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftAnswerDetails'])->name('draft-answer-details');
     Route::put('draft-approve-answers/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftApproveAnswer'])->name('draft-approve-answers');
-    Route::get('final-report', [App\Http\Controllers\Admin\MCAAuditController::class, 'finalReport'])->name('final-report');
+    Route::get('final-report', [App\Http\Controllers\Admin\ReportController::class, 'finalReport'])->name('final-report');
+    Route::get('para-audit-report', [App\Http\Controllers\Admin\ReportController::class, 'paraAuditReport'])->name('para-audit-report');
+    Route::get('complience-answer-report', [App\Http\Controllers\Admin\ReportController::class, 'complienceAnswerReport'])->name('complience-answer-report');
+    Route::post('report/getQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getResponseQuestion'])->name('report-get-response-question');
+    Route::post('report/getUnanswerQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getUnanswerQuestion'])->name('report-get-unresponse-question');
+    Route::get('report/department-program-audit', [App\Http\Controllers\Admin\ReportController::class, 'departmentWiseProgramAudit'])->name('department-program-audit');
 
 
 

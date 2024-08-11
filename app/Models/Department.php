@@ -13,6 +13,16 @@ class Department extends BaseModel
 
     protected $fillable = ['name', 'is_audit', 'created_by', 'updated_by', 'deleted_by'];
 
+    public function audit(){
+        return $this->hasMany(Audit::class, 'department_id', 'id');
+    }
+
+    
+    public function auditObjections()
+    {
+        return $this->hasManyThrough(AuditObjection::class, Audit::class, );
+    }
+
 
     // public static function booted()
     // {

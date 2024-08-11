@@ -180,6 +180,7 @@ class MCAAuditController extends Controller
             'objections' => fn ($q) => $q
                 ->where('auditor_action_status', 1)
                 ->with([
+                    'user',
                     'mcaApprover' => fn ($q) => $q->first()?->append('full_name'),
                     'answeredBy' => fn ($q) => $q->first()?->append('full_name')
                 ])
@@ -203,7 +204,8 @@ class MCAAuditController extends Controller
             $innerHtml .= '
                 <div class="row custm-card">
                     <input type="hidden" name="objection_id[]" value="' . $objection->id . '">
-                    <div class="col-md-3 mt-3">
+                    <h5>'.$objection?->user?->first_name.' '.$objection?->user?->middle_name. ' '.$objection?->user?->last_name.'('.$objection?->user?->auditor_no.')'.'</h5>
+                    <div class="col-md-3">
                         <label class="col-form-label" for="objection_' . $key . '">(Objection ' . $objection->objection_no . ')</label>
                         <textarea name="objection_' . $key . '" id="objection_' . $key . '" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $objection->objection . '</textarea>
                     </div>
@@ -227,7 +229,7 @@ class MCAAuditController extends Controller
                     </div>
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">Approve/Reject</label>
-                        <select name="action_' . $key . '" readonly class="form-control">
+                        <select name="action_' . $key . '" readonly class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($objection->auditor_action_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($objection->auditor_action_status == 2 ? "selected" : "") . '>Reject</option>
@@ -241,7 +243,7 @@ class MCAAuditController extends Controller
                     </div>
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="mca_action_' . $key . '">MCA Action</label>
-                        <select name="mca_action_' . $key . '" ' . $isEditable . ' class="form-control">
+                        <select name="mca_action_' . $key . '" ' . $isEditable . ' class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($objection->mca_action_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($objection->mca_action_status == 2 ? "selected" : "") . '>Reject</option>
@@ -316,8 +318,6 @@ class MCAAuditController extends Controller
 
     public function finalReport(Request $request)
     {
-        $user = Auth::user();
-
         $audits = Audit::query()
             ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
             ->withCount([
