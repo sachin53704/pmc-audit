@@ -237,7 +237,7 @@
                                         @can('report.department')
                                         {{-- hmm get objection answer --}}
                                             <li class="nav-item">
-                                                <a href="{{ route('cdepartment-program-audit') }}" class="nav-link {{ request()->routeIs('cdepartment-program-audit') ? 'active' : '' }}" data-key="t-horizontal">Department Program Audit Report</a>
+                                                <a href="{{ route('department-program-audit') }}" class="nav-link {{ request()->routeIs('cdepartment-program-audit') ? 'active' : '' }}" data-key="t-horizontal">Department Program Audit Report</a>
                                             </li>
                                         @endcan
                                     </ul>
