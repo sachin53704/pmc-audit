@@ -103,8 +103,8 @@ class MCAAuditController extends Controller
         $audits = Audit::query()
             ->withCount('assignedAuditors as assigned_auditors_count')
             // ->where('department_id', Auth::user()->department_id)
-            ->when($statusCode == 2, fn ($q) => $q->where('mca_status', 2)->orWhere('status', '>=', 4))
-            ->when($statusCode != 2, fn ($q) => $q->where('mca_status', $statusCode))
+            ->when($statusCode == 2, fn($q) => $q->where('mca_status', 2)->orWhere('status', '>=', 4))
+            ->when($statusCode != 2, fn($q) => $q->where('mca_status', $statusCode))
             ->latest()
             ->get();
 
@@ -119,7 +119,7 @@ class MCAAuditController extends Controller
     public function getAuditors(Audit $audit)
     {
         $userAssignedAudit = UserAssignedAudit::where('audit_id', $audit->id)->latest()->pluck('user_id')->toArray();
-        $auditors = User::withWhereHas('roles', fn ($q) => $q->where('name', 'Auditor'))->orderBy('id', 'DESC')->get()->append('full_name');
+        $auditors = User::withWhereHas('roles', fn($q) => $q->where('name', 'Auditor'))->orderBy('id', 'DESC')->get()->append('full_name');
 
         $auditorsHtml = '<span>
             <option value="">--Select Auditor--</option>';
@@ -161,8 +161,6 @@ class MCAAuditController extends Controller
 
     public function draftReview(Request $request)
     {
-        $user = Auth::user();
-
         $audits = Audit::query()
             ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
             // ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
@@ -177,12 +175,12 @@ class MCAAuditController extends Controller
     public function draftAnswerDetails(Request $request, Audit $audit)
     {
         $audit->load([
-            'objections' => fn ($q) => $q
+            'objections' => fn($q) => $q
                 ->where('auditor_action_status', 1)
                 ->with([
                     'user',
-                    'mcaApprover' => fn ($q) => $q->first()?->append('full_name'),
-                    'answeredBy' => fn ($q) => $q->first()?->append('full_name')
+                    'mcaApprover' => fn($q) => $q->first()?->append('full_name'),
+                    'answeredBy' => fn($q) => $q->first()?->append('full_name')
                 ])
         ]);
 
@@ -204,7 +202,7 @@ class MCAAuditController extends Controller
             $innerHtml .= '
                 <div class="row custm-card">
                     <input type="hidden" name="objection_id[]" value="' . $objection->id . '">
-                    <h5>'.$objection?->user?->first_name.' '.$objection?->user?->middle_name. ' '.$objection?->user?->last_name.'('.$objection?->user?->auditor_no.')'.'</h5>
+                    <h5>' . $objection?->user?->first_name . ' ' . $objection?->user?->middle_name . ' ' . $objection?->user?->last_name . '(' . $objection?->user?->auditor_no . ')' . '</h5>
                     <div class="col-md-3">
                         <label class="col-form-label" for="objection_' . $key . '">(Objection ' . $objection->objection_no . ')</label>
                         <textarea name="objection_' . $key . '" id="objection_' . $key . '" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $objection->objection . '</textarea>
@@ -321,8 +319,8 @@ class MCAAuditController extends Controller
         $audits = Audit::query()
             ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
             ->withCount([
-                'objections as approved' => fn ($q) => $q->where('status', 4),
-                'objections as unapproved' => fn ($q) => $q->where('status', 5),
+                'objections as approved' => fn($q) => $q->where('status', 4),
+                'objections as unapproved' => fn($q) => $q->where('status', 5),
             ])
             // ->where('department_id', Auth::user()->department_id)
             ->latest()
