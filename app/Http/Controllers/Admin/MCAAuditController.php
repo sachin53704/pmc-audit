@@ -101,12 +101,14 @@ class MCAAuditController extends Controller
         $page_type = 'assign_auditor';
 
         $audits = Audit::query()
-            ->withCount('assignedAuditors as assigned_auditors_count')
+            ->with('assignedAuditors.user')
             // ->where('department_id', Auth::user()->department_id)
             ->when($statusCode == 2, fn($q) => $q->where('mca_status', 2)->orWhere('status', '>=', 4))
             ->when($statusCode != 2, fn($q) => $q->where('mca_status', $statusCode))
             ->latest()
             ->get();
+
+        // return $audits;
 
         // $audits = Audit::query()->withCount('assignedAuditors as assigned_auditors_count')
         //         ->when(Auth::user()->hasRole('MCA'), fn($q) => $q->where('mca_status', 2))

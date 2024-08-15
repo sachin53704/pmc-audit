@@ -18,6 +18,7 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
+                                    <th>Assign Auditor</th>
                                     @if(Request()->status == "pending" || Request()->status == "rejected")
                                     <th>Status</th>
                                     @endif
@@ -34,6 +35,11 @@
                                         <td>{{ Str::limit($audit->remark, '85') }}</td>
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                        </td>
+                                        <td>
+                                            @foreach($audit->assignedAuditors as $auditor)
+                                            {{ $loop->iteration.'. '.$auditor?->user?->first_name.' '.$auditor?->user?->middle_name.' '.$auditor?->user?->last_name }}<br>
+                                            @endforeach
                                         </td>
                                         @if(Request()->status == "pending" || Request()->status == "rejected")
                                         <td>
@@ -53,7 +59,7 @@
                                             @endif
                                             {{-- @if($status == 'pending' && isset($page_type) && $page_type != 'assign_auditor') --}}
                                             @if (isset($page_type) && $page_type == 'assign_auditor')
-                                                @if($audit->assigned_auditors_count > 0)
+                                                @if(count($audit->assignedAuditors) > 0)
                                                     <button class="btn btn-secondary px-2 py-1" title="Auditor Assigned" disabled><i data-feather="user-check"></i> Auditor Assigned</button>
                                                 @else
                                                     @can('audit_list.assign')

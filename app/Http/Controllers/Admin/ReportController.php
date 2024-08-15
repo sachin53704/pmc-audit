@@ -111,18 +111,19 @@ class ReportController extends Controller
 
     public function departmentWiseProgramAudit(Request $request)
     {
-
         $objections = Department::when(Auth::user()->hasRole('Auditor'), function ($q) use ($request) {
             $q->withCount([
-                'auditObjections as unapproved' => fn($q) => $q->whereNull('answer')->where('user_id', Auth::user()->id)->where('auditor_action_status', 0),
+                'auditObjections as unapproved' => fn($q) => $q->where('user_id', Auth::user()->id)->where('auditor_action_status', 0),
                 'auditObjections as approved' => fn($q) => $q->where('auditor_action_status', 1)->where('user_id', Auth::user()->id),
             ])->whereHas('audit', fn($q) => $q->where('department_id', Auth::user()->department_id));
         })->when(Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA') || Auth::user()->hasRole('Super Admin') || Auth::user()->hasRole('Admin'), function ($q) use ($request) {
             $q->withCount([
-                'auditObjections as approved' => fn($q) => $q->where('status', 4),
-                'auditObjections as unapproved' => fn($q) => $q->whereNull('answer')->where('status', 5),
+                'auditObjections as approved' => fn($q) => $q->where('mca_action_status', 1),
+                'auditObjections as unapproved' => fn($q) => $q->where('mca_action_status', 2),
             ]);
         })->get();
+
+        // return $objections;
 
         return view('admin.report.department-report')->with([
             'objections' => $objections
