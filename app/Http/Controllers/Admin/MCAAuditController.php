@@ -197,6 +197,15 @@ class MCAAuditController extends Controller
                         <input name="date" class="form-control" readonly type="date" value="' . $audit->date . '">
                     </div>
                 </div>';
+        $auditorSatus = "disabled";
+        $mcaSatus = "disabled";
+        if(Auth::user()->hasRole('Auditor')){
+            $auditorSatus = "";
+        }
+
+        if(Auth::user()->hasRole('MCA')){
+            $mcaSatus = "";
+        }
 
         foreach ($audit->objections as $key => $objection) {
             $isEditable = $objection->status > 3 ? 'readonly' : '';
@@ -229,7 +238,7 @@ class MCAAuditController extends Controller
                     </div>
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">Approve/Reject</label>
-                        <select name="action_' . $key . '" readonly class="form-select">
+                        <select name="action_' . $key . '" readonly '.$auditorSatus.' class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($objection->auditor_action_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($objection->auditor_action_status == 2 ? "selected" : "") . '>Reject</option>
@@ -243,7 +252,7 @@ class MCAAuditController extends Controller
                     </div>
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="mca_action_' . $key . '">MCA Action</label>
-                        <select name="mca_action_' . $key . '" ' . $isEditable . ' class="form-select">
+                        <select '.$mcaSatus.' name="mca_action_' . $key . '" ' . $isEditable . ' class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($objection->mca_action_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($objection->mca_action_status == 2 ? "selected" : "") . '>Reject</option>
