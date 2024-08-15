@@ -85,12 +85,12 @@
                     e.preventDefault();
 
                     let id = $(this).attr('data-id');
+                    
                     $.ajax({
                         url: "{{ route('report-get-unresponse-question') }}",
                         type: 'POST',
                         data: {
                             '_token': "{{ csrf_token() }}",
-                            status: '0',
                             id: id
                         },
                         success: function(data, textStatus, jqXHR) {
@@ -106,6 +106,7 @@
                                 </tr>`;
                                 count++;
                             })
+                            
                             $('#responseQuestion').html(html)                            
                         },
                         error: function(error, jqXHR, textStatus, errorThrown) {
