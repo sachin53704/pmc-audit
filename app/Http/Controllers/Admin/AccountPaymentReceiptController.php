@@ -259,6 +259,11 @@ class AccountPaymentReceiptController extends Controller
                 </div>';
         }
 
+        if(count($receipt->subreceipts) == 0){
+            $subreceiptHtml .= '
+                <div class="row editReceiptSection custm-card d-none mx-1"></div>';
+        }
+
 
         $response = [
             'result' => 1,
@@ -273,6 +278,7 @@ class AccountPaymentReceiptController extends Controller
 
     public function update(Request $request, PaymentReceipt $payment_receipt)
     {
+        \Log::info($request->all());
         $receipt = $payment_receipt;
         $fieldArray['description'] = 'required';
         $fieldArray['from_date'] = 'required';

@@ -255,6 +255,11 @@ class AccountReceiptController extends Controller
                 </div>';
         }
 
+        if(count($receipt->subreceipts) == 0){
+            $subreceiptHtml .= '
+                <div class="row editReceiptSection custm-card mx-1 d-none"></div>';
+        }
+
 
         $response = [
             'result' => 1,
