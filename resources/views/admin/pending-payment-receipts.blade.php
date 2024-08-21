@@ -37,10 +37,8 @@
                                 <input class="form-control" readonly name="amount" type="number" placeholder="Enter Amount">
                                 <span class="text-danger is-invalid amount_err"></span>
                             </div>
-                            <div class="col-md-1 mt-3">
-                                <div class="card">
-                                    <div class="card-body" id="editImageSection">
-                                    </div>
+                            <div class="col-md-3 mt-3">
+                                <div id="editImageSection" class="mt-4">
                                 </div>
                             </div>
 

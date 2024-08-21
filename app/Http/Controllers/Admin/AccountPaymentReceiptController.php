@@ -273,7 +273,6 @@ class AccountPaymentReceiptController extends Controller
 
     public function update(Request $request, PaymentReceipt $payment_receipt)
     {
-        \Log::info($request->all());
         $receipt = $payment_receipt;
         $fieldArray['description'] = 'required';
         $fieldArray['from_date'] = 'required';
@@ -419,6 +418,12 @@ class AccountPaymentReceiptController extends Controller
         $dyMca = (Auth::user()->hasRole('DY MCA')) ? '=' : 'disabled';
         $mca = (Auth::user()->hasRole('MCA')) ? '=' : 'disabled';
 
+
+        $dyAuditorRequired = (Auth::user()->hasRole('DY Auditor')) ? 'required' : '';
+        $dyMcaRequired = (Auth::user()->hasRole('DY MCA')) ? 'required' : '';
+        $mcaRequired = (Auth::user()->hasRole('MCA')) ? 'required' : '';
+
+
         $subreceiptHtml = '';
         foreach ($receipt->subreceipts as $key => $subreceipt) {
             $isEditable = $subreceipt->{$roleWiseColumn . '_status'} != 0 ? "readonly" : "";
@@ -451,7 +456,7 @@ class AccountPaymentReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">DY Auditor Action</label>
-                        <select ' . $dyAuditor . ' name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select">
+                        <select ' . $dyAuditorRequired . ' ' . $dyAuditor . ' name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->dy_auditor_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->dy_auditor_status == 2 ? "selected" : "") . '>Reject</option>
@@ -466,7 +471,7 @@ class AccountPaymentReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">DY MCA Action</label>
-                        <select ' . $dyMca . ' name="' . ($roleName == "DY MCA" ? $actionFieldName : "") . '" class="form-select" ' . ($roleName == "DY MCA" ? $isEditable : "readonly") . '>
+                        <select ' . $dyMcaRequired . ' ' . $dyMca . ' name="' . ($roleName == "DY MCA" ? $actionFieldName : "") . '" class="form-select" ' . ($roleName == "DY MCA" ? $isEditable : "readonly") . '>
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->dy_mca_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->dy_mca_status == 2 ? "selected" : "") . '>Reject</option>
@@ -481,7 +486,7 @@ class AccountPaymentReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">MCA Action</label>
-                        <select ' . $mca . ' name="' . ($roleName == "MCA" ? $actionFieldName : "") . '" class="form-select" ' . ($roleName == "MCA" ? $isEditable : "readonly") . '>
+                        <select ' . $mcaRequired . ' ' . $mca . ' name="' . ($roleName == "MCA" ? $actionFieldName : "") . '" class="form-select" ' . ($roleName == "MCA" ? $isEditable : "readonly") . '>
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->mca_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->mca_status == 2 ? "selected" : "") . '>Reject</option>
