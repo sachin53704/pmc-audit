@@ -126,11 +126,9 @@ class AccountPaymentReceiptController extends Controller
                     <span class="text-danger is-invalid amount_err"></span>
                 </div>
                 <div class="col-md-4 mt-3">
-                    <div class="card">
-                        <div class="card-body" id="editImageSection">
+                        <div id="editImageSection" class="mt-4">
                             <a href="' . asset($receipt->file) . '" class="btn btn-primary" target="_blank">View File</a>
                         </div>
-                    </div>
                 </div>';
 
         $receiptHtml .= '<div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
@@ -156,10 +154,8 @@ class AccountPaymentReceiptController extends Controller
                                         <input class="form-control" readonly name="amount_' . $key . '" type="number" value="' . $subreceipt->amount . '" placeholder="Enter Amount">
                                     </div>
                                     <div class="col-md-4 mt-2">
-                                        <div class="card mb-0 mt-4">
-                                            <div class="card-body">
-                                                <a href="' . asset($subreceipt->file) . '" target="_blank">View File</a>
-                                            </div>
+                                        <div class="mb-0 mt-4">
+                                            <a href="' . asset($subreceipt->file) . '" class="btn btn-primary" target="_blank">View File</a>
                                         </div>
                                     </div>
 
