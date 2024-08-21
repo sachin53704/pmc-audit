@@ -31,10 +31,11 @@ class DashboardController extends Controller
                 'rejectedAuditCount' => $rejectedAuditCount
             ]);
         } elseif ($userRole->name == "MCA" || $userRole->name == "DY MCA") {
-            $pendingAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_PENDING])->count();
-            $approvedAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_APPROVED])->count();
-            $rejectedAuditCount = Audit::where(['status' => Audit::AUDIT_STATUS_REJECTED])->count();
+            $pendingAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 1]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['mca_status' => 1]))->count();
+            $approvedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 2]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['mca_status' => 2]))->count();
+            $rejectedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 3]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['mca_status' => 3]))->count();
             $draftAuditCount = Audit::where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)->count();
+
 
             $columnName = strtolower(str_replace(' ', '_', $userRole->name));
             $pendingReceipts = SubReceipt::where($columnName . '_status', 0)->groupBy('receipt_id')->count();
@@ -44,6 +45,7 @@ class DashboardController extends Controller
             $pendingPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 0)->groupBy('payment_receipt_id')->count();
             $approvedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 1)->groupBy('payment_receipt_id')->count();
             $rejectedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 2)->groupBy('payment_receipt_id')->count();
+
 
             return view('admin.dashboard.mca')->with([
                 'pendingAuditCount' => $pendingAuditCount,
