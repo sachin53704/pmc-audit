@@ -7,6 +7,7 @@ use App\Models\Audit;
 use App\Models\Receipt;
 use App\Models\SubPaymentReceipt;
 use App\Models\SubReceipt;
+use App\Models\PaymentReceipt;
 use App\Models\UserAssignedAudit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -53,9 +54,19 @@ class DashboardController extends Controller
                 $q->where($columnName . '_status', 2);
             })->count();
 
-            $pendingPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 0)->groupBy('payment_receipt_id')->count();
-            $approvedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 1)->groupBy('payment_receipt_id')->count();
-            $rejectedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 2)->groupBy('payment_receipt_id')->count();
+            // $pendingPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 0)->groupBy('payment_receipt_id')->count();
+            // $approvedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 1)->groupBy('payment_receipt_id')->count();
+            // $rejectedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 2)->groupBy('payment_receipt_id')->count();
+
+            $pendingPaymentReceipts = PaymentReceipt::whereHas('subreceipts', function ($q) use ($columnName) {
+                $q->where($columnName . '_status', 0);
+            })->count();
+            $approvedPaymentReceipts = PaymentReceipt::whereHas('subreceipts', function ($q) use ($columnName) {
+                $q->where($columnName . '_status', 1);
+            })->count();
+            $rejectedPaymentReceipts = PaymentReceipt::whereHas('subreceipts', function ($q) use ($columnName) {
+                $q->where($columnName . '_status', 2);
+            })->count();
 
 
             return view('admin.dashboard.mca')->with([
