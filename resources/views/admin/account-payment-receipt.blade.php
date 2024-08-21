@@ -147,8 +147,8 @@
                                 </div>
                                 <div class="row justify-content-end mb-3">
                                     <div class="col-md-6 col-sm-12">
-                                        <button type="button" class="btn btn-danger editFormRemove float-start w-25 mt-2 mx-1">Remove</button>
-                                        <button type="button" class="btn btn-primary add-more-edit w-25 float-end mt-2 mx-1">Add More</button>
+                                        {{-- <button type="button" class="btn btn-danger editFormRemove float-start w-25 mt-2 mx-1">Remove</button>
+                                        <button type="button" class="btn btn-primary add-more-edit w-25 float-end mt-2 mx-1">Add More</button> --}}
                                     </div>
                                 </div>
                             </div>
