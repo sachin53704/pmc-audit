@@ -417,9 +417,9 @@ class AccountPaymentReceiptController extends Controller
         $roleWiseColumn = str_replace(' ', '_', strtolower($roleName));
 
 
-        $dyAuditor = (Auth::user()->hasRole('DY Auditor')) ? '=' : 'disabled';
-        $dyMca = (Auth::user()->hasRole('DY MCA')) ? '=' : 'disabled';
-        $mca = (Auth::user()->hasRole('MCA')) ? '=' : 'disabled';
+        $dyAuditor = (Auth::user()->hasRole('DY Auditor')) ? '' : 'disabled';
+        $dyMca = (Auth::user()->hasRole('DY MCA')) ? '' : 'disabled';
+        $mca = (Auth::user()->hasRole('MCA')) ? '' : 'disabled';
 
 
         $dyAuditorRequired = (Auth::user()->hasRole('DY Auditor')) ? 'required' : '';
@@ -450,16 +450,12 @@ class AccountPaymentReceiptController extends Controller
                         <span class="text-danger is-invalid amount_' . $key . '_err"></span>
                     </div>
                     <div class="col-md-4 mt-2">
-                        <div class="card mb-0 mt-4">
-                            <div class="card-body">
-                                <a href="' . asset($subreceipt->file) . '" target="_blank">View File</a>
-                            </div>
-                        </div>
+                        <a href="' . asset($subreceipt->file) . '" target="_blank" class="btn btn-primary">View File</a>
                     </div>
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">DY Auditor Action</label>
-                        <select ' . $dyAuditorRequired . ' ' . $dyAuditor . ' name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select">
+                        <select ' . $dyAuditorRequired . ' ' . $dyAuditor . '  name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->dy_auditor_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->dy_auditor_status == 2 ? "selected" : "") . '>Reject</option>
