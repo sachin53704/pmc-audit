@@ -19,27 +19,27 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" style="max-height: 100px; min-height:100px"></textarea>
+                                <textarea class="form-control" name="description" style="max-height: 100px; min-height:100px" required></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="from_date">From Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="from_date" type="date" onclick="this.showPicker()" placeholder="Select From Date">
+                                <input class="form-control" name="from_date" type="date" onclick="this.showPicker()" placeholder="Select From Date" required>
                                 <span class="text-danger is-invalid from_date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="to_date">To Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="to_date" type="date" onclick="this.showPicker()" placeholder="Select To Date">
+                                <input class="form-control" name="to_date" type="date" onclick="this.showPicker()" placeholder="Select To Date" required>
                                 <span class="text-danger is-invalid to_date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="amount">Amount <span class="text-danger">*</span></label>
-                                <input class="form-control" name="amount" type="number" placeholder="Enter Amount">
+                                <input class="form-control" name="amount" type="number" placeholder="Enter Amount" required>
                                 <span class="text-danger is-invalid amount_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="receipt_file">Upload Receipt<span class="text-danger">*</span></label>
-                                <input type="file" name="receipt_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                <input type="file" name="receipt_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
                                 <span class="text-danger is-invalid receipt_file_err"></span>
                             </div>
 
@@ -57,17 +57,17 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_0">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px"></textarea>
+                                            <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px" required></textarea>
                                             <span class="text-danger is-invalid detail_0_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="amount_0">Amount <span class="text-danger">*</span></label>
-                                            <input class="form-control" name="amount_0" type="number" placeholder="Enter Amount">
+                                            <input class="form-control" name="amount_0" type="number" placeholder="Enter Amount" required>
                                             <span class="text-danger is-invalid amount_0_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="sub_receipt_0">Upload Sub-Receipt<span class="text-danger">*</span></label>
-                                            <input type="file" name="sub_receipt_0" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                            <input type="file" name="sub_receipt_0" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
                                             <span class="text-danger is-invalid sub_receipt_0_err"></span>
                                         </div>
                                     </div>
@@ -131,11 +131,9 @@
                                 <input type="file" name="receipt_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
                                 <span class="text-danger is-invalid receipt_file_err"></span>
                             </div>
-                            <div class="col-md-1 mt-3">
-                                <div class="card">
-                                    <div class="card-body" id="editImageSection">
+                            <div class="col-md-3 mt-3">
+                                    <div id="editImageSection" class="mt-4">
                                     </div>
-                                </div>
                             </div>
 
                             <div class="col-md-12 mt-4" style="border: 1px solid #cfcfcf;border-radius: 8px;">
@@ -420,17 +418,17 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_${editFormCounter}">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_${editFormCounter}" style="max-height: 100px; min-height: 100px"></textarea>
+                                            <textarea class="form-control" name="detail_${editFormCounter}" style="max-height: 100px; min-height: 100px" required></textarea>
                                             <span class="text-danger is-invalid detail_${editFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="amount_${editFormCounter}">Amount <span class="text-danger">*</span></label>
-                                            <input class="form-control" name="amount_${editFormCounter}" type="number" placeholder="Enter Amount">
+                                            <input class="form-control" name="amount_${editFormCounter}" type="number" placeholder="Enter Amount" required>
                                             <span class="text-danger is-invalid amount_${editFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="sub_receipt_${editFormCounter}">Upload Sub-Receipt<span class="text-danger">*</span></label>
-                                            <input type="file" name="sub_receipt_${editFormCounter}" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                            <input type="file" name="sub_receipt_${editFormCounter}" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
                                             <span class="text-danger is-invalid sub_receipt_${editFormCounter}_err"></span>
                                         </div>
                                     </div>`;

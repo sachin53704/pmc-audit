@@ -235,7 +235,7 @@ class AccountReceiptController extends Controller
                         <textarea class="form-control" ' . $isReadonly . ' name="detail_' . $key . '" style="max-height: 100px; min-height: 100px">' . $subreceipt->receipt_detail . '</textarea>
                         <span class="text-danger is-invalid detail_' . $key . '_err"></span>
                     </div>
-                    <div class="col-md-4 mt-2">
+                    <div class="col-md-3 mt-2">
                         <label class="col-form-label" for="amount_' . $key . '">Amount <span class="text-danger">*</span></label>
                         <input class="form-control" ' . $isReadonly . ' name="amount_' . $key . '" type="number" value="' . $subreceipt->amount . '" placeholder="Enter Amount">
                         <span class="text-danger is-invalid amount_' . $key . '_err"></span>
@@ -245,17 +245,14 @@ class AccountReceiptController extends Controller
                         <input type="file" ' . $isReadonly . ' name="sub_receipt_' . $key . '" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
                         <span class="text-danger is-invalid sub_receipt_' . $key . '_err"></span>
                     </div>
-                    <div class="col-md-1 mt-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <a href="' . asset($subreceipt->file) . '" target="_blank">View File</a>
-                            </div>
-                        </div>
+                    <div class="col-md-2 mt-2">
+                        <div class="col-form-label" style="visibility:hidden">file</div>
+                        <a class="btn btn-primary" href="' . asset($subreceipt->file) . '" target="_blank">View File</a>
                     </div>
                 </div>';
         }
 
-        if(count($receipt->subreceipts) == 0){
+        if (count($receipt->subreceipts) == 0) {
             $subreceiptHtml .= '
                 <div class="row editReceiptSection custm-card mx-1 d-none"></div>';
         }
@@ -309,6 +306,10 @@ class AccountReceiptController extends Controller
                 if ($request->{'amount_' . $key}) {
                     $subreceipt = $receipt->subreceipts[$key] ?? '';
 
+                    $dyauditorStatus = ($subreceipt && $subreceipt != "") ? $subreceipt['dy_auditor_status'] == 2 ? 0 : $subreceipt['dy_auditor_status'] : 0;
+                    $dymcaStatus = ($subreceipt && $subreceipt != "") ? $subreceipt['dy_mca_status'] == 2 ? 0 : $subreceipt['dy_mca_status'] : 0;
+                    $mcaStatus = ($subreceipt && $subreceipt != "") ? $subreceipt['mca_status'] == 2 ? 0 : $subreceipt['mca_status'] : 0;
+
                     SubReceipt::updateOrCreate(
                         ['id' => $subreceipt['id'] ?? ''],
                         [
@@ -316,9 +317,9 @@ class AccountReceiptController extends Controller
                             'receipt_detail' => $request->{'detail_' . $key},
                             'amount' => $request->{'amount_' . $key},
                             'file' => $request->{'sub_receipt_' . $key} ? 'storage/file/' . $request->{'sub_receipt_' . $key}->store('', 'file') : $subreceipt['file'],
-                            'dy_auditor_status' => $subreceipt['dy_auditor_status'] == 2 ? 0 : $subreceipt['dy_auditor_status'],
-                            'dy_mca_status' => $subreceipt['dy_mca_status'] == 2 ? 0 : $subreceipt['dy_mca_status'],
-                            'mca_status' => $subreceipt['mca_status'] == 2 ? 0 : $subreceipt['mca_status'],
+                            'dy_auditor_status' => $dyauditorStatus,
+                            'dy_mca_status' => $dymcaStatus,
+                            'mca_status' => $mcaStatus,
                         ]
                     );
                 }
@@ -442,7 +443,7 @@ class AccountReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">DY Auditor Action</label>
-                        <select '.$dyAuditor.' name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select dyaditorAction">
+                        <select ' . $dyAuditor . ' name="' . ($roleName == "DY Auditor" ? $actionFieldName : "") . '" ' . ($roleName == "DY Auditor" ? $isEditable : "readonly") . ' class="form-select dyaditorAction">
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->dy_auditor_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->dy_auditor_status == 2 ? "selected" : "") . '>Reject</option>
@@ -457,7 +458,7 @@ class AccountReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">DY MCA Action</label>
-                        <select '.$dyMca.' name="' . ($roleName == "DY MCA" ? $actionFieldName : "") . '" class="form-select dymcaAction" ' . ($roleName == "DY MCA" ? $isEditable : "readonly") . '>
+                        <select ' . $dyMca . ' name="' . ($roleName == "DY MCA" ? $actionFieldName : "") . '" class="form-select dymcaAction" ' . ($roleName == "DY MCA" ? $isEditable : "readonly") . '>
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->dy_mca_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->dy_mca_status == 2 ? "selected" : "") . '>Reject</option>
@@ -472,7 +473,7 @@ class AccountReceiptController extends Controller
 
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">MCA Action</label>
-                        <select '.$mca.' name="' . ($roleName == "MCA" ? $actionFieldName : "") . '" class="form-select mcaAction" ' . ($roleName == "MCA" ? $isEditable : "readonly") . '>
+                        <select ' . $mca . ' name="' . ($roleName == "MCA" ? $actionFieldName : "") . '" class="form-select mcaAction" ' . ($roleName == "MCA" ? $isEditable : "readonly") . '>
                             <option value="">Action</option>
                             <option value="1" ' . ($subreceipt->mca_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($subreceipt->mca_status == 2 ? "selected" : "") . '>Reject</option>
