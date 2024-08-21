@@ -218,7 +218,10 @@
                                             <a data-id="{{ $receipt->id }}" class="btn view-detail btn-secondary btn-sm">View Sub Receipt</a>
                                         </td>
                                         <td>
+                                            @if($receipt->mca_rejected_count > 0 || $receipt->dy_mca_rejected_count > 0 || $receipt->dy_auditor_rejected_count > 0 || $receipt->mca_pending_count > 0 || $receipt->dy_mca_pending_count > 0 || $receipt->dy_auditor_pending_count > 0)
                                                 <button class="btn btn-secondary edit-element px-2 py-1" title="Edit receipt" data-id="{{ $receipt->id }}"><i data-feather="edit"></i></button>
+                                            @endif
+
                                             @if ($receipt->status < 2)
                                                 <button class="btn btn-danger rem-element px-2 py-1" title="Delete receipt" data-id="{{ $receipt->id }}"><i data-feather="trash-2"></i> </button>
                                             @endif

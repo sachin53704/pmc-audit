@@ -24,6 +24,9 @@ class AccountPaymentReceiptController extends Controller
                 'subreceipts as dy_mca_rejected_count' => fn($q) => $q->where('dy_mca_status', 2),
                 'subreceipts as mca_approved_count' => fn($q) => $q->where('mca_status', 1),
                 'subreceipts as mca_rejected_count' => fn($q) => $q->where('mca_status', 2),
+                'subreceipts as mca_pending_count' => fn($q) => $q->where('mca_status', 0),
+                'subreceipts as dy_mca_pending_count' => fn($q) => $q->where('dy_mca_status', 0),
+                'subreceipts as dy_auditor_pending_count' => fn($q) => $q->where('dy_auditor_status', 0),
             ])
             ->latest()
             ->get();
