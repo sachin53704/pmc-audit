@@ -32,9 +32,12 @@ class DashboardController extends Controller
                 'rejectedAuditCount' => $rejectedAuditCount
             ]);
         } elseif ($userRole->name == "MCA" || $userRole->name == "DY MCA") {
-            $pendingAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 1]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['mca_status' => 1]))->count();
-            $approvedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 2]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['mca_status' => 2]))->count();
-            $rejectedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 3]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['mca_status' => 3]))->count();
+            $pendingAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 1]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['dymca_status' => 1]))->count();
+
+            $approvedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 2]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['dymca_status' => 2]))->count();
+
+            $rejectedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 3]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['dymca_status' => 3]))->count();
+
             $draftAuditCount = Audit::where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)->count();
 
 
