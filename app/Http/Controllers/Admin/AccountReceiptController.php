@@ -106,7 +106,7 @@ class AccountReceiptController extends Controller
         $receiptHtml = '
                 <div class="col-md-4 mt-3">
                     <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                    <textarea class="form-control" readonly name="description" style="max-height: 100px; min-height:100px">' . $receipt->description . '</textarea>
+                    <input type="text" placeholder="enter description" class="form-control" readonly name="description" value="' . $receipt->description . '">
                     <span class="text-danger is-invalid description_err"></span>
                 </div>
                 <div class="col-md-4 mt-3">
@@ -125,8 +125,8 @@ class AccountReceiptController extends Controller
                     <span class="text-danger is-invalid amount_err"></span>
                 </div>
                 <div class="col-md-4 mt-3">
-                    <div class="card">
-                        <div class="card-body" id="editImageSection">
+                    <div class="mt-4">
+                        <div id="editImageSection">
                             <a href="' . asset($receipt->file) . '" class="btn btn-primary" target="_blank">View File</a>
                         </div>
                     </div>
@@ -148,17 +148,15 @@ class AccountReceiptController extends Controller
                                     </div>
                                     <div class="col-md-4 mt-2">
                                         <label class="col-form-label" for="detail_' . $key . '">Detail <span class="text-danger">*</span></label>
-                                        <textarea class="form-control" readonly name="detail_' . $key . '" style="max-height: 100px; min-height: 100px">' . $subreceipt->receipt_detail . '</textarea>
+                                        <input type="text" placeholder="Enter details" class="form-control" readonly name="detail_' . $key . '" value="' . $subreceipt->receipt_detail . '">
                                     </div>
                                     <div class="col-md-4 mt-2">
                                         <label class="col-form-label" for="amount_' . $key . '">Amount <span class="text-danger">*</span></label>
                                         <input class="form-control" readonly name="amount_' . $key . '" type="number" value="' . $subreceipt->amount . '" placeholder="Enter Amount">
                                     </div>
                                     <div class="col-md-4 mt-2">
-                                        <div class="card mb-0 mt-4">
-                                            <div class="card-body">
-                                                <a href="' . asset($subreceipt->file) . '" target="_blank">View File</a>
-                                            </div>
+                                        <div class="mt-4">
+                                                <a href="' . asset($subreceipt->file) . '" target="_blank" class="btn btn-primary">View File</a>
                                         </div>
                                     </div>
 
@@ -173,7 +171,7 @@ class AccountReceiptController extends Controller
                                     </div>
                                     <div class="col-md-2 mt-3">
                                         <label class="col-form-label">DY Auditor Remark</label>
-                                        <textarea readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $subreceipt->dy_auditor_remark . '</textarea>
+                                        <input type="text" readonly class="form-control" value="' . $subreceipt->dy_auditor_remark . '">
                                     </div>
 
                                     <div class="col-md-2 mt-3">
@@ -186,7 +184,7 @@ class AccountReceiptController extends Controller
                                     </div>
                                     <div class="col-md-2 mt-3">
                                         <label class="col-form-label">DY MCA Remark</label>
-                                        <textarea readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $subreceipt->dy_mca_remark . '</textarea>
+                                        <input type="text" readonly class="form-control" value="' . $subreceipt->dy_mca_remark . '">
                                     </div>
 
                                     <div class="col-md-2 mt-3">
@@ -199,7 +197,7 @@ class AccountReceiptController extends Controller
                                     </div>
                                     <div class="col-md-2 mt-3">
                                         <label class="col-form-label" for="action_remark_' . $key . '">MCA Remark</label>
-                                        <textarea readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $subreceipt->mca_remark . '</textarea>
+                                        <input type="text" readonly class="form-control" value="' . $subreceipt->mca_remark . '">
                                     </div>
                                 </div>';
         }
@@ -235,7 +233,7 @@ class AccountReceiptController extends Controller
                     </div>
                     <div class="col-md-4 mt-2">
                         <label class="col-form-label" for="detail_' . $key . '">Detail <span class="text-danger">*</span></label>
-                        <textarea class="form-control" ' . $isReadonly . ' name="detail_' . $key . '" style="max-height: 100px; min-height: 100px">' . $subreceipt->receipt_detail . '</textarea>
+                        <input type="text" placeholder="Enter description" class="form-control" ' . $isReadonly . ' name="detail_' . $key . '" value="' . $subreceipt->receipt_detail . '">
                         <span class="text-danger is-invalid detail_' . $key . '_err"></span>
                     </div>
                     <div class="col-md-3 mt-2">

@@ -19,7 +19,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" style="max-height: 100px; min-height:100px" required></textarea>
+                                <input class="form-control" type="text" placeholder="Enter description" name="description" required>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -34,7 +34,7 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="amount">Amount <span class="text-danger">*</span></label>
-                                <input class="form-control" name="amount" type="number" placeholder="Enter Amount" required>
+                                <input class="form-control totalReceiptsAmount" name="amount" type="number" placeholder="Enter Amount" required>
                                 <span class="text-danger is-invalid amount_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -57,12 +57,12 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_0">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px" required></textarea>
+                                            <input type="text" class="form-control" placeholder="Enter Details" name="detail_0" required>
                                             <span class="text-danger is-invalid detail_0_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="amount_0">Amount <span class="text-danger">*</span></label>
-                                            <input class="form-control" name="amount_0" type="number" placeholder="Enter Amount" required>
+                                            <input class="form-control totalReceiptsSubAmount" name="amount_0" type="number" placeholder="Enter Amount" required>
                                             <span class="text-danger is-invalid amount_0_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
@@ -108,7 +108,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" style="max-height: 100px; min-height:100px" required></textarea>
+                                <input type="text" placeholder="Enter name" class="form-control" name="description" required>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -311,12 +311,12 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_${addFormCounter}">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_${addFormCounter}" style="max-height: 100px; min-height: 100px" required></textarea>
+                                            <input type="text" class="form-control" name="detail_${addFormCounter}" placeholder="Enter Details" required />
                                             <span class="text-danger is-invalid detail_${addFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="amount_${addFormCounter}">Amount <span class="text-danger">*</span></label>
-                                            <input class="form-control" name="amount_${addFormCounter}" type="number" placeholder="Enter Amount" required>
+                                            <input class="form-control totalReceiptsSubAmount" name="amount_${addFormCounter}" type="number" placeholder="Enter Amount" required>
                                             <span class="text-danger is-invalid amount_${addFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
@@ -341,7 +341,18 @@
 
             $("#addForm").submit(function(e) {
                 e.preventDefault();
-                $("#addSubmit").prop('disabled', true);
+
+                // let totalAmount = parseFloat();
+                // var amount = 0;
+                // $(this).find('.totalReceiptsSubAmount').each(function(){
+                //     amount += parseFloat($(this).val());
+                // })
+                
+                // if(totalAmount !== amount){
+                //     alert("Receipt amount not matched with sub receipt total amount");
+                //     return false;
+                // }
+                // $("#addSubmit").prop('disabled', true);
 
                 var formdata = new FormData(this);
                 formdata.append('subreceiptCount', addFormCounter);
@@ -395,7 +406,7 @@
                         editFormBehaviour();
                         if (!data.error) {
                             $("#editForm input[name='edit_model_id']").val(data.receipt.id);
-                            $("#editForm textarea[name='description']").val(data.receipt.description);
+                            $("#editForm input[name='description']").val(data.receipt.description);
                             $("#editForm input[name='from_date']").val(data.receipt.from_date);
                             $("#editForm input[name='to_date']").val(data.receipt.to_date);
                             $("#editForm input[name='amount']").val(data.receipt.amount);
@@ -422,12 +433,12 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_${editFormCounter}">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_${editFormCounter}" style="max-height: 100px; min-height: 100px" required></textarea>
+                                            <input type="text" class="form-control" name="detail_${editFormCounter}" placeholder="Enter description" required>
                                             <span class="text-danger is-invalid detail_${editFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="amount_${editFormCounter}">Amount <span class="text-danger">*</span></label>
-                                            <input class="form-control" name="amount_${editFormCounter}" type="number" placeholder="Enter Amount" required>
+                                            <input class="form-control totalReceiptsSubAmount" name="amount_${editFormCounter}" type="number" placeholder="Enter Amount" required>
                                             <span class="text-danger is-invalid amount_${editFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
