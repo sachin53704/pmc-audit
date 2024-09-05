@@ -7,7 +7,7 @@
                 <img src="{{ asset('admin/images/logo-sm.png') }}" alt="" height="22" />
             </span>
             <span class="logo-lg">
-                <img src="{{ asset('admin/images/logo-dark.png') }}" alt="" height="17" />
+                <img src="{{ asset('admin/images/logo-dark.png') }}" alt="" height="55" />
             </span>
         </a>
         <!-- Light Logo-->
@@ -16,7 +16,7 @@
                 <img src="{{ asset('admin/images/logo-sm.png') }}" alt="" height="22" />
             </span>
             <span class="logo-lg">
-                <img src="{{ asset('admin/images/logo-light.png') }}" alt="" height="17" />
+                <img src="{{ asset('admin/images/logo-light.png') }}" alt="" height="55" />
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
@@ -45,11 +45,11 @@
 
                         @canany(['fiscal_years.view', 'departments.view'])
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') ? 'active' : '' }}" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
                                     <i class="ri-layout-3-line"></i>
                                     <span data-key="t-layouts">Masters</span>
                                 </a>
-                                <div class="collapse menu-dropdown" id="sidebarLayouts">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') ? 'show' : '' }}" id="sidebarMasterLayouts">
                                     <ul class="nav nav-sm flex-column">
                                         @can('fiscal_years.view')
                                             <li class="nav-item">
@@ -69,11 +69,11 @@
 
                         @canany(['users.view', 'roles.view'])
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('users.index') || request()->routeIs('roles.index') ? 'active' : '' }}" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
+                                <a class="nav-link menu-link {{ request()->routeIs('users.index') || request()->routeIs('roles.index') ? 'active' : '' }}" href="#sidebarUserManagementLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarUserManagementLayouts">
                                     <i class="bx bx-user-circle"></i>
                                     <span data-key="t-layouts">User Management</span>
                                 </a>
-                                <div class="collapse menu-dropdown" id="sidebarLayouts">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('users.index') || request()->routeIs('roles.index') ? 'show' : '' }}" id="sidebarUserManagementLayouts">
                                     <ul class="nav nav-sm flex-column">
                                         @can('users.view')
                                             <li class="nav-item">
@@ -112,11 +112,11 @@
 
                         @canany(['audit_list.pending', 'audit_list.approved', 'audit_list.rejected'])
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('audit-list.status', ['status' => 'pending']) ? 'active' : '' }}" href="#sidebarLayouts" data-bs-toggle="collapse" role="button">
+                                <a class="nav-link menu-link {{ request()->routeIs('audit-list.status', ['status' => 'pending']) ? 'active' : '' }}" href="#sidebarProgrammeAuditListLayouts" data-bs-toggle="collapse" role="button">
                                     <i class="ri-file-list-3-line"></i>
-                                    <span data-key="t-layouts">Programme Audit List</span>
+                                    <span data-key="t-layouts">Programme Audit</span>
                                 </a>
-                                <div class="collapse menu-dropdown" id="sidebarLayouts">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('audit-list.status', ['status' => 'pending']) ? 'show' : '' }}" id="sidebarProgrammeAuditListLayouts">
                                     <ul class="nav nav-sm flex-column">
                                         @can('audit_list.pending')
                                             <li class="nav-item">
@@ -215,7 +215,7 @@
                                     <i class="ri-layout-3-line"></i>
                                     <span data-key="t-layouts">Report</span>
                                 </a>
-                                <div class="collapse menu-dropdown" id="sidebarLayouts">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('final-report') || request()->routeIs('departments.index') || request()->routeIs('complience-answer-report') ? 'show' : '' }}" id="sidebarLayouts">
                                     <ul class="nav nav-sm flex-column">
                                         @can('report.final-report')
                                             <li class="nav-item">
