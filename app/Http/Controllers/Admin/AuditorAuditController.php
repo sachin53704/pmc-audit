@@ -11,6 +11,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Department;
+use App\Models\Zone;
+use App\Models\FiscalYear;
+use App\Models\AuditType;
+use App\Models\Severity;
+use App\Models\AuditParaCategory;
 
 class AuditorAuditController extends Controller
 {
@@ -72,11 +78,31 @@ class AuditorAuditController extends Controller
 
         $audits = Audit::query()
             ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
-            ->where('status', '>=', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
+            ->where('status', '>=', 5)
             ->latest()
             ->get();
 
-        return view('admin.create-objection')->with(['audits' => $audits]);
+        $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
+
+        $zones = Zone::where('status', 1)->select('id', 'name')->get();
+
+        $fiscalYears = FiscalYear::select('id', 'name')->get();
+
+        $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
+
+        $severities = Severity::where('status', 1)->select('id', 'name')->get();
+
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name')->get();
+
+        return view('admin.create-objection')->with([
+            'audits' => $audits,
+            'zones' => $zones,
+            'departments' => $departments,
+            'fiscalYears' => $fiscalYears,
+            'auditTypes' => $auditTypes,
+            'severities' => $severities,
+            'auditParaCategory' => $auditParaCategory,
+        ]);
     }
 
 
@@ -168,11 +194,11 @@ class AuditorAuditController extends Controller
 
         $auditorSatus = "disabled";
         $mcaSatus = "disabled";
-        if(Auth::user()->hasRole('Auditor')){
+        if (Auth::user()->hasRole('Auditor')) {
             $auditorSatus = "";
         }
 
-        if(Auth::user()->hasRole('MCA')){
+        if (Auth::user()->hasRole('MCA')) {
             $mcaSatus = "";
         }
 
@@ -205,7 +231,7 @@ class AuditorAuditController extends Controller
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="action_' . $key . '">Auditor Action</label>
-                    <select '.$auditorSatus.' name="action_' . $key . '" class="form-select" ' . $isAuditorReadonly . '>
+                    <select ' . $auditorSatus . ' name="action_' . $key . '" class="form-select" ' . $isAuditorReadonly . '>
                         <option value="">Action</option>
                         <option value="1" ' . ($objection->auditor_action_status == 1 ? "selected" : "") . '>Approve</option>
                         <option value="2" ' . ($objection->auditor_action_status == 2 ? "selected" : "") . '>Reject</option>
@@ -219,7 +245,7 @@ class AuditorAuditController extends Controller
                 </div>
                 <div class="col-md-2 mt-3">
                     <label class="col-form-label" for="mca_action_' . $key . '">MCA Action</label>
-                    <select '.$mcaSatus.' name="mca_action_' . $key . '" readonly class="form-select">
+                    <select ' . $mcaSatus . ' name="mca_action_' . $key . '" readonly class="form-select">
                         <option value="">Action</option>
                         <option value="1" ' . ($objection->mca_action_status == 1 ? "selected" : "") . '>Approve</option>
                         <option value="2" ' . ($objection->mca_action_status == 2 ? "selected" : "") . '>Reject</option>

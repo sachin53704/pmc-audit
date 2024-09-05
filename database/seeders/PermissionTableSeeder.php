@@ -314,6 +314,66 @@ class PermissionTableSeeder extends Seeder
                 'name' => 'report.department',
                 'group' => 'report',
             ],
+            [
+                'id' => 61,
+                'name' => 'audit-para-category.index',
+                'group' => 'Audit Para Category'
+            ],
+            [
+                'id' => 62,
+                'name' => 'audit-para-category.create',
+                'group' => 'Audit Para Category'
+            ],
+            [
+                'id' => 63,
+                'name' => 'audit-para-category.edit',
+                'group' => 'Audit Para Category'
+            ],
+            [
+                'id' => 64,
+                'name' => 'audit-type.index',
+                'group' => 'Audit Type'
+            ],
+            [
+                'id' => 65,
+                'name' => 'audit-type.create',
+                'group' => 'Audit Type'
+            ],
+            [
+                'id' => 66,
+                'name' => 'audit-type.edit',
+                'group' => 'Audit Type'
+            ],
+            [
+                'id' => 67,
+                'name' => 'severity.index',
+                'group' => 'Severity'
+            ],
+            [
+                'id' => 68,
+                'name' => 'severity.create',
+                'group' => 'Severity'
+            ],
+            [
+                'id' => 69,
+                'name' => 'severity.edit',
+                'group' => 'Severity'
+            ],
+            [
+                'id' => 70,
+                'name' => 'zone.index',
+                'group' => 'Zone'
+            ],
+            [
+                'id' => 71,
+                'name' => 'zone.create',
+                'group' => 'Zone'
+            ],
+            [
+                'id' => 72,
+                'name' => 'zone.edit',
+                'group' => 'Zone'
+            ]
         ];
 
         foreach ($permissions as $permission) {

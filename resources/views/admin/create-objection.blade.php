@@ -2,6 +2,12 @@
     <x-slot name="title">HMM</x-slot>
     <x-slot name="heading">HMM</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
+    <style>
+        $('#addObjectionModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+    </style>
 
 
 
@@ -55,7 +61,7 @@
                                             </td>
                                             <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                             <td>
-                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-id="{{ $audit->id }}"><i data-feather="plus-circle"></i> Add Objection</button>
+                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="plus-circle"></i> Add Objection</button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -81,47 +87,126 @@
 
                         <input type="hidden" id="audit_id" name="audit_id" value="">
 
-                        <div class="mb-1 row">
-                            <label class="col-sm-3 col-form-label" for="hmm_no">HMM No : </label>
-                            <div class="col-sm-9">
-                                <h6 id="hmm_no" class="pt-2"></h6>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="objection_no">Auditor Para No <span class="text-danger">*</span></label>
+                                <input type="text" name="objection_no" id="objection_no" class="form-control">
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
+                                <input type="date" name="entry_date" id="entry_date" class="form-control">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="department_id">Department <span class="text-danger">*</span></label>
+                                <select name="department_id" id="department_id" class="form-select">
+                                    <option value="">Select department</option>
+                                    @foreach($departments as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                     
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="zone_id">Zone <span class="text-danger">*</span></label>
+                                <select name="zone_id" id="zone_id" class="form-select">
+                                    <option value="">Select zone</option>
+                                    @foreach($zones as $zone)
+                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="from_year_id">From Year <span class="text-danger">*</span></label>
+                                <select name="from_year_id" id="from_year_id" class="form-select">
+                                    <option value="">Select from year</option>
+                                    @foreach($fiscalYears as $fiscalYear)
+                                    <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="to_year_id">To Year <span class="text-danger">*</span></label>
+                                <select name="to_year_id" id="to_year_id" class="form-select">
+                                    <option value="">Select to year</option>
+                                    @foreach($fiscalYears as $fiscalYear)
+                                    <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="audit_type_id">Audit Type <span class="text-danger">*</span></label>
+                                <select name="audit_type_id" id="audit_type_id" class="form-select">
+                                    <option value="">Select audit type</option>
+                                    @foreach($auditTypes as $auditType)
+                                    <option value="{{ $auditType->id }}">{{ $auditType->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="severity_id">Severity <span class="text-danger">*</span></label>
+                                <select name="severity_id" id="severity_id" class="form-select">
+                                    <option value="">Select severity</option>
+                                    @foreach($severities as $severity)
+                                    <option value="{{ $severity->id }}">{{ $severity->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label" for="date">Date </label>
-                            <div class="col-sm-9">
-                                <input type="date" name="date" readonly class="form-control" value="{{ Carbon\Carbon::today()->format('Y-m-d') }}">
-                                <span class="text-danger is-invalid date_err"></span>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="audit_para_id">Audit Para Category <span class="text-danger">*</span></label>
+                                <select name="audit_para_id" id="audit_para_id" class="form-select">
+                                    <option value="">Select option</option>
+                                    @foreach($auditParaCategory as $auditParaCat)
+                                    <option value="{{ $auditParaCat->id }}">{{ $auditParaCat->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="amount">Amount <span class="text-danger">*</span></label>
+                                <input type="text" name="amount" id="amount" class="form-control">
                             </div>
                         </div>
 
-                        <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label" for="subject">Subject </label>
-                            <div class="col-sm-9">
-                                <input type="text" name="subject" class="form-control" >
-                                <span class="text-danger is-invalid subject_err"></span>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="subject">Subject <span class="text-danger">*</span></label>
+                                <input type="text" name="subject" id="subject" class="form-control">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="work_name">Work Name</label>
+                                <input type="text" name="work_name" id="work_name" class="form-control">
                             </div>
                         </div>
 
-                        <hr class="mt-2 mb-1">
-                        <label class="col-12 col-form-label py-0" for="objection">Objections </label>
-                        <hr class="mt-1 mb-2">
-
-                        <div class="mb-3" id="objSection">
-                            <div class="objSection row mt-2">
-                                <input type="hidden" name="objection_no_0" value="1">
-                                <div class="col-3">
-                                    <label class="form-label" >Question 1</label> <br>
-                                </div>
-                                <div class="col-sm-9">
-                                    <textarea name="objection_0" id="objection_0" cols="10" rows="5" style="max-height: 100px; min-height:100px" class="form-control"></textarea>
-                                    <span class="text-danger is-invalid objection_0_err"></span>
-                                </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="contractor_name">Contractor Name</label>
+                                <input type="text" name="contractor_name" id="contractor_name" class="form-control">
                             </div>
-                            <button type="button" class="btn btn-danger remove float-start w-25 mt-2 mx-1">Remove</button>
-                            <button type="button" class="btn btn-primary add-more w-25 float-end mt-2 mx-1">Add More</button>
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="document">Upload Documents (docx, doc, xlsx, xls and pdf file only allow)</label>
+                                <input type="file" name="document" id="document" class="form-control">
+                            </div>
+                        
+                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
+                                <input type="text" name="sub_unit" id="sub_unit" class="form-control">
+                            </div>
                         </div>
+
+                        
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label for="description">Description <span class="text-danger">*</span></label>
+                                <textarea type="text" name="description" id="description" class="form-control"></textarea>
+                            </div>
+                        </div>
+
 
                     </div>
                     <div class="modal-footer">
@@ -134,6 +219,7 @@
     </div>
 
 @push('scripts')
+
     {{-- Open modal and Add more --}}
     <script>
         var questionCounter = 1;
@@ -257,6 +343,20 @@
 
         });
     </script>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+
+<script>
+    // Initialize CKEditor
+    ClassicEditor
+        .create(document.querySelector('textarea'))
+        .then(editor => {
+            console.log('Editor was initialized', editor);
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+</script>
 
 @endpush
 

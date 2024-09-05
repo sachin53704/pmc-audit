@@ -52,6 +52,10 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     // Masters
     Route::resource('fiscal_years', App\Http\Controllers\Admin\Masters\FiscalYearController::class);
     Route::resource('departments', App\Http\Controllers\Admin\Masters\DepartmentController::class);
+    Route::resource('audit-para-category', App\Http\Controllers\Master\AuditParaCategoryController::class);
+    Route::resource('audit-type', App\Http\Controllers\Master\AuditTypeController::class);
+    Route::resource('severity', App\Http\Controllers\Master\SeverityController::class);
+    Route::resource('zone', App\Http\Controllers\Master\ZoneController::class);
 
     Route::resource('diary', App\Http\Controllers\DiaryController::class);
 

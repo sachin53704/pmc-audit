@@ -45,11 +45,11 @@
 
                         @canany(['fiscal_years.view', 'departments.view'])
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
+                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
                                     <i class="ri-layout-3-line"></i>
                                     <span data-key="t-layouts">Masters</span>
                                 </a>
-                                <div class="collapse menu-dropdown {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') ? 'show' : '' }}" id="sidebarMasterLayouts">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') ? 'show' : '' }}" id="sidebarMasterLayouts">
                                     <ul class="nav nav-sm flex-column">
                                         @can('fiscal_years.view')
                                             <li class="nav-item">
@@ -60,6 +60,30 @@
                                             <li class="nav-item">
                                                 <a href="{{ route('departments.index') }}" class="nav-link {{ request()->routeIs('departments.index') ? 'active' : '' }}" data-key="t-horizontal">Departments</a>
                                             </li>
+                                        @endcan
+                                        
+                                        @can('audit-para-category.index')
+                                        <li class="nav-item">
+                                            <a href="{{ route('audit-para-category.index') }}" class="nav-link {{ request()->routeIs('audit-para-category.index') ? 'active' : '' }}" data-key="t-horizontal">Audit Para Category</a>
+                                        </li>
+                                        @endcan
+                                        
+                                        @can('audit-type.index')
+                                        <li class="nav-item">
+                                            <a href="{{ route('audit-type.index') }}" class="nav-link {{ request()->routeIs('audit-type.index') ? 'active' : '' }}" data-key="t-horizontal">Audit Type</a>
+                                        </li>
+                                        @endcan
+                                        
+                                        @can('severity.index')
+                                        <li class="nav-item">
+                                            <a href="{{ route('severity.index') }}" class="nav-link {{ request()->routeIs('severity.index') ? 'active' : '' }}" data-key="t-horizontal">Severity</a>
+                                        </li>
+                                        @endcan
+                                        
+                                        @can('zone.index')
+                                        <li class="nav-item">
+                                            <a href="{{ route('zone.index') }}" class="nav-link {{ request()->routeIs('zone.index') ? 'active' : '' }}" data-key="t-horizontal">Zone</a>
+                                        </li>
                                         @endcan
                                     </ul>
                                 </div>
