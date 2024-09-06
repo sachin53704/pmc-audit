@@ -91,17 +91,17 @@
                         </div>
 
                         <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label" for="description">Description </label>
+                            <label class="col-sm-3 col-form-label" for="description">Description <span class="text-danger">*</span></label>
                             <div class="col-sm-9" >
-                                <textarea name="description" id="description" cols="10" rows="5" class="form-control"></textarea>
+                                <textarea name="description" id="description" cols="10" rows="5" class="form-control" required></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                         </div>
 
                         <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label" for="letter_file">Upload Letter </label>
+                            <label class="col-sm-3 col-form-label" for="letter_file">Upload Letter <span class="text-danger">*</span></label>
                             <div class="col-sm-9" >
-                                <input type="file" name="letter_file" id="letter_file" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
+                                <input type="file" name="letter_file" id="letter_file" class="form-control" required accept=".pdf, .jpg, .jpeg, .png">
                                 <span class="text-danger is-invalid letter_file_err"></span>
                             </div>
                         </div>

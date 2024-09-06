@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\AuditType;
+use App\Models\Zone;
+use App\Models\Severity;
 
 class AuditObjection extends BaseModel
 {
@@ -22,6 +25,21 @@ class AuditObjection extends BaseModel
     public function audit()
     {
         return $this->belongsTo(Audit::class);
+    }
+
+    public function auditType()
+    {
+        return $this->belongsTo(AuditType::class, 'audit_type_id', 'id');
+    }
+
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class, 'zone_id', 'id');
+    }
+
+    public function severity()
+    {
+        return $this->belongsTo(Severity::class, 'severity_id', 'id');
     }
 
     public function user()

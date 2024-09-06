@@ -54,11 +54,13 @@
 
 
                 <div class="ms-1 header-item d-none d-sm-flex justify-content-end">
+                    @if(!Auth::user()->hasRole('Clerk'))
                     <select name="change-view-mode" class="form-select" style="background-color: #8c68cd; color: #fff;" id="change-view-mode">
                         <option value="">Select view mode</option>
                         <option value="1" {{ session('LOGIN_TYPE') == '1' ? 'selected' : '' }}>Programme Audit</option>
                         <option value="2" {{ session('LOGIN_TYPE') == '2' ? 'selected' : '' }}>Receipt/Payment</option>
                     </select>
+                    @endif
                     {{-- <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-toggle="fullscreen">
                         <i class="bx bx-fullscreen fs-22"></i>
                     </button> --}}

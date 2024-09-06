@@ -93,6 +93,11 @@
             data: formdata,
             contentType: false,
             processData: false,
+            beforeSend: function()
+            {
+                $('#preloader').css('opacity', '0.5');
+                $('#preloader').css('visibility', 'visible');
+            },
             success: function(data) {
                 if (!data.error && !data.error2) {
                     swal("Successful!", data.success, "success")
@@ -113,6 +118,10 @@
             error: function(error) {
                 $("#changePasswordSubmit").prop('disabled', false);
                 swal("Error occured!", "Something went wrong please try again", "error");
+            },
+            complete: function() {
+                $('#preloader').css('opacity', '0');
+                $('#preloader').css('visibility', 'hidden');
             },
         });
 

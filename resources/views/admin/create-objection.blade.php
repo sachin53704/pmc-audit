@@ -84,8 +84,8 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="modelObjectionId"></div>
 
-                        <input type="hidden" id="audit_id" name="audit_id" value="">
 
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-12 mb-3">
@@ -118,8 +118,8 @@
                             </div>
                         
                             <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                <label for="from_year_id">From Year <span class="text-danger">*</span></label>
-                                <select name="from_year_id" id="from_year_id" class="form-select">
+                                <label for="from_year">From Year <span class="text-danger">*</span></label>
+                                <select name="from_year" id="from_year" class="form-select">
                                     <option value="">Select from year</option>
                                     @foreach($fiscalYears as $fiscalYear)
                                     <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
@@ -127,8 +127,8 @@
                                 </select>
                             </div>
                             <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                <label for="to_year_id">To Year <span class="text-danger">*</span></label>
-                                <select name="to_year_id" id="to_year_id" class="form-select">
+                                <label for="to_year">To Year <span class="text-danger">*</span></label>
+                                <select name="to_year" id="to_year" class="form-select">
                                     <option value="">Select to year</option>
                                     @foreach($fiscalYears as $fiscalYear)
                                     <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
@@ -158,8 +158,8 @@
 
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                <label for="audit_para_id">Audit Para Category <span class="text-danger">*</span></label>
-                                <select name="audit_para_id" id="audit_para_id" class="form-select">
+                                <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
+                                <select name="audit_para_category_id" id="audit_para_category_id" class="form-select">
                                     <option value="">Select option</option>
                                     @foreach($auditParaCategory as $auditParaCat)
                                     <option value="{{ $auditParaCat->id }}">{{ $auditParaCat->name }}</option>
@@ -217,6 +217,8 @@
             </form>
         </div>
     </div>
+    
+    
 
 @push('scripts')
 
@@ -227,7 +229,7 @@
         $("#buttons-datatables").on("click", ".add-objection", function(e) {
             e.preventDefault();
             var model_id = $(this).attr("data-id");
-            var url = "{{ route('get-audit-info') }}";
+            var url = "{{ route('objection.get-assign-objection') }}";
 
             $.ajax({
                 url: url,
@@ -237,33 +239,17 @@
                     'audit_id': model_id,
                     'relations': "objections",
                 },
+                beforeSend: function()
+                {
+                    $('#preloader').css('opacity', '0.5');
+                    $('#preloader').css('visibility', 'visible');
+                },
                 success: function(data, textStatus, jqXHR)
                 {
                     if (!data.error)
                     {
-                        $("#addObjectionModal #audit_id").val(data.audit.id);
-                        $("#addObjectionModal #hmm_no").text(data.audit.audit_no);
-                        $("#addObjectionModal [name='date']").val(data.audit.obj_date);
-                        $("#addObjectionModal [name='subject']").val(data.audit.obj_subject);
-
-                        $(".objSection").remove();
-                        $("#objSection").html('<div class="objSection row mt-2"><input type="hidden" name="objection_no_0" value="1"><div class="col-3"><label class="form-label" >Question 1</label> <br></div><div class="col-sm-9"><textarea name="objection_0" id="objection_0" cols="10" rows="5" style="max-height: 100px; min-height:100px" class="form-control"></textarea><span class="text-danger is-invalid objection_0_err"></span></div></div>');
-                        questionCounter = 1;
-
-                        for(let i=0; i<data.audit.objections.length; i++)
-                        {
-                            let clonedSection = $(".objSection").first().clone();
-                            questionCounter++;
-                            clonedSection.find('.form-label').text('Question ' + questionCounter);
-                            clonedSection.find('.text-danger').removeClass('objection_'+(questionCounter-2)+'_err');
-                            clonedSection.find('.text-danger').addClass('objection_'+(questionCounter-1)+'_err');
-                            clonedSection.find('input').attr('name', 'objection_no_'+(questionCounter-1)).attr('value', questionCounter);
-                            clonedSection.find('textarea').attr('id', 'objection_'+(questionCounter-1));
-                            clonedSection.find('textarea').attr('name', 'objection_'+(questionCounter-1));
-                            $(".objSection").last().after(clonedSection);
-                            $("#addObjectionModal [name='objection_"+(questionCounter-1)+"']").val("");
-                            $("#addObjectionModal [name='objection_"+(questionCounter-2)+"']").val(data.audit.objections[i].objection);
-                        }
+                        $('#modelObjectionId').html(data.objectionHtml)
+                        
 
                         $("#addObjectionModal").modal("show");
                     } else {
@@ -273,33 +259,16 @@
                 error: function(error, jqXHR, textStatus, errorThrown) {
                     swal("Error!", "Some thing went wrong", "error");
                 },
+                complete: function() {
+                    $('#preloader').css('opacity', '0');
+                    $('#preloader').css('visibility', 'hidden');
+                },
             });
 
             $('#assign-role-modal').modal('show');
         });
 
-        $(".add-more").click(function(e){
-            e.preventDefault();
-
-            var clonedSection = $(".objSection").first().clone();
-            questionCounter++;
-            clonedSection.find('.form-label').text('Question ' + questionCounter);
-            clonedSection.find('.text-danger').removeClass('objection_'+(questionCounter-2)+'_err');
-            clonedSection.find('.text-danger').addClass('objection_'+(questionCounter-1)+'_err');
-            clonedSection.find('input').attr('name', 'objection_no_'+(questionCounter-1)).attr('value', questionCounter);
-            clonedSection.find('textarea').attr('id', 'objection_'+(questionCounter-1));
-            clonedSection.find('textarea').attr('name', 'objection_'+(questionCounter-1));
-            $(".objSection").last().after(clonedSection);
-            $("#addObjectionModal [name='objection_"+(questionCounter-1)+"']").val("");
-
-        });
-
-        $(document).on("click", ".remove", function(){
-            if($(".objSection").length > 1){
-                $(".objSection").last().remove();
-                questionCounter--;
-            }
-        });
+        
 
 
         // Submit Objection Form
@@ -317,6 +286,11 @@
                 data: formdata,
                 contentType: false,
                 processData: false,
+                beforeSend: function()
+                {
+                    $('#preloader').css('opacity', '0.5');
+                    $('#preloader').css('visibility', 'visible');
+                },
                 success: function(data)
                 {
                     $("#addObjectionSubmit").prop('disabled', false);
@@ -338,7 +312,11 @@
                         $("#addObjectionSubmit").prop('disabled', false);
                         swal("Error occured!", "Something went wrong please try again", "error");
                     }
-                }
+                },
+                complete: function() {
+                    $('#preloader').css('opacity', '0');
+                    $('#preloader').css('visibility', 'hidden');
+                },
             });
 
         });

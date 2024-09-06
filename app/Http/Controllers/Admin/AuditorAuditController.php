@@ -105,6 +105,54 @@ class AuditorAuditController extends Controller
         ]);
     }
 
+    public function getAssignObjection(Request $request)
+    {
+        if ($request->ajax()) {
+            $auditObjections = AuditObjection::with(['audit', 'auditType', 'zone', 'severity'])->where('audit_id', $request->audit_id)->get();
+
+            $objectionHtml = "";
+            if (count($auditObjections) > 0) {
+                $objectionHtml .= '<div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sr no.</th>
+                                <th>HMM No</th>
+                                <th>Objection No</th>
+                                <th>Audit Type</th>
+                                <th>Severity</th>
+                                <th>Zone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>';
+            }
+
+            $count = 1;
+            foreach ($auditObjections as $auditObjection) {
+                $objectionHtml .= '<tr>
+                                <td>' . $count++ . '</td>
+                                <td>' . $auditObjection?->audit?->audit_no . '</td>
+                                <td>' . $auditObjection?->objection_no . '</td>
+                                <td>' . $auditObjection?->auditType?->name . '</td>
+                                <td>' . $auditObjection?->severity?->name . '</td>
+                                <td>' . $auditObjection?->zone?->name . '</td>
+                                <td><button class="btn btn-sm btn-primary viewObjection" data-id="' . $auditObjection?->id . '">View Objection</button></td>
+                            </tr>';
+            }
+
+            if (count($auditObjections) > 0) {
+                $objectionHtml .= '</tbody>
+                        </table>
+                    </div>';
+            }
+
+            return response()->json([
+                'objectionHtml' => $objectionHtml
+            ]);
+        }
+    }
+
 
     public function storeObjection(Request $request)
     {
@@ -115,12 +163,6 @@ class AuditorAuditController extends Controller
         $messageArray['date.required'] = 'Please enter date';
         $messageArray['subject.required'] = 'Please enter subject';
 
-        for ($i = 0; $i < $request->question_count; $i++) {
-            $fieldArray['objection_' . $i] = 'required';
-            $fieldArray['objection_no_' . $i] = 'required';
-            $messageArray['objection_' . $i . '.required'] = 'Please type objection';
-            $messageArray['objection_no_' . $i . '.required'] = 'Objection no is missing';
-        }
         $validator = Validator::make($request->all(), $fieldArray, $messageArray);
 
         if ($validator->fails())

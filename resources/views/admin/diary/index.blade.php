@@ -174,6 +174,11 @@
             data: formdata,
             contentType: false,
             processData: false,
+            beforeSend: function()
+            {
+                $('#preloader').css('opacity', '0.5');
+                $('#preloader').css('visibility', 'visible');
+            },
             success: function(data)
             {
                 $("#addSubmit").prop('disabled', false);
@@ -195,7 +200,11 @@
                     $("#addSubmit").prop('disabled', false);
                     swal("Error occured!", "Something went wrong please try again", "error");
                 }
-            }
+            },
+            complete: function() {
+                $('#preloader').css('opacity', '0');
+                $('#preloader').css('visibility', 'hidden');
+            },
         });
 
     });
@@ -215,6 +224,11 @@
             data: {
                 '_token': "{{ csrf_token() }}"
             },
+            beforeSend: function()
+            {
+                $('#preloader').css('opacity', '0.5');
+                $('#preloader').css('visibility', 'visible');
+            },
             success: function(data, textStatus, jqXHR) {
                 editFormBehaviour();
                 if (!data.error)
@@ -230,6 +244,10 @@
             },
             error: function(error, jqXHR, textStatus, errorThrown) {
                 alert("Some thing went wrong");
+            },
+            complete: function() {
+                $('#preloader').css('opacity', '0');
+                $('#preloader').css('visibility', 'hidden');
             },
         });
     });
@@ -253,6 +271,11 @@
                 data: formdata,
                 contentType: false,
                 processData: false,
+                beforeSend: function()
+                {
+                    $('#preloader').css('opacity', '0.5');
+                    $('#preloader').css('visibility', 'visible');
+                },
                 success: function(data)
                 {
                     $("#editSubmit").prop('disabled', false);
@@ -274,7 +297,11 @@
                         $("#editSubmit").prop('disabled', false);
                         swal("Error occured!", "Something went wrong please try again", "error");
                     }
-                }
+                },
+                complete: function() {
+                    $('#preloader').css('opacity', '0');
+                    $('#preloader').css('visibility', 'hidden');
+                },
             });
 
         });
@@ -306,6 +333,11 @@
                         '_method': "DELETE",
                         '_token': "{{ csrf_token() }}"
                     },
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
+                    },
                     success: function(data, textStatus, jqXHR) {
                         if (!data.error && !data.error2) {
                             swal("Success!", data.success, "success")
@@ -322,6 +354,10 @@
                     },
                     error: function(error, jqXHR, textStatus, errorThrown) {
                         swal("Error!", "Something went wrong", "error");
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
                     },
                 });
             }

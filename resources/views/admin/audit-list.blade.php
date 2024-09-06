@@ -168,6 +168,11 @@
                     data: {
                         '_token': "{{ csrf_token() }}"
                     },
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
+                    },
                     success: function(data, textStatus, jqXHR)
                     {
                         if (!data.error)
@@ -182,6 +187,10 @@
                     },
                     error: function(error, jqXHR, textStatus, errorThrown) {
                         swal("Error!", "Some thing went wrong", "error");
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
                     },
                 });
 
@@ -206,6 +215,11 @@
                     data: formdata,
                     contentType: false,
                     processData: false,
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
+                    },
                     success: function(data) {
                         $("#assignAuditorSubmit").prop('disabled', false);
                         if (!data.error2)
@@ -227,7 +241,11 @@
                             $("#assignAuditorSubmit").prop('disabled', false);
                             swal("Error occured!", "Something went wrong please try again", "error");
                         }
-                    }
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
+                    },
                 });
 
                 function resetErrors() {
@@ -276,6 +294,11 @@
                         'reject_reason': $("#rejectAuditForm [name='reject_reason']").val(),
                         '_token': "{{ csrf_token() }}"
                     },
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
+                    },
                     success: function(data)
                     {
                         $("#rejectAuditSubmit").prop('disabled', false);
@@ -298,7 +321,11 @@
                             $("#rejectAuditSubmit").prop('disabled', false);
                             swal("Error occured!", "Something went wrong please try again", "error");
                         }
-                    }
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
+                    },
                 });
             });
         </script>
@@ -329,6 +356,11 @@
                                 'action': "approve",
                                 '_token': "{{ csrf_token() }}"
                             },
+                            beforeSend: function()
+                            {
+                                $('#preloader').css('opacity', '0.5');
+                                $('#preloader').css('visibility', 'visible');
+                            },
                             success: function(data, textStatus, jqXHR) {
                                 if (!data.error && !data.error2) {
                                     swal("Success!", data.success, "success")
@@ -345,6 +377,10 @@
                             },
                             error: function(error, jqXHR, textStatus, errorThrown) {
                                 swal("Error!", "Something went wrong", "error");
+                            },
+                            complete: function() {
+                                $('#preloader').css('opacity', '0');
+                                $('#preloader').css('visibility', 'hidden');
                             },
                         });
                     }

@@ -93,6 +93,11 @@
                             status: '1',
                             id: id
                         },
+                        beforeSend: function()
+                        {
+                            $('#preloader').css('opacity', '0.5');
+                            $('#preloader').css('visibility', 'visible');
+                        },
                         success: function(data, textStatus, jqXHR) {
                             let html = "";
                             let count = 1;
@@ -110,6 +115,10 @@
                         },
                         error: function(error, jqXHR, textStatus, errorThrown) {
                             alert("Some thing went wrong");
+                        },
+                        complete: function() {
+                            $('#preloader').css('opacity', '0');
+                            $('#preloader').css('visibility', 'hidden');
                         },
                     });
                 });

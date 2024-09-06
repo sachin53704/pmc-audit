@@ -57,7 +57,7 @@ class ClerkAuditController extends Controller
     public function edit(Audit $audit)
     {
         $fileHtml = '
-            <a  class="btn btn-primary btn-md px-2 mt-2" href="' . asset($audit->file_path) . '" target="_blank" >View File</a>
+            <a class="px-2 mt-2" href="' . asset($audit->file_path) . '" target="_blank" >View File</a>
         ';
 
         $departments = Department::get();

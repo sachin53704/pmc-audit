@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('entry_date');
             $table->foreignIdFor(Department::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Zone::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->integer('from_year');
+
             $table->foreignId('from_year')->nullable()->constrained('fiscal_years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('to_year')->nullable()->constrained('fiscal_years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(AuditType::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string('document')->nullable();
             $table->string('sub_unit')->nullable();
             $table->longText('description')->nullable();
+            $table->longText('department_description')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
             $table->foreignId('answered_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('mca_remark')->nullable();
