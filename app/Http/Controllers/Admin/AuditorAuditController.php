@@ -17,6 +17,7 @@ use App\Models\FiscalYear;
 use App\Models\AuditType;
 use App\Models\Severity;
 use App\Models\AuditParaCategory;
+use App\Http\Requests\AddObjectionRequest;
 
 class AuditorAuditController extends Controller
 {
@@ -92,7 +93,7 @@ class AuditorAuditController extends Controller
 
         $severities = Severity::where('status', 1)->select('id', 'name')->get();
 
-        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name')->get();
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
         return view('admin.create-objection')->with([
             'audits' => $audits,
@@ -154,20 +155,8 @@ class AuditorAuditController extends Controller
     }
 
 
-    public function storeObjection(Request $request)
+    public function storeObjection(AddObjectionRequest $request)
     {
-        $fieldArray['audit_id'] = 'required';
-        $fieldArray['date'] = 'required';
-        $fieldArray['subject'] = 'required';
-        $messageArray['audit_id.required'] = 'Please enter audit id';
-        $messageArray['date.required'] = 'Please enter date';
-        $messageArray['subject.required'] = 'Please enter subject';
-
-        $validator = Validator::make($request->all(), $fieldArray, $messageArray);
-
-        if ($validator->fails())
-            return response()->json(['errors' => $validator->errors()], 422);
-
         try {
             DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
@@ -182,13 +171,7 @@ class AuditorAuditController extends Controller
                 $reqParamName = 'objection_' . $i;
                 $objNoParamName = 'objection_no_' . $i;
 
-                AuditObjection::updateOrCreate([
-                    'objection_no' => $request->{$objNoParamName},
-                    'audit_id' => $audit->id,
-                    'user_id' => Auth::user()->id,
-                ], [
-                    'objection' => $request->{$reqParamName},
-                ]);
+                AuditObjection::create($request->all());
             }
             DB::commit();
 

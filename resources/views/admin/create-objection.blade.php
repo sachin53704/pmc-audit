@@ -159,14 +159,15 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-12 mb-3">
                                 <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
+                                <input type="hidden" name="audit_para_value" id="auditParaValue">
                                 <select name="audit_para_category_id" id="audit_para_category_id" class="form-select">
-                                    <option value="">Select option</option>
+                                    <option data-amount="" value="">Select option</option>
                                     @foreach($auditParaCategory as $auditParaCat)
-                                    <option value="{{ $auditParaCat->id }}">{{ $auditParaCat->name }}</option>
+                                    <option data-amount="{{ $auditParaCat->is_amount }}" value="{{ $auditParaCat->id }}">{{ $auditParaCat->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-12 mb-3">
+                            <div class="col-lg-6 col-md-6 col-12 mb-3 d-none isAmountDisplayOrNot">
                                 <label for="amount">Amount <span class="text-danger">*</span></label>
                                 <input type="text" name="amount" id="amount" class="form-control">
                             </div>
@@ -334,6 +335,19 @@
         .catch(error => {
             console.error('Error during initialization of the editor', error);
         });
+
+    $('body').on('change', '#audit_para_category_id', function(){
+        let isAmount = $(this).find(':selected').attr('data-amount')
+        if(isAmount == 1){
+            $('.isAmountDisplayOrNot').removeClass('d-none');
+            $('#amount').prop('required', true);
+            $('#auditParaValue').val(1)
+        }else{
+            $('.isAmountDisplayOrNot').addClass('d-none');
+            $('#amount').prop('required', false);
+            $('#auditParaValue').val(0)
+        }
+    })
 </script>
 
 @endpush
