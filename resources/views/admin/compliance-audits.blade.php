@@ -4,92 +4,6 @@
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
-    {{-- <!-- Add Form -->
-    <div class="row" id="addContainer" style="display:none;">
-        <div class="col-sm-12">
-            <div class="card">
-                <form class="theme-form" name="addForm" id="addForm" enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="card-header">
-                        <h4 class="card-title">Upload Audit</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3 row">
-
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="department_id">Department <span class="text-danger">*</span></label>
-                                <select name="department_id" class="form-control">
-                                    <option value="">Select Department</option>
-                                    @foreach ($departments->where('is_audit', 0) as $department)
-                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid department_id_err"></span>
-                            </div>
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date">
-                                <span class="text-danger is-invalid date_err"></span>
-                            </div>
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="file">File Upload<span class="text-danger">*</span></label>
-                                <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                                <span class="text-danger is-invalid file_err"></span>
-                            </div>
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" ></textarea>
-                                <span class="text-danger is-invalid description_err"></span>
-                            </div>
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="remark">Remark <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="remark" ></textarea>
-                                <span class="text-danger is-invalid remark_err"></span>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary" id="addSubmit">Submit</button>
-                        <button type="reset" class="btn btn-warning">Reset</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div> --}}
-
-
-
-    {{-- Edit Form --}}
-    <div class="row" id="editContainer" style="display:none;">
-        <div class="col">
-            <form class="form-horizontal form-bordered" method="post" id="editForm">
-                @csrf
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Edit Department</h4>
-                    </div>
-                    <div class="card-body py-2">
-                        <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
-
-                        <div class="mb-3 row" >
-                            <div class="col-12" id="objectionList">
-
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-primary" id="editSubmit">Submit</button>
-                        <button type="reset" class="btn btn-warning">Reset</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -122,7 +36,15 @@
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">{{ $audit->status_name }}</span>
+                                            @if($audit->status == "7")
+                                            Approve By MCA
+                                            @elseif ($audit->status == "8")
+                                            Rejected by MCA
+                                            @elseif ($audit->status == "9")
+                                            Answer By department
+                                            @else
+                                            -
+                                            @endif
                                         </td>
                                         <td>
                                             @if($audit->dl_file_path)
@@ -131,12 +53,7 @@
                                         </td>
                                         <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
-                                            {{-- @if($audit->status == 6 || $audit->status == 9  || $audit->status == 11) --}}
-                                                <button class="btn btn-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-plus"></i> Add Compliance</button>
-                                            {{-- @endif --}}
-                                            {{-- @if($audit->status == 1)
-                                                <button class="btn text-danger rem-element px-2 py-1" title="Delete audit" data-id="{{ $audit->id }}"><i data-feather="trash-2"></i> </button>
-                                            @endif --}}
+                                            <button class="btn btn-secondary edit-element px-2 py-1" title="Add Compliance" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="file-plus"></i> Add Compliance</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -149,200 +66,452 @@
     </div>
 
 
-    @push('scripts')
-        {{-- Add --}}
-        {{-- <script>
-            $("#addForm").submit(function(e) {
-                e.preventDefault();
-                $("#addSubmit").prop('disabled', true);
+    {{-- Add Objection Modal --}}
+    <div class="modal fade" id="addObjectionModal" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <form action="" id="addForm" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">View Objection </h5>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modelObjectionId"></div>
 
-                var formdata = new FormData(this);
-                $.ajax({
-                    url: '{{ route('audit.store') }}',
-                    type: 'POST',
-                    data: formdata,
-                    contentType: false,
-                    processData: false,
-                    success: function(data)
-                    {
-                        $("#addSubmit").prop('disabled', false);
-                        if (!data.error2)
-                            swal("Successful!", data.success, "success")
-                                .then((action) => {
-                                    window.location.href = '{{ route('audit.index') }}';
-                                });
-                        else
-                            swal("Error!", data.error2, "error");
-                    },
-                    statusCode: {
-                        422: function(responseObject, textStatus, jqXHR) {
-                            $("#addSubmit").prop('disabled', false);
-                            resetErrors();
-                            printErrMsg(responseObject.responseJSON.errors);
-                        },
-                        500: function(responseObject, textStatus, errorThrown) {
-                            $("#addSubmit").prop('disabled', false);
-                            swal("Error occured!", "Something went wrong please try again", "error");
-                        }
-                    }
-                });
+                        <div id="viewObjectionDetails" class="d-none">
+                            <hr>
+                            <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
+                            <input type="hidden" name="audit_id" value="" id="audit_id">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="objection_no">Auditor Para No <span class="text-danger">*</span></label>
+                                    <input type="text" name="objection_no" id="objection_no" class="form-control" disabled value="{{ time() }}">
+                                    <span class="text-danger is-invalid objection_no_err"></span>
+                                </div>
 
-            });
-        </script> --}}
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
+                                    <input type="date" name="entry_date" disabled id="entry_date" class="form-control">
+                                    <span class="text-danger is-invalid entry_date_err"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="department_id">Department <span class="text-danger">*</span></label>
+                                    <select name="department_id" disabled id="department_id" class="form-select">
+                                        <option value="">Select department</option>
+                                        @foreach($departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger is-invalid department_id_err"></span>
+                                </div>
+                        
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="zone_id">Zone <span class="text-danger">*</span></label>
+                                    <select name="zone_id" id="zone_id" disabled class="form-select">
+                                        <option value="">Select zone</option>
+                                        @foreach($zones as $zone)
+                                        <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger is-invalid zone_id_err"></span>
+                                </div>
+                            
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="from_year">From Year <span class="text-danger">*</span></label>
+                                    <select name="from_year" id="from_year" disabled class="form-select">
+                                        <option value="">Select from year</option>
+                                        @foreach($fiscalYears as $fiscalYear)
+                                        <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger is-invalid from_year_err"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="to_year">To Year <span class="text-danger">*</span></label>
+                                    <select name="to_year" id="to_year" disabled class="form-select">
+                                        <option value="">Select to year</option>
+                                        @foreach($fiscalYears as $fiscalYear)
+                                        <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger is-invalid to_year_err"></span>
+                                </div>
+                            
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="audit_type_id">Audit Type <span class="text-danger">*</span></label>
+                                    <select name="audit_type_id" id="audit_type_id" disabled class="form-select">
+                                        <option value="">Select audit type</option>
+                                        @foreach($auditTypes as $auditType)
+                                        <option value="{{ $auditType->id }}">{{ $auditType->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger is-invalid audit_type_id_err"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="severity_id">Severity <span class="text-danger">*</span></label>
+                                    <select name="severity_id" disabled id="severity_id" class="form-select">
+                                        <option value="">Select severity</option>
+                                        @foreach($severities as $severity)
+                                        <option value="{{ $severity->id }}">{{ $severity->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger is-invalid severity_id_err"></span>
+                                </div>
 
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
+                                    <input type="hidden" disabled name="audit_para_value" id="auditParaValue">
+                                    <select name="audit_para_category_id" disabled id="audit_para_category_id" class="form-select">
+                                        <option data-amount="" value="">Select option</option>
+                                        @foreach($auditParaCategory as $auditParaCat)
+                                        <option data-amount="{{ $auditParaCat->is_amount }}" value="{{ $auditParaCat->id }}">{{ $auditParaCat->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger is-invalid audit_para_category_id_err"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-12 mb-3 d-none isAmountDisplayOrNot">
+                                    <label for="amount">Amount <span class="text-danger">*</span></label>
+                                    <input type="text" name="amount" disabled id="amount" class="form-control">
+                                    <span class="text-danger is-invalid amount_err"></span>
+                                </div>
 
-        <!-- Edit -->
-        <script>
-            $("#buttons-datatables").on("click", ".edit-element", function(e) {
-                e.preventDefault();
-                var model_id = $(this).attr("data-id");
-                var url = "{{ route('compliance.info', ":model_id") }}";
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="subject">Subject <span class="text-danger">*</span></label>
+                                    <input type="text" name="subject" disabled id="subject" class="form-control">
+                                    <span class="text-danger is-invalid subject_err"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="work_name">Work Name</label>
+                                    <input type="text" name="work_name" disabled id="work_name" class="form-control">
+                                    <span class="text-danger is-invalid work_name_err"></span>
+                                </div>
 
-                $.ajax({
-                    url: url.replace(':model_id', model_id),
-                    type: 'GET',
-                    data: {
-                        '_token': "{{ csrf_token() }}"
-                    },
-                    beforeSend: function()
-                    {
-                        $('#preloader').css('opacity', '0.5');
-                        $('#preloader').css('visibility', 'visible');
-                    },
-                    success: function(data, textStatus, jqXHR) {
-                        editFormBehaviour();
-                        if (!data.error)
-                        {
-                            $("#editForm input[name='edit_model_id']").val(data.audit.id);
-                            $("#editForm #objectionList").html(data.innerHtml);
-                        }
-                        else
-                        {
-                            alert(data.error);
-                        }
-                    },
-                    error: function(error, jqXHR, textStatus, errorThrown) {
-                        alert("Some thing went wrong");
-                    },
-                    complete: function() {
-                        $('#preloader').css('opacity', '0');
-                        $('#preloader').css('visibility', 'hidden');
-                    },
-                });
-            });
-        </script>
-
-
-        <!-- Update Compliance -->
-        <script>
-            $(document).ready(function() {
-                $("#editForm").submit(function(e) {
-                    e.preventDefault();
-                    $("#editSubmit").prop('disabled', true);
-                    var formdata = new FormData(this);
-                    formdata.append('_method', 'PUT');
-                    var model_id = $('#edit_model_id').val();
-                    var url = "{{ route('compliance.update', ":model_id") }}";
-                    //
-                    $.ajax({
-                        url: url.replace(':model_id', model_id),
-                        type: 'POST',
-                        data: formdata,
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function()
-                        {
-                            $('#preloader').css('opacity', '0.5');
-                            $('#preloader').css('visibility', 'visible');
-                        },
-                        success: function(data)
-                        {
-                            $("#editSubmit").prop('disabled', false);
-                            if (!data.error2)
-                                swal("Successful!", data.success, "success")
-                                    .then((action) => {
-                                        window.location.reload();
-                                    });
-                            else
-                                swal("Error!", data.error2, "error");
-                        },
-                        statusCode: {
-                            422: function(responseObject, textStatus, jqXHR) {
-                                $("#editSubmit").prop('disabled', false);
-                                resetErrors();
-                                printErrMsg(responseObject.responseJSON.errors);
-                            },
-                            500: function(responseObject, textStatus, errorThrown) {
-                                $("#editSubmit").prop('disabled', false);
-                                swal("Error occured!", "Something went wrong please try again", "error");
-                            }
-                        },
-                        complete: function() {
-                            $('#preloader').css('opacity', '0');
-                            $('#preloader').css('visibility', 'hidden');
-                        },
-                    });
-
-                });
-            });
-        </script>
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="contractor_name">Contractor Name</label>
+                                    <input type="text" name="contractor_name" disabled id="contractor_name" class="form-control">
+                                    <span class="text-danger is-invalid contractor_name_err"></span>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <a href="#" id="documentFile" target="_blank" class="btn btn-primary mt-4">View File</a>
+                                </div>
+                            
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
+                                    <input type="text" name="sub_unit" disabled id="sub_unit" class="form-control">
+                                    <span class="text-danger is-invalid sub_unit_err"></span>
+                                </div>
+                            </div>
 
 
-        <!-- Delete -->
-        <script>
-            $("#buttons-datatables").on("click", ".rem-element", function(e) {
-                e.preventDefault();
-                swal({
-                    title: "Are you sure to delete this audit file?",
-                    // text: "Make sure if you have filled Vendor details before proceeding further",
-                    icon: "info",
-                    buttons: ["Cancel", "Confirm"]
-                })
-                .then((justTransfer) =>
-                {
-                    if (justTransfer)
-                    {
-                        var model_id = $(this).attr("data-id");
-                        var url = "{{ route('audit.destroy', ":model_id") }}";
+                            
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="description">Description <span class="text-danger">*</span></label>
+                                    <textarea type="text" name="description" id="description" class="form-control" disabled></textarea>
+                                </div>
+                            </div>
 
-                        $.ajax({
-                            url: url.replace(':model_id', model_id),
-                            type: 'POST',
-                            data: {
-                                '_method': "DELETE",
-                                '_token': "{{ csrf_token() }}"
-                            },
-                            beforeSend: function()
-                            {
-                                $('#preloader').css('opacity', '0.5');
-                                $('#preloader').css('visibility', 'visible');
-                            },
-                            success: function(data, textStatus, jqXHR) {
-                                if (!data.error && !data.error2) {
-                                    swal("Success!", data.success, "success")
-                                        .then((action) => {
-                                            window.location.reload();
-                                        });
-                                } else {
-                                    if (data.error) {
-                                        swal("Error!", data.error, "error");
-                                    } else {
-                                        swal("Error!", data.error2, "error");
-                                    }
-                                }
-                            },
-                            error: function(error, jqXHR, textStatus, errorThrown) {
-                                swal("Error!", "Something went wrong", "error");
-                            },
-                            complete: function() {
-                                $('#preloader').css('opacity', '0');
-                                $('#preloader').css('visibility', 'hidden');
-                            },
-                        });
-                    }
-                });
-            });
-        </script>
-    @endpush
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="mca_action_status">Status <span class="text-danger">*</span></label>
+                                    <select name="mca_action_status" disabled id="mca_action_status" class="form-select">
+                                        <option value="0">Select value</option>
+                                        <option value="1">Approve</option>
+                                        <option value="2">Forward to department</option>
+                                    </select>
+                                    <span class="text-danger is-invalid mca_action_status_err"></span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="mca_remark">MCA Remark <span class="text-danger">*</span></label>
+                                    <textarea type="text" name="mca_remark" id="mca_remark" class="form-control" disabled></textarea>
+                                    <span class="text-danger is-invalid mca_remark_err"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <div class="table-responsive" id="tableDepartmentAnswer">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer d-none" id="viewFooterObjectionDetails">
+                        <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Cancel</button>
+                        <button class="btn btn-primary" id="saveObjectionStatus" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+ 
+        
+   
 
 </x-admin.layout>
+
+
+
+<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+
+<script>
+    // Initialize CKEditor
+    let editorInstance;
+    ClassicEditor
+        .create(document.querySelector('#description'),{
+            toolbar: {
+                shouldNotGroupWhenFull: true
+            }
+        })
+        .then(editor => {
+            editorInstance = editor;
+            editorInstance.enableReadOnlyMode('reason');
+            editor.ui.view.editable.element.style.height = '200px';  // Fixed height
+
+            // Make the editor scrollable
+            editor.ui.view.editable.element.style.overflowY = 'auto';
+        })
+        .catch(error => {
+            console.error('Error during initialization of the editor', error);
+        });
+</script>
+
+
+<script>
+    $("#buttons-datatables").on("click", ".edit-element", function(e) {
+        e.preventDefault();
+        var model_id = $(this).attr("data-id");
+        var url = "{{ route('objection.get-assign-objection') }}";
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: {
+                '_token': "{{ csrf_token() }}",
+                'audit_id': model_id,
+            },
+            beforeSend: function()
+            {
+                $('#preloader').css('opacity', '0.5');
+                $('#preloader').css('visibility', 'visible');
+            },
+            success: function(data, textStatus, jqXHR) {
+                editFormBehaviour();
+                if (!data.error)
+                {
+                    $('#modelObjectionId').html(data.objectionHtml);
+
+                    $("#addObjectionModal").modal("show");
+                } else {
+                    swal("Error!", data.error, "error");
+                }
+            },
+            error: function(error, jqXHR, textStatus, errorThrown) {
+                alert("Some thing went wrong");
+            },
+            complete: function() {
+                $('#preloader').css('opacity', '0');
+                $('#preloader').css('visibility', 'hidden');
+            },
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $("#editForm").submit(function(e) {
+            e.preventDefault();
+            $("#editSubmit").prop('disabled', true);
+            var formdata = new FormData(this);
+            formdata.append('_method', 'PUT');
+            var model_id = $('#edit_model_id').val();
+            var url = "{{ route('compliance.update', ":model_id") }}";
+            
+            $.ajax({
+                url: url.replace(':model_id', model_id),
+                type: 'POST',
+                data: formdata,
+                contentType: false,
+                processData: false,
+                beforeSend: function()
+                {
+                    $('#preloader').css('opacity', '0.5');
+                    $('#preloader').css('visibility', 'visible');
+                },
+                success: function(data)
+                {
+                    $("#editSubmit").prop('disabled', false);
+                    if (!data.error)
+                        swal("Successful!", data.success, "success")
+                            .then((action) => {
+                                window.location.reload();
+                            });
+                    else
+                        swal("Error!", data.error, "error");
+                },
+                statusCode: {
+                    422: function(responseObject, textStatus, jqXHR) {
+                        $("#editSubmit").prop('disabled', false);
+                        resetErrors();
+                        printErrMsg(responseObject.responseJSON.errors);
+                    },
+                    500: function(responseObject, textStatus, errorThrown) {
+                        $("#editSubmit").prop('disabled', false);
+                        swal("Error occured!", "Something went wrong please try again", "error");
+                    }
+                },
+                complete: function() {
+                    $('#preloader').css('opacity', '0');
+                    $('#preloader').css('visibility', 'hidden');
+                },
+            });
+
+        });
+    });
+</script>
+
+
+<script>
+    $('body').on('click', '.viewObjection', function(){
+        let id = $(this).attr('data-id');
+
+        $.ajax({
+            url: "{{ route('view-objection') }}",
+            type: 'GET',
+            data: {
+                'id': id,
+            },
+            beforeSend: function()
+            {
+                $('#preloader').css('opacity', '0.5');
+                $('#preloader').css('visibility', 'visible');
+            },
+            success: function(data, textStatus, jqXHR)
+            {
+                $('#addForm #audit_objection_id').val(data.auditObjection.id)
+                $("#addForm input[name='audit_id']").val(data.auditObjection.audit_id);
+                $("#addForm input[name='objection_no']").val(data.auditObjection.objection_no);
+                $("#addForm input[name='entry_date']").val(data.auditObjection.entry_date);
+                $("#addForm select[name='department_id']").val(data.auditObjection.department_id);
+                $("#addForm select[name='zone_id']").val(data.auditObjection.zone_id);
+                $("#addForm select[name='from_year']").val(data.auditObjection.from_year);
+                $("#addForm select[name='to_year']").val(data.auditObjection.to_year);
+                $("#addForm select[name='audit_type_id']").val(data.auditObjection.audit_type_id);
+                $("#addForm select[name='severity_id']").val(data.auditObjection.severity_id);
+                $("#addForm select[name='audit_para_category_id']").val(data.auditObjection.audit_para_category_id);
+
+
+                if(data.auditObjection.amount > 0){
+                    $('.isAmountDisplayOrNot').removeClass('d-none');
+                }else{
+                    $('.isAmountDisplayOrNot').addClass('d-none');
+                }
+
+
+                $("#addForm input[name='amount']").val(data.auditObjection.amount);
+                $("#addForm input[name='subject']").val(data.auditObjection.subject);
+                $("#addForm input[name='work_name']").val(data.auditObjection.work_name);
+                $("#addForm input[name='contractor_name']").val(data.auditObjection.contractor_name);
+
+                if(data.auditObjection.document && data.auditObjection.document != ""){
+                    var file = "{{ asset('storage') }}/"+data.auditObjection.document;
+                }else{
+                    var file = "javascript:void(0)";
+                }
+                $("#addForm #documentFile").attr('href', file);
+                $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
+                // $("#addForm textarea[name='description']").val(data.auditObjection.desc
+                editorInstance.setData(data.auditObjection.description);
+                
+                $('#mca_action_status').val(data.auditObjection.mca_action_status)
+                $('#mca_remark').val(data.auditObjection.mca_remark)
+
+                $('#tableDepartmentAnswer').html(data.auditDepartmentAnswerHtml)
+                $('#viewObjectionDetails').removeClass('d-none');
+                $('#viewFooterObjectionDetails').removeClass('d-none');
+            },
+            error: function(error, jqXHR, textStatus, errorThrown) {
+                swal("Error!", "Some thing went wrong", "error");
+            },
+            complete: function() {
+                $('#preloader').css('opacity', '0');
+                $('#preloader').css('visibility', 'hidden');
+            },
+        });
+    });
+</script>
+
+
+<script>
+    $("#addForm").submit(function(e) {
+        e.preventDefault();
+        var model_id = $('#audit_objection_id').val();
+        // $('#audit_id').val(model_id)
+        var url = "{{ route('objection.change-objection-status') }}";
+        var audit_id = $('#audit_id').val();
+        // let description = editordepartmentInstance.getData();
+        var formdata = new FormData(this);
+        
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formdata,
+            contentType: false,
+            processData: false,
+            beforeSend: function()
+            {
+                $('#preloader').css('opacity', '0.5');
+                $('#preloader').css('visibility', 'visible');
+            },
+            success: function(data, textStatus, jqXHR)
+            {
+                if (!data.error){
+                    swal("Successful!", data.success, "success")
+                        .then((action) => {
+                            window.location.reload();
+                        });
+                }
+                else{
+                    swal("Error!", data.error, "error");
+                }
+            },
+            error: function(error, jqXHR, textStatus, errorThrown) {
+                swal("Error!", "Some thing went wrong", "error");
+            },
+            complete: function() {
+                $('#preloader').css('opacity', '0');
+                $('#preloader').css('visibility', 'hidden');
+            },
+        });
+    });
+</script>
+
+
+<script>
+    let count = 100;
+    $('body').on('click', '#addMoreFile', function(){
+        let html = `<tr id="row${count}">
+                <td>{{ date('d-m-Y') }}</td>
+                <td><input type="file" class="form-control" required name="files[]"></td>
+                <td>
+                    <textarea name="remark[]" required class="form-control"></textarea>
+                </td>
+                <td><button class="btn btn-sm btn-danger removeBtn py-0" data-id="${count}"><span style="font-size:18px">-</span></button></td>
+            </tr>`;
+        count += 1;
+
+        $('#addMoreTbody').append(html);
+    });
+
+    $('body').on('click', '.removeBtn', function(){
+        let id = $(this).attr('data-id');
+        $('#row'+id).remove();
+    })
+</script>

@@ -19,7 +19,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" style="max-height: 100px; min-height:100px" required></textarea>
+                                <input type="text" class="form-control" name="description" required>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -57,7 +57,7 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_0">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px" required></textarea>
+                                            <input type="text" class="form-control" name="detail_0" style="max-height: 100px; min-height: 100px" required>
                                             <span class="text-danger is-invalid detail_0_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
@@ -108,7 +108,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" style="max-height: 100px; min-height:100px"></textarea>
+                                <input type="text" class="form-control" name="description" style="max-height: 100px; min-height:100px">
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -318,7 +318,7 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_${addFormCounter}">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_${addFormCounter}" style="max-height: 100px; min-height: 100px"></textarea>
+                                            <input type="text" class="form-control" name="detail_${addFormCounter}" style="max-height: 100px; min-height: 100px">
                                             <span class="text-danger is-invalid detail_${addFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">
@@ -416,7 +416,7 @@
                         editFormBehaviour();
                         if (!data.error) {
                             $("#editForm input[name='edit_model_id']").val(data.receipt.id);
-                            $("#editForm textarea[name='description']").val(data.receipt.description);
+                            $("#editForm input[name='description']").val(data.receipt.description);
                             $("#editForm input[name='from_date']").val(data.receipt.from_date);
                             $("#editForm input[name='to_date']").val(data.receipt.to_date);
                             $("#editForm input[name='amount']").val(data.receipt.amount);
@@ -447,7 +447,7 @@
                                         </div>
                                         <div class="col-md-4 mt-2">
                                             <label class="col-form-label" for="detail_${editFormCounter}">Detail <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" name="detail_${editFormCounter}" style="max-height: 100px; min-height: 100px" required></textarea>
+                                            <input type="text" class="form-control" name="detail_${editFormCounter}" style="max-height: 100px; min-height: 100px" required>
                                             <span class="text-danger is-invalid detail_${editFormCounter}_err"></span>
                                         </div>
                                         <div class="col-md-4 mt-2">

@@ -12,6 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\AuditParaCategory;
+use App\Models\Severity;
+use App\Models\AuditType;
+use App\Models\FiscalYear;
+use App\Models\Zone;
+use App\Models\Department;
+use App\Models\AuditDepartmentAnswer;
 
 class MCAAuditController extends Controller
 {
@@ -20,14 +27,6 @@ class MCAAuditController extends Controller
         $statusCode = strtoupper('AUDIT_STATUS_' . $status);
         $statusCode = constant("App\Models\Audit::$statusCode");
 
-        // $audits = Audit::query()
-        //     ->withCount('assignedAuditors as assigned_auditors_count')
-        //     // ->where('department_id', Auth::user()->department_id)
-        //     ->when($statusCode == 2, fn ($q) => $q->where('status', 2)->orWhere('status', '>=', 4))
-        //     ->when($statusCode != 2, fn ($q) => $q->where('status', $statusCode))
-        //     ->latest()
-        //     ->get();
-        // return $statusCode;
         $audits = Audit::query()
             ->withCount('assignedAuditors as assigned_auditors_count')
             // ->where('department_id', Auth::user()->department_id)
@@ -164,13 +163,99 @@ class MCAAuditController extends Controller
     public function draftReview(Request $request)
     {
         $audits = Audit::query()
-            ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
-            // ->whereHas('assignedAuditors', fn ($q) => $q->where('user_id', $user->id))
-            // ->where('department_id', Auth::user()->department_id)
+            ->where('status', '>=', 7)
             ->latest()
             ->get();
 
-        return view('admin.draft-review')->with(['audits' => $audits]);
+        $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
+
+        $zones = Zone::where('status', 1)->select('id', 'name')->get();
+
+        $fiscalYears = FiscalYear::select('id', 'name')->get();
+
+        $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
+
+        $severities = Severity::where('status', 1)->select('id', 'name')->get();
+
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
+
+        return view('admin.draft-review')->with([
+            'audits' => $audits,
+            'departments' => $departments,
+            'zones' => $zones,
+            'fiscalYears' => $fiscalYears,
+            'auditTypes' => $auditTypes,
+            'severities' => $severities,
+            'auditParaCategory' => $auditParaCategory
+        ]);
+    }
+
+    public function viewObjection(Request $request)
+    {
+        if ($request->ajax()) {
+            $roleName = Auth::user()->roles[0]->name;
+
+            $auditObjection = AuditObjection::where('id', $request->id)->first();
+
+            $auditDepartmentAnswers = AuditDepartmentAnswer::where('audit_objection_id', $request->id)->get();
+
+            $auditDepartmentAnswerHtml = '
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>File</th>
+                            <th>Answer</th>';
+
+            if ($roleName == "Auditor") {
+                $auditDepartmentAnswerHtml .= '<th>Remark</th>';
+            } elseif ($roleName == 'Department') {
+                $auditDepartmentAnswerHtml .= '<th><button class="btn btn-primary btn-sm" id="addMoreFile" type="button"><span class="fa fa-plus"></span></button></th>';
+            }
+
+
+            $auditDepartmentAnswerHtml .= '</tr>
+                    </thead>
+                    <tbody id="addMoreTbody">';
+
+            foreach ($auditDepartmentAnswers as $auditDepartmentAnswer) {
+                $auditDepartmentAnswerHtml .= '
+                    <tr>
+                        <td>' . date('d-m-Y', strtotime($auditDepartmentAnswer->created_at)) . '</td>
+                        <td><a href="' . asset('storage/' . $auditDepartmentAnswer->file) . '" target="_blank" class="btn btn-primary btn-sm">View File</a></td>
+                        <td>
+                            <textarea disabled class="form-control">' . $auditDepartmentAnswer->remark . '</textarea>
+                        </td>';
+
+                if ($roleName == "Auditor") {
+                    $auditDepartmentAnswerHtml .= '<th><input type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '"><textarea name="auditor_remark[]" class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea></th>';
+                } elseif ($roleName == 'Department') {
+                    $auditDepartmentAnswerHtml .= '<td>-</td>';
+                }
+
+                $auditDepartmentAnswerHtml .= '</tr>';
+            }
+            if ($roleName == "Department") {
+                $auditDepartmentAnswerHtml .= '
+                <tr>
+                    <td>' . date('d-m-Y') . '</td>
+                    <td><input type="file" class="form-control" required name="files[]"></td>
+                    <td>
+                        <textarea name="remark[]" required class="form-control"></textarea>
+                    </td>
+                    <td>-</td>
+                </tr>';
+            }
+
+            $auditDepartmentAnswerHtml .= '</tbody>
+                </table>
+            ';
+
+            return response()->json([
+                'auditObjection' => $auditObjection,
+                'auditDepartmentAnswerHtml' => $auditDepartmentAnswerHtml
+            ]);
+        }
     }
 
 
@@ -199,11 +284,11 @@ class MCAAuditController extends Controller
                 </div>';
         $auditorSatus = "disabled";
         $mcaSatus = "disabled";
-        if(Auth::user()->hasRole('Auditor')){
+        if (Auth::user()->hasRole('Auditor')) {
             $auditorSatus = "";
         }
 
-        if(Auth::user()->hasRole('MCA')){
+        if (Auth::user()->hasRole('MCA')) {
             $mcaSatus = "";
         }
 
@@ -238,7 +323,7 @@ class MCAAuditController extends Controller
                     </div>
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="action_' . $key . '">Approve/Reject</label>
-                        <select name="action_' . $key . '" readonly '.$auditorSatus.' class="form-select">
+                        <select name="action_' . $key . '" readonly ' . $auditorSatus . ' class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($objection->auditor_action_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($objection->auditor_action_status == 2 ? "selected" : "") . '>Reject</option>
@@ -252,7 +337,7 @@ class MCAAuditController extends Controller
                     </div>
                     <div class="col-md-2 mt-3">
                         <label class="col-form-label" for="mca_action_' . $key . '">MCA Action</label>
-                        <select '.$mcaSatus.' name="mca_action_' . $key . '" ' . $isEditable . ' class="form-select">
+                        <select ' . $mcaSatus . ' name="mca_action_' . $key . '" ' . $isEditable . ' class="form-select">
                             <option value="">Action</option>
                             <option value="1" ' . ($objection->mca_action_status == 1 ? "selected" : "") . '>Approve</option>
                             <option value="2" ' . ($objection->mca_action_status == 2 ? "selected" : "") . '>Reject</option>

@@ -231,44 +231,6 @@
                             </li>
                         @endcan
 
-
-
-                        @canany(['report.final-report'])
-                            <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('final-report') || request()->routeIs('departments.index') || request()->routeIs('complience-answer-report') ? 'active' : '' }}" href="#sidebarLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLayouts">
-                                    <i class="ri-layout-3-line"></i>
-                                    <span data-key="t-layouts">Report</span>
-                                </a>
-                                <div class="collapse menu-dropdown {{ request()->routeIs('final-report') || request()->routeIs('departments.index') || request()->routeIs('complience-answer-report') ? 'show' : '' }}" id="sidebarLayouts">
-                                    <ul class="nav nav-sm flex-column">
-                                        @can('report.final-report')
-                                            <li class="nav-item">
-                                                <a href="{{ route('final-report') }}" class="nav-link {{ request()->routeIs('final-report') ? 'active' : '' }}" data-key="t-horizontal">Final Report</a>
-                                            </li>
-                                        @endcan
-                                        @can('report.para-audit')
-                                        {{-- hmm not get objection answer --}}
-                                            <li class="nav-item">
-                                                <a href="{{ route('para-audit-report') }}" class="nav-link {{ request()->routeIs('para-audit-report') ? 'active' : '' }}" data-key="t-horizontal">Para Audit Report</a>
-                                            </li>
-                                        @endcan
-                                        @can('report.complience-answer')
-                                        {{-- hmm get objection answer --}}
-                                            <li class="nav-item">
-                                                <a href="{{ route('complience-answer-report') }}" class="nav-link {{ request()->routeIs('complience-answer-report') ? 'active' : '' }}" data-key="t-horizontal">Complience Answer Report</a>
-                                            </li>
-                                        @endcan
-                                        @can('report.department')
-                                        {{-- hmm get objection answer --}}
-                                            <li class="nav-item">
-                                                <a href="{{ route('department-program-audit') }}" class="nav-link {{ request()->routeIs('cdepartment-program-audit') ? 'active' : '' }}" data-key="t-horizontal">Department Program Audit Report</a>
-                                            </li>
-                                        @endcan
-                                    </ul>
-                                </div>
-                            </li>
-                        @endcanany
-
                     @else
 
                         @if(auth()->user()->department_id == 1 )

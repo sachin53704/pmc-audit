@@ -17,6 +17,7 @@ use App\Models\FiscalYear;
 use App\Models\AuditType;
 use App\Models\Severity;
 use App\Models\AuditParaCategory;
+use App\Models\AuditDepartmentAnswer;
 use App\Http\Requests\AddObjectionRequest;
 
 class AuditorAuditController extends Controller
@@ -109,7 +110,15 @@ class AuditorAuditController extends Controller
     public function getAssignObjection(Request $request)
     {
         if ($request->ajax()) {
-            $auditObjections = AuditObjection::with(['audit', 'auditType', 'zone', 'severity'])->where('audit_id', $request->audit_id)->get();
+            $auditObjections = AuditObjection::with(['audit', 'auditType', 'zone', 'severity'])
+                ->where('audit_id', $request->audit_id)
+                ->when(Auth::user()->hasRole('Department'), function ($q) {
+                    $q->where('mca_action_status', 2);
+                })
+                ->when(isset($request->answer_question), function ($q) {
+                    $q->where('is_department_answer', 1);
+                })
+                ->get();
 
             $objectionHtml = "";
             if (count($auditObjections) > 0) {
@@ -119,7 +128,7 @@ class AuditorAuditController extends Controller
                             <tr>
                                 <th>Sr no.</th>
                                 <th>HMM No</th>
-                                <th>Objection No</th>
+                                <th>Auditor Para No</th>
                                 <th>Audit Type</th>
                                 <th>Severity</th>
                                 <th>Zone</th>
@@ -138,7 +147,7 @@ class AuditorAuditController extends Controller
                                 <td>' . $auditObjection?->auditType?->name . '</td>
                                 <td>' . $auditObjection?->severity?->name . '</td>
                                 <td>' . $auditObjection?->zone?->name . '</td>
-                                <td><button class="btn btn-sm btn-primary viewObjection" data-id="' . $auditObjection?->id . '">View Objection</button></td>
+                                <td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="' . $auditObjection?->id . '">View Objection</button></td>
                             </tr>';
             }
 
@@ -149,7 +158,9 @@ class AuditorAuditController extends Controller
             }
 
             return response()->json([
-                'objectionHtml' => $objectionHtml
+                'objectionHtml' => $objectionHtml,
+                'department' => $auditObjection?->audit?->department_id,
+                'departmentName' => $auditObjection?->audit?->department?->name,
             ]);
         }
     }
@@ -157,6 +168,7 @@ class AuditorAuditController extends Controller
 
     public function storeObjection(AddObjectionRequest $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
@@ -164,20 +176,114 @@ class AuditorAuditController extends Controller
             $audit->update([
                 'obj_date' => $request->date,
                 'obj_subject' => $request->subject,
-                'status' => Audit::AUDIT_STATUS_AUDITOR_ADDED_OBJECTION,
+                'status' => 6,
             ]);
 
-            for ($i = 0; $i < $request->question_count; $i++) {
-                $reqParamName = 'objection_' . $i;
-                $objNoParamName = 'objection_no_' . $i;
-
-                AuditObjection::create($request->all());
+            $document = null;
+            if ($request->hasFile('documents')) {
+                $document = $request->documents->store('auditor-program-audit');
             }
+
+            AuditObjection::create([
+                'user_id' => Auth::user()->id,
+                'audit_id' => $audit->id,
+                'objection_no' => $request->objection_no,
+                'entry_date' => date('Y-m-d', strtotime($request->entry_date)),
+                'department_id' => $request->department_id,
+                'zone_id' => $request->zone_id,
+                'from_year' => $request->from_year,
+                'to_year' => $request->to_year,
+                'audit_type_id' => $request->audit_type_id,
+                'severity_id' => $request->severity_id,
+                'audit_para_category_id' => $request->audit_para_category_id,
+                'amount' => $request->amount,
+                'subject' => $request->subject,
+                'work_name' => $request->work_name,
+                'contractor_name' => $request->contractor_name,
+                'document' => $document,
+                'sub_unit' => $request->sub_unit,
+                'description' => $request->description,
+            ]);
+
             DB::commit();
 
             return response()->json(['success' => 'Objection created successfully']);
         } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'creating', 'objection');
+        }
+    }
+
+    public function changeObjectionStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            // dd($request->all());
+            if (Auth::user()->hasRole('MCA')) {
+                $auditObjection = AuditObjection::find($request->id);
+                $auditObjection->mca_action_status = $request->mca_action_status;
+                $auditObjection->mca_remark = $request->mca_remark;
+                if ($auditObjection->save()) {
+                    if ($request->mca_action_status == 1) {
+                        $status = 7;
+                    } else {
+                        $status = 8;
+                    }
+                    Audit::where('id', $request->audit_id)->update([
+                        'status' => $status
+                    ]);
+
+                    if ($auditObjection->mca_action_status == 1) {
+                        return response()->json(['success' => 'Objection approve successfully']);
+                    } else {
+                        return response()->json(['success' => 'Objection forwarded successfully']);
+                    }
+                } else {
+                    return response()->json(['error' => 'Something went wrong']);
+                }
+            } else if (Auth::user()->hasRole('Department')) {
+                // AuditDepartmentAnswer
+                DB::beginTransaction();
+                try {
+
+                    if (isset($request->remark) && is_array($request->remark) && count($request->remark) > 0) {
+                        for ($i = 0; $i < count($request->remark); $i++) {
+                            $file = null;
+                            if ($request->hasFile('files') && isset($request->file('files')[$i])) {
+                                $file = $request->file('files')[$i]->store('department-answer-file');
+                            }
+                            $auditDepartmentAnswer = new AuditDepartmentAnswer;
+                            $auditDepartmentAnswer->audit_objection_id = $request->audit_objection_id;
+                            $auditDepartmentAnswer->audit_id = $request->audit_id;
+                            $auditDepartmentAnswer->remark = $request->remark[$i];
+                            $auditDepartmentAnswer->file = $file;
+                            $auditDepartmentAnswer->save();
+                        }
+                    }
+
+                    DB::commit();
+                    return response()->json(['success' => 'Document uploaded successfully']);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    response()->json(['error' => 'Something went wrong!']);
+                }
+            } else if (Auth::user()->hasRole('Auditor')) {
+                DB::beginTransaction();
+                try {
+                    if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
+                        for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
+                            AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
+                                'auditor_remark' => $request->auditor_remark[$i]
+                            ]);
+                        }
+                    }
+                    DB::commit();
+                    return response()->json(['success' => 'Answer updated successfully']);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    response()->json(['error' => 'Something went wrong!']);
+                }
+            } else {
+                response()->json(['error' => 'Something went wrong!']);
+            }
         }
     }
 
@@ -187,12 +293,32 @@ class AuditorAuditController extends Controller
         $user = Auth::user();
 
         $audits = Audit::query()
-            ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
+            ->where('status', '>=', 9)
             ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
             ->latest()
             ->get();
 
-        return view('admin.answered-questions')->with(['audits' => $audits]);
+        $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
+
+        $zones = Zone::where('status', 1)->select('id', 'name')->get();
+
+        $fiscalYears = FiscalYear::select('id', 'name')->get();
+
+        $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
+
+        $severities = Severity::where('status', 1)->select('id', 'name')->get();
+
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
+
+        return view('admin.answered-questions')->with([
+            'audits' => $audits,
+            'departments' => $departments,
+            'zones' => $zones,
+            'fiscalYears' => $fiscalYears,
+            'auditTypes' => $auditTypes,
+            'severities' => $severities,
+            'auditParaCategory' => $auditParaCategory
+        ]);
     }
 
 
@@ -203,96 +329,9 @@ class AuditorAuditController extends Controller
             'answeredBy' => fn($q) => $q->first()?->append('full_name')
         ])]);
 
-        $isEditable = Auth::user()->hasRole(['Auditor']) ? 'readonly' : '';
-
-        $innerHtml = '
-                <div class="mb-3 row">
-                    <div class="col-md-6 mt-3">
-                        <label class="col-form-label" for="hmm_no">HMM No.</label>
-                        <input name="hmm_no" class="form-control" value="' . $audit->audit_no . '" readonly type="text">
-                    </div>
-                    <div class="col-md-6 mt-3">
-                        <label class="col-form-label" for="date">Date.</label>
-                        <input name="date" class="form-control" readonly type="date" value="' . $audit->date . '">
-                    </div>
-                </div>';
-
-        $auditorSatus = "disabled";
-        $mcaSatus = "disabled";
-        if (Auth::user()->hasRole('Auditor')) {
-            $auditorSatus = "";
-        }
-
-        if (Auth::user()->hasRole('MCA')) {
-            $mcaSatus = "";
-        }
-
-        foreach ($audit->objections as $key => $objection) {
-            $isAuditorReadonly = (($objection->auditor_action_status == 1 && ($objection->mca_action_status == 0 || $objection->mca_action_status == 1)) ? "readonly" : "");
-            $innerHtml .= '
-            <div class="row custm-card">
-                <input type="hidden" name="objection_id[]" value="' . $objection->id . '">
-                <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="objection_' . $key . '">(Objection ' . $objection->objection_no . ')</label>
-                    <textarea name="objection_' . $key . '" id="objection_' . $key . '" class="form-control" readonly cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $objection->objection . '</textarea>
-                </div>
-                <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="compliance_' . $key . '">Compliance <span class="text-danger">*</span></label>
-                    <textarea name="compliance_' . $key . '" ' . $isEditable . ' class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $objection->answer . '</textarea>
-                    <span class="text-danger is-invalid compliance_' . $key . '_err"></span>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="remark_' . $key . '">Remark <span class="text-danger">*</span></label>
-                    <input type="text" name="remark_' . $key . '" ' . $isEditable . ' value="' . $objection->remark . '" class="form-control">
-                    <span class="text-danger is-invalid remark_' . $key . '_err"></span>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="status_' . $key . '">Status</label>
-                    <input type="text" name="status_' . $key . '" class="form-control" value="' . $objection?->status_name . '" readonly>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="officer_detail' . $key . '">Officer Detail</label>
-                    <input type="text" name="officer_detail' . $key . '" class="form-control" value="' . $objection?->answeredBy?->full_name . '" readonly>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="action_' . $key . '">Auditor Action</label>
-                    <select ' . $auditorSatus . ' name="action_' . $key . '" class="form-select" ' . $isAuditorReadonly . '>
-                        <option value="">Action</option>
-                        <option value="1" ' . ($objection->auditor_action_status == 1 ? "selected" : "") . '>Approve</option>
-                        <option value="2" ' . ($objection->auditor_action_status == 2 ? "selected" : "") . '>Reject</option>
-                    </select>
-                    <span class="text-danger is-invalid action_' . $key . '_err"></span>
-                </div>
-                <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="action_remark_' . $key . '">Auditor Remark</label>
-                    <textarea name="action_remark_' . $key . '" class="form-control" ' . $isAuditorReadonly . ' cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $objection->auditor_remark . '</textarea>
-                    <span class="text-danger is-invalid action_' . $key . '_err"></span>
-                </div>
-                <div class="col-md-2 mt-3">
-                    <label class="col-form-label" for="mca_action_' . $key . '">MCA Action</label>
-                    <select ' . $mcaSatus . ' name="mca_action_' . $key . '" readonly class="form-select">
-                        <option value="">Action</option>
-                        <option value="1" ' . ($objection->mca_action_status == 1 ? "selected" : "") . '>Approve</option>
-                        <option value="2" ' . ($objection->mca_action_status == 2 ? "selected" : "") . '>Reject</option>
-                    </select>
-                    <span class="text-danger is-invalid mca_action_' . $key . '_err"></span>
-                </div>
-                <div class="col-md-3 mt-3">
-                    <label class="col-form-label" for="mca_action_remark_' . $key . '">MCA Remark</label>
-                    <textarea name="mca_action_remark_' . $key . '" readonly class="form-control" cols="10" rows="5" style="max-height: 120px; min-height: 120px">' . $objection->mca_remark . '</textarea>
-                    <span class="text-danger is-invalid mca_action_' . $key . '_err"></span>
-                </div>
-            </div>';
-        }
 
 
-        $response = [
-            'result' => 1,
-            'innerHtml' => $innerHtml,
-            'audit' => $audit,
-        ];
-
-        return $response;
+        return "";;
     }
 
 

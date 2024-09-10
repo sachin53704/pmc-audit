@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('sub_unit')->nullable();
             $table->longText('description')->nullable();
             $table->longText('department_description')->nullable();
+            $table->integer('is_department_answer')->comment("0 => No, 1 => Yes")->default(0);
             $table->unsignedTinyInteger('status')->default(1);
             $table->foreignId('answered_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->text('mca_remark')->nullable();

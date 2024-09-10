@@ -56,13 +56,12 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::resource('audit-type', App\Http\Controllers\Master\AuditTypeController::class);
     Route::resource('severity', App\Http\Controllers\Master\SeverityController::class);
     Route::resource('zone', App\Http\Controllers\Master\ZoneController::class);
-
     Route::resource('diary', App\Http\Controllers\DiaryController::class);
-
-
 
     // Clerk Routes
     Route::resource('audit', App\Http\Controllers\Admin\ClerkAuditController::class);
+
+
 
 
 
@@ -73,6 +72,7 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('audit/{audit}/get-auditors', [App\Http\Controllers\Admin\MCAAuditController::class, 'getAuditors'])->name('audit.get-auditors');
     Route::put('audit/{audit}/assign-auditor', [App\Http\Controllers\Admin\MCAAuditController::class, 'assignAuditor'])->name('audit.assign-auditor');
     Route::get('draft-review', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftReview'])->name('draft-review');
+    Route::get('view-objection', [App\Http\Controllers\Admin\MCAAuditController::class, 'viewObjection'])->name('view-objection');
     Route::get('draft-answer-details/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftAnswerDetails'])->name('draft-answer-details');
     Route::put('draft-approve-answers/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftApproveAnswer'])->name('draft-approve-answers');
     Route::get('final-report', [App\Http\Controllers\Admin\ReportController::class, 'finalReport'])->name('final-report');
@@ -90,6 +90,9 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::post('send-letter', [App\Http\Controllers\Admin\AuditorAuditController::class, 'sendLetter'])->name('send-letter');
     Route::get('objection-create', [App\Http\Controllers\Admin\AuditorAuditController::class, 'createObjection'])->name('objection.create');
     Route::get('get-assign-objection', [App\Http\Controllers\Admin\AuditorAuditController::class, 'getAssignObjection'])->name('objection.get-assign-objection');
+    Route::post('change-objection-status', [App\Http\Controllers\Admin\AuditorAuditController::class, 'changeObjectionStatus'])->name('objection.change-objection-status');
+
+
     Route::post('objection-store', [App\Http\Controllers\Admin\AuditorAuditController::class, 'storeObjection'])->name('objection.store');
     Route::get('answered-questions', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answeredQuestions'])->name('answered-questions');
     Route::get('answer-details/{audit}', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answerDetails'])->name('answer-details');
