@@ -45,7 +45,7 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     <th>View Letter</th>
                                     <th>Letter Description</th>
                                     <th>Action</th>
@@ -62,9 +62,9 @@
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                         </td>
@@ -251,12 +251,20 @@
                                     <span class="text-danger is-invalid mca_remark_err"></span>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <div class="table-responsive" id="tableDepartmentAnswer">
+                                        
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
 
                     </div>
                     <div class="modal-footer d-none" id="viewFooterObjectionDetails">
-                        <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Cancel</button>
+                        <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Close</button>
                         <button class="btn btn-primary" id="saveObjectionStatus" type="submit">Submit</button>
                     </div>
                 </div>
@@ -281,7 +289,7 @@
                 .then(editor => {
                     editorInstance = editor;
                     editorInstance.enableReadOnlyMode('reason');
-                    editor.ui.view.editable.element.style.height = '300px';  // Fixed height
+                    editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                     // Make the editor scrollable
                     editor.ui.view.editable.element.style.overflowY = 'auto';
@@ -493,6 +501,8 @@
                         $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
                         // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                         editorInstance.setData(data.auditObjection.description);
+
+                        $('#tableDepartmentAnswer').html(data.auditDepartmentAnswerHtml)
                         $('#mca_action_status').val(data.auditObjection.mca_action_status)
                         $('#mca_remark').val(data.auditObjection.mca_remark)
 

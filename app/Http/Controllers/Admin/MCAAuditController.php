@@ -163,13 +163,13 @@ class MCAAuditController extends Controller
     public function draftReview(Request $request)
     {
         $audits = Audit::query()
-            ->where('status', '>=', 7)
+            ->where('status', '>=', 6)
             ->latest()
             ->get();
 
         $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
 
-        $zones = Zone::where('status', 1)->select('id', 'name')->get();
+        $zones = Zone::select('id', 'name')->get();
 
         $fiscalYears = FiscalYear::select('id', 'name')->get();
 
@@ -210,7 +210,9 @@ class MCAAuditController extends Controller
             if ($roleName == "Auditor") {
                 $auditDepartmentAnswerHtml .= '<th>Remark</th>';
             } elseif ($roleName == 'Department') {
-                $auditDepartmentAnswerHtml .= '<th><button class="btn btn-primary btn-sm" id="addMoreFile" type="button"><span class="fa fa-plus"></span></button></th>';
+                $auditDepartmentAnswerHtml .= '<th>Auditor Remark</th><th><button class="btn btn-primary btn-sm" id="addMoreFile" type="button"><span class="fa fa-plus"></span></button></th>';
+            } elseif ($roleName == 'MCA') {
+                $auditDepartmentAnswerHtml .= '<th>Auditor Remark</th>';
             }
 
 
@@ -228,9 +230,11 @@ class MCAAuditController extends Controller
                         </td>';
 
                 if ($roleName == "Auditor") {
-                    $auditDepartmentAnswerHtml .= '<th><input type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '"><textarea name="auditor_remark[]" class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea></th>';
+                    $auditDepartmentAnswerHtml .= '<td><input type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '"><textarea name="auditor_remark[]" class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea></td>';
                 } elseif ($roleName == 'Department') {
-                    $auditDepartmentAnswerHtml .= '<td>-</td>';
+                    $auditDepartmentAnswerHtml .= '<td><textarea disabled class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea></td><td>-</td>';
+                } elseif ($roleName == 'MCA') {
+                    $auditDepartmentAnswerHtml .= '<td><textarea disabled class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea></td>';
                 }
 
                 $auditDepartmentAnswerHtml .= '</tr>';
@@ -244,7 +248,14 @@ class MCAAuditController extends Controller
                         <textarea name="remark[]" required class="form-control"></textarea>
                     </td>
                     <td>-</td>
+                    <td>-</td>
                 </tr>';
+            }
+
+            if (!Auth::user()->hasRole('Department')) {
+                if (count($auditDepartmentAnswers) == 0) {
+                    $auditDepartmentAnswerHtml = "";
+                }
             }
 
             $auditDepartmentAnswerHtml .= '</tbody>

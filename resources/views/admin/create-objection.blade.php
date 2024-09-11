@@ -27,7 +27,7 @@
                                         <th>File Description</th>
                                         <th>Remark</th>
                                         <th>View File</th>
-                                        <th>Status</th>
+                                        {{-- <th>Status</th> --}}
                                         <th>View Letter</th>
                                         <th>Letter Description</th>
                                         <th>Action</th>
@@ -44,9 +44,9 @@
                                             <td>
                                                 <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                             </td>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="modal-body">
                         <div id="modelObjectionId"></div>
-
+                        <hr>
                         <input type="hidden" name="audit_id" value="" id="audit_id">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-12 mb-3">
@@ -213,7 +213,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Cancel</button>
+                        <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Close</button>
                         <button class="btn btn-primary" id="addObjectionSubmit" type="submit">Submit</button>
                     </div>
                 </div>
@@ -327,32 +327,101 @@
         });
     </script>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
 
-<script>
-    // Initialize CKEditor
-    ClassicEditor
-        .create(document.querySelector('textarea'))
-        .then(editor => {
-            console.log('Editor was initialized', editor);
+    <script>
+        // Initialize CKEditor
+        let editorInstance;
+        ClassicEditor
+            .create(document.querySelector('textarea'),{
+                toolbar: {
+                    shouldNotGroupWhenFull: true
+                }
+            })
+            .then(editor => {
+                editorInstance = editor;
+                console.log('Editor was initialized', editor);
+            })
+            .catch(error => {
+                console.error('Error during initialization of the editor', error);
+            });
+
+        $('body').on('change', '#audit_para_category_id', function(){
+            let isAmount = $(this).find(':selected').attr('data-amount')
+            if(isAmount == 1){
+                $('.isAmountDisplayOrNot').removeClass('d-none');
+                $('#amount').prop('required', true);
+                $('#auditParaValue').val(1)
+            }else{
+                $('.isAmountDisplayOrNot').addClass('d-none');
+                $('#amount').prop('required', false);
+                $('#auditParaValue').val(0)
+            }
         })
-        .catch(error => {
-            console.error('Error during initialization of the editor', error);
-        });
+    </script>
 
-    $('body').on('change', '#audit_para_category_id', function(){
-        let isAmount = $(this).find(':selected').attr('data-amount')
-        if(isAmount == 1){
-            $('.isAmountDisplayOrNot').removeClass('d-none');
-            $('#amount').prop('required', true);
-            $('#auditParaValue').val(1)
-        }else{
-            $('.isAmountDisplayOrNot').addClass('d-none');
-            $('#amount').prop('required', false);
-            $('#auditParaValue').val(0)
-        }
-    })
-</script>
+
+    <script>
+        $('body').on('click', '.viewObjection', function(){
+            let id = $(this).attr('data-id');
+
+            $.ajax({
+                url: "{{ route('view-objection') }}",
+                type: 'GET',
+                data: {
+                    'id': id,
+                },
+                beforeSend: function()
+                {
+                    $('#preloader').css('opacity', '0.5');
+                    $('#preloader').css('visibility', 'visible');
+                },
+                success: function(data, textStatus, jqXHR)
+                {
+                    $("#addForm input[name='audit_id']").val(data.auditObjection.audit_id);
+                    $("#addForm input[name='objection_no']").val(data.auditObjection.objection_no);
+                    $("#addForm input[name='entry_date']").val(data.auditObjection.entry_date);
+                    $("#addForm select[name='department_id']").val(data.auditObjection.department_id);
+                    $("#addForm select[name='zone_id']").val(data.auditObjection.zone_id);
+                    $("#addForm select[name='from_year']").val(data.auditObjection.from_year);
+                    $("#addForm select[name='to_year']").val(data.auditObjection.to_year);
+                    $("#addForm select[name='audit_type_id']").val(data.auditObjection.audit_type_id);
+                    $("#addForm select[name='severity_id']").val(data.auditObjection.severity_id);
+                    $("#addForm select[name='audit_para_category_id']").val(data.auditObjection.audit_para_category_id);
+
+
+                    if(data.auditObjection.amount > 0){
+                        $('.isAmountDisplayOrNot').removeClass('d-none');
+                    }else{
+                        $('.isAmountDisplayOrNot').addClass('d-none');
+                    }
+
+
+                    $("#addForm input[name='amount']").val(data.auditObjection.amount);
+                    $("#addForm input[name='subject']").val(data.auditObjection.subject);
+                    $("#addForm input[name='work_name']").val(data.auditObjection.work_name);
+                    $("#addForm input[name='contractor_name']").val(data.auditObjection.contractor_name);
+
+                    // if(data.auditObjection.document && data.auditObjection.document != ""){
+                    //     var file = "{{ asset('storage') }}/"+data.auditObjection.document;
+                    // }else{
+                    //     var file = "javascript:void(0)";
+                    // }
+                    // $("#addForm #documentFile").attr('href', file);
+                    $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
+                    // $("#addForm textarea[name='description']").val(data.auditObjection.desc
+                    editorInstance.setData(data.auditObjection.description);
+                },
+                error: function(error, jqXHR, textStatus, errorThrown) {
+                    swal("Error!", "Some thing went wrong", "error");
+                },
+                complete: function() {
+                    $('#preloader').css('opacity', '0');
+                    $('#preloader').css('visibility', 'hidden');
+                },
+            });
+        });
+    </script>
 
 @endpush
 

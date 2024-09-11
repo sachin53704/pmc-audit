@@ -44,7 +44,7 @@ class DepartmentAuditController extends Controller
 
         $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
 
-        $zones = Zone::where('status', 1)->select('id', 'name')->get();
+        $zones = Zone::select('id', 'name')->get();
 
         $fiscalYears = FiscalYear::select('id', 'name')->get();
 

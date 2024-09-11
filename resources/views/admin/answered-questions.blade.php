@@ -21,7 +21,7 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     <th>View Letter</th>
                                     <th>Letter Description</th>
                                     <th>Action</th>
@@ -38,9 +38,9 @@
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                         </td>
@@ -202,7 +202,7 @@
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <label for="description">Description <span class="text-danger">*</span></label>
-                                    <textarea type="text" name="description" id="description" class="form-control" disabled></textarea>
+                                    <textarea type="text" name="description" id="description" class="form-control"></textarea>
                                 </div>
                             </div>
 
@@ -260,7 +260,6 @@
                 })
                 .then(editor => {
                     editorInstance = editor;
-                    editorInstance.enableReadOnlyMode('reason');
                     editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                     // Make the editor scrollable

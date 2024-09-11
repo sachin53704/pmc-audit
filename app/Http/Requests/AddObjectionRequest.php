@@ -31,7 +31,7 @@ class AddObjectionRequest extends FormRequest
             'audit_type_id' => 'required',
             'severity_id' => 'required',
             'audit_para_category_id' => 'required',
-            'amount' => 'required|required_if:audit_para_value,1',
+            'amount' => 'required_if:audit_para_value, 1',
             'subject' => 'required',
             'documents' => 'nullable|mimes:docx,doc,xlsx,xls,pdf',
             'sub_unit' => 'required',

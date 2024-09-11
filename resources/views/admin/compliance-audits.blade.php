@@ -503,6 +503,7 @@
                 <td>
                     <textarea name="remark[]" required class="form-control"></textarea>
                 </td>
+                <td>-</td>
                 <td><button class="btn btn-sm btn-danger removeBtn py-0" data-id="${count}"><span style="font-size:18px">-</span></button></td>
             </tr>`;
         count += 1;

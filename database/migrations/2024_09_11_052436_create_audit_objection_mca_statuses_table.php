@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Audit;
+use App\Models\User;
 use App\Models\AuditObjection;
 
 return new class extends Migration
@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('audit_department_answers', function (Blueprint $table) {
+        Schema::create('audit_objection_mca_statuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Audit::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(AuditObjection::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('file')->nullable();
-            $table->text('remark')->nullable();
-            $table->integer('auditor_status')->nullable();
-            $table->text('auditor_remark')->nullable();
-            $table->boolean('is_answer_accepted')->nullable();
+            $table->integer('status')->nullable();
+            $table->text('mca_remark');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('audit_department_answers');
+        Schema::dropIfExists('audit_objection_mca_statuses');
     }
 };
