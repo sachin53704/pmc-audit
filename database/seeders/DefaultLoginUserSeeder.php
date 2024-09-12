@@ -105,7 +105,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // MCA Seeder ##
         $mcaRole = Role::updateOrCreate(['name' => 'MCA']);
-        $mcaRole->syncPermissions(['audit_list.approved', 'audit_list.assign', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view']);
+        $mcaRole->syncPermissions(['audit_list.approved', 'audit_list.assign', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'report.audit-para-summary-report', 'report.department-wise-report']);
 
         $user = User::updateOrCreate([
             'email' => 'mca@gmail.com'

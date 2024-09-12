@@ -377,12 +377,12 @@ class PermissionTableSeeder extends Seeder
             [
                 'id' => 73,
                 'name' => 'report.audit-para-summary-report',
-                'group' => 'Zone'
+                'group' => 'Report'
             ],
             [
                 'id' => 74,
                 'name' => 'report.department-wise-report',
-                'group' => 'Zone'
+                'group' => 'Report'
             ]
         ];
 
