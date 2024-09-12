@@ -78,9 +78,9 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('final-report', [App\Http\Controllers\Admin\ReportController::class, 'finalReport'])->name('final-report');
     Route::get('para-audit-report', [App\Http\Controllers\Admin\ReportController::class, 'paraAuditReport'])->name('para-audit-report');
     Route::get('complience-answer-report', [App\Http\Controllers\Admin\ReportController::class, 'complienceAnswerReport'])->name('complience-answer-report');
-    Route::post('report/getQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getResponseQuestion'])->name('report-get-response-question');
-    Route::post('report/getUnanswerQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getUnanswerQuestion'])->name('report-get-unresponse-question');
-    Route::get('report/department-program-audit', [App\Http\Controllers\Admin\ReportController::class, 'departmentWiseProgramAudit'])->name('department-program-audit');
+    // Route::post('report/getQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getResponseQuestion'])->name('report-get-response-question');
+    // Route::post('report/getUnanswerQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getUnanswerQuestion'])->name('report-get-unresponse-question');
+    // Route::get('report/department-program-audit', [App\Http\Controllers\Admin\ReportController::class, 'departmentWiseProgramAudit'])->name('department-program-audit');
 
 
 
@@ -144,6 +144,11 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('users/{user}/get-role', [App\Http\Controllers\Admin\UserController::class, 'getRole'])->name('users.get-role');
     Route::put('users/{user}/assign-role', [App\Http\Controllers\Admin\UserController::class, 'assignRole'])->name('users.assign-role');
     Route::resource('roles', App\Http\Controllers\Admin\RoleController::class);
+
+
+    // report controller
+    Route::get('report/audit-para-summary-report', [App\Http\Controllers\ReportController::class, 'getAuditParaSummaryReport'])->name('report.audit-para-summary-report');
+    Route::get('report/department-wise-report', [App\Http\Controllers\ReportController::class, 'departmentWiseReport'])->name('report.department-wise-report');
 });
 
 

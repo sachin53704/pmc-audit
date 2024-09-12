@@ -32,6 +32,11 @@ class AuditObjection extends BaseModel
         return $this->belongsTo(AuditType::class, 'audit_type_id', 'id');
     }
 
+    public function auditParaCategory()
+    {
+        return $this->belongsTo(AuditParaCategory::class, 'audit_para_category_id', 'id');
+    }
+
     public function zone()
     {
         return $this->belongsTo(Zone::class, 'zone_id', 'id');
@@ -45,6 +50,11 @@ class AuditObjection extends BaseModel
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function answeredBy()

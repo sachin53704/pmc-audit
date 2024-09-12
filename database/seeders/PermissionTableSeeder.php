@@ -373,6 +373,16 @@ class PermissionTableSeeder extends Seeder
                 'id' => 72,
                 'name' => 'zone.edit',
                 'group' => 'Zone'
+            ],
+            [
+                'id' => 73,
+                'name' => 'report.audit-para-summary-report',
+                'group' => 'Zone'
+            ],
+            [
+                'id' => 74,
+                'name' => 'report.department-wise-report',
+                'group' => 'Zone'
             ]
         ];
 
