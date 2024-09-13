@@ -29,7 +29,7 @@
                                         <th>File Description</th>
                                         <th>Remark</th>
                                         <th>View Audit File</th>
-                                        <th>Status</th>
+                                        {{-- <th>Status</th> --}}
                                         <th>View Letter</th>
                                         <th>Description</th>
                                         <th>Action</th>
@@ -46,9 +46,9 @@
                                             <td>
                                                 <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 @if($audit->dl_file_path)
                                                     <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>

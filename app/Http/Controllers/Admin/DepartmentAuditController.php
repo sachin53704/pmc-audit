@@ -23,7 +23,7 @@ class DepartmentAuditController extends Controller
     {
         $authUser = Auth::user();
         $audits = Audit::query()
-            ->where('status', '>=', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)
+            ->where('status', '>=', 5)
             ->where('department_id', $authUser->department_id)
             ->latest()
             ->get();
