@@ -132,6 +132,11 @@
                         '_token': "{{ csrf_token() }}",
                         'audit_id': model_id
                     },
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
+                    },
                     success: function(data, textStatus, jqXHR)
                     {
                         if (!data.error)
@@ -148,6 +153,10 @@
                     },
                     error: function(error, jqXHR, textStatus, errorThrown) {
                         swal("Error!", "Some thing went wrong", "error");
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
                     },
                 });
 
@@ -171,6 +180,11 @@
                     data: formdata,
                     contentType: false,
                     processData: false,
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
+                    },
                     success: function(data) {
                         $("#sendLetterSubmit").prop('disabled', false);
                         if (!data.error2)
@@ -192,7 +206,11 @@
                             $("#sendLetterSubmit").prop('disabled', false);
                             swal("Error occured!", "Something went wrong please try again", "error");
                         }
-                    }
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
+                    },
                 });
 
                 function resetErrors() {

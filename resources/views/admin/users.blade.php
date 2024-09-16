@@ -102,16 +102,28 @@
                                 <span class="text-danger is-invalid username_err"></span>
                             </div>
 
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="password">Password <span class="text-danger">*</span></label>
-                                <input class="form-control" id="password" name="password" type="password" placeholder="********">
+                            <div class="col-md-4 mt-4">
+                                <label class="form-label" for="password-input">Password (पासवर्ड)</label>
+                                <div class="position-relative auth-pass-inputgroup mb-3">
+                                    <input type="password" class="form-control password-input" placeholder="Enter password" id="password" name="password" >
+                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                                    <span class="text-danger is-invalid password_err"></span>
+                                </div>
                                 <span class="text-danger is-invalid password_err"></span>
                             </div>
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="confirm_password">Confirm Password <span class="text-danger">*</span></label>
-                                <input class="form-control" id="confirm_password" name="confirm_password" type="password" placeholder="********">
-                                <span class="text-danger is-invalid confirm_password_err"></span>
+
+                                <div class="position-relative auth-pass-inputgroup mb-3">
+                                    <input type="password" class="form-control password-input" placeholder="Enter password" id="password" name="confirm_password" >
+                                    <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+                                    <span class="text-danger is-invalid confirm_password_err"></span>
+                                </div>
+
+
+                                {{-- <input class="form-control" id="confirm_password" name="confirm_password" type="password" placeholder="********">
+                                <span class="text-danger is-invalid confirm_password_err"></span> --}}
                             </div>
                         </div>
 
@@ -833,3 +845,4 @@
 
     });
 </script>
+<script src="{{ asset('admin/js/pages/password-addon.init.js') }}"></script>

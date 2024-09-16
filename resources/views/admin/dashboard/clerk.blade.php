@@ -16,7 +16,7 @@
                         </div>
                         <div class="flex-shrink-0">
                             <h5 class="text-success fs-14 mb-0">
-                                {{-- <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +16.24 % --}}
+                                
                             </h5>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                         </div>
                         <div class="flex-shrink-0">
                             <h5 class="text-danger fs-14 mb-0">
-                                {{-- <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -3.57 % --}}
+                               
                             </h5>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="flex-shrink-0">
                             <h5 class="text-success fs-14 mb-0">
-                                {{-- <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 % --}}
+                                
                             </h5>
                         </div>
                     </div>

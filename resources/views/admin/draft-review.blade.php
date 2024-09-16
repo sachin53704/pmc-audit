@@ -86,7 +86,7 @@
 
     {{-- Add Objection Modal --}}
     <div class="modal fade" id="addObjectionModal" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <form action="" id="addForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
@@ -235,22 +235,22 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="mca_action_status">Status <span class="text-danger">*</span></label>
-                                    <select required name="mca_action_status" id="mca_action_status" class="form-select">
+                                    <label for="status">Status</label>
+                                    <select name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_statuss' : 'dymca_statuss' }}" id="status1" class="form-select">
                                         <option value="0">Select value</option>
                                         <option value="1">Approve</option>
                                         <option value="2">Forward to department</option>
                                     </select>
-                                    <span class="text-danger is-invalid mca_action_status_err"></span>
+                                    <span class="text-danger is-invalid {{ (Auth::user()->hasRole('MCA')) ? 'mca_statuss_err' : 'dymca_statuss_err' }}"></span>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="mca_remark">MCA Remark <span class="text-danger">*</span></label>
-                                    <textarea required type="text" name="mca_remark" id="mca_remark" class="form-control"></textarea>
-                                    <span class="text-danger is-invalid mca_remark_err"></span>
+                                    <label for="remark">MCA Remark</label>
+                                    <textarea type="text" name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_remarks' : 'dymca_remarks' }}" id="remark" class="form-control"></textarea>
+                                    <span class="text-danger is-invalid {{ (Auth::user()->hasRole('MCA')) ? 'mca_remarks_err' : 'dymca_remarks_err' }}"></span>
                                 </div>
-                            </div>
+                            </div>--}}
 
                             <div class="row">
                                 <div class="col-12 mb-3">
@@ -349,25 +349,19 @@
             });
 
 
-            $("body").on("click", "#saveObjectionStatus", function(e) {
+            $("#addForm").submit(function(e) {
                 e.preventDefault();
                 var model_id = $('#audit_objection_id').val();
                 // $('#audit_id').val(model_id)
                 var url = "{{ route('objection.change-objection-status') }}";
-                var mca_action_status = $('#mca_action_status').val();
-                var mca_remark = $('#mca_remark').val();
-                var audit_id = $('#audit_id').val();
+                var formdata = new FormData(this);
 
                 $.ajax({
                     url: url,
                     type: 'POST',
-                    data: {
-                        '_token': "{{ csrf_token() }}",
-                        'id': model_id,
-                        'mca_action_status': mca_action_status,
-                        'mca_remark': mca_remark,
-                        'audit_id': audit_id
-                    },
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
                     beforeSend: function()
                     {
                         $('#preloader').css('opacity', '0.5');
@@ -503,8 +497,8 @@
                         editorInstance.setData(data.auditObjection.description);
 
                         $('#tableDepartmentAnswer').html(data.auditDepartmentAnswerHtml)
-                        $('#mca_action_status').val(data.auditObjection.mca_action_status)
-                        $('#mca_remark').val(data.auditObjection.mca_remark)
+                        // $('#mca_action_status').val(data.auditObjection.mca_action_status)
+                        // $('#mca_remark').val(data.auditObjection.mca_remark)
 
 
                         $('#viewObjectionDetails').removeClass('d-none');

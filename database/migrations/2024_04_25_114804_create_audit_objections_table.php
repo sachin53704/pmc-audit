@@ -5,6 +5,7 @@ use App\Models\Department;
 use App\Models\Zone;
 use App\Models\AuditType;
 use App\Models\Severity;
+use App\Models\User;
 use App\Models\AuditParaCategory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,6 +20,7 @@ return new class extends Migration
     {
         Schema::create('audit_objections', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Audit::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedInteger('objection_no');
             $table->date('entry_date');
@@ -37,14 +39,12 @@ return new class extends Migration
             $table->string('document')->nullable();
             $table->string('sub_unit')->nullable();
             $table->longText('description')->nullable();
-            $table->longText('department_description')->nullable();
-            $table->integer('is_department_answer')->comment("0 => No, 1 => Yes")->default(0);
             $table->unsignedTinyInteger('status')->default(1);
-            $table->foreignId('answered_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->text('mca_remark')->nullable();
-            $table->text('auditor_remark')->nullable();
-            $table->foreignId('approved_by_mca')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('approved_by_auditor')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            // $table->boolean('dymca_status')->nullable();
+            // $table->text('dymca_remark')->nullable();
+            // $table->boolean('mca_status')->nullable();
+            // $table->text('mca_remark')->nullable();
+            // $table->text('auditor_remark')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

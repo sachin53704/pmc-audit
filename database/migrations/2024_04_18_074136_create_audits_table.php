@@ -20,6 +20,10 @@ return new class extends Migration
             $table->text('description');
             $table->text('remark');
             $table->text('file_path');
+            $table->integer('dymca_status')->nullable()->comment("1 => Pending,  3 => Rejected,  2 => Accepted");
+            $table->text('dymca_remark')->nullable();
+            $table->integer('mca_status')->nullable()->comment("1 => Pending,  3 => Rejected,  2 => Accepted");
+            $table->text('mca_remark')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
             $table->text('reject_reason')->nullable();
             $table->text('dl_description')->comment("Department Letter Description")->nullable();

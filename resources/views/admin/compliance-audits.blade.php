@@ -18,7 +18,6 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
-                                    <th>Status</th>
                                     <th>View Letter</th>
                                     <th>Letter Description</th>
                                     <th>Action</th>
@@ -35,17 +34,7 @@
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
-                                        <td>
-                                            @if($audit->status == "7")
-                                            Approve By MCA
-                                            @elseif ($audit->status == "8")
-                                            Rejected by MCA
-                                            @elseif ($audit->status == "9")
-                                            Answer By department
-                                            @else
-                                            -
-                                            @endif
-                                        </td>
+                                        
                                         <td>
                                             @if($audit->dl_file_path)
                                                 <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
@@ -68,7 +57,7 @@
 
     {{-- Add Objection Modal --}}
     <div class="modal fade" id="addObjectionModal" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <form action="" id="addForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
@@ -212,6 +201,7 @@
                                 </div>
                             </div>
 
+                            {{-- @if(auth()->user()->hasRole('MCA'))
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
                                     <label for="mca_action_status">Status <span class="text-danger">*</span></label>
@@ -228,6 +218,7 @@
                                     <span class="text-danger is-invalid mca_remark_err"></span>
                                 </div>
                             </div>
+                            @endif --}}
 
                             <div class="row">
                                 <div class="col-12 mb-3">
@@ -430,8 +421,8 @@
                 // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                 editorInstance.setData(data.auditObjection.description);
                 
-                $('#mca_action_status').val(data.auditObjection.mca_action_status)
-                $('#mca_remark').val(data.auditObjection.mca_remark)
+                // $('#mca_action_status').val(data.auditObjection.mca_action_status)
+                // $('#mca_remark').val(data.auditObjection.mca_remark)
 
                 $('#tableDepartmentAnswer').html(data.auditDepartmentAnswerHtml)
                 $('#viewObjectionDetails').removeClass('d-none');
@@ -496,6 +487,22 @@
 
 <script>
     let count = 100;
+
+    var auditorDisabled = "disabled";
+    var mcaDisabled = "disabled";
+    var dymcaDisabled = "disabled";
+    @if (Auth::user()->hasRole('Auditor')) 
+        auditorDisabled = "";
+    @endif
+
+    @if (Auth::user()->hasRole('MCA')) 
+        mcaDisabled = "";
+    @endif
+
+    @if (Auth::user()->hasRole('DY MCA')) 
+        dymcaDisabled = "";
+    @endif
+
     $('body').on('click', '#addMoreFile', function(){
         let html = `<tr id="row${count}">
                 <td>{{ date('d-m-Y') }}</td>
@@ -503,7 +510,36 @@
                 <td>
                     <textarea name="remark[]" required class="form-control"></textarea>
                 </td>
-                <td>-</td>
+                <td>
+                    <select class="form-select" ${auditorDisabled} name="auditor_status[]">
+                        <option value="">Select</option>
+                        <option value="1">Approve</option>
+                        <option value="0">Reject</option>
+                    </select>
+                </td>
+                <td>
+                    <textarea name="auditor_remark[]" ${auditorDisabled} class="form-control"></textarea>
+                </td>
+                <td>
+                    <select class="form-select" ${dymcaDisabled} name="dymca_status[]">
+                        <option value="">Select</option>
+                        <option value="1">Approve</option>
+                        <option value="0">Reject</option>
+                    </select>
+                </td>
+                <td>
+                    <textarea name="dymca_remark[]" ${dymcaDisabled} class="form-control"></textarea>
+                </td>
+                <td>
+                    <select class="form-select" ${mcaDisabled} name="mca_status[]">
+                        <option value="">Select</option>
+                        <option value="1">Approve</option>
+                        <option value="0">Reject</option>
+                    </select>
+                </td>
+                <td>
+                    <textarea name="mca_remark[]" ${mcaDisabled} class="form-control"></textarea>
+                </td>
                 <td><button class="btn btn-sm btn-danger removeBtn py-0" data-id="${count}"><span style="font-size:18px">-</span></button></td>
             </tr>`;
         count += 1;

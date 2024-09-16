@@ -8,6 +8,8 @@ use Illuminate\Database\Seeder;
 use App\Models\AuditType;
 use App\Models\Severity;
 use App\Models\AuditParaCategory;
+use App\Models\FiscalYear;
+use App\Models\Zone;
 
 class MastersSeeder extends Seeder
 {
@@ -147,6 +149,57 @@ class MastersSeeder extends Seeder
                 'name' => $severity['name'],
                 'is_amount' => $severity['is_amount'],
                 'status' => $severity['status']
+            ]);
+        }
+
+        // Financial year master
+        $financialYears = [
+            [
+                'id' => 1,
+                'name' => date('Y') . '-' . date('y', strtotime('+1 years')),
+                'from_year' => date('Y'),
+                'to_year' => date('Y', strtotime('+1 years')),
+            ]
+        ];
+
+        foreach ($financialYears as $financialYear) {
+            FiscalYear::updateOrCreate([
+                'id' => $financialYear['id']
+            ], [
+                'id' => $financialYear['id'],
+                'name' => $financialYear['name'],
+                'from_year' => $financialYear['from_year'],
+                'to_year' => $financialYear['to_year'],
+            ]);
+        }
+
+
+        // Audit type master
+        $zones = [
+            [
+                'id' => 1,
+                'name' => 'Zone 1',
+                'status' => 1
+            ],
+            [
+                'id' => 2,
+                'name' => 'Zone 2',
+                'status' => 1
+            ],
+            [
+                'id' => 3,
+                'name' => 'Zone 3',
+                'status' => 1
+            ]
+        ];
+
+        foreach ($zones as $zone) {
+            Zone::updateOrCreate([
+                'id' => $zone['id']
+            ], [
+                'id' => $zone['id'],
+                'name' => $zone['name'],
+                'status' => $zone['status']
             ]);
         }
     }

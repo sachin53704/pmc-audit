@@ -35,14 +35,12 @@ class DepartmentAuditController extends Controller
     {
         $authUser = Auth::user();
         $audits = Audit::query()
-            ->whereHas('objections', function ($q) {
-                $q->where('mca_action_status', 2);
-            })
+            ->where('status', '>=', 6)
             ->where('department_id', $authUser->department_id)
             ->latest()
             ->get();
 
-        $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
+        $departments = Department::select('id', 'name')->get();
 
         $zones = Zone::select('id', 'name')->get();
 

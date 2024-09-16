@@ -44,13 +44,6 @@
         </div>
     </div>
 
-
-    @push('scripts')
-
-
-    @endpush
-
-
 </x-admin.layout>
 
 

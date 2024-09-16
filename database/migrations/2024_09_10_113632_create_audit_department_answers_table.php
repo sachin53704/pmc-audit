@@ -19,9 +19,14 @@ return new class extends Migration
             $table->foreignIdFor(AuditObjection::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('file')->nullable();
             $table->text('remark')->nullable();
-            $table->integer('auditor_status')->nullable();
+            $table->boolean('auditor_status')->comment('0 => reject, 1 => approve, blank => pending')->nullable();
             $table->text('auditor_remark')->nullable();
-            $table->boolean('is_answer_accepted')->nullable();
+
+            $table->boolean('dymca_status')->comment('0 => reject, 1 => approve, blank => pending')->nullable();
+            $table->text('dymca_remark')->nullable();
+            $table->boolean('mca_status')->comment('0 => reject, 1 => approve, blank => pending')->nullable();
+            $table->text('mca_remark')->nullable();
+
             $table->timestamps();
         });
     }

@@ -62,7 +62,7 @@
 
     {{-- Add Objection Modal --}}
     <div class="modal fade" id="addObjectionModal" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <form action="" id="addForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
@@ -206,7 +206,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
                                     <label for="mca_action_status">Status <span class="text-danger">*</span></label>
                                     <select name="mca_action_status" disabled id="mca_action_status" class="form-select">
@@ -221,7 +221,7 @@
                                     <textarea type="text" name="mca_remark" id="mca_remark" class="form-control" disabled></textarea>
                                     <span class="text-danger is-invalid mca_remark_err"></span>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row">
                                 <div class="col-12 mb-3">
@@ -284,8 +284,7 @@
                     type: 'GET',
                     data: {
                         '_token': "{{ csrf_token() }}",
-                        'audit_id': model_id,
-                        'answer_question': 'yes'
+                        'audit_id': model_id
                     },
                     beforeSend: function()
                     {
@@ -369,8 +368,8 @@
                         editorInstance.setData(data.auditObjection.description);
                         $('#tableDepartmentAnswer').html(data.auditDepartmentAnswerHtml)
 
-                        $('#mca_action_status').val(data.auditObjection.mca_action_status)
-                        $('#mca_remark').val(data.auditObjection.mca_remark)
+                        // $('#mca_action_status').val(data.auditObjection.mca_action_status)
+                        // $('#mca_remark').val(data.auditObjection.mca_remark)
 
 
                         $('#viewObjectionDetails').removeClass('d-none');
