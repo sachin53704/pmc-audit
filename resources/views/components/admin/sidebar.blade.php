@@ -240,22 +240,27 @@
                             </li>
                         @endcan
                         
-                        @canany(['report.audit-para-summary-report', 'report.department-wise-report'])
+                        @canany(['report.audit-para-summary-report', 'report.department-wise-report', 'report.audit-para-remark'])
                         <li class="nav-item">
-                            <a class="nav-link menu-link {{ request()->routeIs('report.audit-para-summary-report') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
+                            <a class="nav-link menu-link {{ request()->routeIs('report.audit-para-summary-report') ? 'active' : '' }} {{ request()->routeIs('report.department-wise-report') ? 'active' : '' }} {{ request()->routeIs('report.program-audit-para-remark') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
                                 <i class="ri-file-list-3-line"></i>
                                 <span data-key="t-layouts">Reports</span>
                             </a>
-                            <div class="collapse menu-dropdown {{ request()->routeIs('report.audit-para-summary-report') ? 'show' : '' }}" id="sidebarReports">
+                            <div class="collapse menu-dropdown {{ request()->routeIs('report.audit-para-summary-report') ? 'show' : '' }} {{ request()->routeIs('report.department-wise-report') ? 'show' : '' }} {{ request()->routeIs('report.program-audit-para-remark') ? 'show' : '' }}" id="sidebarReports">
                                 <ul class="nav nav-sm flex-column">
                                     @can('report.audit-para-summary-report')
                                     <li class="nav-item">
-                                        <a href="{{ route('report.audit-para-summary-report') }}" class="nav-link {{ request()->is('report.audit-para-summary-report') ? 'active' : '' }}" data-key="t-horizontal">Programme Audit Para Summary</a>
+                                        <a href="{{ route('report.audit-para-summary-report') }}" class="nav-link {{ request()->routeIs('report.audit-para-summary-report') ? 'active' : '' }}" data-key="t-horizontal">Programme Audit Para Summary</a>
                                     </li>
                                     @endcan
                                     @can('report.department-wise-report')
                                     <li class="nav-item">
-                                        <a href="{{ route('report.department-wise-report') }}" class="nav-link {{ request()->is('report.department-wise-report') ? 'active' : '' }}" data-key="t-horizontal">Programme Audit Department Wise</a>
+                                        <a href="{{ route('report.department-wise-report') }}" class="nav-link {{ request()->routeIs('report.department-wise-report') ? 'active' : '' }}" data-key="t-horizontal">Programme Audit Department Wise</a>
+                                    </li>
+                                    @endcan
+                                    @can('report.audit-para-remark')
+                                    <li class="nav-item">
+                                        <a href="{{ route('report.program-audit-para-remark') }}" class="nav-link {{ request()->routeIs('report.program-audit-para-remark') ? 'active' : '' }}" data-key="t-horizontal">Programme Audit Para Remark</a>
                                     </li>
                                     @endcan
                                 </ul>

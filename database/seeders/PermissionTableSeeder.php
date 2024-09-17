@@ -388,6 +388,11 @@ class PermissionTableSeeder extends Seeder
                 'id' => 75,
                 'name' => 'hmm-status.view',
                 'group' => 'HMM Status'
+            ],
+            [
+                'id' => 76,
+                'name' => 'report.audit-para-remark',
+                'group' => 'Report'
             ]
         ];
 

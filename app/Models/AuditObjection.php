@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\AuditType;
 use App\Models\Zone;
 use App\Models\Severity;
+use App\Models\AuditDepartmentAnswer;
 
 class AuditObjection extends BaseModel
 {
@@ -61,13 +62,20 @@ class AuditObjection extends BaseModel
     {
         return $this->belongsTo(User::class, 'answered_by', 'id');
     }
+
     public function mcaApprover()
     {
         return $this->belongsTo(User::class, 'approved_by_mca', 'id');
     }
+
     public function auditorApprover()
     {
         return $this->belongsTo(User::class, 'approved_by_auditor', 'id');
+    }
+
+    public function auditDepartmentAnswers()
+    {
+        return $this->hasMany(AuditDepartmentAnswer::class, 'audit_objection_id', 'id');
     }
 
 

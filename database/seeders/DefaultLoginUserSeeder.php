@@ -105,7 +105,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // MCA Seeder ##
         $mcaRole = Role::updateOrCreate(['name' => 'MCA']);
-        $mcaRole->syncPermissions(['audit_list.approved', 'audit_list.assign', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'report.audit-para-summary-report', 'report.department-wise-report', 'hmm-status.view']);
+        $mcaRole->syncPermissions(['audit_list.approved', 'audit_list.assign', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'report.audit-para-summary-report', 'report.department-wise-report', 'report.audit-para-remark', 'hmm-status.view']);
 
         $user = User::updateOrCreate([
             'email' => 'mca@gmail.com'
@@ -126,7 +126,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // DY MCA Seeder ##
         $dyRole = Role::updateOrCreate(['name' => 'DY MCA']);
-        $dyRole->syncPermissions(['audit_list.approved', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'receipt.pending-list', 'receipt.approve-list', 'receipt.reject-list', 'receipt.approve', 'receipt.reject', 'report.audit-para-summary-report', 'report.department-wise-report', 'hmm-status.view']);
+        $dyRole->syncPermissions(['audit_list.approved', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'receipt.pending-list', 'receipt.approve-list', 'receipt.reject-list', 'receipt.approve', 'receipt.reject', 'report.audit-para-summary-report', 'report.department-wise-report', 'report.audit-para-remark', 'hmm-status.view']);
 
         $user = User::updateOrCreate([
             'email' => 'dymca@gmail.com'

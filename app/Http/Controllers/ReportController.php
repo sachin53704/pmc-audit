@@ -16,26 +16,26 @@ class ReportController extends Controller
         $reports = Department::when(isset($request->department) && $request->department != "", function ($q) use ($request) {
             $q->where('id', $request->department);
         })->withCount([
-            'auditObjection as approved_para' => fn($q) => $q->where('mca_action_status', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+            'auditObjection as approved_para' => fn($q) => $q->where('mca_status', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                 $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
             }),
-            'auditObjection as pending_para' => fn($q) => $q->where('mca_action_status', '!=', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+            'auditObjection as pending_para' => fn($q) => $q->where('mca_status', '!=', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                 $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
             }),
         ])
             ->withSum(['auditObjection as approved_subunit' => function ($q) use ($request) {
-                $q->where('mca_action_status', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+                $q->where('mca_status', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                     $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
                 })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                     $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
                 });
             }], 'sub_unit')
             ->withSum(['auditObjection as pending_subunit' => function ($q) use ($request) {
-                $q->where('mca_action_status', '!=', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+                $q->where('mca_status', '!=', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                     $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
                 })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                     $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
@@ -84,6 +84,39 @@ class ReportController extends Controller
             return $pdf->stream('department-report.pdf');
         } else {
             return view('report.department-report.index')->with([
+                'departments' => $departments,
+                'reports' => $reports
+            ]);
+        }
+    }
+
+    public function programAuditParaRemark(Request $request)
+    {
+        $departments = Department::select('id', 'name')->get();
+
+        $reports = AuditObjection::with(['department', 'user', 'audit', 'auditDepartmentAnswers' => function ($q) {
+            return $q->where('mca_status', 1);
+        }])->orderBy('department_id')
+            ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
+                $q->where('department_id', $request->department);
+            })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+                $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
+            })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
+                $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
+            })->get();
+
+        // return $reports;
+        if (isset($request->pdf) && $request->pdf == "Yes") {
+
+            $department = "All";
+            if (isset($request->department) && $request->department != "") {
+                $department = Department::where('id', $request->department)->value('name');
+            }
+            $pdf = PDF::loadView('report.audit-para-remark.pdf', compact('reports', 'department'));
+
+            return $pdf->stream('audit-para-remark.pdf');
+        } else {
+            return view('report.audit-para-remark.index')->with([
                 'departments' => $departments,
                 'reports' => $reports
             ]);
