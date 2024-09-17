@@ -118,6 +118,13 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'])->name('receipts.info');
     Route::put('approve-receipts/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'])->name('approve-receipts');
 
+
+    // dymca and mca approve and forward route
+    Route::get('hmm-mca-status', [App\Http\Controllers\HmmMcaStatusController::class, 'getHmmMCAData'])->name('hmmMcaStatus');
+    Route::post('store-hmm-mca-status', [App\Http\Controllers\HmmMcaStatusController::class, 'storeHmmMCAData'])->name('storeHmmMcaStatus');
+    Route::get('get-hmm-assign-objection', [App\Http\Controllers\HmmMcaStatusController::class, 'getAssignObjection'])->name('objection.get-hmm-assign-objection');
+
+
     // PAYMENT RECEIPT APPROVE/REJECT Routes
     Route::get('payment-receipts/status/pending-list', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'pendingReceipts'])->name('payment-receipts.pending-list');
     Route::get('payment-receipts/status/approved-list', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'approvedReceipts'])->name('payment-receipts.approved-list');

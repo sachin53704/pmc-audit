@@ -383,6 +383,11 @@ class PermissionTableSeeder extends Seeder
                 'id' => 74,
                 'name' => 'report.department-wise-report',
                 'group' => 'Report'
+            ],
+            [
+                'id' => 75,
+                'name' => 'hmm-status.view',
+                'group' => 'HMM Status'
             ]
         ];
 

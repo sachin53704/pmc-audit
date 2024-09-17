@@ -132,9 +132,17 @@ class AuditorAuditController extends Controller
                                 <th>Auditor Para No</th>
                                 <th>Audit Type</th>
                                 <th>Severity</th>
-                                <th>Zone</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>Zone</th>';
+
+                if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA') || Auth::user()->hasRole('Auditor')) {
+                    $objectionHtml .= '
+                    <th>DYMCA Status</th>
+                    <th>DYMCA Remark</th>
+                    <th>MCA Status</th>
+                    <th>MCA Remark</th>';
+                }
+
+                $objectionHtml .= '<th>Action</th>
                             </tr>
                         </thead>
                         <tbody>';
@@ -142,16 +150,21 @@ class AuditorAuditController extends Controller
 
             $count = 1;
             foreach ($auditObjections as $auditObjection) {
-                $status = ($auditObjection->mca_action_status == 1) ? "<span class='badge bg-success'>Approved</span>" : "<span class='badge bg-warning'>Inprocess</span>";
                 $objectionHtml .= '<tr>
                                 <td>' . $count++ . '</td>
                                 <td>' . $auditObjection?->audit?->audit_no . '</td>
                                 <td>' . $auditObjection?->objection_no . '</td>
                                 <td>' . $auditObjection?->auditType?->name . '</td>
                                 <td>' . $auditObjection?->severity?->name . '</td>
-                                <td>' . $auditObjection?->zone?->name . '</td>
-                                <td>' . $status . '</td>
-                                <td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="' . $auditObjection?->id . '">View Objection</button></td>
+                                <td>' . $auditObjection?->zone?->name . '</td>';
+                if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA') || Auth::user()->hasRole('Auditor')) {
+                    $objectionHtml .= '
+                    <th>' . (($auditObjection->dymca_status == 1) ? '<span class="badge bg-success">Approve</span>' : (($auditObjection->dymca_status == 2) ? '<span class="badge bg-warning">Forward To Auditor</span>' : "-")) . '</th>
+                    <th>' . (($auditObjection->dymca_remark) ? $auditObjection->dymca_remark : '-') . '</th>
+                    <th>' . (($auditObjection->mca_status == 1) ? '<span class="badge bg-success">Approve</span>' : (($auditObjection->mca_status == 2) ? '<span class="badge bg-warning">Forward To Auditor</span>' : (($auditObjection->mca_status == 3) ? '<span class="badge bg-primary">Forward to Department</span>' : '-'))) . '</th>
+                    <th>' . (($auditObjection->mca_remark) ? $auditObjection->mca_remark : '-') . '</th>';
+                }
+                $objectionHtml .= '<td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="' . $auditObjection?->id . '">View Objection</button></td>
                             </tr>';
             }
 
@@ -178,12 +191,12 @@ class AuditorAuditController extends Controller
             DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
 
-            $auditStatus = $audit->status;
+            // $auditStatus = $audit->status;
 
             $audit->update([
                 'obj_date' => $request->date,
                 'obj_subject' => $request->subject,
-                'status' => ($auditStatus > 6) ? $auditStatus : 6,
+                // 'status' => ($auditStatus > 6) ? $auditStatus : 6,
             ]);
 
             $document = null;
@@ -210,6 +223,10 @@ class AuditorAuditController extends Controller
                 'document' => $document,
                 'sub_unit' => $request->sub_unit,
                 'description' => $request->description,
+                'dymca_status' => null,
+                'dymca_remark' => null,
+                'mca_status' => null,
+                'mca_remark' => null
             ];
             if (isset($request->audit_objection_id) && $request->audit_objection_id != "" && $request->audit_objection_id) {
                 AuditObjection::updateOrCreate([

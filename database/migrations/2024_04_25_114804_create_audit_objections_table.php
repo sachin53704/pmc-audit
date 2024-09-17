@@ -26,7 +26,6 @@ return new class extends Migration
             $table->date('entry_date');
             $table->foreignIdFor(Department::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Zone::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-
             $table->foreignId('from_year')->nullable()->constrained('fiscal_years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('to_year')->nullable()->constrained('fiscal_years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(AuditType::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
@@ -40,11 +39,10 @@ return new class extends Migration
             $table->string('sub_unit')->nullable();
             $table->longText('description')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
-            // $table->boolean('dymca_status')->nullable();
-            // $table->text('dymca_remark')->nullable();
-            // $table->boolean('mca_status')->nullable();
-            // $table->text('mca_remark')->nullable();
-            // $table->text('auditor_remark')->nullable();
+            $table->integer('dymca_status')->nullable()->comment('1 => Approve, 2 => forward to auditor');
+            $table->text('dymca_remark')->nullable();
+            $table->integer('mca_status')->nullable()->comment('1 => Approve, 2 => forward to auditor, 3 => forward to department');
+            $table->text('mca_remark')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -52,7 +52,7 @@
                                             </td>
                                             <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                             <td>
-                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="plus-circle"></i> Add Objection</button>
+                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"> View Objection</button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -71,144 +71,156 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Objection </h5>
+                        <h5 class="modal-title">View Objection </h5>
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div id="modelObjectionId"></div>
-                        <hr>
-                        <input type="hidden" name="audit_id" value="" id="audit_id">
-                        <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="objection_no">Auditor Para No <span class="text-danger">*</span></label>
-                                <input type="text" name="objection_no" id="objection_no" class="form-control" value="{{ time() }}">
-                                <span class="text-danger is-invalid objection_no_err"></span>
+                        <div class="viewObjectionDetails d-none">
+                            <hr>
+                            <input type="hidden" name="audit_id" value="" id="audit_id">
+                            <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="objection_no">Auditor Para No <span class="text-danger">*</span></label>
+                                    <input type="text" name="objection_no" id="objection_no" class="form-control" value="" readonly>
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
+                                    <input type="date" name="entry_date" id="entry_date" class="form-control" readonly>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="department_id">Department <span class="text-danger">*</span></label>
+                                    <input type="hidden" name="department_id" id="department_hidden_id">
+                                    <input type="text" name="department_name_id" readonly id="department_name_id" class="form-control" />
+                                </div>
+                        
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="zone_id">Zone <span class="text-danger">*</span></label>
+                                    <select name="zone_id" disabled id="zone_id" class="form-select">
+                                        <option value="">Select zone</option>
+                                        @foreach($zones as $zone)
+                                        <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="from_year">From Year <span class="text-danger">*</span></label>
+                                    <select name="from_year" id="from_year" disabled class="form-select">
+                                        <option value="">Select from year</option>
+                                        @foreach($fiscalYears as $fiscalYear)
+                                        <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="to_year">To Year <span class="text-danger">*</span></label>
+                                    <select name="to_year" disabled id="to_year" class="form-select">
+                                        <option value="">Select to year</option>
+                                        @foreach($fiscalYears as $fiscalYear)
+                                        <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="audit_type_id">Audit Type <span class="text-danger">*</span></label>
+                                    <select name="audit_type_id" disabled id="audit_type_id" class="form-select">
+                                        <option value="">Select audit type</option>
+                                        @foreach($auditTypes as $auditType)
+                                        <option value="{{ $auditType->id }}">{{ $auditType->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="severity_id">Severity <span class="text-danger">*</span></label>
+                                    <select name="severity_id" disabled id="severity_id" class="form-select">
+                                        <option value="">Select severity</option>
+                                        @foreach($severities as $severity)
+                                        <option value="{{ $severity->id }}">{{ $severity->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
-                                <input type="date" name="entry_date" id="entry_date" class="form-control">
-                                <span class="text-danger is-invalid entry_date_err"></span>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
+                                    <input type="hidden" name="audit_para_value" id="auditParaValue">
+                                    <select name="audit_para_category_id" disabled id="audit_para_category_id" class="form-select">
+                                        <option data-amount="" value="">Select option</option>
+                                        @foreach($auditParaCategory as $auditParaCat)
+                                        <option data-amount="{{ $auditParaCat->is_amount }}" value="{{ $auditParaCat->id }}">{{ $auditParaCat->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3 d-none isAmountDisplayOrNot">
+                                    <label for="amount">Amount <span class="text-danger">*</span></label>
+                                    <input type="text" name="amount" id="amount" class="form-control" readonly>
+                                </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="department_id">Department <span class="text-danger">*</span></label>
-                                <input type="hidden" name="department_id" id="department_hidden_id">
-                                <input type="text" name="department_name_id" disabled id="department_name_id" class="form-control" />
-                                <span class="text-danger is-invalid department_id_err"></span>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="subject">Subject <span class="text-danger">*</span></label>
+                                    <input type="text" name="subject" id="subject" class="form-control" readonly>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="work_name">Work Name</label>
+                                    <input type="text" name="work_name" id="work_name" class="form-control" readonly>
+                                </div>
                             </div>
-                     
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="zone_id">Zone <span class="text-danger">*</span></label>
-                                <select name="zone_id" id="zone_id" class="form-select">
-                                    <option value="">Select zone</option>
-                                    @foreach($zones as $zone)
-                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid zone_id_err"></span>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="contractor_name">Contractor Name</label>
+                                    <input type="text" name="contractor_name" readonly id="contractor_name" class="form-control">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="documents">File</label>
+                                    <div>
+                                        <a href="" class="btn btn-primary btn-sm" id="documentFile">View File</a>
+                                    </div>
+                                </div>
+                            
+                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                    <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
+                                    <input readonly type="text" name="sub_unit" id="sub_unit" class="form-control">
+                                </div>
                             </div>
-                        
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="from_year">From Year <span class="text-danger">*</span></label>
-                                <select name="from_year" id="from_year" class="form-select">
-                                    <option value="">Select from year</option>
-                                    @foreach($fiscalYears as $fiscalYear)
-                                    <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid from_year_err"></span>
+
+                            
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="description">Description <span class="text-danger">*</span></label>
+                                    <textarea type="text" name="description" id="description" class="form-control"></textarea>
+                                </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="to_year">To Year <span class="text-danger">*</span></label>
-                                <select name="to_year" id="to_year" class="form-select">
-                                    <option value="">Select to year</option>
-                                    @foreach($fiscalYears as $fiscalYear)
-                                    <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid to_year_err"></span>
-                            </div>
-                        
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="audit_type_id">Audit Type <span class="text-danger">*</span></label>
-                                <select name="audit_type_id" id="audit_type_id" class="form-select">
-                                    <option value="">Select audit type</option>
-                                    @foreach($auditTypes as $auditType)
-                                    <option value="{{ $auditType->id }}">{{ $auditType->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid audit_type_id_err"></span>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="severity_id">Severity <span class="text-danger">*</span></label>
-                                <select name="severity_id" id="severity_id" class="form-select">
-                                    <option value="">Select severity</option>
-                                    @foreach($severities as $severity)
-                                    <option value="{{ $severity->id }}">{{ $severity->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid severity_id_err"></span>
-                            </div>
-                        
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
-                                <input type="hidden" name="audit_para_value" id="auditParaValue">
-                                <select name="audit_para_category_id" id="audit_para_category_id" class="form-select">
-                                    <option data-amount="" value="">Select option</option>
-                                    @foreach($auditParaCategory as $auditParaCat)
-                                    <option data-amount="{{ $auditParaCat->is_amount }}" value="{{ $auditParaCat->id }}">{{ $auditParaCat->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid audit_para_category_id_err"></span>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-12 mb-3 d-none isAmountDisplayOrNot">
-                                <label for="amount">Amount <span class="text-danger">*</span></label>
-                                <input type="text" name="amount" id="amount" class="form-control">
-                                <span class="text-danger is-invalid amount_err"></span>
-                            </div>
-                        
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="subject">Subject <span class="text-danger">*</span></label>
-                                <input type="text" name="subject" id="subject" class="form-control">
-                                <span class="text-danger is-invalid subject_err"></span>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="work_name">Work Name</label>
-                                <input type="text" name="work_name" id="work_name" class="form-control">
-                                <span class="text-danger is-invalid work_name_err"></span>
-                            </div>
-                       
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="contractor_name">Contractor Name</label>
-                                <input type="text" name="contractor_name" id="contractor_name" class="form-control">
-                                <span class="text-danger is-invalid contractor_name_err"></span>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="documents">Upload Documents (docx, doc, xlsx, xls and pdf file only allow)</label>
-                                <input type="file" name="documents" id="documents" class="form-control">
-                                <span class="text-danger is-invalid documents_err"></span>
-                            </div>
-                        
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
-                                <input type="text" name="sub_unit" id="sub_unit" class="form-control">
-                                <span class="text-danger is-invalid sub_unit_err"></span>
+
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label for="dymca_status">Select Status <span class="text-danger">*</span></label>
+                                    <select name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_status' : 'dymca_status' }}" class="form-select" id="dymca_status" required>
+                                        <option value="">Select</option>
+                                        <option value="1">Approve</option>
+                                        <option value="2">Forward To Auditor</option>
+                                        @if(Auth::user()->hasRole('MCA'))
+                                        <option value="3">Forward To Department</option>
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="dymca_remark">Remark</label>
+                                    <textarea name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_remark' : 'dymca_remark' }}" id="dymca_remark" class="form-control"></textarea>
+                                </div>
                             </div>
                         </div>
-
-                        
-                        <div class="row">
-                            <div class="col-12 mb-3">
-                                <label for="description">Description <span class="text-danger">*</span></label>
-                                <textarea type="text" name="description" id="description" class="form-control"></textarea>
-                            </div>
-                        </div>
-
 
                     </div>
                     <div class="modal-footer">
-                        <div class="hideFormSubmit">
+                        <div class="viewObjectionDetails d-none">
                             <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Close</button>
                             <button class="btn btn-primary" id="addObjectionSubmit" type="submit">Submit</button>
                         </div>
@@ -235,7 +247,11 @@
             })
             .then(editor => {
                 editorInstance = editor;
-                console.log('Editor was initialized', editor);
+                editorInstance.enableReadOnlyMode('reason');
+                editor.ui.view.editable.element.style.height = '200px';  // Fixed height
+
+                // Make the editor scrollable
+                editor.ui.view.editable.element.style.overflowY = 'auto';
             })
             .catch(error => {
                 console.error('Error during initialization of the editor', error);
@@ -298,23 +314,25 @@
                     $("#addForm input[name='work_name']").val(data.auditObjection.work_name);
                     $("#addForm input[name='contractor_name']").val(data.auditObjection.contractor_name);
 
-                    // if(data.auditObjection.document && data.auditObjection.document != ""){
-                    //     var file = "{{ asset('storage') }}/"+data.auditObjection.document;
-                    // }else{
-                    //     var file = "javascript:void(0)";
-                    // }
-                    // $("#addForm #documentFile").attr('href', file);
+                    if(data.auditObjection.document && data.auditObjection.document != ""){
+                        var file = "{{ asset('storage') }}/"+data.auditObjection.document;
+                    }else{
+                        var file = "javascript:void(0)";
+                    }
+                    $("#addForm #documentFile").attr('href', file);
                     $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
                     // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                     editorInstance.setData(data.auditObjection.description);
 
-                    if((data.auditObjection.dymca_status != "1")){
-                        $('.hideFormSubmit').removeClass('d-none')
-                    }else if((data.auditObjection.mca_status == "2")){
-                        $('.hideFormSubmit').removeClass('d-none')
-                    }else{
-                        $('.hideFormSubmit').addClass('d-none')
-                    }
+                    @if(Auth::user()->hasRole('MCA'))
+                        $('#addForm #dymca_status').val(data.auditObjection.mca_status)
+                        $('#addForm #dymca_remark').val(data.auditObjection.mca_remark)
+                    @else
+                        $('#addForm #dymca_status').val(data.auditObjection.dymca_status)
+                        $('#addForm #dymca_remark').val(data.auditObjection.dymca_remark)
+                    @endif
+
+                    $('.viewObjectionDetails').removeClass('d-none')
                 },
                 error: function(error, jqXHR, textStatus, errorThrown) {
                     swal("Error!", "Some thing went wrong", "error");
@@ -336,7 +354,7 @@
             e.preventDefault();
             var model_id = $(this).attr("data-id");
             $('#audit_id').val(model_id)
-            var url = "{{ route('objection.get-assign-objection') }}";
+            var url = "{{ route('objection.get-hmm-assign-objection') }}";
 
             $.ajax({
                 url: url,
@@ -385,7 +403,7 @@
             var formdata = new FormData(this);
 
             $.ajax({
-                url: '{{ route('objection.store') }}',
+                url: '{{ route('storeHmmMcaStatus') }}',
                 type: 'POST',
                 data: formdata,
                 contentType: false,

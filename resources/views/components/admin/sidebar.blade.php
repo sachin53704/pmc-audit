@@ -192,6 +192,15 @@
                             </li>
                         @endcan
 
+                        @can('hmm-status.view')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('hmmMcaStatus') ? 'active' : '' }}" href="{{ route('hmmMcaStatus') }}" >
+                                    <i class="ri-auction-line"></i>
+                                    <span data-key="t-dashboards">HMM</span>
+                                </a>
+                            </li>
+                        @endcan
+
                         @can('department_letter.view')
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('department-letter.index') ? 'active' : '' }}" href="{{ route('department-letter.index') }}" >
