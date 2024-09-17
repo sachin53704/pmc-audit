@@ -125,6 +125,15 @@
                                 {{-- <input class="form-control" id="confirm_password" name="confirm_password" type="password" placeholder="********">
                                 <span class="text-danger is-invalid confirm_password_err"></span> --}}
                             </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="active_status">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" name="active_status">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                                <span class="text-danger is-invalid active_status_err"></span>
+                            </div>
                         </div>
 
                     </div>
@@ -228,6 +237,15 @@
                                 <span class="text-danger is-invalid username_err"></span>
                             </div>
 
+                            <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="active_status">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" name="active_status">
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                                <span class="text-danger is-invalid active_status_err"></span>
+                            </div>
+
                         </div>
                     </div>
                     <div class="card-footer">
@@ -266,6 +284,7 @@
                                     <th>Department</th>
                                     <th>User Type</th>
                                     <th>Registered On</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -281,6 +300,13 @@
                                         <td>{{ $user->roles[0]?->name }}</td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($user->created_at)->format('d M, y h:i:s') }}
+                                        </td>
+                                        <td>
+                                            @if(($user->active_status == 1))
+                                            <span class="badge bg-success">Active</span>
+                                            @else
+                                            <span class="badge bg-danger">Inactive</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <button class="edit-element btn btn-primary px-2 py-1" title="Edit User" data-id="{{ $user->id }}"><i data-feather="edit"></i></button>
@@ -642,6 +668,7 @@
                     $("#editForm input[name='email']").val(data.user.email);
                     $("#editForm select[name='role']").html(data.roleHtml);
                     $("#editForm input[name='username']").val(data.user.username);
+                    $('#editForm select[name="active_status"]').val(data.user.active_status)
 
                     var roleId = data.role.id;
                     $("#editForm .auditor_no_field").addClass("d-none");

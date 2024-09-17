@@ -260,6 +260,7 @@
                 })
                 .then(editor => {
                     editorInstance = editor;
+                    editorInstance.enableReadOnlyMode('reason');
                     editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                     // Make the editor scrollable

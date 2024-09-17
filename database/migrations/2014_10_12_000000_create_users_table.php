@@ -25,12 +25,13 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('username', 100);
             $table->string('password');
+            $table->boolean('active_status')->default(1);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('users', function (Blueprint $table){
+        Schema::table('users', function (Blueprint $table) {
             $table->foreignId('created_by')->after('remember_token')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('updated_by')->after('created_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('deleted_by')->after('updated_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
@@ -44,7 +45,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
 
-        Schema::table('users', function (Blueprint $table){
+        Schema::table('users', function (Blueprint $table) {
             $table->dropConstrainedForeignId('created_by');
             $table->dropConstrainedForeignId('updated_by');
             $table->dropConstrainedForeignId('deleted_by');

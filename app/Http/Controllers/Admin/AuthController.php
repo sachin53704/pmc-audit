@@ -17,8 +17,7 @@ class AuthController extends Controller
     public function showLogin()
     {
         $quotes = [];
-        for($i=1; $i<=3; $i++)
-        {
+        for ($i = 1; $i <= 3; $i++) {
             array_push($quotes, Inspiring::quote());
         }
 
@@ -27,48 +26,48 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required',
-            'password' => 'required',
-        ],
-        [
-            'username.required' => 'Please enter username',
-            'password.required' => 'Please enter password',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'username' => 'required',
+                'password' => 'required',
+            ],
+            [
+                'username.required' => 'Please enter username',
+                'password.required' => 'Please enter password',
+            ]
+        );
 
-        if ($validator->passes())
-        {
+        if ($validator->passes()) {
             $username = $request->username;
             $password = $request->password;
             $remember_me = $request->has('remember_me') ? true : false;
 
-            try
-            {
+            try {
                 $user = User::where('email', $username)->first();
 
-                if(!$user)
-                    return response()->json(['error2'=> 'No user found with this username']);
+                if (!$user)
+                    return response()->json(['error2' => 'No user found with this username']);
 
-                if($user->active_status == '0' && !$user->roles)
-                    return response()->json(['error2'=> 'You are not authorized to login, contact HOD']);
+                if ($user->active_status == '0' && !$user->roles)
+                    return response()->json(['error2' => 'You are not authorized to login, contact HOD']);
 
-                if(!auth()->attempt(['email' => $username, 'password' => $password], $remember_me))
-                    return response()->json(['error2'=> 'Your entered credentials are invalid']);
+                if ($user->active_status == '0')
+                    return response()->json(['error2' => 'You are not authorized to login, contact Admin']);
+
+                if (!auth()->attempt(['email' => $username, 'password' => $password], $remember_me))
+                    return response()->json(['error2' => 'Your entered credentials are invalid']);
 
                 $userType = $user->roles[0]->name;
 
-                return response()->json(['success'=> 'login successful', 'user_type'=> $userType, 'user' => $user ]);
-            }
-            catch(\Exception $e)
-            {
+                return response()->json(['success' => 'login successful', 'user_type' => $userType, 'user' => $user]);
+            } catch (\Exception $e) {
                 DB::rollBack();
-                Log::info("login error:". $e);
-                return response()->json(['error2'=> 'Something went wrong while validating your credentials!']);
+                Log::info("login error:" . $e);
+                return response()->json(['error2' => 'Something went wrong while validating your credentials!']);
             }
-        }
-        else
-        {
-            return response()->json(['error'=>$validator->errors()]);
+        } else {
+            return response()->json(['error' => $validator->errors()]);
         }
     }
 
@@ -106,37 +105,27 @@ class AuthController extends Controller
             'confirm_password' => 'required|same:password',
         ]);
 
-        if ($validator->passes())
-        {
+        if ($validator->passes()) {
             $old_password = $request->old_password;
             $password = $request->password;
 
-            try
-            {
+            try {
                 $user = DB::table('users')->where('id', $request->user()->id)->first();
 
-                if( Hash::check($old_password, $user->password) )
-                {
-                    DB::table('users')->where('id', $request->user()->id)->update(['password'=> Hash::make($password)]);
+                if (Hash::check($old_password, $user->password)) {
+                    DB::table('users')->where('id', $request->user()->id)->update(['password' => Hash::make($password)]);
 
-                    return response()->json(['success'=> 'Password changed successfully!']);
+                    return response()->json(['success' => 'Password changed successfully!']);
+                } else {
+                    return response()->json(['error2' => 'Old password does not match']);
                 }
-                else
-                {
-                    return response()->json(['error2'=> 'Old password does not match']);
-                }
-            }
-            catch(\Exception $e)
-            {
+            } catch (\Exception $e) {
                 DB::rollBack();
-                Log::info("password change error:". $e);
-                return response()->json(['error2'=> 'Something went wrong while changing your password!']);
+                Log::info("password change error:" . $e);
+                return response()->json(['error2' => 'Something went wrong while changing your password!']);
             }
-        }
-        else
-        {
-            return response()->json(['error'=>$validator->errors()]);
+        } else {
+            return response()->json(['error' => $validator->errors()]);
         }
     }
-
 }

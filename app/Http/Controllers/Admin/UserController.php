@@ -28,7 +28,7 @@ class UserController extends Controller
         $departments = Department::latest()->get();
         $roles = Role::orderBy('id', 'DESC')->whereNot('name', 'like', '%super%')->get();
 
-        return view('admin.users')->with(['users'=> $users, 'roles'=> $roles, 'departments' => $departments]);
+        return view('admin.users')->with(['users' => $users, 'roles' => $roles, 'departments' => $departments]);
     }
 
     /**
@@ -44,21 +44,19 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $input = $request->validated();
 
             $input['password'] = Hash::make($input['password']);
             $input['department_id'] = $input['department_id'] ?? $input['home_department_id'];
+            $input['active_status'] = $request->active_status;
 
-            $user = User::create( Arr::only( $input, Auth::user()->getFillable() ) );
-            DB::table('model_has_roles')->insert(['role_id'=> $input['role'], 'model_type'=> 'App\Models\User', 'model_id'=> $user->id]);
+            $user = User::create(Arr::only($input, Auth::user()->getFillable()));
+            DB::table('model_has_roles')->insert(['role_id' => $input['role'], 'model_type' => 'App\Models\User', 'model_id' => $user->id]);
             DB::commit();
-            return response()->json(['success'=> 'User created successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'User created successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'creating', 'User');
         }
     }
@@ -79,14 +77,13 @@ class UserController extends Controller
         $roles = Role::whereNot('name', 'like', '%super%')->get();
         $user->loadMissing('roles', 'department');
 
-        if ($user)
-        {
+        if ($user) {
             $roleHtml = '<span>
                 <option value="">--Select Role --</option>';
-                foreach($roles as $role):
-                    $is_select = $role->id == $user->roles[0]->id ? "selected" : "";
-                    $roleHtml .= '<option value="'.$role->id.'" '.$is_select.'>'.$role->name.'</option>';
-                endforeach;
+            foreach ($roles as $role):
+                $is_select = $role->id == $user->roles[0]->id ? "selected" : "";
+                $roleHtml .= '<option value="' . $role->id . '" ' . $is_select . '>' . $role->name . '</option>';
+            endforeach;
             $roleHtml .= '</span>';
 
 
@@ -96,9 +93,7 @@ class UserController extends Controller
                 'roleHtml' => $roleHtml,
                 'role' => $user->roles[0],
             ];
-        }
-        else
-        {
+        } else {
             $response = ['result' => 0];
         }
         return $response;
@@ -109,19 +104,17 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $input = $request->validated();
-            $user->update( Arr::only( $input, Auth::user()->getFillable() ) );
+            $input['active_status'] = $request->active_status;
+            $user->update(Arr::only($input, Auth::user()->getFillable()));
             $user->roles()->detach();
-            DB::table('model_has_roles')->insert(['role_id'=> $input['role'], 'model_type'=> 'App\Models\User', 'model_id'=> $user->id]);
+            DB::table('model_has_roles')->insert(['role_id' => $input['role'], 'model_type' => 'App\Models\User', 'model_id' => $user->id]);
             DB::commit();
 
-            return response()->json(['success'=> 'User updated successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'User updated successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'updating', 'User');
         }
     }
@@ -137,37 +130,28 @@ class UserController extends Controller
     public function toggle(Request $request, User $user)
     {
         $current_status = DB::table('users')->where('id', $user->id)->value('active_status');
-        try
-        {
+        try {
             DB::beginTransaction();
-            if($current_status == '1')
-            {
-                User::where('id', $user->id)->update([ 'active_status' => '0' ]);
-            }
-            else
-            {
-                User::where('id', $user->id)->update([ 'active_status' => '1' ]);
+            if ($current_status == '1') {
+                User::where('id', $user->id)->update(['active_status' => '0']);
+            } else {
+                User::where('id', $user->id)->update(['active_status' => '1']);
             }
             DB::commit();
-            return response()->json(['success'=> 'User status updated successfully']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'User status updated successfully']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'changing', 'User\'s status');
         }
     }
 
     public function retire(Request $request, User $user)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
-                $user->delete();
+            $user->delete();
             DB::commit();
-            return response()->json(['success'=> 'Employee retired successfully']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Employee retired successfully']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'changing', 'Employee\'s retirement status');
         }
     }
@@ -175,33 +159,28 @@ class UserController extends Controller
     public function changePassword(ChangeUserPasswordRequest $request, User $user)
     {
         $input = $request->validated();
-        try
-        {
+        try {
             DB::beginTransaction();
-            $user->update([ 'password' => Hash::make($input['new_password']) ]);
+            $user->update(['password' => Hash::make($input['new_password'])]);
             DB::commit();
-            return response()->json(['success'=> 'Password updated successfully']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Password updated successfully']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'changing', 'User\'s password');
         }
-
     }
 
 
     public function getRole(User $user)
     {
         $user->load('roles');
-        if ($user)
-        {
+        if ($user) {
             $roles = Role::orderBy('id', 'DESC')->get();
             $roleHtml = '<span>
                 <option value="">--Select Role--</option>';
-                foreach($roles as $role):
-                    $is_select = $role->id == $user->roles[0]->id ? "selected" : "";
-                    $roleHtml .= '<option value="'.$role->id.'" '.$is_select.'>'.$role->name.'</option>';
-                endforeach;
+            foreach ($roles as $role):
+                $is_select = $role->id == $user->roles[0]->id ? "selected" : "";
+                $roleHtml .= '<option value="' . $role->id . '" ' . $is_select . '>' . $role->name . '</option>';
+            endforeach;
             $roleHtml .= '</span>';
 
             $response = [
@@ -209,9 +188,7 @@ class UserController extends Controller
                 'user' => $user,
                 'roleHtml' => $roleHtml,
             ];
-        }
-        else
-        {
+        } else {
             $response = ['result' => 0];
         }
         return $response;
@@ -220,16 +197,13 @@ class UserController extends Controller
 
     public function assignRole(User $user, AssignUserRoleRequest $request)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $user->roles()->detach();
-            DB::table('model_has_roles')->insert(['role_id'=> $request->edit_role, 'model_type'=> 'App\Models\User', 'model_id'=> $user->id]);
+            DB::table('model_has_roles')->insert(['role_id' => $request->edit_role, 'model_type' => 'App\Models\User', 'model_id' => $user->id]);
             DB::commit();
-            return response()->json(['success'=> 'Role updated successfully']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Role updated successfully']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'changing', 'User\'s role');
         }
     }
