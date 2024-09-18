@@ -155,8 +155,8 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
     // report controller
     Route::get('report/audit-para-summary-report', [App\Http\Controllers\ReportController::class, 'getAuditParaSummaryReport'])->name('report.audit-para-summary-report');
-    Route::get('report/department-wise-report', [App\Http\Controllers\ReportController::class, 'departmentWiseReport'])->name('report.department-wise-report');
-    Route::get('report/program-audit-para-remark', [App\Http\Controllers\ReportController::class, 'programAuditParaRemark'])->name('report.program-audit-para-remark');
+    Route::get('report/final-report', [App\Http\Controllers\ReportController::class, 'finalReport'])->name('report.final-report');
+    Route::get('report/para-current-status-report', [App\Http\Controllers\ReportController::class, 'paraCurrentStatusReport'])->name('report.para-current-status-report');
 });
 
 

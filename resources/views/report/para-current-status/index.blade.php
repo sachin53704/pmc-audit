@@ -1,7 +1,7 @@
 
 <x-admin.layout>
-    <x-slot name="title">Audit Para Department Wise Report</x-slot>
-    <x-slot name="heading">Audit Para Department Wise Report</x-slot>
+    <x-slot name="title">Para Current Status Report</x-slot>
+    <x-slot name="heading">Para Current Status Report</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
        
@@ -47,21 +47,30 @@
                                     <tr>
                                         <th>Sr No.</th>
                                         <th>Department</th>
-                                        <th>Para No</th>
-                                        <th>Entry Date</th>
-                                        <th>Audit Para Category</th>
-                                        <th>Amount</th>
+                                        <th>HMM No.</th>
+                                        <th>Auditor No.</th>
+                                        <th>Para No.</th>
+                                        <th>Remark</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($reports as $report)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report->department?->name }}</td>
+                                        <td>{{ $report?->department?->name }}</td>
                                         <td>{{ $report->objection_no }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($report->entry_date)) }}</td>
-                                        <td>{{ $report->auditParaCategory?->name }}</td>
-                                        <td>{{ $report->amount ?? 0 }}</td>
+                                        <td>{{ $report?->user?->auditor_no }}</td>
+                                        <td>{{ $report?->audit->audit_no }}</td>
+                                        <td>
+                                            @php $count = 1; @endphp
+                                            @foreach($report->auditDepartmentAnswers as $auditAnswer)
+                                             {{ $count++ . ". " .$auditAnswer->auditor_remark }}<br>
+                                            @endforeach
+
+                                            @if($count == 1)
+                                            -
+                                            @endif
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -81,7 +90,7 @@
         $('#generatePdf').click(function(){
             
             var url = $('#serachForm').serialize();
-            url = "{{ route('report.department-wise-report') }}"+ '?pdf=Yes&'+ url
+            url = "{{ route('report.para-current-status-report') }}"+ '?pdf=Yes&'+ url
             window.open(
                 url,
                 '_blank'

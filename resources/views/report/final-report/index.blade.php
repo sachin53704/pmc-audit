@@ -1,7 +1,7 @@
 
 <x-admin.layout>
-    <x-slot name="title">Audit Para Summary Report</x-slot>
-    <x-slot name="heading">Audit Para Summary Report</x-slot>
+    <x-slot name="title">Audit Para Department Wise Report</x-slot>
+    <x-slot name="heading">Audit Para Department Wise Report</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
        
@@ -24,59 +24,50 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-                                    <label for="from">Select From Date</label>
-                                    <input type="date" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control" id="from">
+                                    <label for="from">Select Financial year</label>
+                                    <select name="year" id="year" class="form-select">
+                                        <option value="">All</option>
+                                        @foreach($financialYears as $financialYear)
+                                        <option {{ (isset(request()->year) && request()->year == $financialYear->id) ? 'selected' : '' }} value="{{ $financialYear->id }}">{{ $financialYear->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-                                    <label for="to">Select To Date</label>
-                                    <input type="date" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control" id="to">
-                                </div>
-
-                                <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-                                    <button class="btn btn-primary mt-4">Search</button>
+                                    {{-- <button class="btn btn-primary mt-4">Search</button> --}}
                                     <button type="button" class="btn btn-success mt-4" id="generatePdf">PDF</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <div class="card-body">
+                    {{-- <div class="card-body">
                         <div class="table-responsive">
                             <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Sr No.</th>
                                         <th>Department</th>
-                                        <th>Objection No.</th>
-                                        <th>Auditor No.</th>
-                                        <th>Para No.</th>
-                                        <th>Remark</th>
+                                        <th>Para No</th>
+                                        <th>Entry Date</th>
+                                        <th>Audit Para Category</th>
+                                        <th>Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($reports as $report)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report?->department?->name }}</td>
+                                        <td>{{ $report->department?->name }}</td>
                                         <td>{{ $report->objection_no }}</td>
-                                        <td>{{ $report?->user?->auditor_no }}</td>
-                                        <td>{{ $report?->audit->audit_no }}</td>
-                                        <td>
-                                            @php $count = 1; @endphp
-                                            @foreach($report->auditDepartmentAnswers as $auditAnswer)
-                                            {{ $count++ }}. {{ $auditAnswer->remark }}
-                                            @endforeach
-
-                                            @if($count == 1)
-                                            -
-                                            @endif
-                                        </td>
+                                        <td>{{ date('d-m-Y', strtotime($report->entry_date)) }}</td>
+                                        <td>{{ $report->auditParaCategory?->name }}</td>
+                                        <td>{{ $report->amount ?? 0 }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -90,7 +81,7 @@
         $('#generatePdf').click(function(){
             
             var url = $('#serachForm').serialize();
-            url = "{{ route('report.program-audit-para-remark') }}"+ '?pdf=Yes&'+ url
+            url = "{{ route('report.final-report') }}"+ '?pdf=Yes&'+ url
             window.open(
                 url,
                 '_blank'

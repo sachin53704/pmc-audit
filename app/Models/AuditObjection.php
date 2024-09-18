@@ -9,6 +9,7 @@ use App\Models\AuditType;
 use App\Models\Zone;
 use App\Models\Severity;
 use App\Models\AuditDepartmentAnswer;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuditObjection extends BaseModel
 {
@@ -76,6 +77,16 @@ class AuditObjection extends BaseModel
     public function auditDepartmentAnswers()
     {
         return $this->hasMany(AuditDepartmentAnswer::class, 'audit_objection_id', 'id');
+    }
+
+    public function from()
+    {
+        return $this->belongsTo(FiscalYear::class, 'from_year', 'id');
+    }
+
+    public function to()
+    {
+        return $this->belongsTo(FiscalYear::class, 'to_year', 'id');
     }
 
 

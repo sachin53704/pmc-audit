@@ -62,7 +62,7 @@
                 <tr>
                     <th>Sr No.</th>
                     <th>Department</th>
-                    <th>Objection No.</th>
+                    <th>HMM No.</th>
                     <th>Auditor No.</th>
                     <th>Para No.</th>
                     <th>Remark</th>
@@ -79,7 +79,7 @@
                     <td>
                         @php $count = 1; @endphp
                         @foreach($report->auditDepartmentAnswers as $auditAnswer)
-                        {{ $count++ }}. {{ $auditAnswer->remark }}
+                            {{ $count++ . ". " .$auditAnswer->auditor_remark }}<br>
                         @endforeach
 
                         @if($count == 1)

@@ -279,7 +279,7 @@ class MCAAuditController extends Controller
                             </select>
                         </td>
                         <td>
-                            <textarea ' . (($auditDepartmentAnswer->mca_status == "1") ? "" : 'disabled') . ' name="mca_remark[]" ' . $mcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->mca_remark . '</textarea>
+                            <textarea ' . (($auditDepartmentAnswer->dymca_status == "1") ? "" : 'disabled') . ' name="mca_remark[]" ' . $mcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->mca_remark . '</textarea>
                         </td>
                         </tr>';
             }

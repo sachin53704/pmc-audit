@@ -200,11 +200,6 @@ class PermissionTableSeeder extends Seeder
                 'group' => 'mca_audit',
             ],
             [
-                'id' => 38,
-                'name' => 'report.final-report',
-                'group' => 'mca_audit',
-            ],
-            [
                 'id' => 39,
                 'name' => 'receipt.view',
                 'group' => 'account_receipt',
@@ -380,8 +375,8 @@ class PermissionTableSeeder extends Seeder
                 'group' => 'Report'
             ],
             [
-                'id' => 74,
-                'name' => 'report.department-wise-report',
+                'id' => 38,
+                'name' => 'report.final-report',
                 'group' => 'Report'
             ],
             [
@@ -391,7 +386,7 @@ class PermissionTableSeeder extends Seeder
             ],
             [
                 'id' => 76,
-                'name' => 'report.audit-para-remark',
+                'name' => 'report.para-current-status',
                 'group' => 'Report'
             ]
         ];

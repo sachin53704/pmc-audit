@@ -6,6 +6,7 @@ use App\Models\AuditObjection;
 use Illuminate\Http\Request;
 use PDF;
 use App\Models\Department;
+use App\Models\FiscalYear;
 
 class ReportController extends Controller
 {
@@ -16,12 +17,16 @@ class ReportController extends Controller
         $reports = Department::when(isset($request->department) && $request->department != "", function ($q) use ($request) {
             $q->where('id', $request->department);
         })->withCount([
-            'auditObjection as approved_para' => fn($q) => $q->where('mca_status', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+            'auditObjection as approved_para' => fn($q) => $q->whereHas('auditDepartmentAnswers', function ($q) {
+                $q->where('mca_status', '!=', 0);
+            })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                 $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
             }),
-            'auditObjection as pending_para' => fn($q) => $q->where('mca_status', '!=', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+            'auditObjection as pending_para' => fn($q) => $q->whereHas('auditDepartmentAnswers', function ($q) {
+                $q->where('mca_status', 0);
+            })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                 $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
@@ -60,37 +65,26 @@ class ReportController extends Controller
         }
     }
 
-    public function departmentWiseReport(Request $request)
+    public function finalReport(Request $request)
     {
         $departments = Department::select('id', 'name')->get();
 
-        $reports = AuditObjection::with(['department', 'auditParaCategory'])
-            ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
-                $q->where('department_id', $request->department);
-            })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
-                $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
-            })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
-                $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
-            })->get();
+        $financialYears = FiscalYear::select('id', 'name')->get();
 
-        if (isset($request->pdf) && $request->pdf == "Yes") {
+        $reports = AuditObjection::with(['user', 'from', 'to', 'user'])->when(isset($request->department_id) && $request->department_id != "", function ($q) use ($request) {
+            $q->where('department_id', $request->department_id);
+        })->get();
 
-            $department = "All";
-            if (isset($request->department) && $request->department != "") {
-                $department = Department::where('id', $request->department)->value('name');
-            }
-            $pdf = PDF::loadView('report.department-report.pdf', compact('reports', 'department'));
+        // $department = "All";
+        // if (isset($request->department) && $request->department != "") {
+        //     $department = Department::where('id', $request->department)->value('name');
+        // }
+        // $pdf = PDF::loadView('report.final-report.pdf', compact('reports', 'department'));
 
-            return $pdf->stream('department-report.pdf');
-        } else {
-            return view('report.department-report.index')->with([
-                'departments' => $departments,
-                'reports' => $reports
-            ]);
-        }
+        // return $pdf->stream('final-report.pdf');
     }
 
-    public function programAuditParaRemark(Request $request)
+    public function paraCurrentStatusReport(Request $request)
     {
         $departments = Department::select('id', 'name')->get();
 
@@ -112,11 +106,11 @@ class ReportController extends Controller
             if (isset($request->department) && $request->department != "") {
                 $department = Department::where('id', $request->department)->value('name');
             }
-            $pdf = PDF::loadView('report.audit-para-remark.pdf', compact('reports', 'department'));
+            $pdf = PDF::loadView('report.para-current-status.pdf', compact('reports', 'department'));
 
-            return $pdf->stream('audit-para-remark.pdf');
+            return $pdf->stream('para-current-status.pdf');
         } else {
-            return view('report.audit-para-remark.index')->with([
+            return view('report.para-current-status.index')->with([
                 'departments' => $departments,
                 'reports' => $reports
             ]);
