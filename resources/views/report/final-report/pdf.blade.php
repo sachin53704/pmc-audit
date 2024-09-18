@@ -27,6 +27,10 @@
             width: 100%;
             border-collapse: collapse;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +44,11 @@
                     <h2>Panvel Munciple Corporation</h2>
                     <h4>Audit Department</h4>
                     <h4>Audit Para Summary Report</h4>
-                    <h5>Form Date: {{ (request()->from != "") ? date('d-m-Y', strtotime(request()->from)) : '' }}  To Date: {{ (request()->to) ? date('d-m-Y', strtotime(request()->to)) : '' }}</h5>
+                    <h5>
+                        @if((request()->from != "") && (request()->to != ""))
+                        Form Date: {{ (request()->from != "") ? date('d-m-Y', strtotime(request()->from)) : '' }}  To Date: {{ (request()->to) ? date('d-m-Y', strtotime(request()->to)) : '' }}
+                        @endif
+                    </h5>
                 </td>
                 <td>
                     <p>Date : {{ date('d-m-Y') }}</p>
@@ -53,30 +61,42 @@
 
     <section id="content">
         <h6>Department : {{ $department }}</h6>
+        
+        @php $count = 1; @endphp
+        @foreach($reports as $report)
+        <div style="border: 1px solid; margin-bottom: 15px;">
+            {!! $report->description !!}
+        </div>
         <table>
             <thead>
                 <tr>
-                    <th>Sr No.</th>
-                    <th>Department</th>
-                    <th>Para No</th>
-                    <th>Entry Date</th>
-                    <th>Audit Para Category</th>
-                    <th>Amount</th>
+                    <th>Subject</th>
+                    <th>Para Audit No</th>
+                    <th>Date</th>
+                    <th>Financial Year From</th>
+                    <th>Financial Year To</th>
+                    <th>Hmm No</th>
+                    <th>Auditor No.</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($reports as $report)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $report->department?->name }}</td>
-                    <td>{{ $report->objection_no }}</td>
+                    <td>{{ $report->subject }}</td>
+                    <td>{{ $report->audit?->audit_no }}</td>
                     <td>{{ date('d-m-Y', strtotime($report->entry_date)) }}</td>
-                    <td>{{ $report->auditParaCategory?->name }}</td>
-                    <td>{{ $report->amount ?? 0 }}</td>
+                    <td>{{ $report->from?->name }}</td>
+                    <td>{{ $report->to?->name }}</td>
+                    <td>{{ $report->objection_no }}</td>
+                    <td>{{ $report->user?->auditor_no }}</td>
                 </tr>
-                @endforeach
             </tbody>
         </table>
+        @if(count($reports) != $count)
+        <div class="page-break"></div>
+        @endif
+
+        @php $count = $count + 1; @endphp
+        @endforeach
     </section>
 </body>
 </html>

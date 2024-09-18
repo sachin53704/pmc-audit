@@ -40,34 +40,7 @@
                             </div>
                         </form>
                     </div>
-                    {{-- <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Sr No.</th>
-                                        <th>Department</th>
-                                        <th>Para No</th>
-                                        <th>Entry Date</th>
-                                        <th>Audit Para Category</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($reports as $report)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report->department?->name }}</td>
-                                        <td>{{ $report->objection_no }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($report->entry_date)) }}</td>
-                                        <td>{{ $report->auditParaCategory?->name }}</td>
-                                        <td>{{ $report->amount ?? 0 }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div> --}}
+                    
                 </div>
             </div>
         </div>

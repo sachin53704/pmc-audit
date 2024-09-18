@@ -71,17 +71,28 @@ class ReportController extends Controller
 
         $financialYears = FiscalYear::select('id', 'name')->get();
 
-        $reports = AuditObjection::with(['user', 'from', 'to', 'user'])->when(isset($request->department_id) && $request->department_id != "", function ($q) use ($request) {
-            $q->where('department_id', $request->department_id);
-        })->get();
+        if (isset($request->pdf) && $request->pdf == "Yes") {
 
-        // $department = "All";
-        // if (isset($request->department) && $request->department != "") {
-        //     $department = Department::where('id', $request->department)->value('name');
-        // }
-        // $pdf = PDF::loadView('report.final-report.pdf', compact('reports', 'department'));
+            $reports = AuditObjection::with(['audit', 'from', 'to', 'user'])->when(isset($request->department_id) && $request->department_id != "", function ($q) use ($request) {
+                $q->where('department_id', $request->department_id);
+            })->when(isset($request->year) && $request->year != "", function ($q) use ($request) {
+                $q->where('from_year', '<=', $request->year)
+                    ->where('to_year', '>=', $request->to);
+            })->get();
 
-        // return $pdf->stream('final-report.pdf');
+            $department = "All";
+            if (isset($request->department) && $request->department != "") {
+                $department = Department::where('id', $request->department)->value('name');
+            }
+            $pdf = PDF::loadView('report.final-report.pdf', compact('reports', 'department'));
+
+            return $pdf->stream('final-report.pdf');
+        } else {
+            return view('report.final-report.index')->with([
+                'departments' => $departments,
+                'financialYears' => $financialYears
+            ]);
+        }
     }
 
     public function paraCurrentStatusReport(Request $request)

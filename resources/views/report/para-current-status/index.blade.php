@@ -47,6 +47,7 @@
                                     <tr>
                                         <th>Sr No.</th>
                                         <th>Department</th>
+                                        <th>Subject</th>
                                         <th>HMM No.</th>
                                         <th>Auditor No.</th>
                                         <th>Para No.</th>
@@ -58,6 +59,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $report?->department?->name }}</td>
+                                        <td>{{ $report->subject }}</td>
                                         <td>{{ $report->objection_no }}</td>
                                         <td>{{ $report?->user?->auditor_no }}</td>
                                         <td>{{ $report?->audit->audit_no }}</td>
