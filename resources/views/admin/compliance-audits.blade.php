@@ -34,7 +34,7 @@
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
-                                        
+
                                         <td>
                                             @if($audit->dl_file_path)
                                                 <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
@@ -94,7 +94,7 @@
                                     </select>
                                     <span class="text-danger is-invalid department_id_err"></span>
                                 </div>
-                        
+
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="zone_id">Zone <span class="text-danger">*</span></label>
                                     <select name="zone_id" id="zone_id" disabled class="form-select">
@@ -105,7 +105,7 @@
                                     </select>
                                     <span class="text-danger is-invalid zone_id_err"></span>
                                 </div>
-                            
+
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="from_year">From Year <span class="text-danger">*</span></label>
                                     <select name="from_year" id="from_year" disabled class="form-select">
@@ -126,7 +126,7 @@
                                     </select>
                                     <span class="text-danger is-invalid to_year_err"></span>
                                 </div>
-                            
+
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="audit_type_id">Audit Type <span class="text-danger">*</span></label>
                                     <select name="audit_type_id" id="audit_type_id" disabled class="form-select">
@@ -171,20 +171,9 @@
                                     <span class="text-danger is-invalid subject_err"></span>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                    <label for="work_name">Work Name</label>
-                                    <input type="text" name="work_name" disabled id="work_name" class="form-control">
-                                    <span class="text-danger is-invalid work_name_err"></span>
-                                </div>
-
-                                <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                    <label for="contractor_name">Contractor Name</label>
-                                    <input type="text" name="contractor_name" disabled id="contractor_name" class="form-control">
-                                    <span class="text-danger is-invalid contractor_name_err"></span>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <a href="#" id="documentFile" target="_blank" class="btn btn-primary mt-4">View File</a>
                                 </div>
-                            
+
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
                                     <input type="text" name="sub_unit" disabled id="sub_unit" class="form-control">
@@ -193,7 +182,7 @@
                             </div>
 
 
-                            
+
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <label for="description">Description <span class="text-danger">*</span></label>
@@ -223,7 +212,7 @@
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <div class="table-responsive" id="tableDepartmentAnswer">
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -241,9 +230,9 @@
     </div>
 
 
- 
-        
-   
+
+
+
 
 </x-admin.layout>
 
@@ -324,7 +313,7 @@
             formdata.append('_method', 'PUT');
             var model_id = $('#edit_model_id').val();
             var url = "{{ route('compliance.update', ":model_id") }}";
-            
+
             $.ajax({
                 url: url.replace(':model_id', model_id),
                 type: 'POST',
@@ -408,9 +397,6 @@
 
                 $("#addForm input[name='amount']").val(data.auditObjection.amount);
                 $("#addForm input[name='subject']").val(data.auditObjection.subject);
-                $("#addForm input[name='work_name']").val(data.auditObjection.work_name);
-                $("#addForm input[name='contractor_name']").val(data.auditObjection.contractor_name);
-
                 if(data.auditObjection.document && data.auditObjection.document != ""){
                     var file = "{{ asset('storage') }}/"+data.auditObjection.document;
                 }else{
@@ -420,7 +406,7 @@
                 $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
                 // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                 editorInstance.setData(data.auditObjection.description);
-                
+
                 // $('#mca_action_status').val(data.auditObjection.mca_action_status)
                 // $('#mca_remark').val(data.auditObjection.mca_remark)
 
@@ -449,7 +435,7 @@
         var audit_id = $('#audit_id').val();
         // let description = editordepartmentInstance.getData();
         var formdata = new FormData(this);
-        
+
         $.ajax({
             url: url,
             type: 'POST',
@@ -491,15 +477,15 @@
     var auditorDisabled = "disabled";
     var mcaDisabled = "disabled";
     var dymcaDisabled = "disabled";
-    @if (Auth::user()->hasRole('Auditor')) 
+    @if (Auth::user()->hasRole('Auditor'))
         auditorDisabled = "";
     @endif
 
-    @if (Auth::user()->hasRole('MCA')) 
+    @if (Auth::user()->hasRole('MCA'))
         mcaDisabled = "";
     @endif
 
-    @if (Auth::user()->hasRole('DY MCA')) 
+    @if (Auth::user()->hasRole('DY MCA'))
         dymcaDisabled = "";
     @endif
 

@@ -57,6 +57,8 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::resource('severity', App\Http\Controllers\Master\SeverityController::class);
     Route::resource('zone', App\Http\Controllers\Master\ZoneController::class);
     Route::resource('diary', App\Http\Controllers\DiaryController::class);
+    Route::get('signature', [App\Http\Controllers\SignatureController::class, 'edit'])->name('signature.edit');
+    Route::post('signature', [App\Http\Controllers\SignatureController::class, 'update'])->name('signature.update');
 
     // Clerk Routes
     Route::resource('audit', App\Http\Controllers\Admin\ClerkAuditController::class);
