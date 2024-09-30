@@ -206,9 +206,6 @@
                                         <option value="">Select</option>
                                         <option value="1">Approve</option>
                                         <option value="2">Forward To Auditor</option>
-                                        @if(Auth::user()->hasRole('MCA'))
-                                        <option value="3">Forward To Department</option>
-                                        @endif
                                     </select>
                                 </div>
                                 <div class="col-6 mb-3">

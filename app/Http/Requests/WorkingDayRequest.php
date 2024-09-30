@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DiaryRequest extends FormRequest
+class WorkingDayRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +22,8 @@ class DiaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'work' => 'required',
-            'date' => 'required',
-            'department_id' => 'required',
-            'working_day_id' => 'required',
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'work.required' => 'Please enter message',
-            'date.required' => 'Please select date'
+            'name' => 'required',
+            'status' => 'required'
         ];
     }
 }

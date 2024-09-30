@@ -388,6 +388,21 @@ class PermissionTableSeeder extends Seeder
                 'id' => 76,
                 'name' => 'report.para-current-status',
                 'group' => 'Report'
+            ],
+            [
+                'id' => 77,
+                'name' => 'working-day.index',
+                'group' => 'Working Day'
+            ],
+            [
+                'id' => 78,
+                'name' => 'working-day.create',
+                'group' => 'Working Day'
+            ],
+            [
+                'id' => 79,
+                'name' => 'working-day.edit',
+                'group' => 'Working Day'
             ]
         ];
 

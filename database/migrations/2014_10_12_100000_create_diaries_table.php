@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
+use App\Models\WorkingDay;
+use App\Models\Department;
 
 return new class extends Migration
 {
@@ -15,8 +17,12 @@ return new class extends Migration
         Schema::create('diaries', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->longText('text');
+            $table->foreignIdFor(WorkingDay::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(Department::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('date');
+            $table->longText('work');
+            $table->integer('dymca_status')->nullable()->comment('1 => accepted, 0 => rejected');
+            $table->integer('mca_status')->nullable()->comment('1 => accepted, 0 => rejected');
             $table->timestamps();
             $table->softDeletes();
         });

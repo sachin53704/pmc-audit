@@ -20,10 +20,24 @@ class HmmMcaStatusController extends Controller
         $user = Auth::user();
 
         $audits = Audit::query()
-            // ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
-            ->where('status', 5)
+            ->when(Auth::user()->hasRole('MCA'), function ($q) {
+                $q->whereHas('objections', function ($q) {
+                    $q->where('dymca_status', 1);
+                });
+            })
+            ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+                $q->whereHas('objections', function ($q) {
+                    $q->whereNull('mca_status')
+
+                        ->when(function ($q) {
+                            $q->whereNull('dymca_status')
+                                ->orWhere('dymca_status', 2);
+                        });
+                });
+            })
             ->latest()
             ->get();
+
 
         $departments = Department::select('id', 'name')->get();
 
@@ -58,12 +72,6 @@ class HmmMcaStatusController extends Controller
                         'mca_status' => $request->mca_status,
                         'mca_remark' => $request->mca_remark,
                     ]);
-
-                if ($request->mca_status == 3) {
-                    Audit::where('id', $request->audit_id)->update([
-                        'status' => 6
-                    ]);
-                }
 
                 return response()->json(['success' => 'Objection status updated  successful']);
             } else {

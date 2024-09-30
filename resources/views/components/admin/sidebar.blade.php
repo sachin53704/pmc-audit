@@ -43,7 +43,7 @@
 
                     @if(session()->get('LOGIN_TYPE') == 1)
 
-                        @canany(['fiscal_years.view', 'departments.view'])
+                        @canany(['fiscal_years.view', 'departments.view', 'audit-para-category.index', 'audit-type.index', 'severity.index', 'zone.index', 'working-day.index'])
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
                                     <i class="ri-layout-3-line"></i>
@@ -83,6 +83,12 @@
                                         @can('zone.index')
                                         <li class="nav-item">
                                             <a href="{{ route('zone.index') }}" class="nav-link {{ request()->routeIs('zone.index') ? 'active' : '' }}" data-key="t-horizontal">Zone</a>
+                                        </li>
+                                        @endcan
+                                        
+                                        @can('working-day.index')
+                                        <li class="nav-item">
+                                            <a href="{{ route('working-day.index') }}" class="nav-link {{ request()->routeIs('working-day.index') ? 'active' : '' }}" data-key="t-horizontal">Working Day</a>
                                         </li>
                                         @endcan
                                     </ul>
