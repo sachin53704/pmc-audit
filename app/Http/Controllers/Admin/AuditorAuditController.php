@@ -237,11 +237,19 @@ class AuditorAuditController extends Controller
                     'id' => $request->audit_objection_id
                 ], $arrData);
                 DB::commit();
-                return response()->json(['success' => 'Objection updated successfully']);
+                if ($request->isDrafSave) {
+                    return response()->json(['success' => 'Objection draft updated successfully']);
+                } else {
+                    return response()->json(['success' => 'Objection updated successfully']);
+                }
             } else {
                 AuditObjection::create($arrData);
                 DB::commit();
-                return response()->json(['success' => 'Objection created successfully']);
+                if ($request->isDrafSave) {
+                    return response()->json(['success' => 'Objection draft created successfully']);
+                } else {
+                    return response()->json(['success' => 'Objection created successfully']);
+                }
             }
         } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'creating', 'objection');

@@ -245,6 +245,16 @@
                                 </a>
                             </li>
                         @endcan
+
+
+                        @can('para-audit.index')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('para-audit.index') ? 'active' : '' }}" href="{{ route('para-audit.index') }}" >
+                                    <i class="ri-draft-line"></i>
+                                    <span data-key="t-dashboards">Para Audit</span>
+                                </a>
+                            </li>
+                        @endcan
                         
                         @canany(['report.audit-para-summary-report', 'report.final-report', 'report.para-current-status'])
                         <li class="nav-item">

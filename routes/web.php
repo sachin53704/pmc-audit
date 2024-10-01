@@ -162,6 +162,10 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('report/audit-para-summary-report', [App\Http\Controllers\ReportController::class, 'getAuditParaSummaryReport'])->name('report.audit-para-summary-report');
     Route::get('report/final-report', [App\Http\Controllers\ReportController::class, 'finalReport'])->name('report.final-report');
     Route::get('report/para-current-status-report', [App\Http\Controllers\ReportController::class, 'paraCurrentStatusReport'])->name('report.para-current-status-report');
+
+
+    // Para Audit Menu
+    Route::resource('para-audit', App\Http\Controllers\ParaAuditController::class);
 });
 
 

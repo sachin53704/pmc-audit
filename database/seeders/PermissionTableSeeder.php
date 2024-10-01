@@ -403,6 +403,16 @@ class PermissionTableSeeder extends Seeder
                 'id' => 79,
                 'name' => 'working-day.edit',
                 'group' => 'Working Day'
+            ],
+            [
+                'id' => 80,
+                'name' => 'para-audit.index',
+                'group' => 'Para Audit'
+            ],
+            [
+                'id' => 81,
+                'name' => 'para-audit.create',
+                'group' => 'Para Audit'
             ]
         ];
 

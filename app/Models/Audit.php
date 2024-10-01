@@ -32,7 +32,7 @@ class Audit extends BaseModel
     public function getStatusNameAttribute()
     {
         $statusName = collect(config('default_data.audit_status'));
-        return $statusName->where('id', $this->status)->first()['name'];
+        // return $statusName->where('id', $this->status)->first()['name'];
     }
 
 
@@ -41,13 +41,25 @@ class Audit extends BaseModel
     {
         return $this->belongsTo(Department::class);
     }
+
     public function assignedAuditors()
     {
         return $this->hasMany(UserAssignedAudit::class, 'audit_id', 'id');
     }
+
     public function objections()
     {
         return $this->hasMany(AuditObjection::class);
+    }
+
+    public function paraAudits()
+    {
+        return $this->hasMany(ParaAudit::class, 'audit_id', 'id');
+    }
+
+    public function paraAudit()
+    {
+        return $this->hasOne(ParaAudit::class, 'audit_id', 'id');
     }
 
 
