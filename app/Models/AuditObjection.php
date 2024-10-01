@@ -21,7 +21,7 @@ class AuditObjection extends BaseModel
     const OBJECTION_STATUS_MCA_APPROVED = 4;
     const OBJECTION_STATUS_MCA_REJECTED = 5;
 
-    protected $fillable = ['user_id', 'audit_id', 'objection_no', 'entry_date', 'department_id', 'zone_id', 'from_year', 'to_year', 'audit_type_id', 'severity_id', 'audit_para_category_id', 'amount', 'subject', 'document', 'sub_unit', 'description', 'status', 'mca_status', 'mca_remark', 'auditor_status', 'auditor_remark', 'dymca_status', 'dymca_remark'];
+    protected $fillable = ['user_id', 'audit_id', 'objection_no', 'entry_date', 'department_id', 'zone_id', 'from_year', 'to_year', 'audit_type_id', 'severity_id', 'audit_para_category_id', 'amount', 'subject', 'document', 'sub_unit', 'description', 'draft_description', 'is_draft_send', 'status', 'mca_status', 'mca_remark', 'auditor_status', 'auditor_remark', 'dymca_status', 'dymca_remark'];
     protected $appends = ['status_name'];
 
     public function audit()

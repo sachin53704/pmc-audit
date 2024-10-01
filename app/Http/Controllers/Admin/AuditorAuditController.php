@@ -128,7 +128,6 @@ class AuditorAuditController extends Controller
                         <thead>
                             <tr>
                                 <th>Sr no.</th>
-                                <th>HMM No</th>
                                 <th>Auditor Para No</th>
                                 <th>Audit Type</th>
                                 <th>Severity</th>
@@ -152,7 +151,6 @@ class AuditorAuditController extends Controller
             foreach ($auditObjections as $auditObjection) {
                 $objectionHtml .= '<tr>
                                 <td>' . $count++ . '</td>
-                                <td>' . $auditObjection?->audit?->audit_no . '</td>
                                 <td>' . $auditObjection?->objection_no . '</td>
                                 <td>' . $auditObjection?->auditType?->name . '</td>
                                 <td>' . $auditObjection?->severity?->name . '</td>
@@ -187,6 +185,7 @@ class AuditorAuditController extends Controller
 
     public function storeObjection(AddObjectionRequest $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
@@ -222,23 +221,28 @@ class AuditorAuditController extends Controller
                 'contractor_name' => $request->contractor_name,
                 'document' => $document,
                 'sub_unit' => $request->sub_unit,
-                'description' => $request->description,
+                'draft_description' => $request->description,
                 'dymca_status' => null,
                 'dymca_remark' => null,
                 'mca_status' => null,
                 'mca_remark' => null
             ];
+
+            if ($request->isDrafSave == 0) {
+                $arrData = array_merge($arrData, ['description' => $request->description, 'is_draft_send' => 1]);
+            }
+
             if (isset($request->audit_objection_id) && $request->audit_objection_id != "" && $request->audit_objection_id) {
                 AuditObjection::updateOrCreate([
                     'id' => $request->audit_objection_id
                 ], $arrData);
+                DB::commit();
+                return response()->json(['success' => 'Objection updated successfully']);
             } else {
                 AuditObjection::create($arrData);
+                DB::commit();
+                return response()->json(['success' => 'Objection created successfully']);
             }
-
-            DB::commit();
-
-            return response()->json(['success' => 'Objection created successfully']);
         } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'creating', 'objection');
         }
@@ -254,23 +258,36 @@ class AuditorAuditController extends Controller
                 if (Auth::user()->hasRole('MCA')) {
                     $roleStatus = "mca_status";
                     $roleRemark = "mca_remark";
-                    $prevStatus = 9;
-                    $currentStatus = 10;
+                    $prevStatus = 11;
+                    $currentStatus = 12;
                 } else {
                     $roleStatus = "dymca_status";
                     $roleRemark = "dymca_remark";
-                    $prevStatus = 8;
-                    $currentStatus = 9;
+                    $prevStatus = 10;
+                    $currentStatus = 11;
                 }
                 try {
-                    // dd($request->all());
-
                     if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
                         for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
-                            AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
-                                $roleStatus => $request->$roleStatus[$i],
-                                $roleRemark => $request->$roleRemark[$i]
-                            ]);
+
+                            if (Auth::user()->hasRole('MCA') && $request->department_mca_status_id[$i]) {
+                                AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
+                                    'department_mca_status' => $request->department_mca_status[$i],
+                                    'department_mca_remark' => $request->department_mca_remark[$i]
+                                ]);
+                                if ($request->department_mca_status_id[$i]) {
+                                    $prevStatus = 8;
+                                    $currentStatus = 9;
+                                } else {
+                                    $prevStatus = 11;
+                                    $currentStatus = 12;
+                                }
+                            } else {
+                                AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
+                                    $roleStatus => $request->$roleStatus[$i],
+                                    $roleRemark => $request->$roleRemark[$i]
+                                ]);
+                            }
                         }
                     }
 
@@ -319,6 +336,31 @@ class AuditorAuditController extends Controller
                     DB::rollback();
                     response()->json(['error' => 'Something went wrong!']);
                 }
+            } else if (Auth::user()->hasRole('Department HOD')) {
+                DB::beginTransaction();
+                try {
+                    if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
+                        for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
+
+                            AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
+                                'department_hod_status' => $request->department_hod_status[$i],
+                                'department_hod_remark' => $request->department_hod_remark[$i]
+                            ]);
+                        }
+                    }
+
+                    $auditStatus = Audit::where('id', $request->audit_id)->value('status');
+
+                    Audit::where('id', $request->audit_id)->update([
+                        'status' => ($auditStatus > 7) ? $auditStatus : 8
+                    ]);
+
+                    DB::commit();
+                    return response()->json(['success' => 'Answer updated successfully']);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    response()->json(['error' => 'Something went wrong!']);
+                }
             } else if (Auth::user()->hasRole('Auditor')) {
                 DB::beginTransaction();
                 try {
@@ -335,7 +377,7 @@ class AuditorAuditController extends Controller
                     $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
                     Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > 7) ? $auditStatus : 8
+                        'status' => ($auditStatus > 9) ? $auditStatus : 10
                     ]);
 
                     DB::commit();
@@ -356,7 +398,7 @@ class AuditorAuditController extends Controller
         $user = Auth::user();
 
         $audits = Audit::query()
-            ->where('status', '>=', 7)
+            ->where('status', '>=', 9)
             ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
             ->latest()
             ->get();

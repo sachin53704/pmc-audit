@@ -104,7 +104,6 @@
                             <label class="col-sm-3 col-form-label" for="auditor_id">Auditor : </label>
                             <div class="col-sm-9" style="max-height: 60px">
                                 <select class="js-example-basic-single form-select" multiple name="auditor_id[]" id="auditor_id">
-                                    <option value="">--Select Auditor--</option>
                                 </select>
                                 <span class="text-danger is-invalid auditor_id_err"></span>
                             </div>

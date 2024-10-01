@@ -122,8 +122,7 @@ class MCAAuditController extends Controller
         $userAssignedAudit = UserAssignedAudit::where('audit_id', $audit->id)->latest()->pluck('user_id')->toArray();
         $auditors = User::withWhereHas('roles', fn($q) => $q->where('name', 'Auditor'))->orderBy('id', 'DESC')->get()->append('full_name');
 
-        $auditorsHtml = '<span>
-            <option value="">--Select Auditor--</option>';
+        $auditorsHtml = '<span>';
         foreach ($auditors as $auditor) :
             $is_select = in_array($auditor->id, $userAssignedAudit) ? "selected" : "";
             $auditorsHtml .= '<option value="' . $auditor->id . '" ' . $is_select . '>' . $auditor->full_name . '(' . $auditor->auditor_no . ')' . '</option>';
@@ -163,10 +162,13 @@ class MCAAuditController extends Controller
     public function draftReview(Request $request)
     {
         if (Auth::user()->hasRole('MCA')) {
-            $status = 9;
-        } else {
             $status = 8;
+        } elseif (Auth::user()->hasRole('Department HOD')) {
+            $status = 7;
+        } elseif (Auth::user()->hasRole('DY MCA')) {
+            $status = 10;
         }
+
         $audits = Audit::query()
             ->where('status', '>=', $status)
             ->latest()
@@ -205,18 +207,25 @@ class MCAAuditController extends Controller
             $auditDepartmentAnswers = AuditDepartmentAnswer::where('audit_objection_id', $request->id)->get();
 
             $auditDepartmentAnswerHtml = '
-                <table class="table table-bordered">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle table-nowrap">
                     <thead>
                         <tr>
                             <th>Date</th>
-                            <th>File</th>
-                            <th>Compliance</th>
-                            <th>Auditor Status</th>
-                            <th>Auditor Remark</th>
-                            <th>Dymca Status</th>
-                            <th>Dymca Remark</th>
-                            <th>MCA Status</th>
-                            <th>MCA Remark</th>';
+                            <th>File &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>Compliance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>Department Hod Status</th>
+                            <th>Department Hod Remark</th>
+
+                            <th>Department MCA Status</th>
+                            <th>Department MCA Remark</th>
+
+                            <th>Auditor Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>Auditor Remark &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>Dymca Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>Dymca Remark &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>MCA Status  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>MCA Remark  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>';
 
             if ($roleName == "Department") {
                 $auditDepartmentAnswerHtml .= '<th><button class="btn btn-primary btn-sm" id="addMoreFile" type="button"><span class="fa fa-plus"></span></button></th>';
@@ -230,6 +239,7 @@ class MCAAuditController extends Controller
             $auditorDisabled = "disabled";
             $mcaDisabled = "disabled";
             $dymcaDisabled = "disabled";
+            $departmentHodDisabled = "disabled";
             if (Auth::user()->hasRole('Auditor')) {
                 $auditorDisabled = "";
             }
@@ -242,6 +252,10 @@ class MCAAuditController extends Controller
                 $dymcaDisabled = "";
             }
 
+            if (Auth::user()->hasRole('Department HOD')) {
+                $departmentHodDisabled = "";
+            }
+
             foreach ($auditDepartmentAnswers as $auditDepartmentAnswer) {
                 $auditDepartmentAnswerHtml .= '
                     <tr>
@@ -250,6 +264,43 @@ class MCAAuditController extends Controller
                         <td>
                             <textarea disabled class="form-control">' . $auditDepartmentAnswer->remark . '</textarea>
                         </td>
+
+                        
+                        <td>
+                            <select class="form-select" ' . $departmentHodDisabled . ' name="department_hod_status[]">
+                                <option value="">Select</option>
+                                <option ' . (($auditDepartmentAnswer->department_hod_status == "1") ? "selected" : "") . ' value="1">Approve</option>
+                                <option ' . (($auditDepartmentAnswer->department_hod_status == "0") ? "selected" : "") . ' value="0">Reject</option>
+                            </select>
+                        </td>
+                        <td> 
+                            <textarea name="department_hod_remark[]" ' . $departmentHodDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_hod_remark . '</textarea>
+                        </td>
+
+                        
+
+
+
+
+                        <td>
+                            <input type="hidden" name="department_mca_status_id[]" value="' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "1" : '0') . '" />
+                            
+                            <select ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' class="form-select" ' . $mcaDisabled . ' name="department_mca_status[]">
+                                <option value="">Select</option>
+                                <option ' . (($auditDepartmentAnswer->department_mca_status == "1") ? "selected" : "") . ' value="1">Approve</option>
+                                <option ' . (($auditDepartmentAnswer->department_mca_status == "0") ? "selected" : "") . ' value="0">Reject</option>
+                            </select>
+                        </td>
+                        <td> 
+                            <textarea ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' name="department_mca_remark[]" ' . $mcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_mca_remark . '</textarea>
+                        </td>
+
+
+
+
+
+
+
                         <td>
                             <select class="form-select" ' . $auditorDisabled . ' name="auditor_status[]">
                                 <option value="">Select</option>
@@ -291,35 +342,60 @@ class MCAAuditController extends Controller
                     <td>
                         <textarea name="remark[]" required class="form-control"></textarea>
                     </td>
+
                     <td>
-                        <select class="form-select" ' . $auditorDisabled . ' name="auditor_status[]">
+                        <select class="form-select" disabled name="department_hod_status[]">
                             <option value="">Select</option>
                             <option value="1">Approve</option>
                             <option value="0">Reject</option>
                         </select>
                     </td>
                     <td>
-                        <textarea name="auditor_remark[]" ' . $auditorDisabled . ' class="form-control"></textarea>
+                        <textarea name="department_hod_remark[]" disabled class="form-control"></textarea>
                     </td>
+
                     <td>
-                        <select class="form-select" ' . $dymcaDisabled . ' name="dymca_status[]">
+                        <select class="form-select" disabled name="department_mca_status[]">
                             <option value="">Select</option>
                             <option value="1">Approve</option>
                             <option value="0">Reject</option>
                         </select>
                     </td>
                     <td>
-                        <textarea name="dymca_remark[]" ' . $dymcaDisabled . ' class="form-control"></textarea>
+                        <textarea name="department_mca_remark[]" disabled class="form-control"></textarea>
                     </td>
+
+
+                    
                     <td>
-                        <select class="form-select" ' . $mcaDisabled . ' name="mca_status[]">
+                        <select class="form-select" disabled name="auditor_status[]">
                             <option value="">Select</option>
                             <option value="1">Approve</option>
                             <option value="0">Reject</option>
                         </select>
                     </td>
                     <td>
-                        <textarea name="mca_remark[]" ' . $mcaDisabled . ' class="form-control"></textarea>
+                        <textarea name="auditor_remark[]" disabled class="form-control"></textarea>
+                    </td>
+                    <td>
+                        <select class="form-select" disabled name="dymca_status[]">
+                            <option value="">Select</option>
+                            <option value="1">Approve</option>
+                            <option value="0">Reject</option>
+                        </select>
+                    </td>
+                    <td>
+                        <textarea name="dymca_remark[]" disabled class="form-control"></textarea>
+                    </td>
+                    <td>
+                        <select class="form-select" disabled name="mca_status[]">
+                            <option value="">Select</option>
+                            <option value="1">Approve</option>
+                            <option value="0">Reject</option>
+                        </select>
+                    </td>
+                    <td>
+                        <textarea name="mca_remark[]" disabled class="form-control"></textarea>
                     </td>
                     <td>-</td>
                 </tr>';
@@ -332,7 +408,7 @@ class MCAAuditController extends Controller
             }
 
             $auditDepartmentAnswerHtml .= '</tbody>
-                </table>
+                </table></div>
             ';
 
             return response()->json([

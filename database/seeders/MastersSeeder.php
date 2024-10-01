@@ -10,6 +10,7 @@ use App\Models\Severity;
 use App\Models\AuditParaCategory;
 use App\Models\FiscalYear;
 use App\Models\Zone;
+use App\Models\WorkingDay;
 
 class MastersSeeder extends Seeder
 {
@@ -200,6 +201,57 @@ class MastersSeeder extends Seeder
                 'id' => $zone['id'],
                 'name' => $zone['name'],
                 'status' => $zone['status']
+            ]);
+        }
+
+
+
+        // Audit type master
+        $workingDays = [
+            [
+                'id' => 1,
+                'name' => 'Sunday',
+                'status' => 1
+            ],
+            [
+                'id' => 2,
+                'name' => 'Monday',
+                'status' => 1
+            ],
+            [
+                'id' => 3,
+                'name' => 'Tuesday',
+                'status' => 1
+            ],
+            [
+                'id' => 4,
+                'name' => 'Wednesday',
+                'status' => 1
+            ],
+            [
+                'id' => 5,
+                'name' => 'Thursday',
+                'status' => 1
+            ],
+            [
+                'id' => 6,
+                'name' => 'Friday',
+                'status' => 1
+            ],
+            [
+                'id' => 7,
+                'name' => 'Saturday',
+                'status' => 1
+            ]
+        ];
+
+        foreach ($workingDays as $workingDay) {
+            WorkingDay::updateOrCreate([
+                'id' => $workingDay['id']
+            ], [
+                'id' => $workingDay['id'],
+                'name' => $workingDay['name'],
+                'status' => $workingDay['status']
             ]);
         }
     }

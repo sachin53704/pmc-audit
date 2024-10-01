@@ -17,12 +17,11 @@ class HmmMcaStatusController extends Controller
 {
     public function getHmmMCAData(Request $request)
     {
-        $user = Auth::user();
-
         $audits = Audit::query()
             ->when(Auth::user()->hasRole('MCA'), function ($q) {
                 $q->whereHas('objections', function ($q) {
-                    $q->where('dymca_status', 1);
+                    $q->where('dymca_status', 1)
+                        ->where('is_draft_send', 1);
                 });
             })
             ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
@@ -30,13 +29,14 @@ class HmmMcaStatusController extends Controller
                     $q->whereNull('mca_status')
 
                         ->when(function ($q) {
-                            $q->whereNull('dymca_status')
+                            $q->where('is_draft_send', 1)->whereNull('dymca_status')
                                 ->orWhere('dymca_status', 2);
                         });
                 });
             })
             ->latest()
             ->get();
+        // return $audits;
 
 
         $departments = Department::select('id', 'name')->get();
@@ -73,6 +73,14 @@ class HmmMcaStatusController extends Controller
                         'mca_remark' => $request->mca_remark,
                     ]);
 
+                if ($request->mca_status == 1) {
+                    $audit = Audit::find($request->audit_id);
+                    if ($audit->status <= 6) {
+                        $audit->status = 6;
+                        $audit->save();
+                    }
+                }
+
                 return response()->json(['success' => 'Objection status updated  successful']);
             } else {
                 AuditObjection::where('id', $request->audit_objection_id)
@@ -103,7 +111,6 @@ class HmmMcaStatusController extends Controller
                         <thead>
                             <tr>
                                 <th>Sr no.</th>
-                                <th>HMM No</th>
                                 <th>Auditor Para No</th>
                                 <th>Audit Type</th>
                                 <th>Severity</th>
@@ -127,7 +134,6 @@ class HmmMcaStatusController extends Controller
             foreach ($auditObjections as $auditObjection) {
                 $objectionHtml .= '<tr>
                                 <td>' . $count++ . '</td>
-                                <td>' . $auditObjection?->audit?->audit_no . '</td>
                                 <td>' . $auditObjection?->objection_no . '</td>
                                 <td>' . $auditObjection?->auditType?->name . '</td>
                                 <td>' . $auditObjection?->severity?->name . '</td>

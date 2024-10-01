@@ -194,13 +194,14 @@
                                 <textarea type="text" name="description" id="description" class="form-control"></textarea>
                             </div>
                         </div>
+                        <input type="hidden" name="isDrafSave" value="" id="isDrafSave">
 
 
                     </div>
                     <div class="modal-footer">
                         <div class="hideFormSubmit">
-                            <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Close</button>
-                            <button class="btn btn-primary" id="addObjectionSubmit" type="submit">Submit</button>
+                            <button class="btn btn-secondary" type="submit" value="1" id="draftSave">Draft Save</button>
+                            <button class="btn btn-primary" id="addObjectionSubmit" value="1" type="submit">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -215,6 +216,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
 
     <script>
+        
         // Initialize CKEditor
         let editorInstance;
         ClassicEditor
@@ -293,15 +295,15 @@
                     // $("#addForm #documentFile").attr('href', file);
                     $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
                     // $("#addForm textarea[name='description']").val(data.auditObjection.desc
-                    editorInstance.setData(data.auditObjection.description);
+                    editorInstance.setData(data.auditObjection.draft_description);
 
-                    if((data.auditObjection.dymca_status != "1")){
-                        $('.hideFormSubmit').removeClass('d-none')
-                    }else if((data.auditObjection.mca_status == "2")){
-                        $('.hideFormSubmit').removeClass('d-none')
-                    }else{
-                        $('.hideFormSubmit').addClass('d-none')
-                    }
+                    // if((data.auditObjection.dymca_status != "1")){
+                    //     $('.hideFormSubmit').removeClass('d-none')
+                    // }else if((data.auditObjection.mca_status == "2")){
+                    //     $('.hideFormSubmit').removeClass('d-none')
+                    // }else{
+                    //     $('.hideFormSubmit').addClass('d-none')
+                    // }
                 },
                 error: function(error, jqXHR, textStatus, errorThrown) {
                     swal("Error!", "Some thing went wrong", "error");
@@ -363,6 +365,12 @@
             $('#assign-role-modal').modal('show');
         });
 
+        $('#draftSave').click(function(){
+            $('#isDrafSave').val(1)
+        });
+        $('#addObjectionSubmit').click(function(){
+            $('#isDrafSave').val(0)
+        });
 
         // Submit Objection Form
         $("#addForm").submit(function(e) {

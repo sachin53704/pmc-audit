@@ -160,24 +160,12 @@
                                     <label for="amount">Amount <span class="text-danger">*</span></label>
                                     <input type="text" name="amount" id="amount" class="form-control" readonly>
                                 </div>
-                            </div>
-
-                            <div class="row">
+                                
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
                                     <label for="subject">Subject <span class="text-danger">*</span></label>
                                     <input type="text" name="subject" id="subject" class="form-control" readonly>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="work_name">Work Name</label>
-                                    <input type="text" name="work_name" id="work_name" class="form-control" readonly>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="contractor_name">Contractor Name</label>
-                                    <input type="text" name="contractor_name" readonly id="contractor_name" class="form-control">
-                                </div>
+                                
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
                                     <label for="documents">File</label>
                                     <div>
@@ -189,10 +177,7 @@
                                     <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
                                     <input readonly type="text" name="sub_unit" id="sub_unit" class="form-control">
                                 </div>
-                            </div>
-
                             
-                            <div class="row">
                                 <div class="col-12 mb-3">
                                     <label for="description">Description <span class="text-danger">*</span></label>
                                     <textarea type="text" name="description" id="description" class="form-control"></textarea>
@@ -308,8 +293,6 @@
 
                     $("#addForm input[name='amount']").val(data.auditObjection.amount);
                     $("#addForm input[name='subject']").val(data.auditObjection.subject);
-                    $("#addForm input[name='work_name']").val(data.auditObjection.work_name);
-                    $("#addForm input[name='contractor_name']").val(data.auditObjection.contractor_name);
 
                     if(data.auditObjection.document && data.auditObjection.document != ""){
                         var file = "{{ asset('storage') }}/"+data.auditObjection.document;
