@@ -103,7 +103,7 @@
                             <input type="hidden" name="audit_id" value="" id="audit_id">
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="objection_no">Auditor Para No <span class="text-danger">*</span></label>
+                                    <label for="objection_no">HMM No. <span class="text-danger">*</span></label>
                                     <input type="text" name="objection_no" id="objection_no" class="form-control" disabled value="{{ time() }}">
                                     <span class="text-danger is-invalid objection_no_err"></span>
                                 </div>

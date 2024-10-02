@@ -111,7 +111,7 @@ class HmmMcaStatusController extends Controller
                         <thead>
                             <tr>
                                 <th>Sr no.</th>
-                                <th>Auditor Para No</th>
+                                <th>HMM No.</th>
                                 <th>Audit Type</th>
                                 <th>Severity</th>
                                 <th>Zone</th>';

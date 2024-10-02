@@ -287,7 +287,7 @@ class MCAAuditController extends Controller
                             
                             <select ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' class="form-select" ' . $mcaDisabled . ' name="department_mca_status[]">
                                 <option value="">Select</option>
-                                <option ' . (($auditDepartmentAnswer->department_mca_status == "1") ? "selected" : "") . ' value="1">Approve</option>
+                                <option ' . (($auditDepartmentAnswer->department_mca_status == "1") ? "selected" : "") . ' value="1">Forward To Auditor</option>
                                 <option ' . (($auditDepartmentAnswer->department_mca_status == "0") ? "selected" : "") . ' value="0">Reject</option>
                             </select>
                         </td>
@@ -357,7 +357,7 @@ class MCAAuditController extends Controller
                     <td>
                         <select class="form-select" disabled name="department_mca_status[]">
                             <option value="">Select</option>
-                            <option value="1">Approve</option>
+                            <option value="1">Forward To Auditor</option>
                             <option value="0">Reject</option>
                         </select>
                     </td>
