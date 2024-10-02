@@ -101,17 +101,10 @@ class MCAAuditController extends Controller
 
         $audits = Audit::query()
             ->with('assignedAuditors.user')
-            // ->where('department_id', Auth::user()->department_id)
             ->when($statusCode == 2, fn($q) => $q->where('mca_status', 2)->orWhere('status', '>=', 4))
             ->when($statusCode != 2, fn($q) => $q->where('mca_status', $statusCode))
             ->latest()
             ->get();
-
-        // return $audits;
-
-        // $audits = Audit::query()->withCount('assignedAuditors as assigned_auditors_count')
-        //         ->when(Auth::user()->hasRole('MCA'), fn($q) => $q->where('mca_status', 2))
-        //         ->where(Auth::user()->hasRole(''))
 
         return view('admin.audit-list')->with(['status' => $status, 'audits' => $audits, 'page_type' => $page_type]);
     }
@@ -170,6 +163,9 @@ class MCAAuditController extends Controller
         }
 
         $audits = Audit::query()
+            ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                $q->where('department_id', Auth::user()->department_id);
+            })
             ->where('status', '>=', $status)
             ->latest()
             ->get();
