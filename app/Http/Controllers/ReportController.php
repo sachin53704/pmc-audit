@@ -6,7 +6,7 @@ use App\Models\AuditObjection;
 use Illuminate\Http\Request;
 use PDF;
 use App\Models\Department;
-use App\Models\FiscalYear;
+use App\Models\ParaAudit;
 
 class ReportController extends Controller
 {
@@ -18,14 +18,14 @@ class ReportController extends Controller
             $q->where('id', $request->department);
         })->withCount([
             'auditObjection as approved_para' => fn($q) => $q->whereHas('auditDepartmentAnswers', function ($q) {
-                $q->where('mca_status', '!=', 0);
+                $q->where('mca_status', '=', 1);
             })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                 $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
             }),
             'auditObjection as pending_para' => fn($q) => $q->whereHas('auditDepartmentAnswers', function ($q) {
-                $q->where('mca_status', 0);
+                $q->where('mca_status', "!=", 1);
             })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
@@ -67,18 +67,18 @@ class ReportController extends Controller
 
     public function finalReport(Request $request)
     {
-        $departments = Department::select('id', 'name')->get();
+        $departments = Department::select('id', 'name')->where('is_audit', 0)->get();
 
-        $financialYears = FiscalYear::select('id', 'name')->get();
 
         if (isset($request->pdf) && $request->pdf == "Yes") {
 
-            $reports = AuditObjection::with(['audit', 'from', 'to', 'user'])->when(isset($request->department_id) && $request->department_id != "", function ($q) use ($request) {
-                $q->where('department_id', $request->department_id);
-            })->when(isset($request->year) && $request->year != "", function ($q) use ($request) {
-                $q->where('from_year', '<=', $request->year)
-                    ->where('to_year', '>=', $request->to);
-            })->get();
+            $reports = ParaAudit::with(['audit.department'])
+                ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
+                    $q->whereHas('audit', function ($q) use ($request) {
+                        $q->where('department_id', $request->department);
+                    });
+                })
+                ->get();
 
             $department = "All";
             if (isset($request->department) && $request->department != "") {
@@ -90,7 +90,6 @@ class ReportController extends Controller
         } else {
             return view('report.final-report.index')->with([
                 'departments' => $departments,
-                'financialYears' => $financialYears
             ]);
         }
     }

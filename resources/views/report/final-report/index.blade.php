@@ -24,16 +24,6 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-                                    <label for="from">Select Financial year</label>
-                                    <select name="year" id="year" class="form-select">
-                                        <option value="">All</option>
-                                        @foreach($financialYears as $financialYear)
-                                        <option {{ (isset(request()->year) && request()->year == $financialYear->id) ? 'selected' : '' }} value="{{ $financialYear->id }}">{{ $financialYear->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     {{-- <button class="btn btn-primary mt-4">Search</button> --}}
                                     <button type="button" class="btn btn-success mt-4" id="generatePdf">PDF</button>
                                 </div>

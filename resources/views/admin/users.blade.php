@@ -466,7 +466,7 @@
         $("#addForm .auditor_no_field").addClass("d-none");
         $("#addForm .home_department_field").addClass("d-none");
         $("#addForm .department_field").addClass("d-none");
-        if(roleId == 4)
+        if(roleId == 4 || roleId == 3)
         {
             $("#addForm .department_field").removeClass("d-none");
         }else if(roleId == 5){
@@ -680,7 +680,7 @@
                         $("#editForm input[name='auditor_no']").val(data.user.auditor_no);
                         // $("#editForm select[name='home_department_id']").val(data.user?.department.id);
                     }
-                    else if(roleId == 4)
+                    else if(roleId == 4 || roleId == 3)
                     {
                         $("#editForm .department_field").removeClass("d-none");
                         $("#editForm select[name='department_id']").val(data.user?.department_id);
