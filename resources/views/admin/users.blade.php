@@ -469,6 +469,7 @@
         if(roleId == 4)
         {
             $("#addForm .department_field").removeClass("d-none");
+            $("#addForm .auditor_no_field").removeClass("d-none");
         }
         else{
             $("#addForm .department_field").addClass("d-none")
@@ -489,6 +490,7 @@
         if(roleId == 4)
         {
             $("#addForm .department_field").removeClass("d-none");
+            $("#editForm .auditor_no_field").removeClass("d-none");
         }
         else
         {
