@@ -468,17 +468,16 @@
         $("#addForm .department_field").addClass("d-none");
         if(roleId == 4)
         {
-            $("#addForm .auditor_no_field").removeClass("d-none");
-            $("#addForm .home_department_field").removeClass("d-none");
-        }
-        else if(roleId == 7)
-        {
-            $("#addForm .home_department_field").removeClass("d-none");
-        }
-        else if(roleId == 3 || roleId == 5 || roleId == 6 || roleId == 8 || roleId == 9)
-        {
             $("#addForm .department_field").removeClass("d-none");
         }
+        else{
+            $("#addForm .department_field").addClass("d-none")
+            $("#addForm select[name='department_id']").val("")
+        }
+        // else if(roleId == 3 || roleId == 5 || roleId == 6 || roleId == 8 || roleId == 9)
+        // {
+        //     $("#addForm .department_field").removeClass("d-none");
+        // }
     });
     $("#editForm").on("change", "[name='role']", function(e) {
         e.preventDefault();
@@ -489,16 +488,12 @@
         $("#editForm .department_field").addClass("d-none");
         if(roleId == 4)
         {
-            $("#editForm .auditor_no_field").removeClass("d-none");
-            $("#editForm .home_department_field").removeClass("d-none");
+            $("#addForm .department_field").removeClass("d-none");
         }
-        else if(roleId == 7)
+        else
         {
-            $("#editForm .home_department_field").removeClass("d-none");
-        }
-        else if(roleId == 3 || roleId == 5 || roleId == 6 || roleId == 8 || roleId == 9)
-        {
-            $("#editForm .department_field").removeClass("d-none");
+            $("#addForm .department_field").addClass("d-none")
+            $("#addForm select[name='department_id']").val("")
         }
     });
 </script>

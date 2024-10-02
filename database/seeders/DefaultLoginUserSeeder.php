@@ -74,7 +74,6 @@ class DefaultLoginUserSeeder extends Seeder
             'gender' => 'male',
             'mobile' => '9999999943',
             'email' => 'departmenthod@gmail.com',
-            'department_id' => '1',
             'username' => 'departmenthod@gmail.com',
             'password' => Hash::make('12345678')
         ]);
@@ -136,7 +135,6 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999995',
-            'department_id' => '1',
             'username' => 'mca@gmail.com',
             'email' => 'mca@gmail.com',
             'password' => Hash::make('12345678')
@@ -157,7 +155,6 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999996',
-            'department_id' => '1',
             'username' => 'dymca@gmail.com',
             'email' => 'dymca@gmail.com',
             'password' => Hash::make('12345678')
@@ -178,7 +175,6 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999997',
-            'department_id' => '3',
             'username' => 'clerk@gmail.com',
             'email' => 'clerk@gmail.com',
             'password' => Hash::make('12345678')
@@ -199,7 +195,6 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999998',
-            'department_id' => '1',
             'username' => 'localfund@gmail.com',
             'email' => 'localfund@gmail.com',
             'password' => Hash::make('12345678')
@@ -220,7 +215,6 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999999',
-            'department_id' => '1',
             'username' => 'agaudit@gmail.com',
             'email' => 'agaudit@gmail.com',
             'password' => Hash::make('12345678')
