@@ -30,9 +30,9 @@ class UpdateUserRequest extends FormRequest
             'gender' => 'required|max:100|in:male,female,others',
             'email' => 'required|email',
             'mobile' => 'required|digits:10',
-            'auditor_no' => 'required_if:role,4|max:50',
+            'auditor_no' => 'required_if:role,5|max:50',
             // 'home_department_id' => 'required_if:role,4,7|max:50',
-            'department_id' => 'required_if:role,3,5,6,8,9|max:50',
+            'department_id' => 'required_if:role,4|max:50',
             'username' => 'required|max:100'
         ];
     }

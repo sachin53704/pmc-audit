@@ -49,7 +49,7 @@ class UserController extends Controller
             $input = $request->validated();
 
             $input['password'] = Hash::make($input['password']);
-            $input['department_id'] = $input['department_id'] ?? $input['home_department_id'];
+            $input['department_id'] = $input['department_id'] ?? null;
             $input['active_status'] = $request->active_status;
 
             $user = User::create(Arr::only($input, Auth::user()->getFillable()));
