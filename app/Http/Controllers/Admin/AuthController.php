@@ -44,7 +44,7 @@ class AuthController extends Controller
             $remember_me = $request->has('remember_me') ? true : false;
 
             try {
-                $user = User::where('email', $username)->first();
+                $user = User::where('email', $username)->orWhere('username', $username)->first();
 
                 if (!$user)
                     return response()->json(['error2' => 'No user found with this username']);
