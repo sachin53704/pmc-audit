@@ -55,7 +55,8 @@ class AuthController extends Controller
                 if ($user->active_status == '0')
                     return response()->json(['error2' => 'You are not authorized to login, contact Admin']);
 
-                if (!auth()->attempt(['email' => $username, 'password' => $password], $remember_me))
+                $login_field = filter_var($username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+                if (!auth()->attempt([$login_field => $username, 'password' => $password], $remember_me))
                     return response()->json(['error2' => 'Your entered credentials are invalid']);
 
                 $userType = $user->roles[0]->name;

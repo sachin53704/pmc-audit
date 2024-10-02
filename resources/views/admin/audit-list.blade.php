@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">{{ ucfirst($status) }} Programme Audit List</x-slot>
-    <x-slot name="heading">{{ ucfirst($status) }} Programme Audit List</x-slot>
+    <x-slot name="title">Assign Programme Audit List</x-slot>
+    <x-slot name="heading">Assign Programme Audit List</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 

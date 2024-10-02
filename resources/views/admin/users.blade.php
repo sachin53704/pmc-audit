@@ -46,7 +46,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="mobile">User Mobile <span class="text-danger">*</span></label>
-                                <input class="form-control" id="mobile" name="mobile" type="number" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                                <input class="form-control" id="mobile" name="mobile" type="text" maxlength="10" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
                                     placeholder="Enter User Mobile">
                                 <span class="text-danger is-invalid mobile_err"></span>
                             </div>
@@ -187,7 +187,7 @@
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="mobile">User Mobile <span class="text-danger">*</span></label>
-                                <input class="form-control" name="mobile" type="number" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
+                                <input class="form-control" name="mobile" type="text" maxlength="10" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"
                                     placeholder="Enter User Mobile">
                                 <span class="text-danger is-invalid mobile_err"></span>
                             </div>
