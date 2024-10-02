@@ -139,7 +139,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
+                        <table id="buttons-datatables" class="table nowrap">
                             <thead>
                                 <tr>
                                     <th>Sr No</th>
@@ -159,8 +159,8 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                        <td>{{ Str::limit($audit->description, '85') }}</td>
-                                        <td>{{ Str::limit($audit->remark, '85') }}</td>
+                                        <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}<span></td>
+                                        <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>

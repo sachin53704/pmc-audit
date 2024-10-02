@@ -37,9 +37,6 @@ class ParaAuditController extends Controller
             ->with(['paraAudit'])
             ->latest()
             ->get();
-        // return $audits;
-
-        // select * from `audits` where exists (select * from `para_audits` where `audits`.`id` = `para_audits`.`audit_id` and `is_draft_send` = 1 and `dymca_status` != 1) and `status` >= 12 and `audits`.`deleted_at` is null order by `created_at` desc
 
         return view('para-audit.index')->with([
             'audits' => $audits
@@ -49,12 +46,26 @@ class ParaAuditController extends Controller
     public function create(Request $request)
     {
         if ($request->ajax()) {
-            $paraAudits = AuditObjection::where('audit_id', $request->audit_id)->select('description')->get();
+            $paraAudits = AuditObjection::where('audit_id', $request->audit_id)->get();
 
             $html = "";
 
             foreach ($paraAudits as $paraAudit) {
                 $html .= $paraAudit->description;
+                $html .= "<table class='table'>
+                    <thead>
+                        <tr>
+                            <th>HMM No.</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>" . $paraAudit->objection_no . "</td>
+                            <td>" . date('d-m-Y', strtotime($paraAudit->entry_date)) . "</td>
+                        </tr>
+                    </tbody>
+                </table><br><br>";
             }
 
             return response()->json([
@@ -90,10 +101,10 @@ class ParaAuditController extends Controller
         if ($request->ajax()) {
             $audit = ParaAudit::where('id', $request->id)
                 ->when(Auth::user()->hasRole('Auditor'), function ($q) {
-                    $q->select('id', 'draft_description as description');
+                    $q->select('id', 'draft_description as description', 'mca_status', 'mca_remark', 'dymca_status', 'dymca_remark');
                 })
                 ->when(Auth::user()->hasRole(['MCA', 'DY MCA']), function ($q) {
-                    $q->select('id', 'description as description');
+                    $q->select('id', 'description as description', 'mca_status', 'mca_remark', 'dymca_status', 'dymca_remark');
                 })
                 ->first();
 
@@ -128,7 +139,7 @@ class ParaAuditController extends Controller
                 ];
 
                 if ($request->isDrafSave == 0) {
-                    $data = array_merge($data, ['description' => $request->description, 'is_draft_send' => 1]);
+                    $data = array_merge($data, ['description' => $request->description, 'is_draft_send' => 1, 'dymca_status' => null, 'dymca_remark' => null, 'mca_status' => null, 'mca_status' => null]);
                 }
                 ParaAudit::where('id', $request->id)->update($data);
 

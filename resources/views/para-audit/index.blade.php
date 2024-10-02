@@ -17,10 +17,6 @@
                                         <th>Date</th>
                                         <th>File Description</th>
                                         <th>Remark</th>
-                                        <th>View File</th>
-                                        {{-- <th>Status</th> --}}
-                                        <th>View Letter</th>
-                                        <th>Letter Description</th>
                                         <th>DYMCA Status</th>
                                         <th>MCA Status</th>
                                         <th>Action</th>
@@ -35,35 +31,26 @@
                                             <td>{{ Str::limit($audit->description, '85') }}</td>
                                             <td>{{ Str::limit($audit->remark, '85') }}</td>
                                             <td>
-                                                <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
-                                            </td>
-                                            {{-- <td>
-                                                <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                            </td> --}}
-                                            <td>
-                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                                            </td>
-                                            <td>{{ Str::limit($audit->dl_description, '85') }}</td>
-                                            <td>
-                                                @if($audit->paraAudit?->dymca_status == 0)
+                                                
+                                                @if($audit->paraAudit && $audit->paraAudit?->dymca_status == "0")
                                                 <span class="badge bg-danger">Rejected</span>
-                                                @elseif($audit->paraAudit?->dymca_status == 1)
+                                                @elseif($audit->paraAudit && $audit->paraAudit?->dymca_status == "1")
                                                 <span class="badge bg-success">Approve</span>
                                                 @else
                                                 <span class="badge bg-warning">Pending</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if($audit->paraAudit?->mca_status == 0)
+                                                @if($audit->paraAudit && $audit->paraAudit?->mca_status == "0")
                                                 <span class="badge bg-danger">Rejected</span>
-                                                @elseif($audit->paraAudit?->mca_status == 1)
+                                                @elseif($audit->paraAudit && $audit->paraAudit?->mca_status == "1")
                                                 <span class="badge bg-success">Approve</span>
                                                 @else
                                                 <span class="badge bg-warning">Pending</span>
                                                 @endif
                                             </td>
                                             <td>
-                                                @if(($audit->paraAudit?->mca_status == 1 || $audit->paraAudit?->dymca_status == 1) && Auth::user()->hasRole('Auditor'))
+                                                @if(($audit->paraAudit && ($audit->paraAudit?->mca_status == 1 || $audit->paraAudit?->dymca_status == 1)) && Auth::user()->hasRole('Auditor'))
                                                 -
                                                 @else
                                                 @if($audit->paraAudit)
@@ -85,7 +72,7 @@
 
         {{-- Add Para Audit Modal --}}
         <div class="modal fade" id="addParaAuditModal" role="dialog">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <form action="" id="addForm" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-content">
@@ -208,31 +195,31 @@
             });
     </script>
 
-<script>
-        
-    // Initialize CKEditor
-    let editorEditInstance;
-    ClassicEditor
-        .create(document.querySelector('#editDescription'),{
-            toolbar: {
-                shouldNotGroupWhenFull: true
-            }
-        })
-        .then(editor => {
-            editorEditInstance = editor;
-            @if(Auth::user()->hasRole(['DY MCA', 'MCA']))
-            editorEditInstance.enableReadOnlyMode('reason');
-            @endif
+    <script>
+            
+        // Initialize CKEditor
+        let editorEditInstance;
+        ClassicEditor
+            .create(document.querySelector('#editDescription'),{
+                toolbar: {
+                    shouldNotGroupWhenFull: true
+                }
+            })
+            .then(editor => {
+                editorEditInstance = editor;
+                @if(Auth::user()->hasRole(['DY MCA', 'MCA']))
+                editorEditInstance.enableReadOnlyMode('reason');
+                @endif
 
-            editor.ui.view.editable.element.style.height = '200px';  // Fixed height
+                editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
-            // Make the editor scrollable
-            editor.ui.view.editable.element.style.overflowY = 'auto';
-        })
-        .catch(error => {
-            console.error('Error during initialization of the editor', error);
-        });
-</script>
+                // Make the editor scrollable
+                editor.ui.view.editable.element.style.overflowY = 'auto';
+            })
+            .catch(error => {
+                console.error('Error during initialization of the editor', error);
+            });
+    </script>
 
 
 
@@ -355,7 +342,20 @@
                 {
                     if (!data.error)
                     {
-                        $("#editForm input[name='id']").val(data.audit.id)
+                        $("#editForm input[name='id']").val(data.audit.id);
+                        // alert(data.audit.dymca_status)
+                        @if(Auth::user()->hasRole('DY MCA'))
+                            $('#editForm #dymca_status').val(data.audit.dymca_status)
+                            $('#editForm #dymca_remark').val(data.audit.dymca_remark)
+                            if(data.audit.mca_status){
+                                $('#editForm #dymca_status').prop('disabled', true)
+                                $('#editForm #dymca_remark').prop('disabled', true)
+                            }
+                        @elseif (Auth::user()->hasRole('MCA'))
+                            $('#editForm #mca_status').val(data.audit.mca_status);
+                            $('#editForm #mca_remark').val(data.audit.mca_remark);
+                        @endif
+
                         editorEditInstance.setData(data.audit.description);
                         // $("#addParaAuditModal").modal("show");
                     } else {
