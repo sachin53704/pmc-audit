@@ -139,6 +139,12 @@ class MastersSeeder extends Seeder
                 'name' => 'Register Not Available',
                 'is_amount' => 0,
                 'status' => 1
+            ],
+            [
+                'id' => 5,
+                'name' => 'Involve Amount',
+                'is_amount' => 1,
+                'status' => 1
             ]
         ];
 

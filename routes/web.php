@@ -20,7 +20,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 })->name('/');
 
-
+Route::get('localization/{locale}', [App\Http\Controllers\LocalizationController::class, 'index'])->name('language.index');
 
 
 // Guest Users
