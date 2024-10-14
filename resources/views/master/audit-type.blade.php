@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Audit Type</x-slot>
-    <x-slot name="heading">Audit Type</x-slot>
+    <x-slot name="title">@lang('menu.audit_type')</x-slot>
+    <x-slot name="heading">@lang('menu.audit_type')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
         @can('audit-type.create')

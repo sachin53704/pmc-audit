@@ -1,13 +1,15 @@
 <?php
 
 return [
+    'home_page' => 'Home',
     'dashboard' => 'Dashboard',
     'masters' => 'Masters',
-    'financial_year' => 'Financial Year',
+    'financial_year' => 'Financial Years',
     'departments' => 'Departments',
     'audit_para_category' => 'Audit Para Category',
     'audit_type' => 'Audit Type',
     'severity' => 'Severity',
+    'signature' => 'Signature',
     'zone' => 'Zone',
     'working_day' => 'Working Day',
     'user_management' => 'User Management',
@@ -30,5 +32,13 @@ return [
     'reports' => 'Reports',
     'programme_audit_para_summary' => 'Programme Audit Para Summary',
     'final_report' => 'Final Report',
-    'para_current_status_report' => 'Para Current Status Report'
+    'para_current_status_report' => 'Para Current Status Report',
+    'upload_receipt' => 'Upload Receipt',
+    'upload_payment_receipt' => 'Upload Payment Receipt',
+    'pending_receipt' => 'Pending Receipts',
+    'approved_receipt' => 'Approved Receipts',
+    'rejected_receipt' => 'Rejected Receipts',
+    'pending_payment_receipt' => 'Pending Payment Receipts',
+    'approve_payment_receipt' => 'Approved Payment Receipts',
+    'rejected_payment_receipt' => 'Rejected Payment Receipts'
 ];

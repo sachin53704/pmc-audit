@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Dashboard</x-slot>
-    <x-slot name="heading">Dashboard</x-slot>
+    <x-slot name="title">@lang('menu.dashboard')</x-slot>
+    <x-slot name="heading">@lang('menu.dashboard')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
     <div class="row">

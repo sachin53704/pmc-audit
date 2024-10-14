@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Severity</x-slot>
-    <x-slot name="heading">Severity</x-slot>
+    <x-slot name="title">@lang('menu.severity')</x-slot>
+    <x-slot name="heading">@lang('menu.severity')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
         @can('severity.create')

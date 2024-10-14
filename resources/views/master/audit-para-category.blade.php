@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Audit Para Category</x-slot>
-    <x-slot name="heading">Audit Para Category</x-slot>
+    <x-slot name="title">@lang('menu.audit_para_category')</x-slot>
+    <x-slot name="heading">@lang('menu.audit_para_category')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
         @can('audit-para-category.create')

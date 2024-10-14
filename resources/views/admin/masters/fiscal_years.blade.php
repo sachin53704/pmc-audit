@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Financial Years</x-slot>
-    <x-slot name="heading">Financial Years</x-slot>
+    <x-slot name="title">@lang('menu.financial_year')</x-slot>
+    <x-slot name="heading">@lang('menu.financial_year')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 

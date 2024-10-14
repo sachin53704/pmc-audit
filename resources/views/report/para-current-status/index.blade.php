@@ -1,7 +1,7 @@
 
 <x-admin.layout>
-    <x-slot name="title">Para Current Status Report</x-slot>
-    <x-slot name="heading">Para Current Status Report</x-slot>
+    <x-slot name="title">@lang('menu.para_current_status_report')</x-slot>
+    <x-slot name="heading">@lang('menu.para_current_status_report')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
        

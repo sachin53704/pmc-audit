@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Working Day</x-slot>
-    <x-slot name="heading">Working Day</x-slot>
+    <x-slot name="title">@lang('menu.working_day')</x-slot>
+    <x-slot name="heading">@lang('menu.working_day')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
         @can('working-day.create')

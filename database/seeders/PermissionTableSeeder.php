@@ -413,6 +413,11 @@ class PermissionTableSeeder extends Seeder
                 'id' => 81,
                 'name' => 'para-audit.create',
                 'group' => 'Para Audit'
+            ],
+            [
+                'id' => 82,
+                'name' => 'signature.edit',
+                'group' => 'Signature'
             ]
         ];
 

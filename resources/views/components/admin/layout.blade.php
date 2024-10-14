@@ -48,7 +48,7 @@
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
                                         <li class="breadcrumb-item">
-                                            <a href="{{ route('home') }}">Home</a>
+                                            <a href="{{ route('home') }}">@lang('menu.home_page')</a>
                                         </li>
                                         <li class="breadcrumb-item {{ isset($subheading) ? '' : 'active' }}">
                                             {{ $heading }}

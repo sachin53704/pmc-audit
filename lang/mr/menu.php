@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'home_page' => 'मुखपृष्ठ',
     'dashboard' => 'डॅशबोर्ड',
     'masters' => 'मास्टर्स',
     'financial_year' => 'आर्थिक वर्ष',
@@ -8,6 +9,7 @@ return [
     'audit_para_category' => 'ऑडिट पॅरा श्रेणी',
     'audit_type' => 'ऑडिट प्रकार',
     'severity' => 'तीव्रता',
+    'signature' => 'स्वाक्षरी',
     'zone' => 'झोन',
     'working_day' => 'कामाचा दिवस',
     'user_management' => 'वापरकर्ता व्यवस्थापन',
@@ -30,5 +32,13 @@ return [
     'reports' => 'अहवाल',
     'programme_audit_para_summary' => 'कार्यक्रम ऑडिट पॅरा सारांश',
     'final_report' => 'अंतिम अहवाल',
-    'para_current_status_report' => 'पॅरा वर्तमान स्थिती अहवाल'
+    'para_current_status_report' => 'पॅरा वर्तमान स्थिती अहवाल',
+    'upload_receipt' => 'पावती अपलोड करा',
+    'upload_payment_receipt' => 'पेमेंट पावती अपलोड करा',
+    'pending_receipt' => 'प्रलंबित पावत्या',
+    'approved_receipt' => 'मंजूर पावत्या',
+    'rejected_receipt' => 'नाकारलेल्या पावत्या',
+    'pending_payment_receipt' => 'प्रलंबित पेमेंट पावत्या',
+    'approve_payment_receipt' => 'मंजूर पेमेंट पावत्या',
+    'rejected_payment_receipt' => 'नाकारलेल्या पेमेंट पावत्या'
 ];

@@ -43,13 +43,13 @@
 
                     @if(session()->get('LOGIN_TYPE') == 1)
 
-                        @canany(['fiscal_years.view', 'departments.view', 'audit-para-category.index', 'audit-type.index', 'severity.index', 'zone.index', 'working-day.index'])
+                        @canany(['fiscal_years.view', 'departments.view', 'audit-para-category.index', 'audit-type.index', 'severity.index', 'zone.index', 'working-day.index', 'signature.edit'])
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
+                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') || request()->routeIs('signature.edit') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
                                     <i class="ri-layout-3-line"></i>
                                     <span data-key="t-layouts">@lang('menu.masters')</span>
                                 </a>
-                                <div class="collapse menu-dropdown {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') ? 'show' : '' }}" id="sidebarMasterLayouts">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') || request()->routeIs('signature.edit') ? 'show' : '' }}" id="sidebarMasterLayouts">
                                     <ul class="nav nav-sm flex-column">
                                         @can('fiscal_years.view')
                                             <li class="nav-item">
@@ -89,6 +89,18 @@
                                         @can('working-day.index')
                                         <li class="nav-item">
                                             <a href="{{ route('working-day.index') }}" class="nav-link {{ request()->routeIs('working-day.index') ? 'active' : '' }}" data-key="t-horizontal">@lang('menu.working_day')</a>
+                                        </li>
+                                        @endcan
+                                        
+                                        @can('working-day.index')
+                                        <li class="nav-item">
+                                            <a href="{{ route('working-day.index') }}" class="nav-link {{ request()->routeIs('working-day.index') ? 'active' : '' }}" data-key="t-horizontal">@lang('menu.working_day')</a>
+                                        </li>
+                                        @endcan
+                                        
+                                        @can('signature.edit')
+                                        <li class="nav-item">
+                                            <a href="{{ route('signature.edit') }}" class="nav-link {{ request()->routeIs('signature.edit') ? 'active' : '' }}" data-key="t-horizontal">@lang('menu.signature')</a>
                                         </li>
                                         @endcan
                                     </ul>
@@ -291,7 +303,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link menu-link {{ request()->routeIs('receipts.index') ? 'active' : '' }}" href="{{ route('receipts.index') }}" >
                                         <i class="ri-pages-line"></i>
-                                        <span data-key="t-dashboards">Upload Receipt</span>
+                                        <span data-key="t-dashboards">@lang('menu.upload_receipt')</span>
                                     </a>
                                 </li>
                             @endcan
@@ -300,7 +312,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.index') ? 'active' : '' }}" href="{{ route('payment-receipts.index') }}" >
                                         <i class="ri-pages-line"></i>
-                                        <span data-key="t-dashboards">Upload Payment Receipt</span>
+                                        <span data-key="t-dashboards">@lang('menu.upload_payment_receipt')</span>
                                     </a>
                                 </li>
                             @endcan
@@ -311,7 +323,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('receipts.pending-list') ? 'active' : '' }}" href="{{ route('receipts.pending-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Pending Receipts</span>
+                                    <span data-key="t-dashboards">@lang('menu.pending_receipt')</span>
                                 </a>
                             </li>
                         @endcan
@@ -320,7 +332,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('receipts.approved-list') ? 'active' : '' }}" href="{{ route('receipts.approved-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Approved Receipts</span>
+                                    <span data-key="t-dashboards">@lang('menu.approved_receipt')</span>
                                 </a>
                             </li>
                         @endcan
@@ -329,7 +341,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('receipts.rejected-list') ? 'active' : '' }}" href="{{ route('receipts.rejected-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Rejected Receipts</span>
+                                    <span data-key="t-dashboards">@lang('menu.rejected_receipt')</span>
                                 </a>
                             </li>
                         @endcan
@@ -340,7 +352,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.pending-list') ? 'active' : '' }}" href="{{ route('payment-receipts.pending-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Pending Payment Receipts</span>
+                                    <span data-key="t-dashboards">@lang('menu.pending_payment_receipt')</span>
                                 </a>
                             </li>
                         @endcan
@@ -349,7 +361,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.approved-list') ? 'active' : '' }}" href="{{ route('payment-receipts.approved-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Approved Payment Receipts</span>
+                                    <span data-key="t-dashboards">@lang('menu.approve_payment_receipt')</span>
                                 </a>
                             </li>
                         @endcan
@@ -358,7 +370,7 @@
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('payment-receipts.rejected-list') ? 'active' : '' }}" href="{{ route('payment-receipts.rejected-list') }}" >
                                     <i class="ri-pages-line"></i>
-                                    <span data-key="t-dashboards">Rejected Payment Receipts</span>
+                                    <span data-key="t-dashboards">@lang('menu.rejected_payment_receipt')</span>
                                 </a>
                             </li>
                         @endcan

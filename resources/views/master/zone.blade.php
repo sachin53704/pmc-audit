@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Zone</x-slot>
-    <x-slot name="heading">Zone</x-slot>
+    <x-slot name="title">@lang('menu.zone')</x-slot>
+    <x-slot name="heading">@lang('menu.zone')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
         @can('zone.create')

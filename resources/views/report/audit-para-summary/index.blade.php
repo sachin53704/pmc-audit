@@ -1,7 +1,7 @@
 
 <x-admin.layout>
-    <x-slot name="title">Audit Para Summary Report</x-slot>
-    <x-slot name="heading">Audit Para Summary Report</x-slot>
+    <x-slot name="title">@lang('menu.programme_audit_para_summary')</x-slot>
+    <x-slot name="heading">@lang('menu.programme_audit_para_summary')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
        
