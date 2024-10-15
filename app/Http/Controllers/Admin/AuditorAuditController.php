@@ -113,7 +113,7 @@ class AuditorAuditController extends Controller
         if ($request->ajax()) {
             $auditObjections = AuditObjection::with(['audit', 'auditType', 'zone', 'severity'])
                 ->where('audit_id', $request->audit_id)
-                ->where('is_objection_send', 1)
+                // ->where('is_objection_send', 1)
 
                 ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
                     $q->where('is_department_draft_save', 1);
@@ -344,7 +344,6 @@ class AuditorAuditController extends Controller
                             } else {
                                 $auditDepartmentAnswer = new AuditDepartmentAnswer;
                             }
-                            // \Log::info('f');
 
                             $auditDepartmentAnswer->audit_objection_id = $request->audit_objection_id;
                             $auditDepartmentAnswer->audit_id = $request->audit_id;

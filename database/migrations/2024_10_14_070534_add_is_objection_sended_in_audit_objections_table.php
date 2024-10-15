@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('audit_objections', function (Blueprint $table) {
+            $table->boolean('is_draft_save')->default(0)->after('status');
             $table->boolean('is_objection_send')->default(0)->after('status');
         });
     }
@@ -22,6 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('audit_objections', function (Blueprint $table) {
+            $table->dropColumn('is_draft_save');
             $table->dropColumn('is_objection_send');
         });
     }

@@ -218,6 +218,15 @@
                                 </a>
                             </li>
                         @endcan
+                        
+                        @if(Auth::user()->hasRole('DY MCA'))
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('objection.send-objection') ? 'active' : '' }}" href="{{ route('objection.send-objection') }}" >
+                                <i class="ri-auction-line"></i>
+                                <span data-key="t-dashboards">Send HMM</span>
+                            </a>
+                        </li>
+                        @endif
 
                         @can('department_letter.view')
                             <li class="nav-item">
