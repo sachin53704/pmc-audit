@@ -70,7 +70,7 @@
                                         </td>
                                         <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
-                                            <button class="btn btn-secondary view-element px-2 py-1" title="View answered questions" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Answers</button>
+                                            <button class="btn btn-secondary view-element px-2 py-1" title="View compliance objection" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}
                                         </td>
                                     </tr>
@@ -223,23 +223,6 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="status">Status</label>
-                                    <select name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_statuss' : 'dymca_statuss' }}" id="status1" class="form-select">
-                                        <option value="0">Select value</option>
-                                        <option value="1">Approve</option>
-                                        <option value="2">Forward to department</option>
-                                    </select>
-                                    <span class="text-danger is-invalid {{ (Auth::user()->hasRole('MCA')) ? 'mca_statuss_err' : 'dymca_statuss_err' }}"></span>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="remark">MCA Remark</label>
-                                    <textarea type="text" name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_remarks' : 'dymca_remarks' }}" id="remark" class="form-control"></textarea>
-                                    <span class="text-danger is-invalid {{ (Auth::user()->hasRole('MCA')) ? 'mca_remarks_err' : 'dymca_remarks_err' }}"></span>
-                                </div>
-                            </div>--}}
-
                             <div class="row">
                                 <div class="col-12 mb-3">
                                     <div class="table-responsive" id="tableDepartmentAnswer">
@@ -290,7 +273,7 @@
         </script>
 
 
-        <!-- Approve Reject Answers -->
+        <!-- Approve Reject compliance -->
         <script>
 
             $("body").on("click", ".view-element", function(e) {

@@ -418,6 +418,11 @@ class PermissionTableSeeder extends Seeder
                 'id' => 82,
                 'name' => 'signature.edit',
                 'group' => 'Signature'
+            ],
+            [
+                'id' => 83,
+                'name' => 'send-hmm.view',
+                'group' => 'send hmm'
             ]
         ];
 

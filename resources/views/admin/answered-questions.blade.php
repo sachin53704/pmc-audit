@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Answered Questions</x-slot>
-    <x-slot name="heading">Answered Questions</x-slot>
+    <x-slot name="title">Compliance Objections</x-slot>
+    <x-slot name="heading">Compliance Objections</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -46,7 +46,7 @@
                                         </td>
                                         <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
-                                            <button class="btn btn-secondary edit-element px-2 py-1" title="View answered questions" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Answers</button>
+                                            <button class="btn btn-secondary edit-element px-2 py-1" title="View compliance objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}
                                         </td>
                                     </tr>
@@ -79,7 +79,7 @@
                             <input type="hidden" name="audit_id" value="" id="audit_id">
                             <div class="row">
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                    <label for="objection_no">Auditor Para No <span class="text-danger">*</span></label>
+                                    <label for="objection_no">HMM No. <span class="text-danger">*</span></label>
                                     <input type="text" name="objection_no" id="objection_no" class="form-control" disabled value="{{ time() }}">
                                     <span class="text-danger is-invalid objection_no_err"></span>
                                 </div>
@@ -191,7 +191,7 @@
                                 </div>
                             
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                    <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
+                                    <label for="sub_unit">No. of Objection <span class="text-danger">*</span></label>
                                     <input type="text" name="sub_unit" disabled id="sub_unit" class="form-control">
                                     <span class="text-danger is-invalid sub_unit_err"></span>
                                 </div>

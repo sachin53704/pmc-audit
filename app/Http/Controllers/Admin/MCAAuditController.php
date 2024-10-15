@@ -260,7 +260,11 @@ class MCAAuditController extends Controller
                         <td>
                             <a href="' . asset('storage/' . $auditDepartmentAnswer->file) . '" target="_blank" class="btn btn-primary btn-sm">View File</a>';
                 $departmentTextareaStatus = "disabled";
-                if (($auditDepartmentAnswer->department_hod_status == "0" || $auditDepartmentAnswer->mca_status == "0" || $auditDepartmentAnswer->department_mca_status == "0") && Auth::user()->hasRole('Department')) {
+
+                // if ($auditDepartmentAnswer->department_mca_status == "1" || !$auditDepartmentAnswer->department_mca_status) {
+                //     $departmentTextareaStatus = "";
+                // }
+                if ((!$auditDepartmentAnswer->department_hod_status || $auditDepartmentAnswer->department_hod_status == "0" || $auditDepartmentAnswer->mca_status == "0" || $auditDepartmentAnswer->department_mca_status == "0") && Auth::user()->hasRole('Department')) {
                     $departmentTextareaStatus = "";
                     $auditDepartmentAnswerHtml .= '<input type="file" class="form-control" name="files[]">';
                 }
@@ -589,6 +593,10 @@ class MCAAuditController extends Controller
         $audits = Audit::query()
             ->where('status', '>=', 6)
             ->latest()
+            ->whereHas('objections', function ($q) {
+                $q->where('mca_status', 1)
+                    ->where('is_objection_send', 0);
+            })
             ->get();
 
         return view('mca.programme-audit.send-objection')->with(['audits' => $audits]);
@@ -600,6 +608,7 @@ class MCAAuditController extends Controller
             $auditObjections = AuditObjection::with(['audit', 'department'])
                 ->where('audit_id', $request->audit_id)
                 ->where('is_objection_send', 0)
+                ->where('mca_status', 1)
                 ->get();
 
             $objectionHtml = "";

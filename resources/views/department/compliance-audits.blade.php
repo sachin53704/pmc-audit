@@ -291,6 +291,7 @@
             data: {
                 '_token': "{{ csrf_token() }}",
                 'audit_id': model_id,
+                'is_objection_send_request': '1'
             },
             beforeSend: function()
             {

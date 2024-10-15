@@ -174,7 +174,7 @@
                                 </div>
                             
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
+                                    <label for="sub_unit">No of Objection <span class="text-danger">*</span></label>
                                     <input readonly type="text" name="sub_unit" id="sub_unit" class="form-control">
                                 </div>
                             
@@ -188,7 +188,7 @@
                                 <div class="col-6 mb-3">
                                     <label for="is_department_hod_forward">Select Status <span class="text-danger">*</span></label>
                                     <select name="is_department_hod_forward" class="form-select" id="is_department_hod_forward" required>
-                                        <option value="">Select</option>
+                                        <option value="0">Select</option>
                                         <option value="1">Forward To Department</option>
                                     </select>
                                 </div>
@@ -326,7 +326,7 @@
                         $('#addForm #dymca_status').val(data.auditObjection.dymca_status)
                         $('#addForm #dymca_remark').val(data.auditObjection.dymca_remark)
                     @else
-                        $('#addForm #is_department_hod_forward').val(data.auditObjection.is_department_hod_forward)
+                        $('#addForm #is_department_hod_forward').val(data.auditObjection.is_department_hod_forward).change()
                         $('#addForm #department_hod_remark').val(data.auditObjection.department_hod_remark)
                     @endif
 

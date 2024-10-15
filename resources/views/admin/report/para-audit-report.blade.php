@@ -18,7 +18,7 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
-                                    <th>Unapproved Questions</th>
+                                    <th>Unapproved Objections</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -35,7 +35,7 @@
                                         </td>
                                         <td>{{ $audit->unapproved }}</td>
                                         <td>
-                                            <a href="javascript::void(0)" data-id="{{ $audit->id }}" class="btn btn-sm btn-primary unapproveQuestion"  data-bs-toggle="modal" data-bs-target=".questionStatusModel">Unapprove Question</a>
+                                            <a href="javascript::void(0)" data-id="{{ $audit->id }}" class="btn btn-sm btn-primary unapproveQuestion"  data-bs-toggle="modal" data-bs-target=".questionStatusModel">Unapprove Objection</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -51,7 +51,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h5 class="modal-title" id="questionStatusModelLabel">Unanswer questions</h5>
+                    <h5 class="modal-title" id="questionStatusModelLabel">Unanswer Objection</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -62,8 +62,8 @@
                                     <th>Sr no.</th>
                                     <th>Objection No</th>
                                     <th>Auditor No</th>
-                                    <th>Question</th>
-                                    <th>Answer</th>
+                                    <th>Objections</th>
+                                    <th>Complience</th>
                                 </tr>
                             </thead>
                             <tbody id="responseQuestion">

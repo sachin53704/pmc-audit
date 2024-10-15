@@ -14,8 +14,8 @@
                                 <tr>
                                     <th>Sr No</th>
                                     <th>Name</th>
-                                    <th>Approved Questions</th>
-                                    <th>Unapproved Questions</th>
+                                    <th>Approved Objections</th>
+                                    <th>Unapproved Objections</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -63,11 +63,11 @@
                 </tr>
                 <tr>
                     <th>Audit Para</th>
-                    <th>Sub units</th>
+                    <th>No of Objection</th>
                     <th>Audit Para</th>
-                    <th>Sub units</th>
+                    <th>No of Objection</th>
                     <th>Audit Para</th>
-                    <th>Sub units</th>
+                    <th>No of Objection</th>
                 </tr>
             </thead>
             <tbody>

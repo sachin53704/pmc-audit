@@ -111,10 +111,11 @@ class AuditorAuditController extends Controller
     public function getAssignObjection(Request $request)
     {
         if ($request->ajax()) {
-            $auditObjections = AuditObjection::with(['audit', 'auditType', 'zone', 'severity'])
+            $auditObjections = AuditObjection::with(['department', 'audit', 'severity'])
                 ->where('audit_id', $request->audit_id)
-                // ->where('is_objection_send', 1)
-
+                ->when(isset($request->is_objection_send_request), function ($q) {
+                    $q->where('is_objection_send', 1);
+                })
                 ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
                     $q->where('is_department_draft_save', 1);
                 })
@@ -130,10 +131,10 @@ class AuditorAuditController extends Controller
                         <thead>
                             <tr>
                                 <th>Sr no.</th>
+                                <th>Department</th>
                                 <th>HMM No.</th>
-                                <th>Audit Type</th>
-                                <th>Severity</th>
-                                <th>Zone</th>';
+                                <th>Subject</th>
+                                <th>Compliance Submit Date</th>';
 
                 if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA') || Auth::user()->hasRole('Auditor')) {
                     $objectionHtml .= '
@@ -155,10 +156,10 @@ class AuditorAuditController extends Controller
             foreach ($auditObjections as $auditObjection) {
                 $objectionHtml .= '<tr>
                                 <td>' . $count++ . '</td>
+                                <td>' . $auditObjection?->department?->name . '</td>
                                 <td>' . $auditObjection?->objection_no . '</td>
-                                <td>' . $auditObjection?->auditType?->name . '</td>
-                                <td>' . $auditObjection?->severity?->name . '</td>
-                                <td>' . $auditObjection?->zone?->name . '</td>';
+                                <td>' . $auditObjection?->subject . '</td>
+                                <td>' . (($auditObjection?->compliance_submit_date) ? date('d-m-Y', strtotime($auditObjection?->compliance_submit_date)) : '-') . '</td>';
                 if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA') || Auth::user()->hasRole('Auditor')) {
                     $objectionHtml .= '
                     <th>' . (($auditObjection->dymca_status == 1) ? '<span class="badge bg-success">Approve</span>' : (($auditObjection->dymca_status == 2) ? '<span class="badge bg-warning">Forward To Auditor</span>' : "-")) . '</th>
@@ -364,7 +365,8 @@ class AuditorAuditController extends Controller
 
                     if ($request->is_draft_save == 0) {
                         AuditObjection::where('id', $request->audit_objection_id)->update([
-                            'is_department_draft_save' => 1
+                            'is_department_draft_save' => 1,
+                            'compliance_submit_date' => now()
                         ]);
                     }
 

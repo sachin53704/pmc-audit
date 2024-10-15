@@ -210,23 +210,8 @@
                             </li>
                         @endcan
 
-                        @can('hmm-status.view')
-                            <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('hmmMcaStatus') ? 'active' : '' }}" href="{{ route('hmmMcaStatus') }}" >
-                                    <i class="ri-auction-line"></i>
-                                    <span data-key="t-dashboards">@lang('menu.hmm')</span>
-                                </a>
-                            </li>
-                        @endcan
                         
-                        @if(Auth::user()->hasRole('DY MCA'))
-                        <li class="nav-item">
-                            <a class="nav-link menu-link {{ request()->routeIs('objection.send-objection') ? 'active' : '' }}" href="{{ route('objection.send-objection') }}" >
-                                <i class="ri-auction-line"></i>
-                                <span data-key="t-dashboards">Send HMM</span>
-                            </a>
-                        </li>
-                        @endif
+                        
 
                         @can('department_letter.view')
                             <li class="nav-item">
@@ -245,6 +230,24 @@
                                     <span data-key="t-dashboards">@lang('menu.hmm_question')</span>
                                 </a>
                             </li>
+                        @endcan
+
+                        @can('hmm-status.view')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('hmmMcaStatus') ? 'active' : '' }}" href="{{ route('hmmMcaStatus') }}" >
+                                    <i class="ri-auction-line"></i>
+                                    <span data-key="t-dashboards">@lang('menu.hmm')</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('send-hmm.view')
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('objection.send-objection') ? 'active' : '' }}" href="{{ route('objection.send-objection') }}" >
+                                <i class="ri-auction-line"></i>
+                                <span data-key="t-dashboards">Send HMM</span>
+                            </a>
+                        </li>
                         @endcan
 
 

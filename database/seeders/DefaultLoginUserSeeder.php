@@ -145,7 +145,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // DY MCA Seeder ##
         $dyRole = Role::updateOrCreate(['name' => 'DY MCA']);
-        $dyRole->syncPermissions(['audit_list.approved', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'receipt.pending-list', 'receipt.approve-list', 'receipt.reject-list', 'receipt.approve', 'receipt.reject', 'report.audit-para-summary-report', 'report.final-report', 'report.para-current-status', 'hmm-status.view', 'para-audit.index', 'para-audit.create']);
+        $dyRole->syncPermissions(['audit_list.approved', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'receipt.pending-list', 'receipt.approve-list', 'receipt.reject-list', 'receipt.approve', 'receipt.reject', 'report.audit-para-summary-report', 'report.final-report', 'report.para-current-status', 'hmm-status.view', 'para-audit.index', 'para-audit.create', 'send-hmm.view']);
 
         $user = User::updateOrCreate([
             'email' => 'dymca@gmail.com'

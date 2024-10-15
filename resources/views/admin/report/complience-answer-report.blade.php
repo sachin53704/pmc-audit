@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Complience Answer Report</x-slot>
-    <x-slot name="heading">Complience Answer Report</x-slot>
+    <x-slot name="title">Complience Report</x-slot>
+    <x-slot name="heading">Complience Report</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -18,7 +18,7 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
-                                    <th>Approved Questions</th>
+                                    <th>Approved Objection</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -35,7 +35,7 @@
                                         </td>
                                         <td>{{ $audit->approved }}</td>
                                         <td>
-                                            <a href="javascript::void(0)" data-id="{{ $audit->id }}" class="btn btn-sm btn-primary approveQuestion"  data-bs-toggle="modal" data-bs-target=".questionStatusModel">Approve Question</a>
+                                            <a href="javascript::void(0)" data-id="{{ $audit->id }}" class="btn btn-sm btn-primary approveQuestion"  data-bs-toggle="modal" data-bs-target=".questionStatusModel">Approve Objection</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -51,7 +51,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
-                    <h5 class="modal-title" id="questionStatusModelLabel">Complience Answer Report</h5>
+                    <h5 class="modal-title" id="questionStatusModelLabel">Complience Report</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -62,8 +62,8 @@
                                     <th>Sr no.</th>
                                     <th>Objection No</th>
                                     <th>Auditor No</th>
-                                    <th>Question</th>
-                                    <th>Answer</th>
+                                    <th>Objection</th>
+                                    <th>Compliance</th>
                                 </tr>
                             </thead>
                             <tbody id="responseQuestion">

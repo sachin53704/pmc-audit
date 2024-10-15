@@ -35,7 +35,10 @@ class HmmMcaStatusController extends Controller
                 });
             })
             ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
-                $q->where('status', '>=', 7);
+                $q->whereHas('objections', function ($q) {
+                    $q->where('is_draft_send', 1);
+                })
+                    ->where('department_id', Auth::user()->department_id);
             })
             ->latest()
             ->get();

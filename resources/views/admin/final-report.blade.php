@@ -18,8 +18,8 @@
                                     <th>File Description</th>
                                     <th>Remark</th>
                                     <th>View File</th>
-                                    <th>Approved Questions</th>
-                                    <th>Unapproved Questions</th>
+                                    <th>Compliance Objection</th>
+                                    <th>Unapproved Objection</th>
                                 </tr>
                             </thead>
                             <tbody>
