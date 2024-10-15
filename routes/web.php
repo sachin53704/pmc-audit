@@ -83,9 +83,11 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('final-report', [App\Http\Controllers\Admin\ReportController::class, 'finalReport'])->name('final-report');
     Route::get('para-audit-report', [App\Http\Controllers\Admin\ReportController::class, 'paraAuditReport'])->name('para-audit-report');
     Route::get('complience-answer-report', [App\Http\Controllers\Admin\ReportController::class, 'complienceAnswerReport'])->name('complience-answer-report');
-    // Route::post('report/getQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getResponseQuestion'])->name('report-get-response-question');
-    // Route::post('report/getUnanswerQuestion', [App\Http\Controllers\Admin\ReportController::class, 'getUnanswerQuestion'])->name('report-get-unresponse-question');
-    // Route::get('report/department-program-audit', [App\Http\Controllers\Admin\ReportController::class, 'departmentWiseProgramAudit'])->name('department-program-audit');
+
+    Route::get('send-hmm', [App\Http\Controllers\Admin\MCAAuditController::class, 'sendObjection'])->name('objection.send-objection');
+    Route::get('get-not-send-objection', [App\Http\Controllers\Admin\MCAAuditController::class, 'getNotSendObjection'])->name('objection.get-not-send-objection');
+    Route::post('store-send-objection', [App\Http\Controllers\Admin\MCAAuditController::class, 'storeSendObjection'])->name('objection.store-not-send-objection');
+
 
 
 
@@ -137,14 +139,6 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('payment-receipts/details/{payment_receipt}', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'receiptDetails'])->name('payment-receipts.details');
     Route::get('payment-receipt-info/{payment_receipt}', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'receiptInfo'])->name('payment-receipts.info');
     Route::put('approve-payment-receipts/{payment_receipt}', [App\Http\Controllers\Admin\AccountPaymentReceiptController::class, 'approveReceipts'])->name('approve-payment-receipts');
-
-    // // DY MCA ROUTES
-    // Route::get('dy-mca-receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'] )->name('receipts.info');
-    // Route::put('dy-mca-approve-receipts/{audit}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'] )->name('approve-receipts');
-
-    // // MCA ROUTES
-    // Route::get('mca-receipt-info/{receipt}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'receiptInfo'] )->name('receipts.info');
-    // Route::put('mca-approve-receipts/{audit}', [App\Http\Controllers\Admin\AccountReceiptController::class, 'approveReceipts'] )->name('approve-receipts');
 
 
 

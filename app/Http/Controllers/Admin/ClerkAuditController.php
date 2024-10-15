@@ -22,7 +22,7 @@ class ClerkAuditController extends Controller
         $departments = Department::get();
         $audits = Audit::latest()->get();
 
-        return view('admin.clerk-audits')->with(['audits' => $audits, 'departments' => $departments]);
+        return view('clerk.upload-program-audit')->with(['audits' => $audits, 'departments' => $departments]);
     }
 
 

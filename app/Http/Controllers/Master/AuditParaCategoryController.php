@@ -13,7 +13,7 @@ class AuditParaCategoryController extends Controller
     {
         $auditParaCategory = AuditParaCategory::select('id', 'name', 'is_amount', 'status')->get();
 
-        return view('master.audit-para-category')->with([
+        return view('audit-para-category')->with([
             'auditParaCategory' => $auditParaCategory
         ]);
     }

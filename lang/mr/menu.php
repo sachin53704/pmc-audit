@@ -26,7 +26,7 @@ return [
     'hmm' => 'HMM',
     'department_letter' => 'विभागाचे पत्र',
     'hmm_question' => 'HMM प्रश्न',
-    'answer_question' => 'प्रश्नांची उत्तरे दिली',
+    'answer_question' => 'अनुपालन प्रश्न',
     'draft_review' => 'मसुदा पुनरावलोकन',
     'para_audit' => 'पॅरा ऑडिट',
     'reports' => 'अहवाल',

@@ -22,13 +22,13 @@
                             </div>
 
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="middle_name">Middle Name <span class="text-danger">*</span></label>
+                                <label class="col-form-label" for="middle_name">Middle Name</label>
                                 <input class="form-control" name="middle_name" type="text" placeholder="Enter Middle Name">
                                 <span class="text-danger is-invalid middle_name_err"></span>
                             </div>
 
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="last_name">Last Name <span class="text-danger">*</span></label>
+                                <label class="col-form-label" for="last_name">Last Name</label>
                                 <input class="form-control" name="last_name" type="text" placeholder="Enter Last Name">
                                 <span class="text-danger is-invalid last_name_err"></span>
                             </div>
@@ -166,12 +166,12 @@
                                 <span class="text-danger is-invalid first_name_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="middle_name">Middle Name <span class="text-danger">*</span></label>
+                                <label class="col-form-label" for="middle_name">Middle Name</label>
                                 <input class="form-control" name="middle_name" type="text" placeholder="Enter Middle Name">
                                 <span class="text-danger is-invalid middle_name_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="last_name">Last Name <span class="text-danger">*</span></label>
+                                <label class="col-form-label" for="last_name">Last Name</label>
                                 <input class="form-control" name="last_name" type="text" placeholder="Enter Last Name">
                                 <span class="text-danger is-invalid last_name_err"></span>
                             </div>

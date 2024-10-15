@@ -35,7 +35,7 @@ class DepartmentAuditController extends Controller
     {
         $authUser = Auth::user();
         $audits = Audit::query()
-            ->where('status', '>=', 6)
+            ->where('status', '>=', 7)
             ->where('department_id', $authUser->department_id)
             ->latest()
             ->get();
@@ -52,7 +52,7 @@ class DepartmentAuditController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('admin.compliance-audits')->with([
+        return view('department.compliance-audits')->with([
             'audits' => $audits,
             'departments' => $departments,
             'zones' => $zones,

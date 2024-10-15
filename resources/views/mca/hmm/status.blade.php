@@ -26,10 +26,10 @@
                                         <th>Date</th>
                                         <th>File Description</th>
                                         <th>Remark</th>
-                                        <th>View File</th>
+                                        {{-- <th>View File</th> --}}
                                         {{-- <th>Status</th> --}}
-                                        <th>View Letter</th>
-                                        <th>Letter Description</th>
+                                        {{-- <th>View Letter</th>
+                                        <th>Letter Description</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -41,16 +41,16 @@
                                             <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                             <td>{{ Str::limit($audit->description, '85') }}</td>
                                             <td>{{ Str::limit($audit->remark, '85') }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
-                                            </td>
+                                            </td> --}}
                                             {{-- <td>
                                                 <span class="badge bg-secondary">{{ $audit->status_name }}</span>
                                             </td> --}}
-                                            <td>
+                                            {{-- <td>
                                                 <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                             </td>
-                                            <td>{{ Str::limit($audit->dl_description, '85') }}</td>
+                                            <td>{{ Str::limit($audit->dl_description, '85') }}</td> --}}
                                             <td>
                                                 <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"> View Objection</button>
                                             </td>
@@ -183,7 +183,21 @@
                                     <textarea type="text" name="description" id="description" class="form-control"></textarea>
                                 </div>
                             </div>
-
+                            @if(Auth::user()->hasRole('Department HOD'))
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label for="is_department_hod_forward">Select Status <span class="text-danger">*</span></label>
+                                    <select name="is_department_hod_forward" class="form-select" id="is_department_hod_forward" required>
+                                        <option value="">Select</option>
+                                        <option value="1">Forward To Department</option>
+                                    </select>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="department_hod_remark">Remark</label>
+                                    <textarea name="department_hod_remark" id="department_hod_remark" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            @else
                             <div class="row">
                                 <div class="col-6 mb-3">
                                     <label for="dymca_status">Select Status <span class="text-danger">*</span></label>
@@ -198,6 +212,7 @@
                                     <textarea name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_remark' : 'dymca_remark' }}" id="dymca_remark" class="form-control"></textarea>
                                 </div>
                             </div>
+                            @endif
                         </div>
 
                     </div>
@@ -307,9 +322,12 @@
                     @if(Auth::user()->hasRole('MCA'))
                         $('#addForm #dymca_status').val(data.auditObjection.mca_status)
                         $('#addForm #dymca_remark').val(data.auditObjection.mca_remark)
-                    @else
+                    @elseif(Auth::user()->hasRole('DY MCA'))
                         $('#addForm #dymca_status').val(data.auditObjection.dymca_status)
                         $('#addForm #dymca_remark').val(data.auditObjection.dymca_remark)
+                    @else
+                        $('#addForm #is_department_hod_forward').val(data.auditObjection.is_department_hod_forward)
+                        $('#addForm #department_hod_remark').val(data.auditObjection.department_hod_remark)
                     @endif
 
                     $('.viewObjectionDetails').removeClass('d-none')

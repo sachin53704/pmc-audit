@@ -34,6 +34,9 @@ class HmmMcaStatusController extends Controller
                         });
                 });
             })
+            ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                $q->where('status', '>=', 7);
+            })
             ->latest()
             ->get();
         // return $audits;
@@ -51,7 +54,7 @@ class HmmMcaStatusController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('hmm.status')->with([
+        return view('mca.hmm.status')->with([
             'audits' => $audits,
             'zones' => $zones,
             'departments' => $departments,
@@ -82,7 +85,7 @@ class HmmMcaStatusController extends Controller
                 }
 
                 return response()->json(['success' => 'Objection status updated  successful']);
-            } else {
+            } elseif (Auth::user()->hasRole('DY MCA')) {
                 AuditObjection::where('id', $request->audit_objection_id)
                     ->update([
                         'dymca_status' => $request->dymca_status,
@@ -90,6 +93,21 @@ class HmmMcaStatusController extends Controller
                     ]);
 
                 return response()->json(['success' => 'Objection status updated  successful']);
+            } else {
+                AuditObjection::where('id', $request->audit_objection_id)
+                    ->update([
+                        'is_department_hod_forward' => $request->is_department_hod_forward,
+                        'department_hod_remark' => $request->department_hod_remark,
+                    ]);
+
+                $audit = Audit::find($request->audit_id);
+
+                if ($audit->status <= 7) {
+                    $audit->status = 7;
+                    $audit->save();
+                }
+
+                return response()->json(['success' => 'Objection forward ro department successful']);
             }
         }
     }
@@ -101,6 +119,9 @@ class HmmMcaStatusController extends Controller
                 ->where('audit_id', $request->audit_id)
                 ->when(Auth::user()->hasRole('MCA'), function ($q) {
                     $q->where('dymca_status', 1);
+                })
+                ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                    $q->where('is_objection_send', 1);
                 })
                 ->get();
 

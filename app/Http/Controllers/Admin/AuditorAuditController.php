@@ -33,7 +33,7 @@ class AuditorAuditController extends Controller
             ->latest()
             ->get();
 
-        return view('admin.assigned-audit-list')->with(['audits' => $audits]);
+        return view('auditor.assigned-audit-list')->with(['audits' => $audits]);
     }
 
 
@@ -97,7 +97,7 @@ class AuditorAuditController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('admin.create-objection')->with([
+        return view('auditor.create-objection')->with([
             'audits' => $audits,
             'zones' => $zones,
             'departments' => $departments,
@@ -113,9 +113,11 @@ class AuditorAuditController extends Controller
         if ($request->ajax()) {
             $auditObjections = AuditObjection::with(['audit', 'auditType', 'zone', 'severity'])
                 ->where('audit_id', $request->audit_id)
-                // ->when(Auth::user()->hasRole('Department'), function ($q) {
-                //     $q->where('mca_action_status', 2);
-                // })
+                ->where('is_objection_send', 1)
+
+                ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                    $q->where('is_department_draft_save', 1);
+                })
                 ->when(Auth::user()->hasRole('Auditor'), function ($q) {
                     $q->where('user_id', Auth::user()->id);
                 })
@@ -140,7 +142,9 @@ class AuditorAuditController extends Controller
                     <th>MCA Status</th>
                     <th>MCA Remark</th>';
                 }
-
+                if (Auth::user()->hasRole('Auditor')) {
+                    $objectionHtml .= '<th>Is Draft</th>';
+                }
                 $objectionHtml .= '<th>Action</th>
                             </tr>
                         </thead>
@@ -161,6 +165,9 @@ class AuditorAuditController extends Controller
                     <th>' . (($auditObjection->dymca_remark) ? $auditObjection->dymca_remark : '-') . '</th>
                     <th>' . (($auditObjection->mca_status == 1) ? '<span class="badge bg-success">Approve</span>' : (($auditObjection->mca_status == 2) ? '<span class="badge bg-warning">Forward To Auditor</span>' : (($auditObjection->mca_status == 3) ? '<span class="badge bg-primary">Forward to Department</span>' : '-'))) . '</th>
                     <th>' . (($auditObjection->mca_remark) ? $auditObjection->mca_remark : '-') . '</th>';
+                }
+                if (Auth::user()->hasRole('Auditor')) {
+                    $objectionHtml .= ($auditObjection->is_draft_save) ? '<td><span class="badge bg-success">Yes</span></td>' : '<td><span class="badge bg-danger">No</span></td>';
                 }
                 $objectionHtml .= '<td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="' . $auditObjection?->id . '">View Objection</button></td>
                             </tr>';
@@ -229,7 +236,9 @@ class AuditorAuditController extends Controller
             ];
 
             if ($request->isDrafSave == 0) {
-                $arrData = array_merge($arrData, ['description' => $request->description, 'is_draft_send' => 1]);
+                $arrData = array_merge($arrData, ['description' => $request->description, 'is_draft_save' => 0, 'is_draft_send' => 1]);
+            } else {
+                $arrData = array_merge($arrData, ['is_draft_save' => 1]);
             }
 
             if (isset($request->audit_objection_id) && $request->audit_objection_id != "" && $request->audit_objection_id) {
@@ -266,13 +275,13 @@ class AuditorAuditController extends Controller
                 if (Auth::user()->hasRole('MCA')) {
                     $roleStatus = "mca_status";
                     $roleRemark = "mca_remark";
-                    $prevStatus = 11;
-                    $currentStatus = 12;
+                    $prevStatus = 12;
+                    $currentStatus = 13;
                 } else {
                     $roleStatus = "dymca_status";
                     $roleRemark = "dymca_remark";
-                    $prevStatus = 10;
-                    $currentStatus = 11;
+                    $prevStatus = 11;
+                    $currentStatus = 12;
                 }
                 try {
                     if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
@@ -283,12 +292,13 @@ class AuditorAuditController extends Controller
                                     'department_mca_status' => $request->department_mca_status[$i],
                                     'department_mca_remark' => $request->department_mca_remark[$i]
                                 ]);
+
                                 if ($request->department_mca_status_id[$i]) {
-                                    $prevStatus = 8;
-                                    $currentStatus = 9;
+                                    $prevStatus = 9;
+                                    $currentStatus = 10;
                                 } else {
-                                    $prevStatus = 11;
-                                    $currentStatus = 12;
+                                    $prevStatus = 12;
+                                    $currentStatus = 13;
                                 }
                             } else {
                                 AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
@@ -313,21 +323,36 @@ class AuditorAuditController extends Controller
                     return response()->json(['error' => 'Something went wrong!']);
                 }
             } else if (Auth::user()->hasRole('Department')) {
+                // dd($request->all());
                 // AuditDepartmentAnswer
                 DB::beginTransaction();
                 try {
 
-                    if (isset($request->remark) && is_array($request->remark) && count($request->remark) > 0) {
-                        for ($i = 0; $i < count($request->remark); $i++) {
-                            $file = null;
-                            if ($request->hasFile('files') && isset($request->file('files')[$i])) {
-                                $file = $request->file('files')[$i]->store('department-answer-file');
+                    if (isset($request->audit_department_answer_id) && is_array($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
+                        for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
+
+                            if (isset($request->audit_department_answer_id[$i]) && $request->audit_department_answer_id[$i] != "") {
+
+
+                                $auditDepartmentAnswer = AuditDepartmentAnswer::find($request->audit_department_answer_id[$i]);
+
+                                $auditDepartmentAnswer->department_hod_status = null;
+                                $auditDepartmentAnswer->auditor_status = null;
+                                $auditDepartmentAnswer->dymca_status = null;
+                                $auditDepartmentAnswer->mca_status = null;
+                                $auditDepartmentAnswer->department_mca_status = null;
+                            } else {
+                                $auditDepartmentAnswer = new AuditDepartmentAnswer;
                             }
-                            $auditDepartmentAnswer = new AuditDepartmentAnswer;
+                            // \Log::info('f');
+
                             $auditDepartmentAnswer->audit_objection_id = $request->audit_objection_id;
                             $auditDepartmentAnswer->audit_id = $request->audit_id;
                             $auditDepartmentAnswer->remark = $request->remark[$i];
-                            $auditDepartmentAnswer->file = $file;
+                            if ($request->hasFile('files') && isset($request->file('files')[$i])) {
+                                $file = $request->file('files')[$i]->store('department-answer-file');
+                                $auditDepartmentAnswer->file = $file;
+                            }
                             $auditDepartmentAnswer->save();
                         }
                     }
@@ -335,12 +360,19 @@ class AuditorAuditController extends Controller
                     $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
                     Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > 6) ? $auditStatus : 7
+                        'status' => ($auditStatus > 7) ? $auditStatus : 8
                     ]);
+
+                    if ($request->is_draft_save == 0) {
+                        AuditObjection::where('id', $request->audit_objection_id)->update([
+                            'is_department_draft_save' => 1
+                        ]);
+                    }
 
                     DB::commit();
                     return response()->json(['success' => 'Document uploaded successfully']);
                 } catch (\Exception $e) {
+                    \Log::info($e);
                     DB::rollback();
                     response()->json(['error' => 'Something went wrong!']);
                 }
@@ -360,7 +392,7 @@ class AuditorAuditController extends Controller
                     $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
                     Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > 7) ? $auditStatus : 8
+                        'status' => ($auditStatus > 8) ? $auditStatus : 9
                     ]);
 
                     DB::commit();
@@ -385,7 +417,7 @@ class AuditorAuditController extends Controller
                     $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
                     Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > 9) ? $auditStatus : 10
+                        'status' => ($auditStatus > 10) ? $auditStatus : 11
                     ]);
 
                     DB::commit();

@@ -20,7 +20,7 @@ class FiscalYearController extends Controller
     {
         $fiscal_years = FiscalYear::latest()->get();
 
-        return view('admin.masters.fiscal_years')->with(['fiscal_years'=> $fiscal_years]);
+        return view('master.fiscal_years')->with(['fiscal_years' => $fiscal_years]);
     }
 
     /**
@@ -36,17 +36,14 @@ class FiscalYearController extends Controller
      */
     public function store(StoreFiscalYearRequest $request)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $input = $request->validated();
-            FiscalYear::create( Arr::only( $input, FiscalYear::getFillables() ) );
+            FiscalYear::create(Arr::only($input, FiscalYear::getFillables()));
             DB::commit();
 
-            return response()->json(['success'=> 'Financial Year created successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Financial Year created successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'creating', 'Financial Year');
         }
     }
@@ -64,15 +61,12 @@ class FiscalYearController extends Controller
      */
     public function edit(FiscalYear $fiscal_year)
     {
-        if ($fiscal_year)
-        {
+        if ($fiscal_year) {
             $response = [
                 'result' => 1,
                 'fiscal_year' => $fiscal_year,
             ];
-        }
-        else
-        {
+        } else {
             $response = ['result' => 0];
         }
         return $response;
@@ -83,17 +77,14 @@ class FiscalYearController extends Controller
      */
     public function update(UpdateFiscalYearRequest $request, FiscalYear $fiscal_year)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $input = $request->validated();
-            $fiscal_year->update( Arr::only( $input, FiscalYear::getFillables() ) );
+            $fiscal_year->update(Arr::only($input, FiscalYear::getFillables()));
             DB::commit();
 
-            return response()->json(['success'=> 'Financial Year updated successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Financial Year updated successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'updating', 'Financial Year');
         }
     }
@@ -103,16 +94,13 @@ class FiscalYearController extends Controller
      */
     public function destroy(FiscalYear $fiscal_year)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $fiscal_year->delete();
             DB::commit();
 
-            return response()->json(['success'=> 'Financial Year deleted successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Financial Year deleted successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'deleting', 'Financial Year');
         }
     }

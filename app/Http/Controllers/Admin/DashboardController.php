@@ -26,7 +26,7 @@ class DashboardController extends Controller
             $approvedAuditCount = Audit::where(['mca_status' => 2])->count();
             $rejectedAuditCount = Audit::where('mca_status', 3)->orWhere('dymca_status', 3)->count();
 
-            return view('admin.dashboard.clerk')->with([
+            return view('dashboard.clerk')->with([
                 'totalAuditCount' => $totalAuditCount,
                 'approvedAuditCount' => $approvedAuditCount,
                 'rejectedAuditCount' => $rejectedAuditCount
@@ -72,7 +72,7 @@ class DashboardController extends Controller
             })->count();
 
 
-            return view('admin.dashboard.mca')->with([
+            return view('dashboard.mca')->with([
                 'pendingAuditCount' => $pendingAuditCount,
                 'approvedAuditCount' => $approvedAuditCount,
                 'rejectedAuditCount' => $rejectedAuditCount,
@@ -104,7 +104,7 @@ class DashboardController extends Controller
                 $rejectedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 2)->distinct('payment_receipt_id')->count();
             }
 
-            return view('admin.dashboard.department')->with([
+            return view('dashboard.department')->with([
                 'user' => $user,
                 'totalDepartmentLetters' => $totalDepartmentLetters,
                 'pendingReceipts' => $pendingReceipts,
@@ -123,7 +123,7 @@ class DashboardController extends Controller
                 ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
                 ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))->count();
 
-            return view('admin.dashboard.auditor')->with([
+            return view('dashboard.auditor')->with([
                 'totalAssignedAudits' => $totalAssignedAudits,
                 'totalHmmList' => $totalHmmList,
                 'totalAnsweredQuestions' => $totalAnsweredQuestions,
@@ -137,7 +137,7 @@ class DashboardController extends Controller
             $approvedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 1)->distinct('payment_receipt_id')->count();
             $rejectedPaymentReceipts = SubPaymentReceipt::where('dy_auditor_status', 2)->distinct('payment_receipt_id')->count();
 
-            return view('admin.dashboard.dy-auditor')->with([
+            return view('dashboard.dy-auditor')->with([
                 'pendingReceipts' => $pendingReceipts,
                 'approvedReceipts' => $approvedReceipts,
                 'rejectedReceipts' => $rejectedReceipts,

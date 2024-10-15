@@ -209,8 +209,8 @@
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="sub_unit">Sub Units <span class="text-danger">*</span></label>
-                                    <input type="text" name="sub_unit" disabled id="sub_unit" class="form-control">
+                                    <label for="sub_unit">No of Objection <span class="text-danger">*</span></label>
+                                    <input type="number" name="sub_unit" disabled id="sub_unit" class="form-control">
                                     <span class="text-danger is-invalid sub_unit_err"></span>
                                 </div>
                             </div>

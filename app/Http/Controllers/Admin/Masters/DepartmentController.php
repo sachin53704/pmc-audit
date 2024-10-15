@@ -20,7 +20,7 @@ class DepartmentController extends Controller
     {
         $departments = Department::latest()->get();
 
-        return view('admin.masters.departments')->with(['departments'=> $departments]);
+        return view('master.departments')->with(['departments' => $departments]);
     }
 
     /**
@@ -36,17 +36,14 @@ class DepartmentController extends Controller
      */
     public function store(StoreDepartmentRequest $request)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $input = $request->validated();
-            Department::create( Arr::only( $input, Department::getFillables() ) );
+            Department::create(Arr::only($input, Department::getFillables()));
             DB::commit();
 
-            return response()->json(['success'=> 'Department created successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Department created successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'creating', 'Department');
         }
     }
@@ -64,15 +61,12 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        if ($department)
-        {
+        if ($department) {
             $response = [
                 'result' => 1,
                 'department' => $department,
             ];
-        }
-        else
-        {
+        } else {
             $response = ['result' => 0];
         }
         return $response;
@@ -83,17 +77,14 @@ class DepartmentController extends Controller
      */
     public function update(UpdateDepartmentRequest $request, Department $department)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $input = $request->validated();
-            $department->update( Arr::only( $input, Department::getFillables() ) );
+            $department->update(Arr::only($input, Department::getFillables()));
             DB::commit();
 
-            return response()->json(['success'=> 'Department updated successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Department updated successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'updating', 'Department');
         }
     }
@@ -103,16 +94,13 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        try
-        {
+        try {
             DB::beginTransaction();
             $department->delete();
             DB::commit();
 
-            return response()->json(['success'=> 'Department deleted successfully!']);
-        }
-        catch(\Exception $e)
-        {
+            return response()->json(['success' => 'Department deleted successfully!']);
+        } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'deleting', 'Department');
         }
     }

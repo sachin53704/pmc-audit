@@ -21,7 +21,7 @@ class DiaryController extends Controller
 
         $workingDays = WorkingDay::select('id', 'name', 'status')->get();
 
-        return view('admin.diary.index')->with([
+        return view('diary.index')->with([
             'diaries' => $diaries,
             'departments' => $departments,
             'workingDays' => $workingDays

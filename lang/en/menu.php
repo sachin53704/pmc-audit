@@ -26,7 +26,7 @@ return [
     'hmm' => 'HMM',
     'department_letter' => 'Department Letter',
     'hmm_question' => 'HMM Questions',
-    'answer_question' => 'Answered Questions',
+    'answer_question' => 'Compliance Questions',
     'draft_review' => 'Draft Review',
     'para_audit' => 'Para Audit',
     'reports' => 'Reports',
