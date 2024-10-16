@@ -291,15 +291,11 @@ class AuditorAuditController extends Controller
                         $status = false;
                         for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
 
-                            if (Auth::user()->hasRole('MCA') && $request->department_mca_status_id[$i]) {
+                            if (Auth::user()->hasRole('MCA') && $request->department_mca_status_id[$i] && isset($request->department_mca_status)) {
                                 AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
                                     'department_mca_status' => $request->department_mca_status[$i],
                                     'department_mca_remark' => $request->department_mca_remark[$i]
                                 ]);
-
-                                if ($request->department_mca_status[$i] == "1") {
-                                    $status = true;
-                                }
 
                                 if ($request->department_mca_status_id[$i]) {
                                     $prevStatus = 9;
@@ -313,6 +309,14 @@ class AuditorAuditController extends Controller
                                     $roleStatus => $request->$roleStatus[$i],
                                     $roleRemark => $request->$roleRemark[$i]
                                 ]);
+                            }
+
+                            if (isset($request->department_mca_status) && $request->department_mca_status[$i] == "1") {
+                                $status = true;
+                            }
+
+                            if (isset($request->mca_status) && $request->mca_status[$i] == "1") {
+                                $status = true;
                             }
                         }
 

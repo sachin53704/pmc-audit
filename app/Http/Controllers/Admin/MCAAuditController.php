@@ -307,8 +307,8 @@ class MCAAuditController extends Controller
                             </select>
                         </td>
                         <td>
-                            <input ' . (($auditDepartmentAnswer->dymca_status) ? 'disabled' : '') . ' type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '">
-                            <textarea name="auditor_remark[]" ' . $auditorDisabled . ' class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea>
+                            <input type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '">
+                            <textarea ' . (($auditDepartmentAnswer->dymca_status) ? 'disabled' : '') . ' name="auditor_remark[]" ' . $auditorDisabled . ' class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea>
                         </td>
                         <td>
                             <select ' . (($auditDepartmentAnswer->mca_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->auditor_status == "1") ? "" : 'disabled') . ' class="form-select" ' . $dymcaDisabled . ' name="dymca_status[]">
