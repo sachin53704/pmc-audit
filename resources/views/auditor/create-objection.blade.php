@@ -291,13 +291,13 @@
                     // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                     editorInstance.setData(data.auditObjection.draft_description);
 
-                    // if((data.auditObjection.dymca_status != "1")){
-                    //     $('.hideFormSubmit').removeClass('d-none')
-                    // }else if((data.auditObjection.mca_status == "2")){
-                    //     $('.hideFormSubmit').removeClass('d-none')
-                    // }else{
-                    //     $('.hideFormSubmit').addClass('d-none')
-                    // }
+                    if((data.auditObjection.dymca_status != "1")){
+                        $('.hideFormSubmit').removeClass('d-none')
+                    }else if((data.auditObjection.mca_status == "2")){
+                        $('.hideFormSubmit').removeClass('d-none')
+                    }else{
+                        $('.hideFormSubmit').addClass('d-none')
+                    }
                 },
                 error: function(error, jqXHR, textStatus, errorThrown) {
                     swal("Error!", "Some thing went wrong", "error");
