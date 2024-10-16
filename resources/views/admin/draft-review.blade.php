@@ -68,7 +68,7 @@
                                         <td>
                                             <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                         </td>
-                                        <td>{{ Str::limit($audit->dl_description, '85') }}</td>
+                                        <td><span style="cursor: pointer" title="{{ $audit->dl_description }}">{{ Str::limit($audit->dl_description, '30') }}</span></td>
                                         <td>
                                             <button class="btn btn-secondary view-element px-2 py-1" title="View compliance objection" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}

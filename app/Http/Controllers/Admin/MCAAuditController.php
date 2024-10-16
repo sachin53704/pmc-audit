@@ -276,53 +276,48 @@ class MCAAuditController extends Controller
 
                         
                         <td>
-                            <select class="form-select" ' . $departmentHodDisabled . ' name="department_hod_status[]">
+                            <select class="form-select" ' . $departmentHodDisabled . ' name="department_hod_status[]" ' . (($auditDepartmentAnswer->department_mca_status) ? 'disabled' : '') . '>
                                 <option value="">Select</option>
                                 <option ' . (($auditDepartmentAnswer->department_hod_status == "1") ? "selected" : "") . ' value="1">Approve</option>
                                 <option ' . (($auditDepartmentAnswer->department_hod_status == "0") ? "selected" : "") . ' value="0">Reject</option>
                             </select>
                         </td>
                         <td> 
-                            <textarea name="department_hod_remark[]" ' . $departmentHodDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_hod_remark . '</textarea>
+                            <textarea ' . (($auditDepartmentAnswer->department_mca_status) ? 'disabled' : '') . ' name="department_hod_remark[]" ' . $departmentHodDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_hod_remark . '</textarea>
                         </td>
-
-                        
-
-
-
 
                         <td>
                             <input type="hidden" name="department_mca_status_id[]" value="' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "1" : '0') . '" />
                             
-                            <select ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' class="form-select" ' . $mcaDisabled . ' name="department_mca_status[]">
+                            <select ' . (($auditDepartmentAnswer->auditor_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' class="form-select" ' . $mcaDisabled . ' name="department_mca_status[]">
                                 <option value="">Select</option>
                                 <option ' . (($auditDepartmentAnswer->department_mca_status == "1") ? "selected" : "") . ' value="1">Forward To Auditor</option>
                                 <option ' . (($auditDepartmentAnswer->department_mca_status == "0") ? "selected" : "") . ' value="0">Reject</option>
                             </select>
                         </td>
                         <td> 
-                            <textarea ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' name="department_mca_remark[]" ' . $mcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_mca_remark . '</textarea>
+                            <textarea ' . (($auditDepartmentAnswer->auditor_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' name="department_mca_remark[]" ' . $mcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_mca_remark . '</textarea>
                         </td>
 
                         <td>
-                            <select class="form-select" ' . $auditorDisabled . ' name="auditor_status[]">
+                            <select ' . (($auditDepartmentAnswer->dymca_status) ? 'disabled' : '') . ' class="form-select" ' . $auditorDisabled . ' name="auditor_status[]">
                                 <option value="">Select</option>
                                 <option ' . (($auditDepartmentAnswer->auditor_status == "1") ? "selected" : "") . ' value="1">Proposal to approve/delete</option>
                                 <option ' . (($auditDepartmentAnswer->auditor_status == "0") ? "selected" : "") . ' value="0">Proposal to convert para</option>
                             </select>
                         </td>
                         <td>
-                            <input type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '">
+                            <input ' . (($auditDepartmentAnswer->dymca_status) ? 'disabled' : '') . ' type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '">
                             <textarea name="auditor_remark[]" ' . $auditorDisabled . ' class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea>
                         </td>
                         <td>
-                            <select ' . (($auditDepartmentAnswer->auditor_status == "1") ? "" : 'disabled') . ' class="form-select" ' . $dymcaDisabled . ' name="dymca_status[]">
+                            <select ' . (($auditDepartmentAnswer->mca_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->auditor_status == "1") ? "" : 'disabled') . ' class="form-select" ' . $dymcaDisabled . ' name="dymca_status[]">
                                 <option value="">Select</option>
                                 <option ' . (($auditDepartmentAnswer->dymca_status == "1") ? "selected" : "") . ' value="1">Approve</option>
                             </select>
                         </td>
                         <td>
-                            <textarea ' . (($auditDepartmentAnswer->auditor_status == "1") ? "" : 'disabled') . ' name="dymca_remark[]" ' . $dymcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->dymca_remark . '</textarea>
+                            <textarea ' . (($auditDepartmentAnswer->mca_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->auditor_status == "1") ? "" : 'disabled') . ' name="dymca_remark[]" ' . $dymcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->dymca_remark . '</textarea>
                         </td>
                         <td>
                             <select ' . (($auditDepartmentAnswer->dymca_status == "1") ? "" : 'disabled') . ' class="form-select" ' . $mcaDisabled . ' name="mca_status[]">

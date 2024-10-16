@@ -360,7 +360,7 @@ class AuditorAuditController extends Controller
                 DB::beginTransaction();
                 try {
 
-                    if (isset($request->audit_department_answer_id) && is_array($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
+                    if (isset($request->audit_department_answer_id) && isset($request->remark) && is_array($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
                         for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
 
                             if (isset($request->audit_department_answer_id[$i]) && $request->audit_department_answer_id[$i] != "") {
@@ -412,7 +412,7 @@ class AuditorAuditController extends Controller
                 DB::beginTransaction();
                 try {
                     $status = false;
-                    if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
+                    if (isset($request->audit_department_answer_id) && isset($request->department_hod_status) && isset($request->department_hod_remark) && count($request->audit_department_answer_id) > 0) {
                         for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
 
                             AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
@@ -455,6 +455,7 @@ class AuditorAuditController extends Controller
                         // end of send mail code
                     }
 
+
                     DB::commit();
                     return response()->json(['success' => 'Answer updated successfully']);
                 } catch (\Exception $e) {
@@ -464,7 +465,7 @@ class AuditorAuditController extends Controller
             } else if (Auth::user()->hasRole('Auditor')) {
                 DB::beginTransaction();
                 try {
-                    if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
+                    if (isset($request->audit_department_answer_id) && isset($request->auditor_status) && isset($request->auditor_remark) && count($request->audit_department_answer_id) > 0) {
                         for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
 
                             AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
