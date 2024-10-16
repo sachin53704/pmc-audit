@@ -426,13 +426,14 @@ class AuditorAuditController extends Controller
                         }
                     }
 
-                    $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
                     if ($status) {
+                        $auditStatus = Audit::where('id', $request->audit_id)->value('status');
+
                         $audit = Audit::where('id', $request->audit_id)->update([
                             'status' => ($auditStatus > 8) ? $auditStatus : 9
                         ]);
-
+                        $audit = Audit::find($request->audit_id);
                         // send mail code
                         $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
 
