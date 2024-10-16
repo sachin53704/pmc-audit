@@ -33,7 +33,7 @@ class ParaAuditController extends Controller
                         ->where('dymca_status', 1);
                 });
             })
-            ->where('status', '>=', 12)
+            ->where('status', '>=', 13)
             ->with(['paraAudit'])
             ->latest()
             ->get();
