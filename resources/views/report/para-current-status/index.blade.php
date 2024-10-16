@@ -50,7 +50,6 @@
                                         <th>Subject</th>
                                         <th>HMM No.</th>
                                         <th>Auditor No.</th>
-                                        <th>Para No.</th>
                                         <th>Remark</th>
                                     </tr>
                                 </thead>
@@ -62,7 +61,6 @@
                                         <td>{{ $report->subject }}</td>
                                         <td>{{ $report->objection_no }}</td>
                                         <td>{{ $report?->user?->auditor_no }}</td>
-                                        <td>{{ $report?->audit->audit_no }}</td>
                                         <td>
                                             @php $count = 1; @endphp
                                             @foreach($report->auditDepartmentAnswers as $auditAnswer)

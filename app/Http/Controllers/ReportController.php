@@ -12,13 +12,13 @@ class ReportController extends Controller
 {
     public function getAuditParaSummaryReport(Request $request)
     {
-        $departments = Department::select('id', 'name')->get();
+        $departments = Department::select('id', 'name')->where('is_audit', 0)->get();
 
         $reports = Department::when(isset($request->department) && $request->department != "", function ($q) use ($request) {
             $q->where('id', $request->department);
         })->withCount([
             'auditObjection as approved_para' => fn($q) => $q->whereHas('auditDepartmentAnswers', function ($q) {
-                $q->where('mca_status', '=', 1);
+                $q->where('mca_status', 1);
             })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
@@ -96,9 +96,9 @@ class ReportController extends Controller
 
     public function paraCurrentStatusReport(Request $request)
     {
-        $departments = Department::select('id', 'name')->get();
+        $departments = Department::select('id', 'name')->where('is_audit', 0)->get();
 
-        $reports = AuditObjection::with(['department', 'user', 'audit', 'auditDepartmentAnswers' => function ($q) {
+        $reports = AuditObjection::with(['department', 'user', 'auditDepartmentAnswers' => function ($q) {
             return $q->where('mca_status', 1);
         }])->orderBy('department_id')
             ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
