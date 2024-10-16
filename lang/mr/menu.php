@@ -40,5 +40,6 @@ return [
     'rejected_receipt' => 'नाकारलेल्या पावत्या',
     'pending_payment_receipt' => 'प्रलंबित पेमेंट पावत्या',
     'approve_payment_receipt' => 'मंजूर पेमेंट पावत्या',
-    'rejected_payment_receipt' => 'नाकारलेल्या पेमेंट पावत्या'
+    'rejected_payment_receipt' => 'नाकारलेल्या पेमेंट पावत्या',
+    'send_hmm' => 'HMM पाठवा'
 ];

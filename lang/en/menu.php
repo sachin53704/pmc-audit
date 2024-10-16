@@ -40,5 +40,6 @@ return [
     'rejected_receipt' => 'Rejected Receipts',
     'pending_payment_receipt' => 'Pending Payment Receipts',
     'approve_payment_receipt' => 'Approved Payment Receipts',
-    'rejected_payment_receipt' => 'Rejected Payment Receipts'
+    'rejected_payment_receipt' => 'Rejected Payment Receipts',
+    'send_hmm' => 'Send HMM'
 ];

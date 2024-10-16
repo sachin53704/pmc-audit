@@ -245,7 +245,7 @@
                         <li class="nav-item">
                             <a class="nav-link menu-link {{ request()->routeIs('objection.send-objection') ? 'active' : '' }}" href="{{ route('objection.send-objection') }}" >
                                 <i class="ri-auction-line"></i>
-                                <span data-key="t-dashboards">Send HMM</span>
+                                <span data-key="t-dashboards">@lang('menu.send_hmm')</span>
                             </a>
                         </li>
                         @endcan

@@ -69,6 +69,11 @@ class User extends Authenticatable
         return $this->hasMany(Diary::class, 'user_id', 'id');
     }
 
+    public function userAssignAudit()
+    {
+        return $this->hasMany(UserAssignedAudit::class, 'user_id', 'id');
+    }
+
 
     // public static function booted()
     // {

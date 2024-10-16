@@ -82,7 +82,9 @@
     </button>
 
 
-
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
     <div id="preloader">
         <div id="status">
             <div class="spinner-border text-primary avatar-sm" role="status">
@@ -94,7 +96,7 @@
 
 
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('admin/js/jquery.min.js') }}" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('admin/js/jquery.min.js') }}"></script>
     <script src="{{ asset('admin/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('admin/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('admin/libs/node-waves/waves.min.js') }}"></script>

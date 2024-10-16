@@ -20,6 +20,8 @@ use App\Models\AuditParaCategory;
 use App\Models\AuditDepartmentAnswer;
 use App\Http\Requests\AddObjectionRequest;
 use App\Models\AuditObjectionMcaStatus;
+use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class AuditorAuditController extends Controller
 {
@@ -286,6 +288,7 @@ class AuditorAuditController extends Controller
                 }
                 try {
                     if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
+                        $status = false;
                         for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
 
                             if (Auth::user()->hasRole('MCA') && $request->department_mca_status_id[$i]) {
@@ -293,6 +296,10 @@ class AuditorAuditController extends Controller
                                     'department_mca_status' => $request->department_mca_status[$i],
                                     'department_mca_remark' => $request->department_mca_remark[$i]
                                 ]);
+
+                                if ($request->department_mca_status[$i] == "1") {
+                                    $status = true;
+                                }
 
                                 if ($request->department_mca_status_id[$i]) {
                                     $prevStatus = 9;
@@ -307,6 +314,30 @@ class AuditorAuditController extends Controller
                                     $roleRemark => $request->$roleRemark[$i]
                                 ]);
                             }
+                        }
+
+                        $audit = Audit::find($request->audit_department_answer_id[0]);
+
+                        if ($audit && $status) {
+                            // send mail code
+                            $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                            $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                            $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                                $q->where('audit_id', $request->audit_id);
+                            })->pluck('email')->toArray();
+                            $mca = User::whereHas('roles', function ($q) {
+                                $q->whereIn('name', ['MCA', 'DY MCA']);
+                            })->pluck('email')->toArray();
+
+                            $receiver_list = array_merge($userdepartment, $auditor, $mca);
+
+                            Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                                $message->from('from@example.com', 'Your Name');
+                                $message->to($receiver_list);
+                                $message->subject('Hello');
+                            });
+                            // end of send mail code
                         }
                     }
 
@@ -380,6 +411,7 @@ class AuditorAuditController extends Controller
             } else if (Auth::user()->hasRole('Department HOD')) {
                 DB::beginTransaction();
                 try {
+                    $status = false;
                     if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
                         for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
 
@@ -387,14 +419,40 @@ class AuditorAuditController extends Controller
                                 'department_hod_status' => $request->department_hod_status[$i],
                                 'department_hod_remark' => $request->department_hod_remark[$i]
                             ]);
+
+                            if ($request->department_hod_status[$i] == "1") {
+                                $status = true;
+                            }
                         }
                     }
 
                     $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
-                    Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > 8) ? $auditStatus : 9
-                    ]);
+                    if ($status) {
+                        $audit = Audit::where('id', $request->audit_id)->update([
+                            'status' => ($auditStatus > 8) ? $auditStatus : 9
+                        ]);
+
+                        // send mail code
+                        $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                        $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                        $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                            $q->where('audit_id', $request->audit_id);
+                        })->pluck('email')->toArray();
+                        $mca = User::whereHas('roles', function ($q) {
+                            $q->whereIn('name', ['MCA', 'DY MCA']);
+                        })->pluck('email')->toArray();
+
+                        $receiver_list = array_merge($userdepartment, $auditor, $mca);
+
+                        Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                            $message->from('from@example.com', 'Your Name');
+                            $message->to($receiver_list);
+                            $message->subject('Hello');
+                        });
+                        // end of send mail code
+                    }
 
                     DB::commit();
                     return response()->json(['success' => 'Answer updated successfully']);

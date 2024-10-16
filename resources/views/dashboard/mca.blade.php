@@ -23,7 +23,7 @@
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $pendingAuditCount }}</h4>
-                                    <a href="#" class="text-decoration-underline"></a>
+                                    <a href="{{ route('audit-list.status', ['status' => 'pending']) }}" class="text-decoration-underline">View</a>
                                 </div>
                                 <div class="avatar-sm flex-shrink-0">
                                     <span class="avatar-title bg-primary-subtle rounded fs-3">

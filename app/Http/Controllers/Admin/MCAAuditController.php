@@ -19,6 +19,7 @@ use App\Models\FiscalYear;
 use App\Models\Zone;
 use App\Models\Department;
 use App\Models\AuditDepartmentAnswer;
+use Illuminate\Support\Facades\Mail;
 
 class MCAAuditController extends Controller
 {
@@ -680,6 +681,27 @@ class MCAAuditController extends Controller
                         $audit->status = 7;
                         $audit->save();
                     }
+
+                    // send mail code
+                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                    $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                        $q->where('audit_id', $request->audit_id);
+                    })->pluck('email')->toArray();
+                    $mca = User::whereHas('roles', function ($q) {
+                        $q->whereIn('name', ['MCA', 'DY MCA']);
+                    })->pluck('email')->toArray();
+
+                    $receiver_list = array_merge($userdepartment, $auditor, $mca);
+
+                    Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                        $message->from('from@example.com', 'Your Name');
+                        $message->to($receiver_list);
+                        $message->subject('Hello');
+                    });
+                    // end of send mail code
+
                     DB::commit();
                     return response()->json(['success' => 'Objection send successful']);
                 } catch (\Exception $e) {
