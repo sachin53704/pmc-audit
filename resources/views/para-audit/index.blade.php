@@ -50,7 +50,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if(($audit->paraAudit && ($audit->paraAudit?->mca_status == 1 || $audit->paraAudit?->dymca_status == 1)) && Auth::user()->hasRole('Auditor'))
+                                                @if(($audit->paraAudit && ($audit->paraAudit?->mca_status == 1 && $audit->paraAudit?->dymca_status == 1)) && Auth::user()->hasRole('Auditor'))
                                                 -
                                                 @else
                                                 @if($audit->paraAudit)
