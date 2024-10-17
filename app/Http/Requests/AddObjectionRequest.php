@@ -33,7 +33,7 @@ class AddObjectionRequest extends FormRequest
             'audit_para_category_id' => 'required',
             'amount' => 'required_if:audit_para_value, 1',
             'subject' => 'required',
-            'documents' => 'nullable|mimes:docx,doc,xlsx,xls,pdf',
+            'documents' => 'nullable|mimes:docx,doc,xlsx,xls,pdf|max:2048',
             'sub_unit' => 'required',
             'description' => 'required'
         ];

@@ -24,9 +24,21 @@ class UpdateAuditRequest extends FormRequest
         return [
             'department_id' => 'required',
             'date' => 'required',
-            'file' => 'nullable|mimes:pdf,jpg,jpeg,png',
+            'file' => 'nullable|mimes:pdf,jpg,jpeg,png|max:2048',
             'description' => 'required',
             'remark' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'department_id.required' => 'Please select department',
+            'date.required' => 'Please select date',
+            'file.mimes' => 'Only pdf, jpg, jpeg and png formate allow',
+            'file.max' => 'File should be less than 2mb',
+            'description.required' => 'Please enter description',
+            'remark.required' => 'Please enter remark',
         ];
     }
 }

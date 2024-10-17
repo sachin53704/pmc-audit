@@ -24,7 +24,18 @@ class SendDepartmentLetterRequest extends FormRequest
         return [
             'audit_id' => 'required',
             'description' => 'required',
-            'letter_file' => 'required|mimes:pdf,png,jpg,jpeg',
+            'letter_file' => 'required|mimes:pdf,png,jpg,jpeg|max:2048',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'audit_id.required' => 'Please select audit',
+            'letter_file.required' => 'Please upload letter',
+            'letter_file.mimes' => 'Only pdf, jpg, jpeg and png formate allow',
+            'letter_file.max' => 'File should be less than 2mb',
+            'description.required' => 'Please enter description',
         ];
     }
 }
