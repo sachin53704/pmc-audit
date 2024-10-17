@@ -28,8 +28,8 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $audit->department?->name }}</td>
                                             <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                            <td>{{ Str::limit($audit->description, '85') }}</td>
-                                            <td>{{ Str::limit($audit->remark, '85') }}</td>
+                                            <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
+                                            <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->remark, '30') }}</span></td>
                                             <td>
                                                 
                                                 @if($audit->paraAudit && $audit->paraAudit?->dymca_status == "0")
@@ -354,6 +354,11 @@
                         @elseif (Auth::user()->hasRole('MCA'))
                             $('#editForm #mca_status').val(data.audit.mca_status);
                             $('#editForm #mca_remark').val(data.audit.mca_remark);
+
+                            if(data.audit.mca_status){
+                                $('#editForm #mca_status').prop('disabled', true)
+                                $('#editForm #mca_remark').prop('disabled', true)
+                            }
                         @endif
 
                         editorEditInstance.setData(data.audit.description);
