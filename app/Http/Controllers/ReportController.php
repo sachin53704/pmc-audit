@@ -17,16 +17,12 @@ class ReportController extends Controller
         $reports = Department::when(isset($request->department) && $request->department != "", function ($q) use ($request) {
             $q->where('id', $request->department);
         })->withCount([
-            'auditObjection as approved_para' => fn($q) => $q->whereHas('auditDepartmentAnswers', function ($q) {
-                $q->where('mca_status', 1);
-            })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+            'auditObjection as approved_para' => fn($q) => $q->where('mca_final_status', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                 $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
             }),
-            'auditObjection as pending_para' => fn($q) => $q->whereHas('auditDepartmentAnswers', function ($q) {
-                $q->where('mca_status', "!=", 1);
-            })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
+            'auditObjection as pending_para' => fn($q) => $q->where('mca_final_status', '!=', 1)->when(isset($request->from) && $request->from != "", function ($search) use ($request) {
                 $search->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($search) use ($request) {
                 $search->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
@@ -98,9 +94,7 @@ class ReportController extends Controller
     {
         $departments = Department::select('id', 'name')->where('is_audit', 0)->get();
 
-        $reports = AuditObjection::with(['department', 'user', 'auditDepartmentAnswers' => function ($q) {
-            return $q->where('mca_status', 1);
-        }])->orderBy('department_id')
+        $reports = AuditObjection::with(['department', 'user'])->where('mca_final_status', 1)->orderBy('department_id')
             ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
                 $q->where('department_id', $request->department);
             })->when(isset($request->from) && $request->from != "", function ($search) use ($request) {

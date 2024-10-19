@@ -46,7 +46,7 @@ class ParaAuditController extends Controller
     public function create(Request $request)
     {
         if ($request->ajax()) {
-            $paraAudits = AuditObjection::where('audit_id', $request->audit_id)->get();
+            $paraAudits = AuditObjection::where('audit_id', $request->audit_id)->where('mca_final_status', 1)->get();
 
             $html = "";
 
