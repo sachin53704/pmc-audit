@@ -96,6 +96,8 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('audit-info', [App\Http\Controllers\Admin\AuditorAuditController::class, 'getAuditInfo'])->name('get-audit-info');
     Route::post('send-letter', [App\Http\Controllers\Admin\AuditorAuditController::class, 'sendLetter'])->name('send-letter');
     Route::get('objection-create', [App\Http\Controllers\Admin\AuditorAuditController::class, 'createObjection'])->name('objection.create');
+
+
     Route::get('get-assign-objection', [App\Http\Controllers\Admin\AuditorAuditController::class, 'getAssignObjection'])->name('objection.get-assign-objection');
     Route::post('change-objection-status', [App\Http\Controllers\Admin\AuditorAuditController::class, 'changeObjectionStatus'])->name('objection.change-objection-status');
 
@@ -160,6 +162,20 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
     // Para Audit Menu
     Route::resource('para-audit', App\Http\Controllers\ParaAuditController::class);
+
+
+    // department hod
+    Route::get('forward-objection-to-department', [App\Http\Controllers\DepartmentHodController::class, 'forwardObjectionToDepartment'])->name('objection.forward-objection-to-department');
+    Route::post('store-forward-objection-to-department', [App\Http\Controllers\DepartmentHodController::class, 'storeForwardObjectionToDepartment'])->name('storeForwardObjectionToDepartment');
+    Route::get('view-forward-objection-to-department', [App\Http\Controllers\DepartmentHodController::class, 'viewForwardObjectionToDepartment'])->name('objection.view-forward-objection-to-department');
+
+
+    Route::post('save-department-compliance', [App\Http\Controllers\DepartmentHodController::class, 'saveDepartmentCompliance'])->name('saveDepartmentCompliance');
+
+
+    // Objection Ajax request
+    Route::get('ajax/view-auditor-objections', [App\Http\Controllers\ObjectionAjaxController::class, 'viewAuditorObjections'])->name('ajax.viewAuditorObjection');
+    Route::get('get-dymca-send-objections', [App\Http\Controllers\ObjectionAjaxController::class, 'getDymcaSendObjections'])->name('objection.getDymcaSendObjections');
 });
 
 

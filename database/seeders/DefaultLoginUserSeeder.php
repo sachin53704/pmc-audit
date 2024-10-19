@@ -63,7 +63,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // Department Seeder ##
         $departmentHodRole = Role::updateOrCreate(['name' => 'Department HOD']);
-        $departmentHodRole->syncPermissions(['department_letter.view', 'draft-review.view', 'receipt.view', 'receipt.create', 'payment-receipt.view', 'payment-receipt.create', 'hmm-status.view']);
+        $departmentHodRole->syncPermissions(['department_letter.view', 'draft-review.view', 'receipt.view', 'receipt.create', 'payment-receipt.view', 'payment-receipt.create']);
 
         $departmenthod = User::updateOrCreate([
             'email' => 'departmenthod@gmail.com'

@@ -17,9 +17,6 @@
                                     <th>Date</th>
                                     <th>File Description</th>
                                     <th>Remark</th>
-                                    {{-- <th>View File</th>
-                                    <th>View Letter</th>
-                                    <th>Letter Description</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -31,18 +28,8 @@
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
                                         <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
-                                        {{-- <td>
-                                            <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
-                                        </td>
-
                                         <td>
-                                            @if($audit->dl_file_path)
-                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                                            @endif
-                                        </td>
-                                        <td>{{ Str::limit($audit->dl_description, '85') }}</td> --}}
-                                        <td>
-                                            <button class="btn btn-secondary edit-element px-2 py-1" title="Add Compliance" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="send"></i> Send Objection</button>
+                                            <button class="btn btn-secondary edit-element px-2 py-1" title="Add Compliance" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}">View Objection</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -67,15 +54,28 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="modelObjectionId"></div>
-
-                        
-
-
+                        <div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Sr no.</th>
+                                            <th>Department</th>
+                                            <th>HMM No.</th>
+                                            <th>Subject</th>
+                                            <th>Entry Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modelObjectionId">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer" id="viewFooterObjectionDetails">
                         <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Cancel</button>
-                        <button class="btn btn-primary" id="saveObjectionStatus" type="submit">Submit</button>
+                        <button class="btn btn-primary" id="saveObjectionStatus" type="submit"><i data-feather="send"></i> Send</button>
                     </div>
                 </div>
             </form>
@@ -96,8 +96,8 @@
             url: url,
             type: 'GET',
             data: {
-                '_token': "{{ csrf_token() }}",
                 'audit_id': model_id,
+                'status': 3
             },
             beforeSend: function()
             {
@@ -108,7 +108,20 @@
                 editFormBehaviour();
                 if (!data.error)
                 {
-                    $('#modelObjectionId').html(data.objectionHtml);
+                    var html = "";
+                    var count = 1;
+                    $.each(data.auditObjections, function(index, value){
+                        html += `<tr>
+                                <td>
+                                <input type="hidden" name="audit_id" value="${value.audit_id}" >
+                                <input type="checkbox" class="form-checkbox" name="id[]" value="${value.id}" ></td>
+                                <td>${count++}</td>
+                                <td>${value?.department?.name}</td>
+                                <td>${value.objection_no}</td>
+                                <td>${value.subject}</td>
+                                <td>${value.entry_date}</td></tr>`;
+                    });
+                    $('#modelObjectionId').html(html);
 
                     $("#addObjectionModal").modal("show");
                 } else {

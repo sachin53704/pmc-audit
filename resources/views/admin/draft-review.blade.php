@@ -44,10 +44,6 @@
                                     <th>Date</th>
                                     <th>File Description</th>
                                     <th>Remark</th>
-                                    <th>View File</th>
-                                    {{-- <th>Status</th> --}}
-                                    <th>View Letter</th>
-                                    <th>Letter Description</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -59,16 +55,7 @@
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
                                         <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
-                                        <td>
-                                            <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
-                                        </td>
-                                        {{-- <td>
-                                            <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                        </td> --}}
-                                        <td>
-                                            <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                                        </td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->dl_description }}">{{ Str::limit($audit->dl_description, '30') }}</span></td>
+                                        
                                         <td>
                                             <button class="btn btn-secondary view-element px-2 py-1" title="View compliance objection" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}
@@ -95,7 +82,24 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="modelObjectionId"></div>
+                        <div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr no.</th>
+                                            <th>Department</th>
+                                            <th>HMM No.</th>
+                                            <th>Subject</th>
+                                            <th>Compliance Submit Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modelObjectionId">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                         <div id="viewObjectionDetails" class="d-none">
                             <hr>
@@ -218,18 +222,180 @@
 
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label for="description">Description <span class="text-danger">*</span></label>
+                                    <label for="description">Objection Description <span class="text-danger">*</span></label>
                                     <textarea type="text" name="description" id="description" class="form-control" disabled></textarea>
                                 </div>
                             </div>
 
+                            
                             <div class="row">
-                                <div class="col-12 mb-3">
-                                    <div class="table-responsive" id="tableDepartmentAnswer">
+                            
+                                <div class="col-xl-12">
+                                    <div class="card">
+                                        <div class="card-header align-items-center d-flex">
+                                            <h4 class="card-title mb-0 flex-grow-1">Objection Status</h4>
+                                        </div><!-- end card header -->
+                                        <div class="card-body">
+                                            <div class="live-preview">
+                                                <div class="accordion custom-accordionwithicon-plus" id="accordionWithplusicon">
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="accordionwithplusExample1">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#departmentCompliance" aria-expanded="true" aria-controls="departmentCompliance">
+                                                                Department Compliance 
+                                                            </button>
+                                                        </h2>
+                                                        <div id="departmentCompliance" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample1" data-bs-parent="#accordionWithplusicon">
+                                                            
+                                                            <div class="row px-3 py-2">
+                                                                <div class="col-12 mb-3">
+                                                                    <label for="department_file">Compliance File <span class="text-danger">*</span></label>
+                                                                    <a href="#" class="btn btn-primary d-none complianceFile" target="_blank">View File</a>
+                                                                    @if(Auth::user()->hasRole('Department'))
+                                                                    <input type="file" name="department_files" id="department_file" class="form-control">
+                                                                    @endif
+                                                                </div>
 
-                                    </div>
+                                                                <div class="col-12 mb-3">
+                                                                    <label for="department_remark">Compliance Description <span class="text-danger">*</span></label>
+                                                                    <textarea name="department_remark" id="department_remark" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="accordionwithplusExample2">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#departmentHodStatus" aria-expanded="false" aria-controls="departmentHodStatus">
+                                                                Department HOD Status
+                                                            </button>
+                                                        </h2>
+                                                        <div id="departmentHodStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                            <div class="row px-3 py-2">
+                                                    
+                                                                <div class="col-6">
+                                                                    <label for="department_hod_final_status">Department HOD Status</label>
+                                                                    <select name="department_hod_final_status" class="form-select">
+                                                                        <option value="">Select Status</option>
+                                                                        <option value="1">Approve</option>
+                                                                        <option value="0">Reject</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label for="department_hod_final_remark">Department HOD Remark</label>
+                                                                    <textarea name="department_hod_final_remark" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="accordionwithplusExample3">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcaForwardToAuditor" aria-expanded="false" aria-controls="mcaForwardToAuditor">
+                                                                MCA Forward To Auditor
+                                                            </button>
+                                                        </h2>
+                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
+                                                            <div class="row px-3 py-2">
+                                                                    
+                                                                <div class="col-6">
+                                                                    <label for="department_mca_second_status">MCA Status</label>
+                                                                    <select name="department_mca_second_status" class="form-select">
+                                                                        <option value="">Select Status</option>
+                                                                        <option value="1">Forward To Auditor</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label for="department_mca_second_remark">MCA Remark</label>
+                                                                    <textarea  name="department_mca_second_remark" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="accordionwithplusExample2">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditorStatus" aria-expanded="false" aria-controls="auditorStatus">
+                                                                Auditor Status
+                                                            </button>
+                                                        </h2>
+                                                        <div id="auditorStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                            <div class="row px-3 py-2">
+                                                                
+                                                                <div class="col-6 px-3 pt-2">
+                                                                    <label for="auditor_status">Auditor Status</label>
+                                                                    <select name="auditor_status" class="form-select">
+                                                                        <option value="">Select Status</option>
+                                                                        <option value="1">Proposal to Approve / Delete</option>
+                                                                        <option value="0">Proposal to convert para</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label for="auditor_remark">Auditor Remark</label>
+                                                                    <textarea name="auditor_remark" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="accordionwithplusExample2">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dymcaStatus" aria-expanded="false" aria-controls="dymcaStatus">
+                                                                DyMca Status
+                                                            </button>
+                                                        </h2>
+                                                        <div id="dymcaStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                            <div class="row px-3 py-2">
+                                                                
+                                                                <div class="col-6">
+                                                                    <label for="dymca_final_status">Dymca Status</label>
+                                                                    <select name="dymca_final_status" class="form-select">
+                                                                        <option value="">Select Status</option>
+                                                                        <option value="1">Approve</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label for="dymca_final_remark">Dymca Remark</label>
+                                                                    <textarea name="dymca_final_remark" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="accordionwithplusExample2">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcaStatus" aria-expanded="false" aria-controls="mcaStatus">
+                                                                MCA Status
+                                                            </button>
+                                                        </h2>
+                                                        <div id="mcaStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                            <div class="row px-3 py-2">
+                                                                
+                                                                <div class="col-6">
+                                                                    <label for="mca_final_status">MCA Status</label>
+                                                                    <select name="mca_final_status" class="form-select">
+                                                                        <option value="">Select Status</option>
+                                                                        <option value="1">Approve</option>
+                                                                        <option value="0">Forward to department</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label for="mca_final_remark">MCA Remark</label>
+                                                                    <textarea name="mca_final_remark" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div><!-- end card-body -->
+                                    </div><!-- end card -->
                                 </div>
+                                <!--end col-->
+
                             </div>
+
                         </div>
 
 
@@ -269,7 +435,24 @@
                     console.error('Error during initialization of the editor', error);
                 });
 
-                // myeditor.ckeditorGet().config.readOnly = true;
+                let deditorInstance;
+                ClassicEditor
+                    .create(document.querySelector('#department_remark'),{
+                        toolbar: {
+                            shouldNotGroupWhenFull: true
+                        }
+                    })
+                    .then(editor => {
+                        deditorInstance = editor;
+                        deditorInstance.enableReadOnlyMode('reason');
+                        editor.ui.view.editable.element.style.height = '200px';  // Fixed height
+
+                        // Make the editor scrollable
+                        editor.ui.view.editable.element.style.overflowY = 'auto';
+                    })
+                    .catch(error => {
+                        console.error('Error during initialization of the editor', error);
+                    });
         </script>
 
 
@@ -280,15 +463,13 @@
                 e.preventDefault();
                 var model_id = $(this).attr("data-id");
                 // $('#audit_id').val(model_id)
-                var url = "{{ route('objection.get-assign-objection') }}";
+                var url = "{{ route('ajax.viewAuditorObjection') }}";
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     data: {
-                        '_token': "{{ csrf_token() }}",
                         'audit_id': model_id,
-                        'relations': "objections",
                     },
                     beforeSend: function()
                     {
@@ -299,8 +480,19 @@
                     {
                         if (!data.error)
                         {
-                            $('#modelObjectionId').html(data.objectionHtml)
-
+                            var html = ``;
+                            var count = 1;
+                            $.each(data.auditObjections, function(index, value){
+                                html += `<tr>
+                                    <td>${count++}</td>
+                                    <td>${value?.department?.name}</td>
+                                    <td>${value.objection_no}</td>
+                                    <td>${value.subject}</td>
+                                    <td>${(value.compliance_submit_date) ? value.compliance_submit_date : '-'}</td>
+                                    <td><button type="button" target="_blank" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}">View Objection</button></td>
+                                </tr>`;
+                            });
+                            $('#modelObjectionId').html(html);
 
                             $("#addObjectionModal").modal("show");
                         } else {
@@ -464,7 +656,75 @@
                         // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                         editorInstance.setData(data.auditObjection.description);
 
-                        $('#tableDepartmentAnswer').html(data.auditDepartmentAnswerHtml)
+
+
+                        let roleName = "{{ Auth::user()->roles[0]->name }}";
+                        
+                        // department status                        
+                        if(data.auditObjection.department_draft_remark){
+                            deditorInstance.setData(data.auditObjection.department_draft_remark);
+                        }
+                        if(data.auditObjection.department_file != ""){
+                            $('.complianceFile').removeClass('d-none');
+                            $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.auditObjection.department_file);
+                        }
+                        
+                        if(data.auditObjection.department_hod_final_status == "1" || data.auditObjection.mca_final_status != "0"){
+                            $('.complianceFile').prop('disabled', true)
+                        }
+                        
+
+                        
+                        $("#addForm select[name='department_hod_final_status']").val(data.auditObjection.department_hod_final_status);
+                        $("#addForm textarea[name='department_hod_final_remark']").val(data.auditObjection.department_hod_final_remark);
+                        if((data.auditObjection.department_mca_second_status == "1" && data.auditObjection.department_draft_remark != "")){
+                            $("#addForm select[name='department_hod_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true)
+                        }else if(roleName != "Department HOD"){
+                            $("#addForm select[name='department_hod_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true)
+                        }
+
+
+                        $("#addForm select[name='department_mca_second_status']").val(data.auditObjection.department_mca_second_status);
+                        $("#addForm textarea[name='department_mca_second_remark']").val(data.auditObjection.department_mca_second_remark);
+                        if((data.auditObjection.auditor_status == "1" || data.auditObjection.auditor_status == "0")){
+                            $("#addForm select[name='department_mca_second_status']").prop('disabled', true)
+                            $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', true)
+                        }else if(roleName != "MCA"){
+                            $("#addForm select[name='department_mca_second_status']").prop('disabled', true)
+                            $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', true)
+                        }
+
+
+                        $("#addForm select[name='auditor_status']").val(data.auditObjection.auditor_status);
+                        $("#addForm textarea[name='auditor_remark']").val(data.auditObjection.auditor_remark);
+                        if(data.auditObjection.dymca_final_status == "1" && roleName != "Auditor"){
+                            $("#addForm select[name='auditor_status']").prop('disabled', true)
+                            $("#addForm textarea[name='auditor_remark']").prop('disabled', true)
+                        }
+
+                        $("#addForm select[name='dymca_final_status']").val(data.auditObjection.dymca_final_status);
+                        $("#addForm textarea[name='dymca_final_remark']").val(data.auditObjection.dymca_final_remark);
+                        if(data.auditObjection.mca_final_status == "1" || data.auditObjection.mca_final_status == "0"){
+                            $("#addForm select[name='dymca_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='dymca_final_remark']").prop('disabled', true)
+                        }else if(roleName != "DY MCA"){
+                            $("#addForm select[name='dymca_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='dymca_final_remark']").prop('disabled', true)
+                        }
+
+
+                        $("#addForm select[name='mca_final_status']").val(data.auditObjection.mca_final_status);
+                        $("#addForm textarea[name='mca_final_remark']").val(data.auditObjection.mca_final_remark);
+                        if(data.auditObjection.dymca_final_status != "1"){
+                            $("#addForm select[name='mca_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true)
+                        }else if(roleName != "MCA"){
+                            $("#addForm select[name='mca_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true)
+                        }
+
                         // $('#mca_action_status').val(data.auditObjection.mca_action_status)
                         // $('#mca_remark').val(data.auditObjection.mca_remark)
 

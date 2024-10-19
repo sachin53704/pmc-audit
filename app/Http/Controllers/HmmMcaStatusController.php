@@ -12,6 +12,7 @@ use App\Models\AuditType;
 use App\Models\Severity;
 use App\Models\AuditParaCategory;
 use App\Models\AuditObjection;
+use Illuminate\Support\Facades\DB;
 
 class HmmMcaStatusController extends Controller
 {
@@ -42,8 +43,6 @@ class HmmMcaStatusController extends Controller
             })
             ->latest()
             ->get();
-        // return $audits;
-
 
         $departments = Department::select('id', 'name')->get();
 
@@ -73,29 +72,45 @@ class HmmMcaStatusController extends Controller
         if ($request->ajax()) {
             // dd($request->all());
             if (Auth::user()->hasRole('MCA')) {
-                AuditObjection::where('id', $request->audit_objection_id)
-                    ->update([
-                        'mca_status' => $request->mca_status,
-                        'mca_remark' => $request->mca_remark,
-                    ]);
-
-                if ($request->mca_status == 1) {
-                    $audit = Audit::find($request->audit_id);
-                    if ($audit->status <= 6) {
-                        $audit->status = 6;
-                        $audit->save();
+                try {
+                    DB::beginTransaction();
+                    $auditObjection = AuditObjection::find($request->audit_objection_id);
+                    $auditObjection->mca_status = $request->mca_status;
+                    $auditObjection->mca_remark = $request->mca_remark;
+                    if ($auditObjection->status < 3 && $request->mca_status) {
+                        $auditObjection->status = 3;
                     }
+                    $auditObjection->save();
+
+                    if ($request->mca_status == 1) {
+                        $audit = Audit::find($request->audit_id);
+                        if ($audit->status <= 6) {
+                            $audit->status = 6;
+                            $audit->save();
+                        }
+                    }
+                    DB::commit();
+                    return response()->json(['success' => 'Objection status updated successful']);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return response()->json(['error' => 'Something went wrong!']);
                 }
-
-                return response()->json(['success' => 'Objection status updated  successful']);
             } elseif (Auth::user()->hasRole('DY MCA')) {
-                AuditObjection::where('id', $request->audit_objection_id)
-                    ->update([
-                        'dymca_status' => $request->dymca_status,
-                        'dymca_remark' => $request->dymca_remark,
-                    ]);
-
-                return response()->json(['success' => 'Objection status updated  successful']);
+                try {
+                    DB::beginTransaction();
+                    $auditObjection = AuditObjection::find($request->audit_objection_id);
+                    $auditObjection->dymca_status = $request->dymca_status;
+                    $auditObjection->dymca_remark = $request->dymca_remark;
+                    if ($auditObjection->status < 2 && $request->dymca_status) {
+                        $auditObjection->status = 2;
+                    }
+                    $auditObjection->save();
+                    DB::commit();
+                    return response()->json(['success' => 'Objection status updated successful']);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return response()->json(['error' => 'Something went wrong!']);
+                }
             } else {
                 AuditObjection::where('id', $request->audit_objection_id)
                     ->update([
@@ -118,7 +133,7 @@ class HmmMcaStatusController extends Controller
     public function getAssignObjection(Request $request)
     {
         if ($request->ajax()) {
-            $auditObjections = AuditObjection::with(['audit', 'auditType', 'zone', 'severity'])
+            $auditObjections = AuditObjection::with(['audit', 'auditType', 'department', 'severity'])
                 ->where('audit_id', $request->audit_id)
                 ->when(Auth::user()->hasRole('MCA'), function ($q) {
                     $q->where('dymca_status', 1);
@@ -135,10 +150,9 @@ class HmmMcaStatusController extends Controller
                         <thead>
                             <tr>
                                 <th>Sr no.</th>
+                                <th>Department</th>
                                 <th>HMM No.</th>
-                                <th>Audit Type</th>
-                                <th>Severity</th>
-                                <th>Zone</th>';
+                                <th>Subject</th>';
 
                 if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA') || Auth::user()->hasRole('Auditor')) {
                     $objectionHtml .= '
@@ -158,10 +172,9 @@ class HmmMcaStatusController extends Controller
             foreach ($auditObjections as $auditObjection) {
                 $objectionHtml .= '<tr>
                                 <td>' . $count++ . '</td>
+                                <td>' . $auditObjection?->department?->name . '</td>
                                 <td>' . $auditObjection?->objection_no . '</td>
-                                <td>' . $auditObjection?->auditType?->name . '</td>
-                                <td>' . $auditObjection?->severity?->name . '</td>
-                                <td>' . $auditObjection?->zone?->name . '</td>';
+                                <td>' . $auditObjection?->subject . '</td>';
                 if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA')) {
                     $objectionHtml .= '
                     <th>' . (($auditObjection->dymca_status == 1) ? '<span class="badge bg-success">Approve</span>' : (($auditObjection->dymca_status == 2) ? '<span class="badge bg-warning">Forward To Auditor</span>' : "-")) . '</th>

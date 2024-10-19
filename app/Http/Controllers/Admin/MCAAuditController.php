@@ -156,10 +156,11 @@ class MCAAuditController extends Controller
 
     public function draftReview(Request $request)
     {
+        $status = 0;
         if (Auth::user()->hasRole('MCA')) {
             $status = 9;
         } elseif (Auth::user()->hasRole('Department HOD')) {
-            $status = 7;
+            $status = 8;
         } elseif (Auth::user()->hasRole('DY MCA')) {
             $status = 11;
         }
@@ -198,220 +199,10 @@ class MCAAuditController extends Controller
     public function viewObjection(Request $request)
     {
         if ($request->ajax()) {
-            $roleName = Auth::user()->roles[0]->name;
-
             $auditObjection = AuditObjection::where('id', $request->id)->first();
 
-            $auditDepartmentAnswers = AuditDepartmentAnswer::where('audit_objection_id', $request->id)->get();
-
-            $auditDepartmentAnswerHtml = '
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle table-nowrap">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>File &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Compliance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Department Hod Status</th>
-                            <th>Department Hod Remark</th>
-
-                            <th>Department MCA Status</th>
-                            <th>Department MCA Remark</th>
-
-                            <th>Auditor Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Auditor Remark &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Dymca Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Dymca Remark &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>MCA Status  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>MCA Remark  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>';
-
-            if ($roleName == "Department" && !$auditObjection->is_department_draft_save) {
-                $auditDepartmentAnswerHtml .= '<th><button class="btn btn-primary btn-sm" id="addMoreFile" type="button"><span class="fa fa-plus"></span></button></th>';
-            }
-
-
-            $auditDepartmentAnswerHtml .= '</tr>
-                    </thead>
-                    <tbody id="addMoreTbody">';
-
-            $auditorDisabled = "disabled";
-            $mcaDisabled = "disabled";
-            $dymcaDisabled = "disabled";
-            $departmentHodDisabled = "disabled";
-            if (Auth::user()->hasRole('Auditor')) {
-                $auditorDisabled = "";
-            }
-
-            if (Auth::user()->hasRole('MCA')) {
-                $mcaDisabled = "";
-            }
-
-            if (Auth::user()->hasRole('DY MCA')) {
-                $dymcaDisabled = "";
-            }
-
-            if (Auth::user()->hasRole('Department HOD')) {
-                $departmentHodDisabled = "";
-            }
-            $countCheck = true;
-            foreach ($auditDepartmentAnswers as $auditDepartmentAnswer) {
-                $auditDepartmentAnswerHtml .= '
-                    <tr>
-                        <td>' . date('d-m-Y', strtotime($auditDepartmentAnswer->created_at)) . '</td>
-                        <td>
-                            <a href="' . asset('storage/' . $auditDepartmentAnswer->file) . '" target="_blank" class="btn btn-primary btn-sm">View File</a>';
-                $departmentTextareaStatus = "disabled";
-
-                // if ($auditDepartmentAnswer->department_mca_status == "1" || !$auditDepartmentAnswer->department_mca_status) {
-                //     $departmentTextareaStatus = "";
-                // }
-                if ((!$auditDepartmentAnswer->department_hod_status || $auditDepartmentAnswer->department_hod_status == "0" || $auditDepartmentAnswer->mca_status == "0" || $auditDepartmentAnswer->department_mca_status == "0") && Auth::user()->hasRole('Department')) {
-                    $departmentTextareaStatus = "";
-                    $auditDepartmentAnswerHtml .= '<input type="file" class="form-control" name="files[]">';
-                }
-                $auditDepartmentAnswerHtml .= '</td>
-                        <td>
-                            <textarea ' . $departmentTextareaStatus . ' name="remark[]" class="form-control">' . $auditDepartmentAnswer->remark . '</textarea>
-                        </td>
-
-                        
-                        <td>
-                            <select class="form-select" ' . $departmentHodDisabled . ' name="department_hod_status[]" ' . (($auditDepartmentAnswer->department_mca_status) ? 'disabled' : '') . '>
-                                <option value="">Select</option>
-                                <option ' . (($auditDepartmentAnswer->department_hod_status == "1") ? "selected" : "") . ' value="1">Approve</option>
-                                <option ' . (($auditDepartmentAnswer->department_hod_status == "0") ? "selected" : "") . ' value="0">Reject</option>
-                            </select>
-                        </td>
-                        <td> 
-                            <textarea ' . (($auditDepartmentAnswer->department_mca_status) ? 'disabled' : '') . ' name="department_hod_remark[]" ' . $departmentHodDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_hod_remark . '</textarea>
-                        </td>
-
-                        <td>
-                            <input type="hidden" name="department_mca_status_id[]" value="' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "1" : '0') . '" />
-                            
-                            <select ' . (($auditDepartmentAnswer->auditor_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' class="form-select" ' . $mcaDisabled . ' name="department_mca_status[]">
-                                <option value="">Select</option>
-                                <option ' . (($auditDepartmentAnswer->department_mca_status == "1") ? "selected" : "") . ' value="1">Forward To Auditor</option>
-                                <option ' . (($auditDepartmentAnswer->department_mca_status == "0") ? "selected" : "") . ' value="0">Reject</option>
-                            </select>
-                        </td>
-                        <td> 
-                            <textarea ' . (($auditDepartmentAnswer->auditor_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->department_hod_status == "1" && $auditDepartmentAnswer->auditor_status != "1") ? "" : 'disabled') . ' name="department_mca_remark[]" ' . $mcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->department_mca_remark . '</textarea>
-                        </td>
-
-                        <td>
-                            <select ' . (($auditDepartmentAnswer->dymca_status) ? 'disabled' : '') . ' class="form-select" ' . $auditorDisabled . ' name="auditor_status[]">
-                                <option value="">Select</option>
-                                <option ' . (($auditDepartmentAnswer->auditor_status == "1") ? "selected" : "") . ' value="1">Proposal to approve/delete</option>
-                                <option ' . (($auditDepartmentAnswer->auditor_status == "0") ? "selected" : "") . ' value="0">Proposal to convert para</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="hidden" name="audit_department_answer_id[]" value="' . $auditDepartmentAnswer->id . '">
-                            <textarea ' . (($auditDepartmentAnswer->dymca_status) ? 'disabled' : '') . ' name="auditor_remark[]" ' . $auditorDisabled . ' class="form-control">' . $auditDepartmentAnswer->auditor_remark . '</textarea>
-                        </td>
-                        <td>
-                            <select ' . (($auditDepartmentAnswer->mca_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->auditor_status == "1") ? "" : 'disabled') . ' class="form-select" ' . $dymcaDisabled . ' name="dymca_status[]">
-                                <option value="">Select</option>
-                                <option ' . (($auditDepartmentAnswer->dymca_status == "1") ? "selected" : "") . ' value="1">Approve</option>
-                            </select>
-                        </td>
-                        <td>
-                            <textarea ' . (($auditDepartmentAnswer->mca_status) ? 'disabled' : '') . ' ' . (($auditDepartmentAnswer->auditor_status == "1") ? "" : 'disabled') . ' name="dymca_remark[]" ' . $dymcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->dymca_remark . '</textarea>
-                        </td>
-                        <td>
-                            <select ' . (($auditDepartmentAnswer->dymca_status == "1") ? "" : 'disabled') . ' class="form-select" ' . $mcaDisabled . ' name="mca_status[]">
-                                <option value="">Select</option>
-                                <option ' . (($auditDepartmentAnswer->mca_status == "1") ? "selected" : "") . ' value="1">Approve</option>
-                                <option ' . (($auditDepartmentAnswer->mca_status == "0") ? "selected" : "") . ' value="0">Forward to department</option>
-                            </select>
-                        </td>
-                        <td>
-                            <textarea ' . (($auditDepartmentAnswer->dymca_status == "1") ? "" : 'disabled') . ' name="mca_remark[]" ' . $mcaDisabled . ' class="form-control">' . $auditDepartmentAnswer->mca_remark . '</textarea>
-                        </td>
-                        </tr>';
-                $countCheck = false;
-            }
-            if ($roleName == "Department" && $countCheck) {
-                $auditDepartmentAnswerHtml .= '
-                <tr>
-                    <td>' . date('d-m-Y') . '</td>
-                    <td><input type="file" class="form-control" required name="files[]"></td>
-                    <td>
-                        <textarea name="remark[]" class="form-control" required></textarea>
-                    </td>
-
-                    <td>
-                        <select class="form-select" disabled name="department_hod_status[]">
-                            <option value="">Select</option>
-                            <option value="1">Approve</option>
-                            <option value="0">Reject</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="hidden" value="" class="form-control" name="audit_department_answer_id[]">
-                        <textarea name="department_hod_remark[]" disabled class="form-control"></textarea>
-                    </td>
-
-                    <td>
-                        <select class="form-select" disabled name="department_mca_status[]">
-                            <option value="">Select</option>
-                            <option value="1">Forward To Auditor</option>
-                            <option value="0">Reject</option>
-                        </select>
-                    </td>
-                    <td>
-                        <textarea name="department_mca_remark[]" disabled class="form-control"></textarea>
-                    </td>
-
-
-                    
-                    <td>
-                        <select class="form-select" disabled name="auditor_status[]">
-                            <option value="">Select</option>
-                            <option value="1">Proposal to approve/delete</option>
-                            <option value="0">Proposal to convert para</option>
-                        </select>
-                    </td>
-                    <td>
-                        <textarea name="auditor_remark[]" disabled class="form-control"></textarea>
-                    </td>
-                    <td>
-                        <select class="form-select" disabled name="dymca_status[]">
-                            <option value="">Select</option>
-                            <option value="1">Approve</option>
-                        </select>
-                    </td>
-                    <td>
-                        <textarea name="dymca_remark[]" disabled class="form-control"></textarea>
-                    </td>
-                    <td>
-                        <select class="form-select" disabled name="mca_status[]">
-                            <option value="">Select</option>
-                            <option value="1">Approve</option>
-                            <option value="0">Forward to department</option>
-                        </select>
-                    </td>
-                    <td>
-                        <textarea name="mca_remark[]" disabled class="form-control"></textarea>
-                    </td>
-                    <td>-</td>
-                </tr>';
-            }
-
-            if (!Auth::user()->hasRole('Department')) {
-                if (count($auditDepartmentAnswers) == 0) {
-                    $auditDepartmentAnswerHtml = "";
-                }
-            }
-
-            $auditDepartmentAnswerHtml .= '</tbody>
-                </table></div>
-            ';
-
             return response()->json([
-                'auditObjection' => $auditObjection,
-                'auditDepartmentAnswerHtml' => $auditDepartmentAnswerHtml
+                'auditObjection' => $auditObjection
             ]);
         }
     }
@@ -604,55 +395,14 @@ class MCAAuditController extends Controller
             $auditObjections = AuditObjection::with(['audit', 'department'])
                 ->where('audit_id', $request->audit_id)
                 ->where('is_objection_send', 0)
+                ->where('status', '>=', $request->status)
                 ->where('mca_status', 1)
                 ->get();
-
-            $objectionHtml = "";
-            if (count($auditObjections) > 0) {
-                $objectionHtml .= '<div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Sr no.</th>
-                                <th>Department</th>
-                                <th>HMM No.</th>
-                                <th>Subject</th>
-                                <th>Entry Date</th>';
-
-
-                // $objectionHtml .= '<th>Action</th>
-                $objectionHtml .= '</tr>
-                        </thead>
-                        <tbody>';
-            }
-
-            $count = 1;
-            foreach ($auditObjections as $auditObjection) {
-                $objectionHtml .= '<tr>
-                                <td>
-                                <input type="hidden" name="audit_id" value="' . $auditObjection->audit_id . '" >
-                                <input type="checkbox" class="form-checkbox" name="id[]" value="' . $auditObjection->id . '" ></td>
-                                <td>' . $count++ . '</td>
-                                <td>' . $auditObjection?->department?->name . '</td>
-                                <td>' . $auditObjection?->objection_no . '</td>
-                                <td>' . $auditObjection?->subject . '</td>
-                                <td>' . date('d-m-Y', strtotime($auditObjection?->entry_date)) . '</td></tr>';
-
-                // $objectionHtml .= '<td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="' . $auditObjection?->id . '">View Objection</button></td>
-                //             </tr>';
-            }
-
-            if (count($auditObjections) > 0) {
-                $objectionHtml .= '</tbody>
-                        </table>
-                    </div>';
-            }
 
             $audit = Audit::find($request->audit_id);
 
             return response()->json([
-                'objectionHtml' => $objectionHtml,
+                'auditObjections' => $auditObjections,
                 'department' => $audit->department_id,
                 'departmentName' => $audit->department?->name,
             ]);
@@ -666,9 +416,16 @@ class MCAAuditController extends Controller
             if (isset($request->id)) {
                 DB::beginTransaction();
                 try {
-                    AuditObjection::whereIn('id', $request->id)->update([
-                        'is_objection_send' => 1
-                    ]);
+                    if (isset($request->id)) {
+                        for ($i = 0; $i < count($request->id); $i++) {
+                            $auditObjection = AuditObjection::find($request->id[$i]);
+                            $auditObjection->is_objection_send = 1;
+                            if ($auditObjection->status < 4) {
+                                $auditObjection->status = 4;
+                            }
+                            $auditObjection->save();
+                        }
+                    }
 
                     $audit = Audit::find($request->audit_id);
 

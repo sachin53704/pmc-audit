@@ -26,10 +26,6 @@
                                         <th>Date</th>
                                         <th>File Description</th>
                                         <th>Remark</th>
-                                        {{-- <th>View File</th> --}}
-                                        {{-- <th>Status</th> --}}
-                                        {{-- <th>View Letter</th>
-                                        <th>Letter Description</th> --}}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -41,16 +37,6 @@
                                             <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                             <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
                                             <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
-                                            {{-- <td>
-                                                <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
-                                            </td> --}}
-                                            {{-- <td>
-                                                <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                            </td> --}}
-                                            {{-- <td>
-                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                                            </td>
-                                            <td>{{ Str::limit($audit->dl_description, '85') }}</td> --}}
                                             <td>
                                                 <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"> View Objection</button>
                                             </td>
@@ -75,28 +61,48 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="modelObjectionId"></div>
+                        <div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr no.</th>
+                                            <th>Department</th>
+                                            <th>HMM No.</th>
+                                            <th>Subject</th>
+                                            <th>DYMCA Status</th>
+                                            <th>DYMCA Remark</th>
+                                            <th>MCA Status</th>
+                                            <th>MCA Remark</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="modelObjectionId">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         <div class="viewObjectionDetails d-none">
                             <hr>
                             <input type="hidden" name="audit_id" value="" id="audit_id">
                             <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
                             <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="objection_no">HMM No. <span class="text-danger">*</span></label>
                                     <input type="text" name="objection_no" id="objection_no" class="form-control" value="" readonly>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
                                     <input type="date" name="entry_date" id="entry_date" class="form-control" readonly>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="department_id">Department <span class="text-danger">*</span></label>
                                     <input type="hidden" name="department_id" id="department_hidden_id">
                                     <input type="text" name="department_name_id" readonly id="department_name_id" class="form-control" />
                                 </div>
                         
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="zone_id">Zone <span class="text-danger">*</span></label>
                                     <select name="zone_id" disabled id="zone_id" class="form-select">
                                         <option value="">Select zone</option>
@@ -106,7 +112,7 @@
                                     </select>
                                 </div>
                             
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="from_year">From Year <span class="text-danger">*</span></label>
                                     <select name="from_year" id="from_year" disabled class="form-select">
                                         <option value="">Select from year</option>
@@ -115,7 +121,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="to_year">To Year <span class="text-danger">*</span></label>
                                     <select name="to_year" disabled id="to_year" class="form-select">
                                         <option value="">Select to year</option>
@@ -125,7 +131,7 @@
                                     </select>
                                 </div>
                             
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="audit_type_id">Audit Type <span class="text-danger">*</span></label>
                                     <select name="audit_type_id" disabled id="audit_type_id" class="form-select">
                                         <option value="">Select audit type</option>
@@ -134,7 +140,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="severity_id">Severity <span class="text-danger">*</span></label>
                                     <select name="severity_id" disabled id="severity_id" class="form-select">
                                         <option value="">Select severity</option>
@@ -146,7 +152,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
                                     <input type="hidden" name="audit_para_value" id="auditParaValue">
                                     <select name="audit_para_category_id" disabled id="audit_para_category_id" class="form-select">
@@ -156,24 +162,24 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-3 d-none isAmountDisplayOrNot">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3 d-none isAmountDisplayOrNot">
                                     <label for="amount">Amount <span class="text-danger">*</span></label>
                                     <input type="text" name="amount" id="amount" class="form-control" readonly>
                                 </div>
                                 
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="subject">Subject <span class="text-danger">*</span></label>
                                     <input type="text" name="subject" id="subject" class="form-control" readonly>
                                 </div>
                                 
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="documents">File</label>
                                     <div>
                                         <a href="" class="btn btn-primary btn-sm" id="documentFile">View File</a>
                                     </div>
                                 </div>
                             
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
+                                <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="sub_unit">No of Objection <span class="text-danger">*</span></label>
                                     <input readonly type="text" name="sub_unit" id="sub_unit" class="form-control">
                                 </div>
@@ -183,21 +189,7 @@
                                     <textarea type="text" name="description" id="description" class="form-control"></textarea>
                                 </div>
                             </div>
-                            @if(Auth::user()->hasRole('Department HOD'))
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label for="is_department_hod_forward">Select Status <span class="text-danger">*</span></label>
-                                    <select name="is_department_hod_forward" class="form-select" id="is_department_hod_forward" required>
-                                        <option value="0">Select</option>
-                                        <option value="1">Forward To Department</option>
-                                    </select>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label for="department_hod_remark">Remark</label>
-                                    <textarea name="department_hod_remark" id="department_hod_remark" class="form-control"></textarea>
-                                </div>
-                            </div>
-                            @else
+                           
                             <div class="row">
                                 <div class="col-6 mb-3">
                                     <label for="dymca_status">Select Status <span class="text-danger">*</span></label>
@@ -212,7 +204,6 @@
                                     <textarea name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_remark' : 'dymca_remark' }}" id="dymca_remark" class="form-control"></textarea>
                                 </div>
                             </div>
-                            @endif
                         </div>
 
                     </div>
@@ -272,6 +263,11 @@
     <script>
         $('body').on('click', '.viewObjection', function(){
             let id = $(this).attr('data-id');
+            let departmentName = $(this).attr('data-department-name');
+            let departmentId = $(this).attr('data-department-id');
+
+            $("#addForm #department_name_id").val(departmentName);
+            $("#addForm #department_hidden_id").val(departmentId);
 
             $.ajax({
                 url: "{{ route('view-objection') }}",
@@ -290,7 +286,7 @@
                     $("#addForm input[name='audit_id']").val(data.auditObjection.audit_id);
                     $("#addForm input[name='objection_no']").val(data.auditObjection.objection_no);
                     $("#addForm input[name='entry_date']").val(data.auditObjection.entry_date);
-                    $("#addForm select[name='department_id']").val(data.auditObjection.department_id);
+                    // $("#addForm select[name='department_id']").val(data.auditObjection.department_id);
                     $("#addForm select[name='zone_id']").val(data.auditObjection.zone_id);
                     $("#addForm select[name='from_year']").val(data.auditObjection.from_year);
                     $("#addForm select[name='to_year']").val(data.auditObjection.to_year);
@@ -352,15 +348,15 @@
             e.preventDefault();
             var model_id = $(this).attr("data-id");
             $('#audit_id').val(model_id)
-            var url = "{{ route('objection.get-hmm-assign-objection') }}";
+            var url = "{{ route('ajax.viewAuditorObjection') }}";
+            let status = @if(Auth::user()->hasRole('DY MCA'))1 @elseif(Auth::user()->hasRole('MCA'))2 @endif
 
             $.ajax({
                 url: url,
                 type: 'GET',
                 data: {
-                    '_token': "{{ csrf_token() }}",
                     'audit_id': model_id,
-                    'relations': "objections",
+                    'status': status
                 },
                 beforeSend: function()
                 {
@@ -371,9 +367,24 @@
                 {
                     if (!data.error)
                     {
-                        $('#modelObjectionId').html(data.objectionHtml)
-                        $('#department_name_id').val(data.departmentName);
-                        $('#department_hidden_id').val(data.department)
+                        var html = ``;
+                        var count = 1;
+                        $.each(data.auditObjections, function(index, value){
+                            html += `<tr>
+                                <td>${count++}</td>
+                                <td>${value?.department?.name}</td>
+                                <td>${value.objection_no}</td>
+                                <td>${value.subject}</td>
+                                <td>${ (value.dymca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.dymca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
+                                <td>${ (value.dymca_remark) ? value.dymca_remark : '-' }</td>
+                                <td>${ (value.mca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.mca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
+                                <td>${ (value.mca_remark) ? value.mca_remark : '-' }</td>
+                                <td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}" data-department-name="${data.departmentName}" data-department-id="${data.department}">View Objection</button></td>
+                            </tr>`;
+                        });
+                        $('#modelObjectionId').html(html);
+
+                        $('.viewObjectionDetails').addClass('d-none')
 
                         $("#addObjectionModal").modal("show");
                     } else {

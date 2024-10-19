@@ -21,8 +21,8 @@ class AuditObjection extends BaseModel
     const OBJECTION_STATUS_MCA_APPROVED = 4;
     const OBJECTION_STATUS_MCA_REJECTED = 5;
 
-    protected $fillable = ['user_id', 'audit_id', 'objection_no', 'entry_date', 'department_id', 'zone_id', 'from_year', 'to_year', 'audit_type_id', 'severity_id', 'audit_para_category_id', 'amount', 'subject', 'document', 'sub_unit', 'description', 'draft_description', 'is_draft_send', 'status', 'mca_status', 'mca_remark', 'auditor_status', 'auditor_remark', 'dymca_status', 'dymca_remark', 'is_draft_save', 'is_objection_send', 'is_department_hod_forward', 'department_hod_remark'];
-    protected $appends = ['status_name'];
+    protected $fillable = ['user_id', 'audit_id', 'objection_no', 'entry_date', 'department_id', 'zone_id', 'from_year', 'to_year', 'audit_type_id', 'severity_id', 'audit_para_category_id', 'amount', 'subject', 'document', 'sub_unit', 'description', 'draft_description', 'is_draft_send', 'is_department_draft_save', 'compliance_submit_date', 'status', 'is_objection_send', 'is_department_hod_forward', 'department_hod_remark', 'is_draft_save', 'dymca_status', 'dymca_remark', 'mca_status', 'mca_remark', 'department_file', 'department_remark', 'department_draft_remark', 'department_hod_final_status', 'department_hod_final_remark', 'department_mca_second_status', 'department_mca_second_remark', 'auditor_status', 'auditor_remark', 'dymca_final_status', 'dymca_final_remark', 'mca_final_status', 'mca_final_remark'];
+
 
     public function audit()
     {
@@ -87,13 +87,5 @@ class AuditObjection extends BaseModel
     public function to()
     {
         return $this->belongsTo(FiscalYear::class, 'to_year', 'id');
-    }
-
-
-
-    public function getStatusNameAttribute()
-    {
-        $statusName = collect(config('default_data.objection_status'));
-        return $statusName->where('id', $this->status)->first()['name'];
     }
 }

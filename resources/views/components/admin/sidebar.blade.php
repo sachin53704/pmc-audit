@@ -240,6 +240,15 @@
                                 </a>
                             </li>
                         @endcan
+                        {{-- objection.forward-objection-to-department --}}
+                        @if(Auth::user()->hasRole('Department HOD'))
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('objection.forward-objection-to-department') ? 'active' : '' }}" href="{{ route('objection.forward-objection-to-department') }}" >
+                                <i class="ri-auction-line"></i>
+                                <span data-key="t-dashboards">@lang('menu.hmm')</span>
+                            </a>
+                        </li>
+                        @endif
 
                         @can('send-hmm.view')
                         <li class="nav-item">

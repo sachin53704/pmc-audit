@@ -272,169 +272,103 @@ class AuditorAuditController extends Controller
     {
         if ($request->ajax()) {
             if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA')) {
-
-                DB::beginTransaction();
-
-                if (Auth::user()->hasRole('MCA')) {
-                    $roleStatus = "mca_status";
-                    $roleRemark = "mca_remark";
-                    $prevStatus = 12;
-                    $currentStatus = 13;
-                } else {
-                    $roleStatus = "dymca_status";
-                    $roleRemark = "dymca_remark";
-                    $prevStatus = 11;
-                    $currentStatus = 12;
-                }
                 try {
-                    if (isset($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
-                        $status = false;
-                        for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
+                    DB::beginTransaction();
+                    if (Auth::user()->hasRole('MCA')) {
+                        if (isset($request->department_mca_second_status) && $request->department_mca_second_status != "") {
 
-                            if (Auth::user()->hasRole('MCA') && $request->department_mca_status_id[$i] && isset($request->department_mca_status)) {
-                                AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
-                                    'department_mca_status' => $request->department_mca_status[$i],
-                                    'department_mca_remark' => $request->department_mca_remark[$i]
-                                ]);
-
-                                if ($request->department_mca_status_id[$i]) {
-                                    $prevStatus = 9;
-                                    $currentStatus = 10;
-                                } else {
-                                    $prevStatus = 12;
-                                    $currentStatus = 13;
-                                }
-                            } else {
-                                AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
-                                    $roleStatus => $request->$roleStatus[$i],
-                                    $roleRemark => $request->$roleRemark[$i]
-                                ]);
+                            $auditObjection = AuditObjection::find($request->audit_objection_id);
+                            $auditObjection->department_mca_second_status = $request->department_mca_second_status;
+                            $auditObjection->department_mca_second_remark = $request->department_mca_second_remark;
+                            if ($auditObjection->status < 8 && $auditObjection->department_hod_final_status) {
+                                $auditObjection->status = 8;
                             }
+                            $auditObjection->save();
 
-                            if (isset($request->department_mca_status) && $request->department_mca_status[$i] == "1") {
-                                $status = true;
-                            }
+                            $prevStatus = 9;
+                            $currentStatus = 10;
 
-                            if (isset($request->mca_status) && $request->mca_status[$i] == "1") {
-                                $status = true;
+                            $this->changeAuditStatus($request, $prevStatus, $currentStatus);
+                            DB::commit();
+                            return response()->json(['success' => 'Objection forward to auditor successfully']);
+                        } else if (isset($request->mca_final_status) && $request->mca_final_status != "") {
+                            $auditObjection = AuditObjection::find($request->audit_objection_id);
+                            $auditObjection->mca_final_status = $request->mca_final_status;
+                            $auditObjection->mca_final_remark = $request->mca_final_remark;
+                            if ($auditObjection->status < 11) {
+                                $auditObjection->status = 11;
                             }
+                            $auditObjection->save();
+
+
+                            $prevStatus = 12;
+                            $currentStatus = 13;
+
+
+                            if ($request->mca_final_status == "0") {
+                                $audit = Audit::find($request->audit_id);
+                                // send mail code
+                                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                                $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                                    $q->where('audit_id', $request->audit_id);
+                                })->pluck('email')->toArray();
+                                $mca = User::whereHas('roles', function ($q) {
+                                    $q->whereIn('name', ['MCA', 'DY MCA']);
+                                })->pluck('email')->toArray();
+
+                                $receiver_list = array_merge($userdepartment, $auditor, $mca);
+
+                                Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                                    $message->from('from@example.com', 'Your Name');
+                                    $message->to($receiver_list);
+                                    $message->subject('Hello');
+                                });
+                                // end of send mail code
+                                $this->changeAuditStatus($request, $prevStatus, $currentStatus);
+                                DB::commit();
+                                return response()->json(['success' => 'Objection forward to department successfully']);
+                            }
+                            $this->changeAuditStatus($request, $prevStatus, $currentStatus);
+                            DB::commit();
+                            return response()->json(['success' => 'Objection approve successfully']);
                         }
-
-                        $audit = Audit::find($request->audit_department_answer_id[0]);
-
-                        if ($audit && $status) {
-                            // send mail code
-                            $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
-
-                            $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
-                            $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
-                                $q->where('audit_id', $request->audit_id);
-                            })->pluck('email')->toArray();
-                            $mca = User::whereHas('roles', function ($q) {
-                                $q->whereIn('name', ['MCA', 'DY MCA']);
-                            })->pluck('email')->toArray();
-
-                            $receiver_list = array_merge($userdepartment, $auditor, $mca);
-
-                            Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
-                                $message->from('from@example.com', 'Your Name');
-                                $message->to($receiver_list);
-                                $message->subject('Hello');
-                            });
-                            // end of send mail code
+                    } else {
+                        $auditObjection = AuditObjection::find($request->audit_objection_id);
+                        $auditObjection->dymca_final_status = $request->dymca_final_status;
+                        $auditObjection->dymca_final_remark = $request->dymca_final_remark;
+                        if ($auditObjection->status < 10) {
+                            $auditObjection->status = 10;
                         }
+                        $auditObjection->save();
+
+
+                        $prevStatus = 11;
+                        $currentStatus = 12;
+                        $this->changeAuditStatus($request, $prevStatus, $currentStatus);
+                        DB::commit();
+                        return response()->json(['success' => 'Objection approve successfully']);
                     }
-
-                    $auditStatus = Audit::where('id', $request->audit_id)->value('status');
-
-                    Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > $prevStatus) ? $auditStatus : $currentStatus
-                    ]);
-
-                    DB::commit();
-                    return response()->json(['success' => 'Objection approve successfully']);
                 } catch (\Exception $e) {
                     DB::rollback();
-
                     return response()->json(['error' => 'Something went wrong!']);
-                }
-            } else if (Auth::user()->hasRole('Department')) {
-                // dd($request->all());
-                // AuditDepartmentAnswer
-                DB::beginTransaction();
-                try {
-
-                    if (isset($request->audit_department_answer_id) && isset($request->remark) && is_array($request->audit_department_answer_id) && count($request->audit_department_answer_id) > 0) {
-                        for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
-
-                            if (isset($request->audit_department_answer_id[$i]) && $request->audit_department_answer_id[$i] != "") {
-
-
-                                $auditDepartmentAnswer = AuditDepartmentAnswer::find($request->audit_department_answer_id[$i]);
-
-                                $auditDepartmentAnswer->department_hod_status = null;
-                                $auditDepartmentAnswer->auditor_status = null;
-                                $auditDepartmentAnswer->dymca_status = null;
-                                $auditDepartmentAnswer->mca_status = null;
-                                $auditDepartmentAnswer->department_mca_status = null;
-                            } else {
-                                $auditDepartmentAnswer = new AuditDepartmentAnswer;
-                            }
-
-                            $auditDepartmentAnswer->audit_objection_id = $request->audit_objection_id;
-                            $auditDepartmentAnswer->audit_id = $request->audit_id;
-                            $auditDepartmentAnswer->remark = $request->remark[$i];
-                            if ($request->hasFile('files') && isset($request->file('files')[$i])) {
-                                $file = $request->file('files')[$i]->store('department-answer-file');
-                                $auditDepartmentAnswer->file = $file;
-                            }
-                            $auditDepartmentAnswer->save();
-                        }
-                    }
-
-                    $auditStatus = Audit::where('id', $request->audit_id)->value('status');
-
-                    Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > 7) ? $auditStatus : 8
-                    ]);
-
-                    if ($request->is_draft_save == 0) {
-                        AuditObjection::where('id', $request->audit_objection_id)->update([
-                            'is_department_draft_save' => 1,
-                            'compliance_submit_date' => now()
-                        ]);
-                    }
-
-                    DB::commit();
-                    return response()->json(['success' => 'Document uploaded successfully']);
-                } catch (\Exception $e) {
-                    \Log::info($e);
-                    DB::rollback();
-                    response()->json(['error' => 'Something went wrong!']);
                 }
             } else if (Auth::user()->hasRole('Department HOD')) {
                 DB::beginTransaction();
                 try {
-                    $status = false;
-                    if (isset($request->audit_department_answer_id) && isset($request->department_hod_status) && isset($request->department_hod_remark) && count($request->audit_department_answer_id) > 0) {
-                        for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
-
-                            AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
-                                'department_hod_status' => $request->department_hod_status[$i],
-                                'department_hod_remark' => $request->department_hod_remark[$i]
-                            ]);
-
-                            if ($request->department_hod_status[$i] == "1") {
-                                $status = true;
-                            }
-                        }
+                    $auditObjection = AuditObjection::find($request->audit_objection_id);
+                    $auditObjection->department_hod_final_status = $request->department_hod_final_status;
+                    $auditObjection->department_hod_final_remark = $request->department_hod_final_remark;
+                    if ($auditObjection->status < 7 && $auditObjection->department_hod_final_status) {
+                        $auditObjection->status = 7;
                     }
+                    $auditObjection->save();
 
-
-                    if ($status) {
+                    if ($request->department_hod_final_status == "1") {
                         $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
-                        $audit = Audit::where('id', $request->audit_id)->update([
+                        Audit::where('id', $request->audit_id)->update([
                             'status' => ($auditStatus > 8) ? $auditStatus : 9
                         ]);
                         $audit = Audit::find($request->audit_id);
@@ -457,11 +391,13 @@ class AuditorAuditController extends Controller
                             $message->subject('Hello');
                         });
                         // end of send mail code
+
+                        DB::commit();
+                        return response()->json(['success' => 'Objection approve successfully']);
                     }
 
-
                     DB::commit();
-                    return response()->json(['success' => 'Answer updated successfully']);
+                    return response()->json(['success' => 'Objection rejected successfully']);
                 } catch (\Exception $e) {
                     DB::rollback();
                     response()->json(['error' => 'Something went wrong!']);
@@ -469,15 +405,13 @@ class AuditorAuditController extends Controller
             } else if (Auth::user()->hasRole('Auditor')) {
                 DB::beginTransaction();
                 try {
-                    if (isset($request->audit_department_answer_id) && isset($request->auditor_status) && isset($request->auditor_remark) && count($request->audit_department_answer_id) > 0) {
-                        for ($i = 0; $i < count($request->audit_department_answer_id); $i++) {
-
-                            AuditDepartmentAnswer::where('id', $request->audit_department_answer_id[$i])->update([
-                                'auditor_status' => $request->auditor_status[$i],
-                                'auditor_remark' => $request->auditor_remark[$i]
-                            ]);
-                        }
+                    $auditObjection = AuditObjection::find($request->audit_objection_id);
+                    $auditObjection->auditor_status = $request->auditor_status;
+                    $auditObjection->auditor_remark = $request->auditor_remark;
+                    if ($auditObjection->status < 9) {
+                        $auditObjection->status = 9;
                     }
+                    $auditObjection->save();
 
                     $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
@@ -486,7 +420,11 @@ class AuditorAuditController extends Controller
                     ]);
 
                     DB::commit();
-                    return response()->json(['success' => 'Answer updated successfully']);
+                    if ($request->auditor_status) {
+                        return response()->json(['success' => 'Compliance send for proposal to approve or delete successfully']);
+                    } else {
+                        return response()->json(['success' => 'Compliance send for proposal to convert para successfully']);
+                    }
                 } catch (\Exception $e) {
                     DB::rollback();
                     response()->json(['error' => 'Something went wrong!']);
@@ -495,6 +433,17 @@ class AuditorAuditController extends Controller
                 response()->json(['error' => 'Something went wrong!']);
             }
         }
+    }
+
+    public function changeAuditStatus($request, $prevStatus, $currentStatus)
+    {
+        $auditStatus = Audit::where('id', $request->audit_id)->value('status');
+
+        Audit::where('id', $request->audit_id)->update([
+            'status' => ($auditStatus > $prevStatus) ? $auditStatus : $currentStatus
+        ]);
+
+        return true;
     }
 
 
