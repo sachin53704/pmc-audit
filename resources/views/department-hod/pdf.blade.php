@@ -25,11 +25,11 @@
             </tr>
             <tr>
                 <th>From Year</th>
-                <td>{{ $objection->from?->year }}</td>
+                <td>{{ $objection->from?->name }}</td>
             </tr>
             <tr>
                 <th>To Year</th>
-                <td>{{ $objection->to?->year }}</td>
+                <td>{{ $objection->to?->name }}</td>
             </tr>
             
             <tr>
