@@ -670,9 +670,9 @@
                 $('#viewObjectionDetails').removeClass('d-none');
                 $('#viewFooterObjectionDetails').removeClass('d-none');
 
-                // if(!data.auditObjection.is_department_draft_save){
-                //     $('#saveDraftObjectionStatus').addClass('d-none');
-                // }
+                if(!data.auditObjection.is_department_draft_save){
+                    $('#saveDraftObjectionStatus').addClass('d-none');
+                }
             },
             error: function(error, jqXHR, textStatus, errorThrown) {
                 swal("Error!", "Some thing went wrong", "error");
