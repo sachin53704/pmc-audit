@@ -702,6 +702,9 @@
                         if(data.auditObjection.dymca_final_status == "1" && roleName != "Auditor"){
                             $("#addForm select[name='auditor_status']").prop('disabled', true)
                             $("#addForm textarea[name='auditor_remark']").prop('disabled', true)
+                        }else if(roleName != "Auditor"){
+                            $("#addForm select[name='auditor_status']").prop('disabled', true)
+                            $("#addForm textarea[name='auditor_remark']").prop('disabled', true)
                         }
 
                         $("#addForm select[name='dymca_final_status']").val(data.auditObjection.dymca_final_status);

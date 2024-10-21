@@ -606,6 +606,9 @@
                         if(data.auditObjection.dymca_final_status == "1" && roleName != "Auditor"){
                             $("#addForm select[name='auditor_status']").prop('disabled', true)
                             $("#addForm textarea[name='auditor_remark']").prop('disabled', true)
+                        }else if(roleName != "Auditor"){
+                            $("#addForm select[name='auditor_status']").prop('disabled', true)
+                            $("#addForm textarea[name='auditor_remark']").prop('disabled', true)
                         }
 
                         $("#addForm select[name='dymca_final_status']").val(data.auditObjection.dymca_final_status);
@@ -630,7 +633,9 @@
                         }
                         // $('#mca_action_status').val(data.auditObjection.mca_action_status)
                         // $('#mca_remark').val(data.auditObjection.mca_remark)
-
+                        if((data.auditObjection.department_hod_final_status == "1" && data.auditObjection.mca_final_status != "0") && roleName == "Auditor"){
+                            $('#viewFooterObjectionDetails button').addClass('d-none');
+                        }
 
                         $('#viewObjectionDetails').removeClass('d-none');
                         $('#viewFooterObjectionDetails').removeClass('d-none');
