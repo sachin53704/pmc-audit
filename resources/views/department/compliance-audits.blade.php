@@ -268,8 +268,7 @@
                                                                     <label for="department_mca_second_status">MCA Status</label>
                                                                     <select @if(!Auth::user()->hasRole('MCA'))disabled @endif name="department_mca_second_status" class="form-select">
                                                                         <option value="">Select Status</option>
-                                                                        <option value="1">Approve</option>
-                                                                        <option value="0">Reject</option>
+                                                                        <option value="1">Forward to Auditor</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-6">
@@ -320,7 +319,6 @@
                                                                     <select @if(!Auth::user()->hasRole('DY MCA'))disabled @endif name="dymca_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
-                                                                        <option value="0">Reject</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-6">
@@ -346,7 +344,7 @@
                                                                     <select @if(!Auth::user()->hasRole('MCA'))disabled @endif name="mca_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
-                                                                        <option value="0">Reject</option>
+                                                                        <option value="0">Forward To Department</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-6">
