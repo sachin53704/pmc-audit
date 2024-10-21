@@ -92,7 +92,7 @@ class ClerkAuditController extends Controller
 
             $request['status'] = 1;
             $request['dymca_status'] = 1;
-            $request['mca_status'] = 1;
+            $request['mca_status'] = null;
             $audit->update($request->all());
 
             return response()->json(['success' => 'Audit file updated successfully!']);
