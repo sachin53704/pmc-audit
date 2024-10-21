@@ -634,7 +634,7 @@
                         // $('#mca_action_status').val(data.auditObjection.mca_action_status)
                         // $('#mca_remark').val(data.auditObjection.mca_remark)
                         if((data.auditObjection.department_hod_final_status == "1" && data.auditObjection.mca_final_status != "0") && roleName == "Auditor"){
-                            $('#viewFooterObjectionDetails button').addClass('d-none');
+                            // $('#viewFooterObjectionDetails button').addClass('d-none');
                         }
 
                         $('#viewObjectionDetails').removeClass('d-none');
