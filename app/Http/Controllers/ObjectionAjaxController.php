@@ -37,7 +37,7 @@ class ObjectionAjaxController extends Controller
                         ->whereNotNull('department_remark')
                         ->where('status', '>=', 6);
                 })
-                ->when(Auth::user()->hasRole('Auditor'), function ($q) {
+                ->when(Auth::user()->hasRole('Auditor'), function ($q) use ($request) {
                     $q->where('user_id', Auth::user()->id);
                     if (isset($request->status)) {
                         $q->where('status', '>=', 1);
@@ -48,6 +48,7 @@ class ObjectionAjaxController extends Controller
                 ->get();
 
             $audit = Audit::find($request->audit_id);
+
             return response()->json([
                 'auditObjections' => $auditObjections,
                 'department' => $audit->department_id,
@@ -61,7 +62,8 @@ class ObjectionAjaxController extends Controller
         if ($request->ajax()) {
             $auditObjections = AuditObjection::with(['department'])
                 ->where('audit_id', $request->audit_id)
-                ->where('is_objection_send', 0)
+                ->where('is_objection_send', 1)
+                ->where('is_department_hod_forward', 0)
                 ->where('status', '>=', 4)
                 ->get();
 
