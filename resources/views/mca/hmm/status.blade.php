@@ -318,9 +318,17 @@
                     @if(Auth::user()->hasRole('MCA'))
                         $('#addForm #dymca_status').val(data.auditObjection.mca_status)
                         $('#addForm #dymca_remark').val(data.auditObjection.mca_remark)
+                        if(data.auditObjection.is_objection_send){
+                            $('#addForm #dymca_status').prop('disabled', true);
+                            $('#addForm #dymca_remark').prop('disabled', true);
+                        }
                     @elseif(Auth::user()->hasRole('DY MCA'))
                         $('#addForm #dymca_status').val(data.auditObjection.dymca_status)
                         $('#addForm #dymca_remark').val(data.auditObjection.dymca_remark)
+                        if(data.auditObjection.mca_status){
+                            $('#addForm #dymca_status').prop('disabled', true);
+                            $('#addForm #dymca_remark').prop('disabled', true);
+                        }
                     @else
                         $('#addForm #is_department_hod_forward').val(data.auditObjection.is_department_hod_forward).change()
                         $('#addForm #department_hod_remark').val(data.auditObjection.department_hod_remark)
