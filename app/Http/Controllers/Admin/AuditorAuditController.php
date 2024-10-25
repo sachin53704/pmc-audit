@@ -35,7 +35,7 @@ class AuditorAuditController extends Controller
             ->latest()
             ->get();
 
-        return view('auditor.assigned-audit-list')->with(['audits' => $audits]);
+        return view('program-audit.auditor.assigned-audit-list')->with(['audits' => $audits]);
     }
 
 
@@ -87,6 +87,13 @@ class AuditorAuditController extends Controller
             ->latest()
             ->get();
 
+        // $audits = AuditObjection::query()->withWhereHas('audit', function ($q) use ($user) {
+        //     $q->where('status', '>=', 5)
+        //         ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id));
+        // })
+        //     ->latest()
+        //     ->get();
+
         $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
 
         $zones = Zone::where('status', 1)->select('id', 'name')->get();
@@ -99,7 +106,7 @@ class AuditorAuditController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('auditor.create-objection')->with([
+        return view('program-audit.auditor.create-objection')->with([
             'audits' => $audits,
             'zones' => $zones,
             'departments' => $departments,

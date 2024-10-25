@@ -33,19 +33,9 @@
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="file">File Upload<span class="text-danger">*</span></label>
-                                <input type="file" name="file" class="form-control" required accept=".pdf,.jpg,.jpeg,.png">
-                                <span class="text-danger is-invalid file_err"></span>
-                            </div>
-                            <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
                                 <textarea class="form-control" name="description" required></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
-                            </div>
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="remark">Remark <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="remark" required></textarea>
-                                <span class="text-danger is-invalid remark_err"></span>
                             </div>
 
                         </div>
@@ -92,23 +82,10 @@
                             {{-- <div class="col-md-1 mt-3">
                                 <div class="edit_file pt-3 mt-3"></div>
                             </div> --}}
-                            <div class="col-md-3 mt-3">
-                                <label class="col-form-label" for="file">
-                                    File Upload<span class="text-danger">*</span>
-                                    <span class="edit_file"></span>
-                                </label>
-                                <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
-                                <span class="text-danger is-invalid file_err"></span>
-                            </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
                                 <textarea class="form-control" name="description" required></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
-                            </div>
-                            <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="remark">Remark <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="remark" required></textarea>
-                                <span class="text-danger is-invalid remark_err"></span>
                             </div>
 
                         </div>
@@ -146,7 +123,6 @@
                                     <th>Department</th>
                                     <th>Date</th>
                                     <th>File Description</th>
-                                    <th>Remark</th>
                                     <th>View File</th>
                                     <th>Dy MCA Reject Reason</th>
                                     <th>MCA Reject Reason</th>
@@ -160,9 +136,8 @@
                                         <td>{{ $audit->department?->name }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}<span></td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
                                         <td>
-                                            <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                            <a href="{{ asset('storage/'.$audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
                                         <td>
                                             @if ($audit->dymca_status == "3")

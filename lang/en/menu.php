@@ -27,7 +27,7 @@ return [
     'department_letter' => 'Department Letter',
     'hmm_question' => 'HMM Objection',
     'answer_question' => 'Compliance Objection',
-    'draft_review' => 'Draft Review',
+    'draft_review' => 'Compliance',
     'para_audit' => 'Para Audit',
     'reports' => 'Reports',
     'programme_audit_para_summary' => 'Programme Audit Para Summary',

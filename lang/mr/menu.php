@@ -27,7 +27,7 @@ return [
     'department_letter' => 'विभागाचे पत्र',
     'hmm_question' => 'HMM प्रश्न',
     'answer_question' => 'अनुपालन प्रश्न',
-    'draft_review' => 'मसुदा पुनरावलोकन',
+    'draft_review' => 'अनुपालन',
     'para_audit' => 'पॅरा ऑडिट',
     'reports' => 'अहवाल',
     'programme_audit_para_summary' => 'कार्यक्रम ऑडिट पॅरा सारांश',

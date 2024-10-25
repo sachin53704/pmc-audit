@@ -52,7 +52,7 @@ class DepartmentAuditController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('department.compliance-audits')->with([
+        return view('program-audit.department.compliance-audits')->with([
             'audits' => $audits,
             'departments' => $departments,
             'zones' => $zones,

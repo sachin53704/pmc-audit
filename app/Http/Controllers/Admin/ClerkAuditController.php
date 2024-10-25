@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use PDF;
 
 class ClerkAuditController extends Controller
 {
@@ -22,7 +24,7 @@ class ClerkAuditController extends Controller
         $departments = Department::get();
         $audits = Audit::latest()->get();
 
-        return view('clerk.upload-program-audit')->with(['audits' => $audits, 'departments' => $departments]);
+        return view('program-audit.clerk.upload-program-audit')->with(['audits' => $audits, 'departments' => $departments]);
     }
 
 
@@ -35,7 +37,8 @@ class ClerkAuditController extends Controller
     public function store(StoreAuditRequest $request)
     {
         try {
-            $request['file_path'] = 'storage/file/' . $request->file->store('', 'file');
+            $name = $this->generatePdf($request->date, $request->description);
+            $request['file_path'] = $name;
             $request['dymca_status'] = 1;
             $request['audit_no'] = Audit::generateAuditNo();
 
@@ -83,12 +86,11 @@ class ClerkAuditController extends Controller
     public function update(UpdateAuditRequest $request, Audit $audit)
     {
         try {
-            if ($request->hasFile('file')) {
-                if (Storage::disk('file')->exists($audit->file_path)) {
-                    Storage::disk('file')->delete($audit->file_path);
-                }
-                $request['file_path'] = 'storage/file/' . $request->file->store('', 'file');
+            if (Storage::disk('public')->exists($audit->file_path)) {
+                Storage::disk('public')->delete($audit->file_path);
             }
+            $name = $this->generatePdf($request->date, $request->description);
+            $request['file_path'] = $name;
 
             $request['status'] = 1;
             $request['dymca_status'] = 1;
@@ -111,5 +113,16 @@ class ClerkAuditController extends Controller
         } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'deleting', 'Audit file');
         }
+    }
+
+
+    public function generatePdf($date, $description)
+    {
+        $pdf = PDF::loadView('program-audit.clerk.pdf', compact('date', 'description'));
+
+        $name = 'file/' . Str::random(60) . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
     }
 }

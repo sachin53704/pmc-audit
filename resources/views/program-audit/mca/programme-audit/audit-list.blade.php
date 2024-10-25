@@ -15,12 +15,11 @@
                                     <th>Sr No</th>
                                     <th>Department</th>
                                     <th>Date</th>
-                                    <th>File Description</th>
-                                    <th>Remark</th>
+                                    <th>Description</th>
                                     <th>View File</th>
                                     <th>Assign Auditor</th>
                                     @if(Request()->status == "pending" || Request()->status == "rejected")
-                                    <th>Status</th>
+                                    @if(Request()->status == "rejected")<th>Status</th>@endif
                                     @endif
                                     <th>Action</th>
                                 </tr>
@@ -32,7 +31,7 @@
                                         <td>{{ $audit->department?->name }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
+                                       
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
@@ -41,7 +40,7 @@
                                             {{ $loop->iteration.'. '.$auditor?->user?->first_name.' '.$auditor?->user?->middle_name.' '.$auditor?->user?->last_name }}<br>
                                             @endforeach
                                         </td>
-                                        @if(Request()->status == "pending" || Request()->status == "rejected")
+                                        @if(Request()->status == "rejected")
                                         <td>
                                             @if($audit->dymca_status == 3)
                                             {{ $audit->dymca_remark }}
@@ -52,6 +51,8 @@
                                             @endif
                                         </td>
                                         @endif
+
+                                        {{-- @if(Request()->status == "pending") --}}
                                         <td>
                                             @if(Auth::user()->hasRole('MCA') && $audit->mca_status == "1" || Auth::user()->hasRole('DY MCA') && $audit->dymca_status == "1")
                                                 <button class="btn btn-success approve-audit px-2 py-1" data-action="approve" title="Approve" data-id="{{ $audit->id }}"><i data-feather="check-circle"></i> Approve</button>
@@ -69,6 +70,7 @@
                                             @else
                                             @endif
                                         </td>
+                                        {{-- @endif --}}
                                     </tr>
                                 @endforeach
                         </table>
@@ -106,6 +108,14 @@
                                 <select class="js-example-basic-single form-select" multiple name="auditor_id[]" id="auditor_id">
                                 </select>
                                 <span class="text-danger is-invalid auditor_id_err"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label" for="assign_auditor_date">Date : </label>
+                            <div class="col-sm-9" style="max-height: 60px">
+                                <input type="date" name="assign_auditor_date" id="assign_auditor_date" class="form-control" value="{{ date('Y-m-d') }}">
+                                <span class="text-danger is-invalid assign_auditor_date_err"></span>
                             </div>
                         </div>
 

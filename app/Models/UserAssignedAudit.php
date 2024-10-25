@@ -10,7 +10,7 @@ class UserAssignedAudit extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'audit_id', 'status'];
+    protected $fillable = ['user_id', 'audit_id', 'status', 'assign_auditor_date'];
 
     public function user()
     {

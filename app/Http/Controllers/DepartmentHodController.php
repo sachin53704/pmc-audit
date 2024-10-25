@@ -16,13 +16,19 @@ class DepartmentHodController extends Controller
 {
     public function forwardObjectionToDepartment(Request $request)
     {
-        $audits = Audit::query()->whereHas('objections', function ($q) {
-            $q->where('is_draft_send', 1)
-                ->where('is_department_hod_forward', 0);
-        })->where('department_id', Auth::user()->department_id)->latest()
-            ->get();
+        // $audits = Audit::query()->whereHas('objections', function ($q) {
+        //     $q->where('is_draft_send', 1)
+        //         ->where('is_department_hod_forward', 0);
+        // })->where('department_id', Auth::user()->department_id)->latest()
+        //     ->get();
 
-        return view('department-hod.forward-objection')->with([
+        $audits = AuditObjection::query()->with(['audit', 'department'])
+            ->where('is_draft_send', 1)
+            ->where('is_department_hod_forward', 0)
+            ->where('department_id', Auth::user()->department_id)
+            ->latest()->get();
+
+        return view('program-audit.department-hod.forward-objection')->with([
             'audits' => $audits
         ]);
     }
@@ -64,7 +70,7 @@ class DepartmentHodController extends Controller
 
                     $receiver_list = array_merge($userdepartment, $auditor, $mca);
 
-                    Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                    Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
                         $message->from('from@example.com', 'Your Name');
                         $message->to($receiver_list);
                         $message->subject('Hello');
@@ -84,9 +90,9 @@ class DepartmentHodController extends Controller
 
     public function viewForwardObjectionToDepartment(Request $request)
     {
-        $objection = AuditObjection::with(['department', 'from', 'to', 'zone', 'auditType', 'severity', 'auditParaCategory'])->where('id', $request->id)->first();
+        $objections = AuditObjection::with(['department', 'from', 'to', 'zone', 'auditType', 'severity', 'auditParaCategory'])->whereIn('id', $request->id)->get();
 
-        $pdf = PDF::loadView('department-hod.pdf', compact('objection'));
+        $pdf = PDF::loadView('program-audit.department-hod.pdf', compact('objections'));
 
         return $pdf->stream('para-current-status.pdf');
     }

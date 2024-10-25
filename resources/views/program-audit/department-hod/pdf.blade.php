@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        .page-break {
+            page-break-after: always;
+        }
+        </style>
 </head>
 <body>
+    @foreach($objections as $objection)
     <table border="1" style="width:100%">
         <thead>
             <tr>
@@ -60,5 +66,7 @@
         </tbody>
     </table>
     {!! $objection->description !!}
+    <div class="page-break"></div>
+    @endforeach
 </body>
 </html>

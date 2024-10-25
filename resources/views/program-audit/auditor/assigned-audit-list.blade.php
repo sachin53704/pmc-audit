@@ -15,11 +15,8 @@
                                     <th>Sr No</th>
                                     <th>Department</th>
                                     <th>Date</th>
-                                    <th>File Description</th>
-                                    <th>Remark</th>
+                                    <th>Description</th>
                                     <th>View File</th>
-                                    <th>View Letter</th>
-                                    <th>Letter Description</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -30,18 +27,11 @@
                                         <td>{{ $audit->department?->name }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '85') }}</span></td>
                                         <td>
                                             @if($audit->file_path)
                                                 <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                             @endif
                                         </td>
-                                        <td>
-                                            @if($audit->dl_file_path)
-                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                                            @endif
-                                        </td>
-                                        <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                         <td>
                                             @if($audit->dl_file_path)
                                                 <button class="btn btn-secondary px-2 py-1" title="letter is sent to department" disabled><i data-feather="file-text"></i> Letter Sent</button>

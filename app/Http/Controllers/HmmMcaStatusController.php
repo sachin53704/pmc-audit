@@ -18,31 +18,45 @@ class HmmMcaStatusController extends Controller
 {
     public function getHmmMCAData(Request $request)
     {
-        $audits = Audit::query()
-            ->when(Auth::user()->hasRole('MCA'), function ($q) {
-                $q->whereHas('objections', function ($q) {
-                    $q->where('dymca_status', 1)
-                        ->where('is_draft_send', 1);
-                });
-            })
-            ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
-                $q->whereHas('objections', function ($q) {
-                    $q->whereNull('mca_status')
-
-                        ->when(function ($q) {
-                            $q->where('is_draft_send', 1)->whereNull('dymca_status')
-                                ->orWhere('dymca_status', 2);
-                        });
-                });
-            })
-            ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
-                $q->whereHas('objections', function ($q) {
-                    $q->where('is_draft_send', 1);
-                })
-                    ->where('department_id', Auth::user()->department_id);
-            })
+        $audits = AuditObjection::query()->with('department')->withWhereHas('audit', function ($q) {
+            $q->where('status', '>=', 5);
+        })->when(Auth::user()->hasRole('MCA'), function ($q) {
+            $q->where('dymca_status', 1)
+                ->where('is_draft_send', 1);
+        })->when(Auth::user()->hasRole('MCA'), function ($q) {
+            $q->where('dymca_status', 1)
+                ->where('is_draft_send', 1);
+        })->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+            $q->where('is_draft_send', 1)->where('department_id', Auth::user()->department_id);
+        })
             ->latest()
             ->get();
+
+        // $audits = Audit::query()
+        //     ->when(Auth::user()->hasRole('MCA'), function ($q) {
+        //         $q->whereHas('objections', function ($q) {
+        //             $q->where('dymca_status', 1)
+        //                 ->where('is_draft_send', 1);
+        //         });
+        //     })
+        //     ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+        //         $q->whereHas('objections', function ($q) {
+        //             $q->whereNull('mca_status')
+
+        //                 ->when(function ($q) {
+        //                     $q->where('is_draft_send', 1)->whereNull('dymca_status')
+        //                         ->orWhere('dymca_status', 2);
+        //                 });
+        //         });
+        //     })
+        //     ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+        //         $q->whereHas('objections', function ($q) {
+        //             $q->where('is_draft_send', 1);
+        //         })
+        //             ->where('department_id', Auth::user()->department_id);
+        //     })
+        //     ->latest()
+        //     ->get();
 
         $departments = Department::select('id', 'name')->get();
 
@@ -56,7 +70,7 @@ class HmmMcaStatusController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('mca.hmm.status')->with([
+        return view('program-audit.mca.hmm.status')->with([
             'audits' => $audits,
             'zones' => $zones,
             'departments' => $departments,

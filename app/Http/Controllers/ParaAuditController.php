@@ -38,7 +38,7 @@ class ParaAuditController extends Controller
             ->latest()
             ->get();
 
-        return view('para-audit.index')->with([
+        return view('program-audit.para-audit.index')->with([
             'audits' => $audits
         ]);
     }

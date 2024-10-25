@@ -25,7 +25,9 @@
                                         <th>Department</th>
                                         <th>Date</th>
                                         <th>File Description</th>
-                                        <th>Remark</th>
+                                        <th>HMM No.</th>
+                                        <th>DYMCA Status</th>
+                                        <th>MCA Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -34,11 +36,29 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $audit->department?->name }}</td>
-                                            <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                            <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
-                                            <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
+                                            <td>{{ Carbon\Carbon::parse($audit->audit?->date)->format('d-m-Y') }}</td>
+                                            <td><span style="cursor: pointer" title="{{ $audit->audit?->description }}">{{ Str::limit($audit->audit?->description, '30') }}</span></td>
+                                            <td>{{ $audit->objection_no }}</td>
                                             <td>
-                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"> View Objection</button>
+                                                @if($audit->dymca_status == "1")
+                                                <span class="badge bg-success">Approve</span>
+                                                @elseif($audit->dymca_status == "2")
+                                                <span class="badge bg-danger">Forward To Auditor</span>
+                                                @else
+                                                <span class="badge bg-warning">Pending</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($audit->mca_status == "1")
+                                                <span class="badge bg-success">Approve</span>
+                                                @elseif($audit->mca_status == "2")
+                                                <span class="badge bg-danger">Forward To Auditor</span>
+                                                @else
+                                                <span class="badge bg-warning">Pending</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}" data-department-name="{{ $audit->department?->name }}" data-department-id="{{ $audit->department?->name }}"> View Objection</button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -52,7 +72,7 @@
 
     {{-- Add Objection Modal --}}
     <div class="modal fade" id="addObjectionModal" role="dialog">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <form action="" id="addForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
@@ -61,29 +81,8 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Sr no.</th>
-                                            <th>Department</th>
-                                            <th>HMM No.</th>
-                                            <th>Subject</th>
-                                            <th>DYMCA Status</th>
-                                            <th>DYMCA Remark</th>
-                                            <th>MCA Status</th>
-                                            <th>MCA Remark</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="modelObjectionId">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="viewObjectionDetails d-none">
-                            <hr>
+                        <div class="viewObjectionDetails">
+                            
                             <input type="hidden" name="audit_id" value="" id="audit_id">
                             <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
                             <div class="row">
@@ -208,7 +207,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <div class="viewObjectionDetails d-none">
+                        <div class="viewObjectionDetails">
                             <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Close</button>
                             <button class="btn btn-primary" id="addObjectionSubmit" type="submit">Submit</button>
                         </div>
@@ -230,12 +229,24 @@
         ClassicEditor
             .create(document.querySelector('#description'),{
                 toolbar: {
-                    shouldNotGroupWhenFull: true
+                    shouldNotGroupWhenFull: true,
+                    items: [
+                        'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
+                    'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                    'alignment', '|',
+    'fontSize',               // Font size options
+    'fontColor',              // Text color options
+    'fontBackgroundColor',    // Background color for text
+    '|',
+                    'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
+                    'undo', 'redo'
+                    ],
+                    'format_tags': 'p;h1;h2;h3;h4;h5;h6'
                 }
             })
             .then(editor => {
                 editorInstance = editor;
-                editorInstance.enableReadOnlyMode('reason');
+                // editorInstance.enableReadOnlyMode('reason');
                 editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                 // Make the editor scrollable
@@ -261,7 +272,7 @@
 
 
     <script>
-        $('body').on('click', '.viewObjection', function(){
+        $('body').on('click', '.add-objection', function(){
             let id = $(this).attr('data-id');
             let departmentName = $(this).attr('data-department-name');
             let departmentId = $(this).attr('data-department-id');
@@ -334,7 +345,7 @@
                         $('#addForm #department_hod_remark').val(data.auditObjection.department_hod_remark)
                     @endif
 
-                    $('.viewObjectionDetails').removeClass('d-none')
+                    $("#addObjectionModal").modal("show");
                 },
                 error: function(error, jqXHR, textStatus, errorThrown) {
                     swal("Error!", "Some thing went wrong", "error");
@@ -352,64 +363,64 @@
     <script>
         var questionCounter = 1;
 
-        $("#buttons-datatables").on("click", ".add-objection", function(e) {
-            e.preventDefault();
-            var model_id = $(this).attr("data-id");
-            $('#audit_id').val(model_id)
-            var url = "{{ route('ajax.viewAuditorObjection') }}";
-            let status = @if(Auth::user()->hasRole('DY MCA'))1 @elseif(Auth::user()->hasRole('MCA'))2 @endif
+        // $("#buttons-datatables").on("click", ".add-objection", function(e) {
+        //     e.preventDefault();
+        //     var model_id = $(this).attr("data-id");
+        //     $('#audit_id').val(model_id)
+        //     var url = "{{ route('ajax.viewAuditorObjection') }}";
+        //     let status = @if(Auth::user()->hasRole('DY MCA'))1 @elseif(Auth::user()->hasRole('MCA'))2 @endif
 
-            $.ajax({
-                url: url,
-                type: 'GET',
-                data: {
-                    'audit_id': model_id,
-                    'status': status
-                },
-                beforeSend: function()
-                {
-                    $('#preloader').css('opacity', '0.5');
-                    $('#preloader').css('visibility', 'visible');
-                },
-                success: function(data, textStatus, jqXHR)
-                {
-                    if (!data.error)
-                    {
-                        var html = ``;
-                        var count = 1;
-                        $.each(data.auditObjections, function(index, value){
-                            html += `<tr>
-                                <td>${count++}</td>
-                                <td>${value?.department?.name}</td>
-                                <td>${value.objection_no}</td>
-                                <td>${value.subject}</td>
-                                <td>${ (value.dymca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.dymca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
-                                <td>${ (value.dymca_remark) ? value.dymca_remark : '-' }</td>
-                                <td>${ (value.mca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.mca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
-                                <td>${ (value.mca_remark) ? value.mca_remark : '-' }</td>
-                                <td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}" data-department-name="${data.departmentName}" data-department-id="${data.department}">View Objection</button></td>
-                            </tr>`;
-                        });
-                        $('#modelObjectionId').html(html);
+        //     $.ajax({
+        //         url: url,
+        //         type: 'GET',
+        //         data: {
+        //             'audit_id': model_id,
+        //             'status': status
+        //         },
+        //         beforeSend: function()
+        //         {
+        //             $('#preloader').css('opacity', '0.5');
+        //             $('#preloader').css('visibility', 'visible');
+        //         },
+        //         success: function(data, textStatus, jqXHR)
+        //         {
+        //             if (!data.error)
+        //             {
+        //                 var html = ``;
+        //                 var count = 1;
+        //                 $.each(data.auditObjections, function(index, value){
+        //                     html += `<tr>
+        //                         <td>${count++}</td>
+        //                         <td>${value?.department?.name}</td>
+        //                         <td>${value.objection_no}</td>
+        //                         <td>${value.subject}</td>
+        //                         <td>${ (value.dymca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.dymca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
+        //                         <td>${ (value.dymca_remark) ? value.dymca_remark : '-' }</td>
+        //                         <td>${ (value.mca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.mca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
+        //                         <td>${ (value.mca_remark) ? value.mca_remark : '-' }</td>
+        //                         <td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}" data-department-name="${data.departmentName}" data-department-id="${data.department}">View Objection</button></td>
+        //                     </tr>`;
+        //                 });
+        //                 $('#modelObjectionId').html(html);
 
-                        $('.viewObjectionDetails').addClass('d-none')
+        //                 $('.viewObjectionDetails').addClass('d-none')
 
-                        $("#addObjectionModal").modal("show");
-                    } else {
-                        swal("Error!", data.error, "error");
-                    }
-                },
-                error: function(error, jqXHR, textStatus, errorThrown) {
-                    swal("Error!", "Some thing went wrong", "error");
-                },
-                complete: function() {
-                    $('#preloader').css('opacity', '0');
-                    $('#preloader').css('visibility', 'hidden');
-                },
-            });
+        //                 $("#addObjectionModal").modal("show");
+        //             } else {
+        //                 swal("Error!", data.error, "error");
+        //             }
+        //         },
+        //         error: function(error, jqXHR, textStatus, errorThrown) {
+        //             swal("Error!", "Some thing went wrong", "error");
+        //         },
+        //         complete: function() {
+        //             $('#preloader').css('opacity', '0');
+        //             $('#preloader').css('visibility', 'hidden');
+        //         },
+        //     });
 
-            $('#assign-role-modal').modal('show');
-        });
+        //     $('#assign-role-modal').modal('show');
+        // });
 
 
         // Submit Objection Form

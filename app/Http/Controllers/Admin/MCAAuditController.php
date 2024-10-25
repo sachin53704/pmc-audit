@@ -39,7 +39,7 @@ class MCAAuditController extends Controller
             ->latest()
             ->get();
 
-        return view('mca.programme-audit.audit-list')->with(['status' => $status, 'audits' => $audits]);
+        return view('program-audit.mca.programme-audit.audit-list')->with(['status' => $status, 'audits' => $audits]);
     }
 
 
@@ -108,7 +108,7 @@ class MCAAuditController extends Controller
             ->latest()
             ->get();
 
-        return view('mca.programme-audit.audit-list')->with(['status' => $status, 'audits' => $audits, 'page_type' => $page_type]);
+        return view('program-audit.mca.programme-audit.audit-list')->with(['status' => $status, 'audits' => $audits, 'page_type' => $page_type]);
     }
 
 
@@ -141,7 +141,7 @@ class MCAAuditController extends Controller
 
             UserAssignedAudit::where(['audit_id' => $request->audit_id])->delete();
             foreach ($request->auditor_id as $auditorId) {
-                UserAssignedAudit::create(['audit_id' => $request->audit_id, 'user_id' => $auditorId]);
+                UserAssignedAudit::create(['audit_id' => $request->audit_id, 'user_id' => $auditorId, 'assign_auditor_date' => date('Y-m-d', strtotime($request->assign_auditor_date))]);
             }
             Audit::where('id', $request->audit_id)->update(['status' => Audit::AUDIT_STATUS_AUDITOR_ASSIGNED]);
 
@@ -377,16 +377,21 @@ class MCAAuditController extends Controller
 
     public function sendObjection()
     {
-        $audits = Audit::query()
-            ->where('status', '>=', 6)
-            ->latest()
-            ->whereHas('objections', function ($q) {
-                $q->where('mca_status', 1)
-                    ->where('is_objection_send', 0);
-            })
-            ->get();
+        // $audits = Audit::query()
+        //     ->where('status', '>=', 6)
+        //     ->latest()
+        //     ->whereHas('objections', function ($q) {
+        //         $q->where('mca_status', 1)
+        //             ->where('is_objection_send', 0);
+        //     })
+        //     ->get();
 
-        return view('mca.programme-audit.send-objection')->with(['audits' => $audits]);
+        $audits = AuditObjection::query()->with(['department'])->where('mca_status', 1)
+            ->where('is_objection_send', 0)->withWhereHas('audit', function ($q) {
+                $q->where('status', '>=', 6);
+            })->latest()->get();
+
+        return view('program-audit.mca.programme-audit.send-objection')->with(['audits' => $audits]);
     }
 
     public function getNotSendObjection(Request $request)
@@ -447,7 +452,7 @@ class MCAAuditController extends Controller
 
                     $receiver_list = array_merge($userdepartment, $auditor, $mca);
 
-                    Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                    Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
                         $message->from('from@example.com', 'Your Name');
                         $message->to($receiver_list);
                         $message->subject('Hello');
@@ -457,6 +462,7 @@ class MCAAuditController extends Controller
                     DB::commit();
                     return response()->json(['success' => 'Objection send successful']);
                 } catch (\Exception $e) {
+                    \Log::info($e);
                     DB::rollback();
                     return response()->json(['error' => 'Something went wrong']);
                 }

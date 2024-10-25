@@ -52,7 +52,7 @@
                                             </td>
                                             <td>{{ Str::limit($audit->dl_description, '85') }}</td> --}}
                                             <td>
-                                                <button class="btn btn-primary view-objection px-2 py-1" title="Add Objection" data-controls-modal="viewObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}">View Objection</button>
+                                                <button class="btn btn-primary view-objection px-2 py-1" title="View Objection" data-controls-modal="viewObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}">View Objection</button>
                                                 <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-department-id="{{ $audit->department_id }}" data-department-name="{{ $audit->department?->name }}" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="plus-circle"></i> Add Objection</button>
                                             </td>
                                         </tr>
