@@ -24,7 +24,7 @@ class UpdateAuditRequest extends FormRequest
         return [
             'department_id' => 'required',
             'date' => 'required',
-            'description' => 'required',
+            'description' => 'nullable',
         ];
     }
 
@@ -33,7 +33,6 @@ class UpdateAuditRequest extends FormRequest
         return [
             'department_id.required' => 'Please select department',
             'date.required' => 'Please select date',
-            'description.required' => 'Please enter description',
         ];
     }
 }

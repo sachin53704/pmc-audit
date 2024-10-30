@@ -17,7 +17,7 @@
         <thead>
             <tr>
                 <th>HMM NO.</th>
-                <td>{{ date('d-m-Y', strtotime($objection->objection_no)) }}</td>
+                <td>{{ $objection->objection_no }}</td>
             </tr>
         </thead>
         <tbody>
@@ -57,7 +57,7 @@
             </tr>
             <tr>
                 <th>Amount</th>
-                <td>{{ $objection->amount }}</td>
+                <td>{{ $objection->amount ?? '-' }}</td>
             </tr>
             <tr>
                 <th>Subject</th>

@@ -25,6 +25,7 @@ class DepartmentHodController extends Controller
         $audits = AuditObjection::query()->with(['audit', 'department'])
             ->where('is_draft_send', 1)
             ->where('is_department_hod_forward', 0)
+            ->where('hmm_draft_mca_status', 1)
             ->where('department_id', Auth::user()->department_id)
             ->latest()->get();
 

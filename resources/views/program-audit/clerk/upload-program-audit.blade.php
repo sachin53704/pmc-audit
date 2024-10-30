@@ -27,14 +27,38 @@
                                 </select>
                                 <span class="text-danger is-invalid department_id_err"></span>
                             </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="from_year">From Year <span class="text-danger">*</span></label>
+                                <select name="from_year" class="form-select" required>
+                                    <option value="">Select From Year</option>
+                                    @foreach ($financialYears as $financialYear)
+                                        <option value="{{ $financialYear->id }}">{{ $financialYear->name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger is-invalid from_year_err"></span>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="to_year">To Year <span class="text-danger">*</span></label>
+                                <select name="to_year" class="form-select" required>
+                                    <option value="">Select To Year</option>
+                                    @foreach ($financialYears as $financialYear)
+                                        <option value="{{ $financialYear->id }}">{{ $financialYear->name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger is-invalid to_year_err"></span>
+                            </div>
+
+
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
                                 <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" required></textarea>
+                                <label class="col-form-label" for="description">Description</label>
+                                <textarea class="form-control" name="description"></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
 
@@ -74,6 +98,31 @@
                                 </select>
                                 <span class="text-danger is-invalid department_id_err"></span>
                             </div>
+
+
+                            <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="from_year">From Year <span class="text-danger">*</span></label>
+                                <select name="from_year" class="form-select" required>
+                                    <option value="">Select From Year</option>
+                                    @foreach ($financialYears as $financialYear)
+                                        <option value="{{ $financialYear->id }}">{{ $financialYear->name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger is-invalid from_year_err"></span>
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="to_year">To Year <span class="text-danger">*</span></label>
+                                <select name="to_year" class="form-select" required>
+                                    <option value="">Select To Year</option>
+                                    @foreach ($financialYears as $financialYear)
+                                        <option value="{{ $financialYear->id }}">{{ $financialYear->name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger is-invalid to_year_err"></span>
+                            </div>
+
+
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
                                 <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
@@ -83,8 +132,8 @@
                                 <div class="edit_file pt-3 mt-3"></div>
                             </div> --}}
                             <div class="col-md-4 mt-3">
-                                <label class="col-form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="description" required></textarea>
+                                <label class="col-form-label" for="description">Description</label>
+                                <textarea class="form-control" name="description"></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
                             </div>
 
@@ -116,14 +165,14 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="buttons-datatables" class="table nowrap">
+                        <table id="buttons-datatables" class="table">
                             <thead>
                                 <tr>
                                     <th>Sr No</th>
                                     <th>Department</th>
                                     <th>Date</th>
-                                    <th>File Description</th>
-                                    <th>View File</th>
+                                    {{-- <th>Description</th> --}}
+                                    <th>View Letter</th>
                                     <th>Dy MCA Reject Reason</th>
                                     <th>MCA Reject Reason</th>
                                     <th>Action</th>
@@ -135,7 +184,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}<span></td>
+                                        {{-- <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}<span></td> --}}
                                         <td>
                                             <a href="{{ asset('storage/'.$audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
@@ -244,11 +293,11 @@
                         if (!data.error)
                         {
                             $("#editForm input[name='edit_model_id']").val(data.audit.id);
-                            $("#editForm select[name='department_id']").html(data.departmentHtml);
+                            $("#editForm select[name='department_id']").val(data.audit.department_id);
                             $("#editForm input[name='date']").val(data.audit.date);
-                            $("#editForm .edit_file").html(data.fileHtml);
                             $("#editForm textarea[name='description']").val(data.audit.description);
-                            $("#editForm textarea[name='remark']").val(data.audit.remark);
+                            $("#editForm select[name='from_year']").val(data.audit.from_year);
+                            $("#editForm select[name='to_year']").val(data.audit.to_year);
                         }
                         else
                         {

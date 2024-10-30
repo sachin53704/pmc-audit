@@ -81,13 +81,11 @@ class MCAAuditController extends Controller
             } elseif (Auth::user()->hasRole('MCA')) {
                 $audit->update([
                     'mca_status' => 2,
-                    'status' => Audit::AUDIT_STATUS_REJECTED,
-                    // 'reject_reason' => $request->reject_reason,
+                    'status' => 5,
+                    'dl_description' => $audit->description,
+                    'dl_file_path' => $audit->file_path,
                 ]);
             }
-            // $audit->update([
-            //     'status' => Audit::AUDIT_STATUS_APPROVED,
-            // ]);
 
             return response()->json(['success' => 'Programme audit approved successfully']);
         }
@@ -143,7 +141,7 @@ class MCAAuditController extends Controller
             foreach ($request->auditor_id as $auditorId) {
                 UserAssignedAudit::create(['audit_id' => $request->audit_id, 'user_id' => $auditorId, 'assign_auditor_date' => date('Y-m-d', strtotime($request->assign_auditor_date))]);
             }
-            Audit::where('id', $request->audit_id)->update(['status' => Audit::AUDIT_STATUS_AUDITOR_ASSIGNED]);
+            // Audit::where('id', $request->audit_id)->update(['status' => Audit::AUDIT_STATUS_AUDITOR_ASSIGNED]);
 
             DB::commit();
 
@@ -165,12 +163,22 @@ class MCAAuditController extends Controller
             $status = 11;
         }
 
-        $audits = Audit::query()
-            ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
-                $q->where('department_id', Auth::user()->department_id);
+        $audits = AuditObjection::with(['department', 'audit'])
+            ->whereHas('audit', function ($q) use ($status) {
+                $q->where('status', '>=', $status);
             })
-            ->where('status', '>=', $status)
-            ->latest()
+            ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+                $q->where('status', '>=', 9);
+            })
+            ->when(Auth::user()->hasRole('MCA'), function ($q) use ($request) {
+                $q->where('status', '>=', 7);
+            })
+            ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                $q->where('is_department_draft_save', 0)
+                    ->whereNotNull('department_remark')
+                    ->where('status', '>=', 6)
+                    ->where('department_id', Auth::user()->department_id);
+            })
             ->get();
 
         $departments = Department::select('id', 'name')->get();
@@ -377,15 +385,6 @@ class MCAAuditController extends Controller
 
     public function sendObjection()
     {
-        // $audits = Audit::query()
-        //     ->where('status', '>=', 6)
-        //     ->latest()
-        //     ->whereHas('objections', function ($q) {
-        //         $q->where('mca_status', 1)
-        //             ->where('is_objection_send', 0);
-        //     })
-        //     ->get();
-
         $audits = AuditObjection::query()->with(['department'])->where('mca_status', 1)
             ->where('is_objection_send', 0)->withWhereHas('audit', function ($q) {
                 $q->where('status', '>=', 6);

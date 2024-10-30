@@ -65,6 +65,16 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
     // Clerk Routes
     Route::resource('audit', App\Http\Controllers\Admin\ClerkAuditController::class);
+    // Route::get('hmm-draft', [App\Http\Controllers\ClerkHMMDraftController::class, 'hmmDraft'])->name('clerk.hmm-draft');
+
+    Route::get('send-hmm-draft', [App\Http\Controllers\ClerkHMMDraftController::class, 'sendObjection'])->name('objection.send-hmm-draft');
+    Route::get('get-not-send-hmm-draft', [App\Http\Controllers\ClerkHMMDraftController::class, 'getNotSendHmmDraft'])->name('objection.get-not-send-hmm-draft');
+    Route::post('store-send-hmm-draft', [App\Http\Controllers\ClerkHMMDraftController::class, 'storeSendObjection'])->name('objection.store-not-send-hmm-draft');
+    Route::get('hmm-draft-view-objection', [App\Http\Controllers\ClerkHMMDraftController::class, 'viewObjection'])->name('hmm-draft-view-objection');
+
+
+    Route::get('clerk-send-hmm-draft', [App\Http\Controllers\ClerkHMMDraftController::class, 'clerkSendHmmDraft'])->name('objection.clerk-send-hmm-draft');
+    Route::post('update-clerk-send-hmm-draft', [App\Http\Controllers\ClerkHMMDraftController::class, 'updateClerkSendHmmDraft'])->name('objection.update-clerk-send-hmm-draft');
 
 
 
@@ -178,7 +188,7 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('get-dymca-send-objections', [App\Http\Controllers\ObjectionAjaxController::class, 'getDymcaSendObjections'])->name('objection.getDymcaSendObjections');
 });
 
-
+Route::get('check/pdf', [App\Http\Controllers\Admin\DashboardController::class, 'pdf']);
 
 
 Route::get('/php', function (Request $request) {

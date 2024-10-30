@@ -26,12 +26,8 @@
                                         <th>Sr No</th>
                                         <th>Department</th>
                                         <th>Date</th>
-                                        <th>File Description</th>
-                                        <th>Remark</th>
-                                        <th>View Audit File</th>
-                                        {{-- <th>Status</th> --}}
-                                        <th>View Letter</th>
                                         <th>Description</th>
+                                        <th>View Letter</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -41,20 +37,12 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $audit->department?->name }}</td>
                                             <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                            <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
-                                            <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '85') }}</span></td>
-                                            <td>
-                                                <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
-                                            </td>
-                                            {{-- <td>
-                                                <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                            </td> --}}
+                                            <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '50') }}</span></td>
                                             <td>
                                                 @if($audit->dl_file_path)
                                                     <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                                 @endif
                                             </td>
-                                            <td>{{ Str::limit($audit->dl_description, '85') }}</td>
                                             <td>
                                                 @if($audit->status == 3 || $audit->status == 1)
                                                     <button class="btn btn-secondary edit-element px-2 py-1" title="Edit audit" data-id="{{ $audit->id }}"><i data-feather="edit"></i></button>

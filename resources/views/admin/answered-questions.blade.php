@@ -18,8 +18,10 @@
                                     <th>Sr No</th>
                                     <th>Department</th>
                                     <th>Date</th>
-                                    <th>File Description</th>
-                                    <th>Remark</th>
+                                    <th>HMM No.</th>
+                                    <th>Subject</th>
+                                    <th>Entry Date</th>
+                                    <th>Description</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -28,11 +30,13 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
-                                        <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}<span></td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
+                                        <td>{{ Carbon\Carbon::parse($audit->audit->date)->format('d-m-Y') }}</td>
+                                        <td>{{ $audit->objection_no }}</td>
+                                        <td>{{ $audit->subject }}</td>
+                                        <td>{{ Carbon\Carbon::parse($audit->entry_date)->format('d-m-Y') }}</td>
+                                        <td>@if($audit->audit?->description) <span style="cursor: pointer" title="{{ $audit->audit?->description }}">{{ Str::limit($audit->audit?->description, '30') }}</span>@else - @endif</td>
                                         <td>
-                                            <button class="btn btn-secondary edit-element px-2 py-1" title="View compliance objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
+                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}
                                         </td>
                                     </tr>
@@ -57,26 +61,8 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Sr no.</th>
-                                            <th>Department</th>
-                                            <th>HMM No.</th>
-                                            <th>Subject</th>
-                                            <th>Compliance Submit Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="modelObjectionId">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
 
-                        <div id="viewObjectionDetails" class="d-none">
+                        <div>
                             <hr>
                             <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
                             <input type="hidden" name="audit_id" value="" id="audit_id">
@@ -209,22 +195,6 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="mca_action_status">Status <span class="text-danger">*</span></label>
-                                    <select name="mca_action_status" disabled id="mca_action_status" class="form-select">
-                                        <option value="0">Select value</option>
-                                        <option value="1">Approve</option>
-                                        <option value="2">Forward to department</option>
-                                    </select>
-                                    <span class="text-danger is-invalid mca_action_status_err"></span>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12 mb-3">
-                                    <label for="mca_remark">MCA Remark <span class="text-danger">*</span></label>
-                                    <textarea type="text" name="mca_remark" id="mca_remark" class="form-control" disabled></textarea>
-                                    <span class="text-danger is-invalid mca_remark_err"></span>
-                                </div>
-                            </div> --}}
 
                             <div class="row">
                                 <div class="col-xl-12">
@@ -316,16 +286,32 @@
                                                         <div id="auditorStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
-                                                                <div class="col-6 px-3 pt-2">
-                                                                    <label for="auditor_status">Auditor Status</label>
+
+                                                                <div class="col-12 mb-3">
+                                                                    <label for="auditor_description">Description <span class="text-danger">*</span></label>
+                                                                    <textarea name="auditor_description" id="auditor_description" class="form-control"></textarea>
+                                                                </div>
+
+                                                                <div class="col-3 px-3 pt-2">
+                                                                    <label for="auditor_status">Completed Objection <span class="text-danger">*</span></label>
+                                                                    <input type="number" class="form-control" name="completed_sub_unit">
+                                                                </div>
+
+                                                                <div class="col-3 px-3 pt-2">
+                                                                    <label for="auditor_status">Pending Objection <span class="text-danger">*</span></label>
+                                                                    <input type="number" class="form-control" name="pending_sub_unit">
+                                                                </div>
+
+                                                                <div class="col-3 px-3 pt-2">
+                                                                    <label for="auditor_status">Auditor Status <span class="text-danger">*</span></label>
                                                                     <select name="auditor_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Proposal to Approve / Delete</option>
                                                                         <option value="0">Proposal to convert para</option>
                                                                     </select>
                                                                 </div>
-                                                                <div class="col-6">
-                                                                    <label for="auditor_remark">Auditor Remark</label>
+                                                                <div class="col-3">
+                                                                    <label for="auditor_remark">Auditor Remark <span class="text-danger">*</span></label>
                                                                     <textarea name="auditor_remark" class="form-control"></textarea>
                                                                 </div>
                                                             </div>
@@ -397,6 +383,7 @@
                     </div>
                     <div class="modal-footer d-none" id="viewFooterObjectionDetails">
                         <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Cancel</button>
+                        <button class="btn btn-warning" id="saveObjectionStatus" type="submit">Draft Save</button>
                         <button class="btn btn-primary" id="saveObjectionStatus" type="submit">Submit</button>
                     </div>
                 </div>
@@ -450,61 +437,28 @@
                         console.error('Error during initialization of the editor', error);
                     });
 
-        </script>
-
-
-        <!-- Edit -->
-        <script>
-            $("#buttons-datatables").on("click", ".edit-element", function(e) {
-                e.preventDefault();
-                var model_id = $(this).attr("data-id");
-                var url = "{{ route('ajax.viewAuditorObjection') }}";
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        '_token': "{{ csrf_token() }}",
-                        'audit_id': model_id
-                    },
-                    beforeSend: function()
-                    {
-                        $('#preloader').css('opacity', '0.5');
-                        $('#preloader').css('visibility', 'visible');
-                    },
-                    success: function(data, textStatus, jqXHR) {
-                        editFormBehaviour();
-                        if (!data.error)
-                        {
-                            var html = ``;
-                            var count = 1;
-                            $.each(data.auditObjections, function(index, value){
-                                html += `<tr>
-                                    <td>${count++}</td>
-                                    <td>${value?.department?.name}</td>
-                                    <td>${value.objection_no}</td>
-                                    <td>${value.subject}</td>
-                                    <td>${(value.compliance_submit_date) ? value.compliance_submit_date : '-'}</td>
-                                    <td><button type="button" target="_blank" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}">View Objection</button></td>
-                                </tr>`;
-                            });
-                            $('#modelObjectionId').html(html);
-
-                            $("#addObjectionModal").modal("show");
-                        } else {
-                            swal("Error!", data.error, "error");
+                let auditorDescription;
+                ClassicEditor
+                    .create(document.querySelector('#auditor_description'),{
+                        toolbar: {
+                            shouldNotGroupWhenFull: true
                         }
-                    },
-                    error: function(error, jqXHR, textStatus, errorThrown) {
-                        alert("Some thing went wrong");
-                    },
-                    complete: function() {
-                        $('#preloader').css('opacity', '0');
-                        $('#preloader').css('visibility', 'hidden');
-                    },
-                });
-            });
+                    })
+                    .then(editor => {
+                        auditorDescription = editor;
+                        editor.ui.view.editable.element.style.height = '200px';  // Fixed height
+
+                        // Make the editor scrollable
+                        editor.ui.view.editable.element.style.overflowY = 'auto';
+                    })
+                    .catch(error => {
+                        console.error('Error during initialization of the editor', error);
+                    });
+
+                    
+
         </script>
+
 
 
         <!-- Approve Reject Answers -->
@@ -639,6 +593,8 @@
 
                         $('#viewObjectionDetails').removeClass('d-none');
                         $('#viewFooterObjectionDetails').removeClass('d-none');
+
+                        $("#addObjectionModal").modal("show");
                     },
                     error: function(error, jqXHR, textStatus, errorThrown) {
                         swal("Error!", "Some thing went wrong", "error");

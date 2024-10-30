@@ -42,8 +42,10 @@
                                     <th>Sr No</th>
                                     <th>Department</th>
                                     <th>Date</th>
-                                    <th>File Description</th>
-                                    <th>Remark</th>
+                                    <th>HMM No.</th>
+                                    <th>Subject</th>
+                                    <th>Entry Date</th>
+                                    <th>Description</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -52,12 +54,14 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
-                                        <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
+                                        <td>{{ Carbon\Carbon::parse($audit->audit->date)->format('d-m-Y') }}</td>
+                                        <td>{{ $audit->objection_no }}</td>
+                                        <td>{{ $audit->subject }}</td>
+                                        <td>{{ Carbon\Carbon::parse($audit->entry_date)->format('d-m-Y') }}</td>
+                                        <td>@if($audit->audit?->description) <span style="cursor: pointer" title="{{ $audit->audit?->description }}">{{ Str::limit($audit->audit?->description, '30') }}</span>@else - @endif</td>
                                         
                                         <td>
-                                            <button class="btn btn-secondary view-element px-2 py-1" title="View compliance objection" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
+                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}
                                         </td>
                                     </tr>
@@ -82,26 +86,8 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                       
                         <div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Sr no.</th>
-                                            <th>Department</th>
-                                            <th>HMM No.</th>
-                                            <th>Subject</th>
-                                            <th>Compliance Submit Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="modelObjectionId">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div id="viewObjectionDetails" class="d-none">
                             <hr>
                             <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
                             <input type="hidden" name="audit_id" value="" id="audit_id">
@@ -459,59 +445,6 @@
         <!-- Approve Reject compliance -->
         <script>
 
-            $("body").on("click", ".view-element", function(e) {
-                e.preventDefault();
-                var model_id = $(this).attr("data-id");
-                // $('#audit_id').val(model_id)
-                var url = "{{ route('ajax.viewAuditorObjection') }}";
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        'audit_id': model_id,
-                    },
-                    beforeSend: function()
-                    {
-                        $('#preloader').css('opacity', '0.5');
-                        $('#preloader').css('visibility', 'visible');
-                    },
-                    success: function(data, textStatus, jqXHR)
-                    {
-                        if (!data.error)
-                        {
-                            var html = ``;
-                            var count = 1;
-                            $.each(data.auditObjections, function(index, value){
-                                html += `<tr>
-                                    <td>${count++}</td>
-                                    <td>${value?.department?.name}</td>
-                                    <td>${value.objection_no}</td>
-                                    <td>${value.subject}</td>
-                                    <td>${(value.compliance_submit_date) ? value.compliance_submit_date : '-'}</td>
-                                    <td><button type="button" target="_blank" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}">View Objection</button></td>
-                                </tr>`;
-                            });
-                            $('#modelObjectionId').html(html);
-
-                            $("#addObjectionModal").modal("show");
-                        } else {
-                            swal("Error!", data.error, "error");
-                        }
-                    },
-                    error: function(error, jqXHR, textStatus, errorThrown) {
-                        swal("Error!", "Some thing went wrong", "error");
-                    },
-                    complete: function() {
-                        $('#preloader').css('opacity', '0');
-                        $('#preloader').css('visibility', 'hidden');
-                    },
-                });
-
-                $('#assign-role-modal').modal('show');
-            });
-
-
             $("#addForm").submit(function(e) {
                 e.preventDefault();
                 var model_id = $('#audit_objection_id').val();
@@ -734,6 +667,8 @@
 
                         $('#viewObjectionDetails').removeClass('d-none');
                         $('#viewFooterObjectionDetails').removeClass('d-none');
+
+                        $("#addObjectionModal").modal("show");
                     },
                     error: function(error, jqXHR, textStatus, errorThrown) {
                         swal("Error!", "Some thing went wrong", "error");

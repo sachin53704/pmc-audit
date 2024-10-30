@@ -24,7 +24,7 @@ class StoreAuditRequest extends FormRequest
         return [
             'department_id' => 'required',
             'date' => 'required',
-            'description' => 'required',
+            'description' => 'nullable',
         ];
     }
 
@@ -34,7 +34,6 @@ class StoreAuditRequest extends FormRequest
             'department_id.required' => 'Please select department',
             'date.required' => 'Please select date',
             'file.max' => 'File should be less than 2mb',
-            'description.required' => 'Please enter description',
         ];
     }
 }

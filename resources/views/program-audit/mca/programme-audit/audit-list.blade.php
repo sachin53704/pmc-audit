@@ -15,8 +15,7 @@
                                     <th>Sr No</th>
                                     <th>Department</th>
                                     <th>Date</th>
-                                    <th>Description</th>
-                                    <th>View File</th>
+                                    <th>View Letter</th>
                                     <th>Assign Auditor</th>
                                     @if(Request()->status == "pending" || Request()->status == "rejected")
                                     @if(Request()->status == "rejected")<th>Status</th>@endif
@@ -30,7 +29,6 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
-                                        <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
                                        
                                         <td>
                                             <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>

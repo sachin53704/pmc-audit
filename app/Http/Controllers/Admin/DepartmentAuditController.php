@@ -33,11 +33,11 @@ class DepartmentAuditController extends Controller
 
     public function createCompliance()
     {
-        $authUser = Auth::user();
-        $audits = Audit::query()
-            ->where('status', '>=', 7)
-            ->where('department_id', $authUser->department_id)
-            ->latest()
+        $audits = AuditObjection::with(['department', 'audit'])
+            ->whereHas('audit', function ($q) {
+                $q->where('status', '>=', 7)
+                    ->where('department_id', Auth::user()->department_id);
+            })->where('is_department_hod_forward', 1)->where('status', '>=', 5)
             ->get();
 
         $departments = Department::select('id', 'name')->get();

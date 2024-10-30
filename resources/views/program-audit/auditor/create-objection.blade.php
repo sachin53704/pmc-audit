@@ -24,12 +24,7 @@
                                         <th>Sr No</th>
                                         <th>Department</th>
                                         <th>Date</th>
-                                        <th>File Description</th>
-                                        <th>Remark</th>
-                                        {{-- <th>View File</th> --}}
-                                        {{-- <th>Status</th> --}}
-                                        {{-- <th>View Letter</th>
-                                        <th>Letter Description</th> --}}
+                                        <th>Description</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -40,17 +35,6 @@
                                             <td>{{ $audit->department?->name }}</td>
                                             <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                             <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
-                                            <td><span style="cursor: pointer" title="{{ $audit->remark }}">{{ Str::limit($audit->remark, '30') }}</span></td>
-                                            {{-- <td>
-                                                <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
-                                            </td> --}}
-                                            {{-- <td>
-                                                <span class="badge bg-secondary">{{ $audit->status_name }}</span>
-                                            </td> --}}
-                                            {{-- <td>
-                                                <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                                            </td>
-                                            <td>{{ Str::limit($audit->dl_description, '85') }}</td> --}}
                                             <td>
                                                 <button class="btn btn-primary view-objection px-2 py-1" title="View Objection" data-controls-modal="viewObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}">View Objection</button>
                                                 <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-department-id="{{ $audit->department_id }}" data-department-name="{{ $audit->department?->name }}" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="plus-circle"></i> Add Objection</button>
@@ -169,7 +153,7 @@
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="subject">Subject <span class="text-danger">*</span></label>
-                                <input type="text" name="subject" id="subject" class="form-control">
+                                <textarea name="subject" id="subject" class="form-control" required></textarea>
                                 <span class="text-danger is-invalid subject_err"></span>
                             </div>
 
@@ -328,7 +312,7 @@
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="subject">Subject <span class="text-danger">*</span></label>
-                                <input type="text" name="subject" id="subject" class="form-control">
+                                <textarea type="text" name="subject" id="subject" class="form-control" required></textarea>
                                 <span class="text-danger is-invalid subject_err"></span>
                             </div>
 
@@ -443,7 +427,6 @@
                     $("#updateForm input[name='audit_id']").val(data.auditObjection.audit_id);
                     $("#updateForm input[name='objection_no']").val(data.auditObjection.objection_no);
                     $("#updateForm input[name='entry_date']").val(data.auditObjection.entry_date);
-                    // $("#updateForm select[name='department_id']").val(data.auditObjection.department_id);
                     $("#updateForm select[name='zone_id']").val(data.auditObjection.zone_id);
                     $("#updateForm select[name='from_year']").val(data.auditObjection.from_year);
                     $("#updateForm select[name='to_year']").val(data.auditObjection.to_year);
@@ -451,16 +434,14 @@
                     $("#updateForm select[name='severity_id']").val(data.auditObjection.severity_id);
                     $("#updateForm select[name='audit_para_category_id']").val(data.auditObjection.audit_para_category_id);
 
-
                     if(data.auditObjection.amount > 0){
                         $('.isAmountDisplayOrNot').removeClass('d-none');
                     }else{
                         $('.isAmountDisplayOrNot').addClass('d-none');
                     }
 
-
                     $("#updateForm input[name='amount']").val(data.auditObjection.amount);
-                    $("#updateForm input[name='subject']").val(data.auditObjection.subject);
+                    $("#updateForm textarea[name='subject']").val(data.auditObjection.subject);
                     if(data.auditObjection.document && data.auditObjection.document != ""){
                         var file = "{{ asset('storage') }}/"+data.auditObjection.document;
                     }else{
@@ -468,7 +449,6 @@
                     }
                     $("#updateForm #documentFile").attr('href', file);
                     $("#updateForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
-                    // $("#updateForm textarea[name='description']").val(data.auditObjection.desc
                     viewEditorInstance.setData(data.auditObjection.draft_description);
 
                     $('.viewObjectionDetails').removeClass('d-none');

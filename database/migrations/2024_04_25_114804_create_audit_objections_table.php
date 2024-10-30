@@ -32,7 +32,7 @@ return new class extends Migration
             $table->foreignIdFor(Severity::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(AuditParaCategory::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->double('amount')->nullable();
-            $table->string('subject')->nullable();
+            $table->textarea('subject')->nullable();
             $table->string('work_name')->nullable();
             $table->string('contractor_name')->nullable();
             $table->string('document')->nullable();

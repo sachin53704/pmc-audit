@@ -142,6 +142,21 @@
                             </li>
                         @endcan
 
+
+                        @if(Auth::user()->hasRole('Clerk'))
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('objection.send-hmm-draft') ? 'active' : '' }}" href="{{ route('objection.send-hmm-draft') }}" >
+                                <i class="ri-pages-line"></i>
+                                <span data-key="t-dashboards">HMM Draft</span>
+                            </a>
+                        </li>
+                        @endif
+
+                        
+                        
+
+
+
                         @can('diary.index')
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('diary.index') ? 'active' : '' }}" href="{{ route('diary.index') }}" >
@@ -201,6 +216,9 @@
                         @endcan
 
 
+                        
+
+
                         @can('objection.create')
                             <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('objection.create') ? 'active' : '' }}" href="{{ route('objection.create') }}" >
@@ -250,14 +268,14 @@
                         </li>
                         @endif
 
-                        @can('send-hmm.view')
+                        @if(Auth::user()->hasRole(['DY MCA', 'MCA']))
                         <li class="nav-item">
-                            <a class="nav-link menu-link {{ request()->routeIs('objection.send-objection') ? 'active' : '' }}" href="{{ route('objection.send-objection') }}" >
-                                <i class="ri-auction-line"></i>
-                                <span data-key="t-dashboards">@lang('menu.send_hmm')</span>
+                            <a class="nav-link menu-link {{ request()->routeIs('objection.clerk-send-hmm-draft') ? 'active' : '' }}" href="{{ route('objection.clerk-send-hmm-draft') }}" >
+                                <i class="ri-pages-line"></i>
+                                <span data-key="t-dashboards">HMM Draft</span>
                             </a>
                         </li>
-                        @endcan
+                        @endif
 
 
                         @can('answered-questions.view')

@@ -11,6 +11,7 @@ use App\Models\PaymentReceipt;
 use App\Models\UserAssignedAudit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use PDF;
 
 class DashboardController extends Controller
 {
@@ -160,5 +161,16 @@ class DashboardController extends Controller
             Cookie::queue('theme-mode', 'dark', 43800);
 
         return true;
+    }
+
+    public function pdf()
+    {
+        $data = [
+            'foo' => 'bar'
+        ];
+
+        $pdf = PDF::loadView('letter.clerk-hmm-draft', $data);
+
+        return $pdf->stream('document.pdf');
     }
 }

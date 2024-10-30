@@ -15,6 +15,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\FiscalYear;
 use PDF;
 
 class ClerkAuditController extends Controller
@@ -23,8 +24,13 @@ class ClerkAuditController extends Controller
     {
         $departments = Department::get();
         $audits = Audit::latest()->get();
+        $financialYears = FiscalYear::get();
 
-        return view('program-audit.clerk.upload-program-audit')->with(['audits' => $audits, 'departments' => $departments]);
+        return view('program-audit.clerk.upload-program-audit')->with([
+            'audits' => $audits,
+            'departments' => $departments,
+            'financialYears' => $financialYears
+        ]);
     }
 
 
@@ -59,24 +65,9 @@ class ClerkAuditController extends Controller
 
     public function edit(Audit $audit)
     {
-        $fileHtml = '
-            <a class="px-2 mt-2" href="' . asset($audit->file_path) . '" target="_blank" >View File</a>
-        ';
-
-        $departments = Department::get();
-        $departmentHtml = '<span>
-                <option value="">--Select Department --</option>';
-        foreach ($departments as $department) :
-            $is_select = $department->id == $audit->department_id ? "selected" : "";
-            $departmentHtml .= '<option value="' . $department->id . '" ' . $is_select . '>' . $department->name . '</option>';
-        endforeach;
-        $departmentHtml .= '</span>';
-
         $response = [
             'result' => 1,
             'audit' => $audit,
-            'departmentHtml' => $departmentHtml,
-            'fileHtml' => $fileHtml,
         ];
 
         return $response;

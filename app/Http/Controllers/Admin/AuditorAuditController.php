@@ -87,13 +87,6 @@ class AuditorAuditController extends Controller
             ->latest()
             ->get();
 
-        // $audits = AuditObjection::query()->withWhereHas('audit', function ($q) use ($user) {
-        //     $q->where('status', '>=', 5)
-        //         ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id));
-        // })
-        //     ->latest()
-        //     ->get();
-
         $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
 
         $zones = Zone::where('status', 1)->select('id', 'name')->get();
@@ -392,7 +385,7 @@ class AuditorAuditController extends Controller
 
                         $receiver_list = array_merge($userdepartment, $auditor, $mca);
 
-                        Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                        Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
                             $message->from('from@example.com', 'Your Name');
                             $message->to($receiver_list);
                             $message->subject('Hello');
@@ -407,9 +400,11 @@ class AuditorAuditController extends Controller
                     return response()->json(['success' => 'Objection rejected successfully']);
                 } catch (\Exception $e) {
                     DB::rollback();
+                    \Log::info($e);
                     response()->json(['error' => 'Something went wrong!']);
                 }
             } else if (Auth::user()->hasRole('Auditor')) {
+                // dd($request->all());
                 DB::beginTransaction();
                 try {
                     $auditObjection = AuditObjection::find($request->audit_objection_id);
@@ -456,12 +451,16 @@ class AuditorAuditController extends Controller
 
     public function answeredQuestions(Request $request)
     {
-        $user = Auth::user();
-
-        $audits = Audit::query()
-            ->where('status', '>=', 9)
-            ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
-            ->latest()
+        $audits = AuditObjection::with(['department', 'audit'])
+            ->whereHas('audit', function ($q) {
+                $q->where('status', '>=', 9)
+                    ->whereHas('assignedAuditors', function ($q) {
+                        $q->where('user_id', Auth::user()->id);
+                    });
+            })
+            ->when(Auth::user()->hasRole('Auditor'), function ($q) {
+                $q->where('user_id', Auth::user()->id)->where('status', '>=', 8);
+            })
             ->get();
 
         $departments = Department::select('id', 'name')->get();
