@@ -72,7 +72,7 @@
 
     {{-- Add Objection Modal --}}
     <div class="modal fade" id="addObjectionModal" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <form action="" id="addForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
@@ -234,10 +234,10 @@
                         'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
                     'fontSize', 'fontColor', 'fontBackgroundColor', '|',
                     'alignment', '|',
-    'fontSize',               // Font size options
-    'fontColor',              // Text color options
-    'fontBackgroundColor',    // Background color for text
-    '|',
+                    'fontSize',               // Font size options
+                    'fontColor',              // Text color options
+                    'fontBackgroundColor',    // Background color for text
+                    '|',
                     'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
                     'undo', 'redo'
                     ],
@@ -246,7 +246,7 @@
             })
             .then(editor => {
                 editorInstance = editor;
-                // editorInstance.enableReadOnlyMode('reason');
+                editorInstance.enableReadOnlyMode('reason');
                 editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                 // Make the editor scrollable

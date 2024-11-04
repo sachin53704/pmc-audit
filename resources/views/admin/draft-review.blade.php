@@ -305,16 +305,31 @@
                                                         <div id="auditorStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
-                                                                <div class="col-6 px-3 pt-2">
-                                                                    <label for="auditor_status">Auditor Status</label>
-                                                                    <select name="auditor_status" class="form-select">
+                                                                <div class="col-12 mb-3">
+                                                                    <label for="auditor_description">Description <span class="text-danger">*</span></label>
+                                                                    <textarea name="auditor_description" id="auditor_description" class="form-control"></textarea>
+                                                                </div>
+
+                                                                <div class="col-3 px-3 pt-2">
+                                                                    <label for="auditor_status">Completed Objection <span class="text-danger">*</span></label>
+                                                                    <input type="number" class="form-control" name="completed_sub_unit">
+                                                                </div>
+
+                                                                <div class="col-3 px-3 pt-2">
+                                                                    <label for="auditor_status">Pending Objection <span class="text-danger">*</span></label>
+                                                                    <input type="number" class="form-control" name="pending_sub_unit">
+                                                                </div>
+
+                                                                <div class="col-3 px-3 pt-2">
+                                                                    <label for="auditor_status">Auditor Status <span class="text-danger">*</span></label>
+                                                                    <select name="auditor_status" class="form-select" required>
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Proposal to Approve / Delete</option>
                                                                         <option value="0">Proposal to convert para</option>
                                                                     </select>
                                                                 </div>
-                                                                <div class="col-6">
-                                                                    <label for="auditor_remark">Auditor Remark</label>
+                                                                <div class="col-3">
+                                                                    <label for="auditor_remark">Auditor Remark <span class="text-danger">*</span></label>
                                                                     <textarea name="auditor_remark" class="form-control"></textarea>
                                                                 </div>
                                                             </div>
@@ -361,7 +376,6 @@
                                                                     <select name="mca_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
-                                                                        <option value="0">Forward to department</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-6">
@@ -406,7 +420,19 @@
             ClassicEditor
                 .create(document.querySelector('textarea'),{
                     toolbar: {
-                        shouldNotGroupWhenFull: true
+                        shouldNotGroupWhenFull: true,
+                        items: [
+                            'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
+                        'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                        'alignment', '|',
+                        'fontSize',               // Font size options
+                        'fontColor',              // Text color options
+                        'fontBackgroundColor',    // Background color for text
+                        '|',
+                        'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
+                        'undo', 'redo'
+                        ],
+                        'format_tags': 'p;h1;h2;h3;h4;h5;h6'
                     }
                 })
                 .then(editor => {
@@ -425,12 +451,55 @@
                 ClassicEditor
                     .create(document.querySelector('#department_remark'),{
                         toolbar: {
-                            shouldNotGroupWhenFull: true
+                            shouldNotGroupWhenFull: true,
+                            items: [
+                                'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
+                            'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                            'alignment', '|',
+                            'fontSize',               // Font size options
+                            'fontColor',              // Text color options
+                            'fontBackgroundColor',    // Background color for text
+                            '|',
+                            'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
+                            'undo', 'redo'
+                            ],
+                            'format_tags': 'p;h1;h2;h3;h4;h5;h6'
                         }
                     })
                     .then(editor => {
                         deditorInstance = editor;
                         deditorInstance.enableReadOnlyMode('reason');
+                        editor.ui.view.editable.element.style.height = '200px';  // Fixed height
+
+                        // Make the editor scrollable
+                        editor.ui.view.editable.element.style.overflowY = 'auto';
+                    })
+                    .catch(error => {
+                        console.error('Error during initialization of the editor', error);
+                    });
+
+                let auditorDescription;
+                ClassicEditor
+                    .create(document.querySelector('#auditor_description'),{
+                        toolbar: {
+                            shouldNotGroupWhenFull: true,
+                            items: [
+                                'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
+                            'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                            'alignment', '|',
+                            'fontSize',               // Font size options
+                            'fontColor',              // Text color options
+                            'fontBackgroundColor',    // Background color for text
+                            '|',
+                            'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
+                            'undo', 'redo'
+                            ],
+                            'format_tags': 'p;h1;h2;h3;h4;h5;h6'
+                        }
+                    })
+                    .then(editor => {
+                        auditorDescription = editor;
+                        auditorDescription.enableReadOnlyMode('reason');
                         editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                         // Make the editor scrollable
@@ -632,12 +701,20 @@
 
                         $("#addForm select[name='auditor_status']").val(data.auditObjection.auditor_status);
                         $("#addForm textarea[name='auditor_remark']").val(data.auditObjection.auditor_remark);
+
+                        $("#addForm input[name='completed_sub_unit']").val(data.auditObjection.completed_sub_unit);
+                        $("#addForm input[name='pending_sub_unit']").val(data.auditObjection.pending_sub_unit);
+                        auditorDescription.setData(data.auditObjection.auditor_draft_description ?? '');
                         if(data.auditObjection.dymca_final_status == "1" && roleName != "Auditor"){
-                            $("#addForm select[name='auditor_status']").prop('disabled', true)
-                            $("#addForm textarea[name='auditor_remark']").prop('disabled', true)
+                            $("#addForm select[name='auditor_status']").prop('disabled', true);
+                            $("#addForm textarea[name='auditor_remark']").prop('disabled', true);
+                            $("#addForm input[name='completed_sub_unit']").prop('disabled', true);
+                            $("#addForm input[name='pending_sub_unit']").prop('disabled', true);
                         }else if(roleName != "Auditor"){
-                            $("#addForm select[name='auditor_status']").prop('disabled', true)
-                            $("#addForm textarea[name='auditor_remark']").prop('disabled', true)
+                            $("#addForm select[name='auditor_status']").prop('disabled', true);
+                            $("#addForm textarea[name='auditor_remark']").prop('disabled', true);
+                            $("#addForm input[name='completed_sub_unit']").prop('disabled', true);
+                            $("#addForm input[name='pending_sub_unit']").prop('disabled', true);
                         }
 
                         $("#addForm select[name='dymca_final_status']").val(data.auditObjection.dymca_final_status);

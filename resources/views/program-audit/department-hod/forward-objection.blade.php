@@ -34,7 +34,7 @@
                                 <table class="table table-bordered nowrap align-middle" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th><input type="checkbox" class="form-check-input" name="id[]" style="font-size: 15px;">Select All</th>
+                                            <th><input type="checkbox" class="form-check-input parentCheckBox" style="font-size: 15px;"> &nbsp;&nbsp;Select All</th>
                                             <th>Department</th>
                                             <th>Date</th>
                                             <th>File Description</th>
@@ -96,63 +96,15 @@
 
     {{-- Open modal and Add more --}}
     <script>
-        var questionCounter = 1;
-
-        // $("#buttons-datatables").on("click", ".add-objection", function(e) {
-        //     e.preventDefault();
-        //     var model_id = $(this).attr("data-id");
-        //     $('#audit_id').val(model_id)
-        //     var url = "{{ route('objection.getDymcaSendObjections') }}";
-
-        //     $.ajax({
-        //         url: url,
-        //         type: 'GET',
-        //         data: {
-        //             'audit_id': model_id,
-        //         },
-        //         beforeSend: function()
-        //         {
-        //             $('#preloader').css('opacity', '0.5');
-        //             $('#preloader').css('visibility', 'visible');
-        //         },
-        //         success: function(data, textStatus, jqXHR)
-        //         {
-        //             if (!data.error)
-        //             {
-        //                 var html = ``;
-        //                 var count = 1;
-        //                 $.each(data.auditObjections, function(index, value){
-        //                     html += `<tr>
-        //                         <td>
-        //                         <input type="hidden" name="audit_id" value="${value.audit_id}" >
-        //                         <input type="checkbox" class="form-checkbox" name="id[]" value="${value.id}" ></td>
-        //                         <td>${count++}</td>
-        //                         <td>${value?.department?.name}</td>
-        //                         <td>${value.objection_no}</td>
-        //                         <td>${value.subject}</td>
-        //                         <td><a target="_blank" href="{{ route('objection.view-forward-objection-to-department') }}?id=${value.id}" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}">View File</a></td>
-        //                     </tr>`;
-        //                 });
-        //                 $('#modelObjectionId').html(html);
-
-        //                 $('.viewObjectionDetails').addClass('d-none')
-
-        //                 $("#addObjectionModal").modal("show");
-        //             } else {
-        //                 swal("Error!", data.error, "error");
-        //             }
-        //         },
-        //         error: function(error, jqXHR, textStatus, errorThrown) {
-        //             swal("Error!", "Some thing went wrong", "error");
-        //         },
-        //         complete: function() {
-        //             $('#preloader').css('opacity', '0');
-        //             $('#preloader').css('visibility', 'hidden');
-        //         },
-        //     });
-
-        //     $('#assign-role-modal').modal('show');
-        // });
+        $(document).ready(function(){
+            $('.parentCheckBox').change(function() {
+                if(this.checked) {
+                    $(this).closest('table').find("input[name='id[]']").prop('checked', true)
+                }else{
+                    $(this).closest('table').find("input[name='id[]']").prop('checked', false)
+                }
+            });
+        })
 
 
         // Submit Objection Form

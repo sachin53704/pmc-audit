@@ -32,32 +32,6 @@ class HmmMcaStatusController extends Controller
             ->latest()
             ->get();
 
-        // $audits = Audit::query()
-        //     ->when(Auth::user()->hasRole('MCA'), function ($q) {
-        //         $q->whereHas('objections', function ($q) {
-        //             $q->where('dymca_status', 1)
-        //                 ->where('is_draft_send', 1);
-        //         });
-        //     })
-        //     ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
-        //         $q->whereHas('objections', function ($q) {
-        //             $q->whereNull('mca_status')
-
-        //                 ->when(function ($q) {
-        //                     $q->where('is_draft_send', 1)->whereNull('dymca_status')
-        //                         ->orWhere('dymca_status', 2);
-        //                 });
-        //         });
-        //     })
-        //     ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
-        //         $q->whereHas('objections', function ($q) {
-        //             $q->where('is_draft_send', 1);
-        //         })
-        //             ->where('department_id', Auth::user()->department_id);
-        //     })
-        //     ->latest()
-        //     ->get();
-
         $departments = Department::select('id', 'name')->get();
 
         $zones = Zone::where('status', 1)->select('id', 'name')->get();

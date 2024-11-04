@@ -359,7 +359,19 @@
         ClassicEditor
             .create(document.querySelector('#description'),{
                 toolbar: {
-                    shouldNotGroupWhenFull: true
+                    shouldNotGroupWhenFull: true,
+                    items: [
+                        'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
+                    'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                    'alignment', '|',
+                    'fontSize',               // Font size options
+                    'fontColor',              // Text color options
+                    'fontBackgroundColor',    // Background color for text
+                    '|',
+                    'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
+                    'undo', 'redo'
+                    ],
+                    'format_tags': 'p;h1;h2;h3;h4;h5;h6'
                 }
             })
             .then(editor => {
@@ -374,7 +386,19 @@
         ClassicEditor
             .create(document.querySelector('#viewDescription'),{
                 toolbar: {
-                    shouldNotGroupWhenFull: true
+                    shouldNotGroupWhenFull: true,
+                    items: [
+                        'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
+                    'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                    'alignment', '|',
+                    'fontSize',               // Font size options
+                    'fontColor',              // Text color options
+                    'fontBackgroundColor',    // Background color for text
+                    '|',
+                    'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
+                    'undo', 'redo'
+                    ],
+                    'format_tags': 'p;h1;h2;h3;h4;h5;h6'
                 }
             })
             .then(editor => {

@@ -410,23 +410,37 @@ class AuditorAuditController extends Controller
                     $auditObjection = AuditObjection::find($request->audit_objection_id);
                     $auditObjection->auditor_status = $request->auditor_status;
                     $auditObjection->auditor_remark = $request->auditor_remark;
-                    if ($auditObjection->status < 9) {
-                        $auditObjection->status = 9;
+                    $auditObjection->completed_sub_unit = $request->completed_sub_unit;
+                    $auditObjection->pending_sub_unit = $request->pending_sub_unit;
+                    $auditObjection->auditor_draft_description = $request->auditor_description;
+
+                    if (!$request->is_draft_save) {
+                        if ($auditObjection->status < 9) {
+                            $auditObjection->status = 9;
+                        }
+                        $auditObjection->auditor_description = $request->auditor_description;
                     }
+
+
                     $auditObjection->save();
 
-                    $auditStatus = Audit::where('id', $request->audit_id)->value('status');
+                    if (!$request->is_draft_save) {
+                        $auditStatus = Audit::where('id', $request->audit_id)->value('status');
 
-                    Audit::where('id', $request->audit_id)->update([
-                        'status' => ($auditStatus > 10) ? $auditStatus : 11
-                    ]);
+                        Audit::where('id', $request->audit_id)->update([
+                            'status' => ($auditStatus > 10) ? $auditStatus : 11
+                        ]);
+                        DB::commit();
+                        if ($request->auditor_status) {
+                            return response()->json(['success' => 'Compliance send for proposal to approve or delete successfully']);
+                        } else {
+                            return response()->json(['success' => 'Compliance send for proposal to convert para successfully']);
+                        }
+                    }
+
 
                     DB::commit();
-                    if ($request->auditor_status) {
-                        return response()->json(['success' => 'Compliance send for proposal to approve or delete successfully']);
-                    } else {
-                        return response()->json(['success' => 'Compliance send for proposal to convert para successfully']);
-                    }
+                    return response()->json(['success' => 'Compliance save in draft']);
                 } catch (\Exception $e) {
                     DB::rollback();
                     response()->json(['error' => 'Something went wrong!']);

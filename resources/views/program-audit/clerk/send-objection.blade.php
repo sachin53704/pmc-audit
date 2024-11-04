@@ -14,7 +14,7 @@
                             <select name="department" class="form-select" id="department" required>
                                 <option value="">Select</option>
                                 @foreach($departments as $department)
-                                <option @if(isset($request->department) && $request->department == $department->id)selected @endif value="{{ $department->id }}">{{ $department->name }}</option>
+                                <option @if(isset(request()->department) && request()->department == $department->id)selected @endif value="{{ $department->id }}">{{ $department->name }}</option>
                                 @endforeach
                             </select>
                         </div>
