@@ -164,8 +164,8 @@ class MastersSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => date('Y') . '-' . date('y', strtotime('+1 years')),
-                'from_year' => date('Y'),
-                'to_year' => date('Y', strtotime('+1 years')),
+                'from_year' => "2024-06-01",
+                'to_year' => "2025-06-01",
             ]
         ];
 

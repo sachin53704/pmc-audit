@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Draft Review</x-slot>
-    <x-slot name="heading">Draft Review</x-slot>
+    <x-slot name="title">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</x-slot>
+    <x-slot name="heading">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -10,7 +10,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Draft Review</h4>
+                        <h4 class="card-title">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</h4>
                     </div>
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
@@ -41,28 +41,30 @@
                                 <tr>
                                     <th>Sr No</th>
                                     <th>Department</th>
-                                    <th>Date</th>
                                     <th>HMM No.</th>
-                                    <th>Subject</th>
-                                    <th>Entry Date</th>
-                                    <th>Description</th>
+                                    <th>Pending objection</th>
+                                    <th>View Letter</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($audits as $audit)
+                                @foreach ($pendingAuditObjections as $pendingAuditObjection)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $audit->department?->name }}</td>
-                                        <td>{{ Carbon\Carbon::parse($audit->audit->date)->format('d-m-Y') }}</td>
-                                        <td>{{ $audit->objection_no }}</td>
-                                        <td>{{ $audit->subject }}</td>
-                                        <td>{{ Carbon\Carbon::parse($audit->entry_date)->format('d-m-Y') }}</td>
-                                        <td>@if($audit->audit?->description) <span style="cursor: pointer" title="{{ $audit->audit?->description }}">{{ Str::limit($audit->audit?->description, '30') }}</span>@else - @endif</td>
-                                        
+                                        <td>{{ $pendingAuditObjection->auditObjection?->department?->name }}</td>
+                                        <td>{{ $pendingAuditObjection->auditObjection->objection_no }}</td>                                        
+                                        <td>{{ $pendingAuditObjection->sub_unit }}</td>
                                         <td>
-                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
-                                            {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}
+                                            <a href="javascript:void(0)" class="btn btn-primary btn-sm">View Letter</a>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-id="{{ $pendingAuditObjection->id }}">
+                                                @if(Auth::user()->hasRole(['Department', 'Department HOD']))
+                                                <i data-feather="file-text"></i> View Compliance
+                                                @else
+                                                <i data-feather="file-text"></i> View Objection
+                                                @endif
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -89,6 +91,8 @@
                        
                         <div>
                             <hr>
+                            <input type="hidden" name="pending_audit_objection_id" value="" id="pending_audit_objection_id">
+                            <input type="hidden" name="is_draft_save" value="" id="is_draft_save">
                             <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
                             <input type="hidden" name="audit_id" value="" id="audit_id">
                             <div class="row">
@@ -398,6 +402,9 @@
                     </div>
                     <div class="modal-footer d-none" id="viewFooterObjectionDetails">
                         <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Close</button>
+                        @if(Auth::user()->hasRole(['Department', 'Auditor']))
+                        <button class="btn btn-warning" id="saveDraftObjectionStatus" type="submit">Draft Save</button>
+                        @endif
                         <button class="btn btn-primary" id="saveObjectionStatus" type="submit">Submit</button>
                     </div>
                 </div>
@@ -411,6 +418,16 @@
         <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
 
         <script>
+            $(document).ready(function($q){
+                $('#saveDraftObjectionStatus').click(function(){
+                    $('#is_draft_save').val(1);
+                });
+
+                $('#saveObjectionStatus').click(function(){
+                    $('#is_draft_save').val(0);
+                });
+            })
+
             // Initialize CKEditor
             let editorInstance;
             ClassicEditor
@@ -464,7 +481,10 @@
                     })
                     .then(editor => {
                         deditorInstance = editor;
-                        deditorInstance.enableReadOnlyMode('reason');
+                        let role = "{{ Auth::user()->roles[0]->name }}"
+                        if(role != "Department"){
+                            deditorInstance.enableReadOnlyMode('reason');
+                        }
                         editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                         // Make the editor scrollable
@@ -495,7 +515,10 @@
                     })
                     .then(editor => {
                         auditorDescription = editor;
-                        auditorDescription.enableReadOnlyMode('reason');
+                        let role = "{{ Auth::user()->roles[0]->name }}"
+                        if(role != "Auditor"){
+                            auditorDescription.enableReadOnlyMode('reason');
+                        }
                         editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                         // Make the editor scrollable
@@ -514,7 +537,7 @@
                 e.preventDefault();
                 var model_id = $('#audit_objection_id').val();
                 // $('#audit_id').val(model_id)
-                var url = "{{ route('objection.change-objection-status') }}";
+                var url = "{{ route('pending-change-objection-status') }}";
                 var formdata = new FormData(this);
 
                 $.ajax({
@@ -610,7 +633,7 @@
                 let id = $(this).attr('data-id');
 
                 $.ajax({
-                    url: "{{ route('view-objection') }}",
+                    url: "{{ route('pending-view-objection') }}",
                     type: 'GET',
                     data: {
                         'id': id,
@@ -622,60 +645,67 @@
                     },
                     success: function(data, textStatus, jqXHR)
                     {
-                        $('#addForm #audit_objection_id').val(data.auditObjection.id)
-                        $("#addForm input[name='audit_id']").val(data.auditObjection.audit_id);
-                        $("#addForm input[name='objection_no']").val(data.auditObjection.objection_no);
-                        $("#addForm input[name='entry_date']").val(data.auditObjection.entry_date);
-                        $("#addForm select[name='department_id']").val(data.auditObjection.department_id);
-                        $("#addForm select[name='zone_id']").val(data.auditObjection.zone_id);
-                        $("#addForm select[name='from_year']").val(data.auditObjection.from_year);
-                        $("#addForm select[name='to_year']").val(data.auditObjection.to_year);
-                        $("#addForm select[name='audit_type_id']").val(data.auditObjection.audit_type_id);
-                        $("#addForm select[name='severity_id']").val(data.auditObjection.severity_id);
-                        $("#addForm select[name='audit_para_category_id']").val(data.auditObjection.audit_para_category_id);
+                        $('#addForm #pending_audit_objection_id').val(data.audit.id)
+                        $('#addForm #audit_objection_id').val(data.audit?.audit_objection.id)
+                        $("#addForm input[name='audit_id']").val(data.audit?.audit_objection.audit_id);
+                        $("#addForm input[name='objection_no']").val(data.audit?.audit_objection.objection_no);
+                        $("#addForm input[name='entry_date']").val(data.audit?.auditObjection?.audit.entry_date);
+                        $("#addForm select[name='department_id']").val(data.audit?.audit_objection.department_id);
+                        $("#addForm select[name='zone_id']").val(data.audit?.audit_objection.zone_id);
+                        $("#addForm select[name='from_year']").val(data.audit?.audit_objection.from_year);
+                        $("#addForm select[name='to_year']").val(data.audit?.audit_objection.to_year);
+                        $("#addForm select[name='audit_type_id']").val(data.audit?.audit_objection.audit_type_id);
+                        $("#addForm select[name='severity_id']").val(data.audit?.audit_objection.severity_id);
+                        $("#addForm select[name='audit_para_category_id']").val(data.audit?.audit_objection.audit_para_category_id);
 
 
-                        if(data.auditObjection.amount > 0){
+                        if(data.audit?.audit_objection.amount > 0){
                             $('.isAmountDisplayOrNot').removeClass('d-none');
                         }else{
                             $('.isAmountDisplayOrNot').addClass('d-none');
                         }
 
 
-                        $("#addForm input[name='amount']").val(data.auditObjection.amount);
-                        $("#addForm input[name='subject']").val(data.auditObjection.subject);
-                        if(data.auditObjection.document && data.auditObjection.document != ""){
-                            var file = "{{ asset('storage') }}/"+data.auditObjection.document;
+                        $("#addForm input[name='amount']").val(data.audit?.audit_objection.amount);
+                        $("#addForm input[name='subject']").val(data.audit?.audit_objection.subject);
+                        if(data.audit?.audit_objection.document && data.audit?.audit_objection.document != ""){
+                            var file = "{{ asset('storage') }}/"+data.audit?.audit_objection.document;
                         }else{
                             var file = "javascript:void(0)";
                         }
                         $("#addForm #documentFile").attr('href', file);
-                        $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
-                        // $("#addForm textarea[name='description']").val(data.auditObjection.desc
-                        editorInstance.setData(data.auditObjection.description);
+                        $("#addForm input[name='sub_unit']").val(data.audit.sub_unit);
+                        // $("#addForm textarea[name='description']").val(data.audit.desc
+                        editorInstance.setData(data.audit.pending_description ?? '');
 
 
 
                         let roleName = "{{ Auth::user()->roles[0]->name }}";
                         
                         // department status                        
-                        if(data.auditObjection.department_draft_remark){
-                            deditorInstance.setData(data.auditObjection.department_draft_remark);
+                        if(data.audit.department_draft_remark){
+                            deditorInstance.setData(data.audit.department_draft_remark ?? '');
                         }
-                        if(data.auditObjection.department_file != ""){
+                        if(data.audit.department_file){
                             $('.complianceFile').removeClass('d-none');
-                            $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.auditObjection.department_file);
+                            $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.audit.department_file);
+                        }else{
+                            $('.complianceFile').addClass('d-none'); 
                         }
                         
-                        if(data.auditObjection.department_hod_final_status == "1" || data.auditObjection.mca_final_status != "0"){
-                            $('.complianceFile').prop('disabled', true)
+                        if(data.audit.department_hod_final_status == "1"){
+                            $('#department_file').addClass('d-none');
+                            deditorInstance.enableReadOnlyMode('reason');
                         }
                         
 
                         
-                        $("#addForm select[name='department_hod_final_status']").val(data.auditObjection.department_hod_final_status);
-                        $("#addForm textarea[name='department_hod_final_remark']").val(data.auditObjection.department_hod_final_remark);
-                        if((data.auditObjection.department_mca_second_status == "1" && data.auditObjection.department_draft_remark != "")){
+                        $("#addForm select[name='department_hod_final_status']").val(data.audit.department_hod_final_status);
+                        $("#addForm textarea[name='department_hod_final_remark']").val(data.audit.department_hod_final_remark);
+                        if((data.audit.department_mca_second_status == "1")){
+                            $("#addForm select[name='department_hod_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true)
+                        }else if(!data.audit.department_draft_remark){
                             $("#addForm select[name='department_hod_final_status']").prop('disabled', true)
                             $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true)
                         }else if(roleName != "Department HOD"){
@@ -684,9 +714,9 @@
                         }
 
 
-                        $("#addForm select[name='department_mca_second_status']").val(data.auditObjection.department_mca_second_status);
-                        $("#addForm textarea[name='department_mca_second_remark']").val(data.auditObjection.department_mca_second_remark);
-                        if((data.auditObjection.auditor_status == "1" || data.auditObjection.auditor_status == "0")){
+                        $("#addForm select[name='department_mca_second_status']").val(data.audit.department_mca_second_status);
+                        $("#addForm textarea[name='department_mca_second_remark']").val(data.audit.department_mca_second_remark);
+                        if((data.audit.auditor_status == "1" || data.audit.auditor_status == "0")){
                             $("#addForm select[name='department_mca_second_status']").prop('disabled', true)
                             $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', true)
                         }else if(roleName != "MCA"){
@@ -695,13 +725,13 @@
                         }
 
 
-                        $("#addForm select[name='auditor_status']").val(data.auditObjection.auditor_status);
-                        $("#addForm textarea[name='auditor_remark']").val(data.auditObjection.auditor_remark);
+                        $("#addForm select[name='auditor_status']").val(data.audit.auditor_status);
+                        $("#addForm textarea[name='auditor_remark']").val(data.audit.auditor_remark);
 
-                        $("#addForm input[name='completed_sub_unit']").val(data.auditObjection.completed_sub_unit);
-                        $("#addForm input[name='pending_sub_unit']").val(data.auditObjection.pending_sub_unit);
-                        auditorDescription.setData(data.auditObjection.auditor_draft_description ?? '');
-                        if(data.auditObjection.dymca_final_status == "1" && roleName != "Auditor"){
+                        $("#addForm input[name='completed_sub_unit']").val(data.audit.completed_sub_unit);
+                        $("#addForm input[name='pending_sub_unit']").val(data.audit.pending_sub_unit);
+                        auditorDescription.setData(data.audit.auditor_draft_description ?? '');
+                        if(data.audit.dymca_final_status == "1" && roleName != "Auditor"){
                             $("#addForm select[name='auditor_status']").prop('disabled', true);
                             $("#addForm textarea[name='auditor_remark']").prop('disabled', true);
                             $("#addForm input[name='completed_sub_unit']").prop('disabled', true);
@@ -713,9 +743,9 @@
                             $("#addForm input[name='pending_sub_unit']").prop('disabled', true);
                         }
 
-                        $("#addForm select[name='dymca_final_status']").val(data.auditObjection.dymca_final_status);
-                        $("#addForm textarea[name='dymca_final_remark']").val(data.auditObjection.dymca_final_remark);
-                        if(data.auditObjection.mca_final_status == "1" || data.auditObjection.mca_final_status == "0"){
+                        $("#addForm select[name='dymca_final_status']").val(data.audit.dymca_final_status);
+                        $("#addForm textarea[name='dymca_final_remark']").val(data.audit.dymca_final_remark);
+                        if(data.audit.mca_final_status == "1" || data.audit.mca_final_status == "0"){
                             $("#addForm select[name='dymca_final_status']").prop('disabled', true)
                             $("#addForm textarea[name='dymca_final_remark']").prop('disabled', true)
                         }else if(roleName != "DY MCA"){
@@ -724,20 +754,14 @@
                         }
 
 
-                        $("#addForm select[name='mca_final_status']").val(data.auditObjection.mca_final_status);
-                        $("#addForm textarea[name='mca_final_remark']").val(data.auditObjection.mca_final_remark);
-                        if(data.auditObjection.dymca_final_status != "1"){
-                            $("#addForm select[name='mca_final_status']").prop('disabled', true);
-                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true);
+                        $("#addForm select[name='mca_final_status']").val(data.audit.mca_final_status);
+                        $("#addForm textarea[name='mca_final_remark']").val(data.audit.mca_final_remark);
+                        if(data.audit.dymca_final_status != "1"){
+                            $("#addForm select[name='mca_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true)
                         }else if(roleName != "MCA"){
-                            $("#addForm select[name='mca_final_status']").prop('disabled', true);
-                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true);
-                        }
-
-                        if(data.auditObjection.mca_final_status == "1"){
-                            $("#addForm select[name='mca_final_status']").prop('disabled', true);
-                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true);
-                            $('#saveObjectionStatus').addClass('d-none')
+                            $("#addForm select[name='mca_final_status']").prop('disabled', true)
+                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true)
                         }
 
                         // $('#mca_action_status').val(data.auditObjection.mca_action_status)
@@ -763,6 +787,3 @@
 
 
 </x-admin.layout>
-
-
-

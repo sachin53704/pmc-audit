@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PendingAuditObjection extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['parent_id', 'audit_objection_id', 'sub_unit', 'completed_sub_unit', 'pending_sub_unit', 'pending_description', 'status', 'department_draft_remark', 'department_remark', 'department_file', 'department_hod_final_status', 'department_hod_final_remark', 'department_mca_second_status', 'department_mca_second_remark', 'auditor_status', 'auditor_description', 'auditor_draft_description', 'auditor_remark', 'dymca_final_status', 'dymca_final_remark', 'mca_final_status', 'mca_final_remark', 'is_objection_completed'];
+
+    public function auditObjection()
+    {
+        return $this->belongsTo(AuditObjection::class, 'audit_objection_id', 'id');
+    }
+}

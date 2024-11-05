@@ -56,42 +56,29 @@
     </section>
 
     <section id="content">
-        <h6>Department : {{ $department }}</h6>
+        @foreach($reports as $key => $report)
+        <h3>{{ $key }}</h3>
         <table>
             <thead>
                 <tr>
-                    <th>Sr No.</th>
-                    <th>Department</th>
-                    <th>Subject</th>
-                    <th>HMM No.</th>
-                    <th>Auditor No.</th>
-                    <th>Para No.</th>
-                    <th>Remark</th>
+                    <th>Financial Year</th>
+                    <th>Total Para Audit</th>
+                    <th>Completed Para Audit</th>
+                    <th>Pending Para Audit</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($reports as $report)
+                @foreach($report->groupBy('from_year') as $key => $department)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $report?->department?->name }}</td>
-                    <td>{{ $report->subject }}</td>
-                    <td>{{ $report->objection_no }}</td>
-                    <td>{{ $report?->user?->auditor_no }}</td>
-                    <td>{{ $report?->audit->audit_no }}</td>
-                    <td>
-                        @php $count = 1; @endphp
-                        @foreach($report->auditDepartmentAnswers as $auditAnswer)
-                            {{ $count++ . ". " .$auditAnswer->auditor_remark }}<br>
-                        @endforeach
-
-                        @if($count == 1)
-                        -
-                        @endif
-                    </td>
+                    <td align="center">{{ $key }}</td>
+                    <td align="center">{{ $department->sum('sub_unit') }}</td>
+                    <td align="center">{{ $department->sum('completed_sub_unit') }}</td>
+                    <td align="center">{{ $department->sum('pending_sub_unit') }}</td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
+        @endforeach
     </section>
 </body>
 </html>

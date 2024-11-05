@@ -30,6 +30,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => 'Admin',
             'gender' => 'male',
             'mobile' => '9999999991',
+            'department_id' => null,
             'email' => 'superadmin@gmail.com',
             'username' => 'superadmin@gmail.com',
             'password' => Hash::make('12345678'),
@@ -53,6 +54,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999992',
+            'department_id' => null,
             'email' => 'admin@gmail.com',
             'username' => 'admin@gmail.com',
             'password' => Hash::make('12345678')
@@ -73,6 +75,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999943',
+            'department_id' => 1,
             'email' => 'departmenthod@gmail.com',
             'username' => 'departmenthod@gmail.com',
             'password' => Hash::make('12345678')
@@ -93,6 +96,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999993',
+            'department_id' => null,
             'email' => 'department@gmail.com',
             'department_id' => '1',
             'username' => 'department@gmail.com',
@@ -115,6 +119,7 @@ class DefaultLoginUserSeeder extends Seeder
             'gender' => 'male',
             'mobile' => '9999999994',
             'auditor_no' => '123456',
+            'department_id' => null,
             'username' => 'auditor@gmail.com',
             'email' => 'auditor@gmail.com',
             'password' => Hash::make('12345678')
@@ -135,6 +140,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999995',
+            'department_id' => null,
             'username' => 'mca@gmail.com',
             'email' => 'mca@gmail.com',
             'password' => Hash::make('12345678')
@@ -155,6 +161,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999996',
+            'department_id' => null,
             'username' => 'dymca@gmail.com',
             'email' => 'dymca@gmail.com',
             'password' => Hash::make('12345678')
@@ -175,6 +182,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999997',
+            'department_id' => null,
             'username' => 'clerk@gmail.com',
             'email' => 'clerk@gmail.com',
             'password' => Hash::make('12345678')
@@ -195,6 +203,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999998',
+            'department_id' => null,
             'username' => 'localfund@gmail.com',
             'email' => 'localfund@gmail.com',
             'password' => Hash::make('12345678')
@@ -215,6 +224,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999999999',
+            'department_id' => null,
             'username' => 'agaudit@gmail.com',
             'email' => 'agaudit@gmail.com',
             'password' => Hash::make('12345678')
@@ -235,6 +245,7 @@ class DefaultLoginUserSeeder extends Seeder
             'last_name' => '',
             'gender' => 'male',
             'mobile' => '9999912345',
+            'department_id' => null,
             'auditor_no' => '123485',
             'username' => 'dyauditor@gmail.com',
             'email' => 'dyauditor@gmail.com',

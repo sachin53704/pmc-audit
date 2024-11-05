@@ -45,30 +45,25 @@
                             <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2" style="text-align: center">Department</th>
-                                        <th colspan="2" style="text-align: center">Total Count of</th>
-                                        <th colspan="2" style="text-align: center">Solved Count of</th>
-                                        <th colspan="2" style="text-align: center">Pending Count of</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Audit Para</th>
-                                        <th>No of Objection</th>
-                                        <th>Audit Para</th>
-                                        <th>No of Objection</th>
-                                        <th>Audit Para</th>
-                                        <th>No of Objection</th>
+                                        <th>Sr No.</th>
+                                        <th>Department</th>
+                                        <th>Subject</th>
+                                        <th>HMM No.</th>
+                                        <th>Auditor No.</th>
+                                        <th>Remark</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($reports as $report)
                                     <tr>
-                                        <td>{{ $report->name }}</td>
-                                        <td>{{ $report->approved_para + $report->pending_para }}</td>
-                                        <td>{{ $report->approved_subunit + $report->pending_subunit }}</td>
-                                        <td>{{ $report->approved_para }}</td>
-                                        <td>{{ $report->approved_subunit ?? 0 }}</td>
-                                        <td>{{ $report->pending_para }}</td>
-                                        <td>{{ $report->pending_subunit ?? 0 }}</td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $report?->auditObjection?->department?->name }}</td>
+                                        <td>{{ $report->auditObjection?->subject }}</td>
+                                        <td>{{ $report->auditObjection?->objection_no }}</td>
+                                        <td>{{ $report->auditObjection?->user?->auditor_no }}</td>
+                                        <td>
+                                            {!! $report->pending_description !!}
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

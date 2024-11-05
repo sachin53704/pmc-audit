@@ -299,13 +299,20 @@
 
 
                         @can('para-audit.index')
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('para-audit.index') ? 'active' : '' }}" href="{{ route('para-audit.index') }}" >
                                     <i class="ri-draft-line"></i>
                                     <span data-key="t-dashboards">@lang('menu.para_audit')</span>
                                 </a>
-                            </li>
+                            </li> --}}
                         @endcan
+
+                        <li class="nav-item">
+                            <a class="nav-link menu-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }}" href="{{ route('pending-audit-objection.index') }}" >
+                                <i class="ri-draft-line"></i>
+                                <span data-key="t-dashboards">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</span>
+                            </a>
+                        </li>
                         
                         @canany(['report.audit-para-summary-report', 'report.final-report', 'report.para-current-status'])
                         <li class="nav-item">

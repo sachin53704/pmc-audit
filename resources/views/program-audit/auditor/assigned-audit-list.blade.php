@@ -27,7 +27,7 @@
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                         <td>
                                             @if($audit->file_path)
-                                                <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                                <a href="{{ asset('storage/'.$audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                             @endif
                                         </td>
                                         <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>

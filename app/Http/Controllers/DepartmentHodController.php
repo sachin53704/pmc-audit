@@ -16,12 +16,6 @@ class DepartmentHodController extends Controller
 {
     public function forwardObjectionToDepartment(Request $request)
     {
-        // $audits = Audit::query()->whereHas('objections', function ($q) {
-        //     $q->where('is_draft_send', 1)
-        //         ->where('is_department_hod_forward', 0);
-        // })->where('department_id', Auth::user()->department_id)->latest()
-        //     ->get();
-
         $audits = AuditObjection::query()->with(['audit', 'department'])
             ->where('is_draft_send', 1)
             ->where('is_department_hod_forward', 0)

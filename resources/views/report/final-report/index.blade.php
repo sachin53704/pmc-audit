@@ -22,6 +22,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+                                    <label for="from">Select From Date</label>
+                                    <input type="date" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control" id="from">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+                                    <label for="to">Select To Date</label>
+                                    <input type="date" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control" id="to">
+                                </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     {{-- <button class="btn btn-primary mt-4">Search</button> --}}

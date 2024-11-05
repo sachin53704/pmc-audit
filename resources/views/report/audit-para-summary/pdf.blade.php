@@ -56,30 +56,23 @@
         <table>
             <thead>
                 <tr>
-                    <th rowspan="2">Department</th>
-                    <th colspan="2">Total Count of</th>
-                    <th colspan="2">Solved Count of</th>
-                    <th colspan="2">Pending Count of</th>
-                </tr>
-                <tr>
-                    <th>Audit Para</th>
-                    <th>No of Objection</th>
-                    <th>Audit Para</th>
-                    <th>No of Objection</th>
-                    <th>Audit Para</th>
-                    <th>No of Objection</th>
+                    <th>Department</th>
+                    <th>Subject</th>
+                    <th>HMM No.</th>
+                    <th>Auditor No.</th>
+                    <th>Remark</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($reports as $report)
                 <tr>
-                    <td align="center">{{ $report->name }}</td>
-                    <td align="center">{{ $report->approved_para + $report->pending_para }}</td>
-                    <td align="center">{{ $report->approved_subunit + $report->pending_subunit }}</td>
-                    <td align="center">{{ $report->approved_para }}</td>
-                    <td align="center">{{ $report->approved_subunit ?? 0 }}</td>
-                    <td align="center">{{ $report->pending_para }}</td>
-                    <td align="center">{{ $report->pending_subunit ?? 0 }}</td>
+                    <td align="center">{{ $report?->auditObjection?->department?->name }}</td>
+                    <td align="center">{{ $report->auditObjection?->subject }}</td>
+                    <td align="center">{{ $report->auditObjection?->objection_no }}</td>
+                    <td align="center">{{ $report->auditObjection?->user?->auditor_no }}</td>
+                    <td align="center">
+                        {!! $report->pending_description !!}
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

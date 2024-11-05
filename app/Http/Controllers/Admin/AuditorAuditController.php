@@ -20,6 +20,7 @@ use App\Models\AuditParaCategory;
 use App\Models\AuditDepartmentAnswer;
 use App\Http\Requests\AddObjectionRequest;
 use App\Models\AuditObjectionMcaStatus;
+use App\Models\PendingAuditObjection;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 
@@ -331,6 +332,17 @@ class AuditorAuditController extends Controller
                                 return response()->json(['success' => 'Objection forward to department successfully']);
                             }
                             $this->changeAuditStatus($request, $prevStatus, $currentStatus);
+
+                            if ($auditObjection->pending_sub_unit > 0) {
+                                PendingAuditObjection::create([
+                                    'audit_objection_id' => $auditObjection->id,
+                                    'sub_unit' => $auditObjection->pending_sub_unit,
+                                    'pending_description' => $auditObjection->auditor_draft_description,
+                                    'status' => 1
+                                ]);
+                            }
+
+
                             DB::commit();
                             return response()->json(['success' => 'Objection approve successfully']);
                         }

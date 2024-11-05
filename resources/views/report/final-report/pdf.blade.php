@@ -60,7 +60,7 @@
         @php $count = 1; @endphp
         @foreach($reports as $report)
         <div>
-            {!! $report->description !!}
+            {!! $report->pending_description !!}
         </div>
 
         @php $count = $count + 1; @endphp

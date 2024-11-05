@@ -43,15 +43,21 @@ class ClerkAuditController extends Controller
     public function store(StoreAuditRequest $request)
     {
         try {
-            $name = $this->generatePdf($request->date, $request->description);
-            $request['file_path'] = $name;
+            DB::beginTransaction();
+            $request['file_path'] = 'file';
             $request['dymca_status'] = 1;
             $request['audit_no'] = Audit::generateAuditNo();
 
-            Audit::create($request->all());
+            $audit = Audit::create($request->all());
 
+            $audits = Audit::with(['from', 'to', 'department'])->find($audit->id);
+            $name = $this->generatePdf($audits);
+            $audits->file_path = $name;
+            $audits->save();
+            DB::commit();
             return response()->json(['success' => 'Audit uploaded successfully!']);
         } catch (\Exception $e) {
+            DB::rollback();
             return $this->respondWithAjax($e, 'uploading', 'Audit file');
         }
     }
@@ -77,16 +83,20 @@ class ClerkAuditController extends Controller
     public function update(UpdateAuditRequest $request, Audit $audit)
     {
         try {
-            if (Storage::disk('public')->exists($audit->file_path)) {
-                Storage::disk('public')->delete($audit->file_path);
-            }
-            $name = $this->generatePdf($request->date, $request->description);
-            $request['file_path'] = $name;
 
             $request['status'] = 1;
             $request['dymca_status'] = 1;
             $request['mca_status'] = null;
             $audit->update($request->all());
+
+            $audits = Audit::with(['from', 'to', 'department'])->find($audit->id);
+            if (Storage::disk('public')->exists($audits->file_path)) {
+                Storage::disk('public')->delete($audits->file_path);
+            }
+
+            $name = $this->generatePdf($audits);
+            $audits->file_path = $name;
+            $audits->save();
 
             return response()->json(['success' => 'Audit file updated successfully!']);
         } catch (\Exception $e) {
@@ -107,11 +117,11 @@ class ClerkAuditController extends Controller
     }
 
 
-    public function generatePdf($date, $description)
+    public function generatePdf($audit)
     {
-        $pdf = PDF::loadView('program-audit.clerk.pdf', compact('date', 'description'));
+        $pdf = PDF::loadView('letter.1', compact('audit'));
 
-        $name = 'file/' . Str::random(60) . '.pdf';
+        $name = 'letter/' . Str::random(60) . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;

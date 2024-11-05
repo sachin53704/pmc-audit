@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('date');
             $table->text('description');
             $table->text('remark');
-            $table->text('file_path');
+            $table->string('file_path')->nullable();
             $table->integer('dymca_status')->nullable()->comment("1 => Pending,  3 => Rejected,  2 => Accepted");
             $table->text('dymca_remark')->nullable();
             $table->integer('mca_status')->nullable()->comment("1 => Pending,  3 => Rejected,  2 => Accepted");

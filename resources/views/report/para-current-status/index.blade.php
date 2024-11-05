@@ -1,6 +1,5 @@
-
 <x-admin.layout>
-    <x-slot name="title">@lang('menu.para_current_status_report')</x-slot>
+    <x-slot name="title"> @lang('menu.para_current_status_report')</x-slot>
     <x-slot name="heading">@lang('menu.para_current_status_report')</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
@@ -41,41 +40,32 @@
                         </form>
                     </div>
                     <div class="card-body">
+                        @foreach($reports as $key => $report)
+                        <h3>{{ $key }}</h3>
+                        <hr>
                         <div class="table-responsive">
-                            <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
+                            <table class="table table-bordered nowrap align-middle" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Sr No.</th>
-                                        <th>Department</th>
-                                        <th>Subject</th>
-                                        <th>HMM No.</th>
-                                        <th>Auditor No.</th>
-                                        <th>Remark</th>
+                                        <th>Financial Year</th>
+                                        <th>Total Para Audit</th>
+                                        <th>Completed Para Audit</th>
+                                        <th>Pending Para Audit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($reports as $report)
+                                    @foreach($report->groupBy('from_year') as $key => $department)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report?->department?->name }}</td>
-                                        <td>{{ $report->subject }}</td>
-                                        <td>{{ $report->objection_no }}</td>
-                                        <td>{{ $report?->user?->auditor_no }}</td>
-                                        <td>
-                                            @php $count = 1; @endphp
-                                            @foreach($report->auditDepartmentAnswers as $auditAnswer)
-                                             {{ $count++ . ". " .$auditAnswer->auditor_remark }}<br>
-                                            @endforeach
-
-                                            @if($count == 1)
-                                            -
-                                            @endif
-                                        </td>
+                                        <td>{{ $key }}</td>
+                                        <td>{{ $department->sum('sub_unit') }}</td>
+                                        <td>{{ $department->sum('completed_sub_unit') }}</td>
+                                        <td>{{ $department->sum('pending_sub_unit') }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

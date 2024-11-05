@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('fiscal_years', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->year('from_year');
-            $table->year('to_year');
+            $table->date('from_year');
+            $table->date('to_year');
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('deleted_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();

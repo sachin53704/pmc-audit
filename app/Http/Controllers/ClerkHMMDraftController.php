@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use PDF;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ClerkHMMDraftController extends Controller
 {
@@ -64,10 +67,14 @@ class ClerkHMMDraftController extends Controller
                 DB::beginTransaction();
                 try {
                     if (isset($request->id)) {
+                        $auditId = AuditObjection::where('id', $request->id[0])->value('audit_id');
+                        $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
+                        $name = $this->generatePdf($audit);
                         $time = time();
                         for ($i = 0; $i < count($request->id); $i++) {
                             $auditObjection = AuditObjection::find($request->id[$i]);
                             $auditObjection->hmm_draft_number = $time;
+                            $auditObjection->clerk_send_hmm_draft_letter = $name;
                             $auditObjection->is_objection_send = 1;
                             if ($auditObjection->status < 4) {
                                 $auditObjection->status = 4;
@@ -86,6 +93,16 @@ class ClerkHMMDraftController extends Controller
             }
             return response()->json(['error' => 'Select atleast one objection']);
         }
+    }
+
+    public function generatePdf($audit)
+    {
+        $pdf = PDF::loadView('letter.2', compact('audit'));
+
+        $name = 'letter/' . Str::random(60) . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
     }
 
     public function viewObjection(Request $request)
@@ -112,8 +129,7 @@ class ClerkHMMDraftController extends Controller
             ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
                 $q->whereNull('hmm_draft_mca_status');
             })->when(Auth::user()->hasRole('MCA'), function ($q) {
-                $q->where('hmm_draft_dymca_status', 1)
-                    ->where('hmm_draft_mca_status', '!=', 1);
+                $q->where('hmm_draft_dymca_status', 1);
             })
             ->latest()->get();
 
@@ -137,15 +153,31 @@ class ClerkHMMDraftController extends Controller
 
                 return response()->json(['success' => 'Hmm draft approve successfully']);
             } elseif (Auth::user()->hasRole('MCA')) {
+                $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->value('audit_id');
+                $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
+                $name = $this->generateFinalPdf($audit);
+
+
                 AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)
                     ->update([
                         'hmm_draft_mca_status' => $request->hmm_draft_dymca_status,
                         'hmm_draft_mca_remark' => $request->hmm_draft_dymca_remark,
+                        'hmm_draft_letter' => $name
                     ]);
                 return response()->json(['success' => 'Hmm draft approve successfully']);
             } else {
                 return response()->json(['error' => 'Something went wrong']);
             }
         }
+    }
+
+    public function generateFinalPdf($audit)
+    {
+        $pdf = PDF::loadView('letter.3', compact('audit'));
+
+        $name = 'letter/' . Str::random(60) . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
     }
 }

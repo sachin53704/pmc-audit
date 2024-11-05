@@ -43,10 +43,6 @@ class DashboardController extends Controller
 
 
             $columnName = strtolower(str_replace(' ', '_', $userRole->name));
-            // $pendingReceipts = SubReceipt::where($columnName . '_status', 0)->groupBy('receipt_id')->count();
-            // $approvedReceipts = SubReceipt::where($columnName . '_status', 1)->groupBy('receipt_id')->count();
-            // $rejectedReceipts = SubReceipt::where($columnName . '_status', 2)->groupBy('receipt_id')->count();
-
 
             $pendingReceipts = Receipt::whereHas('subreceipts', function ($q) use ($columnName) {
                 $q->where($columnName . '_status', 0);
@@ -57,10 +53,6 @@ class DashboardController extends Controller
             $rejectedReceipts = Receipt::whereHas('subreceipts', function ($q) use ($columnName) {
                 $q->where($columnName . '_status', 2);
             })->count();
-
-            // $pendingPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 0)->groupBy('payment_receipt_id')->count();
-            // $approvedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 1)->groupBy('payment_receipt_id')->count();
-            // $rejectedPaymentReceipts = SubPaymentReceipt::where($columnName . '_status', 2)->groupBy('payment_receipt_id')->count();
 
             $pendingPaymentReceipts = PaymentReceipt::whereHas('subreceipts', function ($q) use ($columnName) {
                 $q->where($columnName . '_status', 0);
@@ -169,7 +161,7 @@ class DashboardController extends Controller
             'foo' => 'bar'
         ];
 
-        $pdf = PDF::loadView('letter.clerk-hmm-draft', $data);
+        $pdf = PDF::loadView('letter.4', $data);
 
         return $pdf->stream('document.pdf');
     }

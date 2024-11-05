@@ -10,12 +10,17 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <h5 class="modal-title">Forward HMM To Department</h5>
-                            @php $data = []; @endphp
+                            @php $data = []; $file = "javascript:void(0)" @endphp
                             @foreach($audits as $audit)
-                            @php array_push($data, $audit->id) @endphp
+                            @php 
+                                array_push($data, $audit->id);
+                                if($loop->iteration == "1"){
+                                    $file = asset('storage/'.$audit->hmm_draft_letter);
+                                }
+                            @endphp
                             @endforeach
                             <div>
-                                <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data]) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                <a href="{{ $file }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                 <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data]) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                             </div>
                         </div>
@@ -34,7 +39,7 @@
                                 <table class="table table-bordered nowrap align-middle" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th><input type="checkbox" class="form-check-input parentCheckBox" style="font-size: 15px;"> &nbsp;&nbsp;Select All</th>
+                                            <th><label style="cursor: pointer"><input type="checkbox" class="form-check-input parentCheckBox" style="font-size: 15px;"> &nbsp;&nbsp;Select All</label></th>
                                             <th>Department</th>
                                             <th>Date</th>
                                             <th>File Description</th>

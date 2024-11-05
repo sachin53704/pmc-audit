@@ -39,6 +39,8 @@ class FiscalYearController extends Controller
         try {
             DB::beginTransaction();
             $input = $request->validated();
+            $input['from_year'] = date('Y-m-d', strtotime($request->from_year));
+            $input['to_year'] = date('Y-m-d', strtotime($request->to_year));
             FiscalYear::create(Arr::only($input, FiscalYear::getFillables()));
             DB::commit();
 
@@ -80,6 +82,8 @@ class FiscalYearController extends Controller
         try {
             DB::beginTransaction();
             $input = $request->validated();
+            $input['from_year'] = date('Y-m-d', strtotime($request->from_year));
+            $input['to_year'] = date('Y-m-d', strtotime($request->to_year));
             $fiscal_year->update(Arr::only($input, FiscalYear::getFillables()));
             DB::commit();
 

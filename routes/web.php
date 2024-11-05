@@ -186,6 +186,12 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     // Objection Ajax request
     Route::get('ajax/view-auditor-objections', [App\Http\Controllers\ObjectionAjaxController::class, 'viewAuditorObjections'])->name('ajax.viewAuditorObjection');
     Route::get('get-dymca-send-objections', [App\Http\Controllers\ObjectionAjaxController::class, 'getDymcaSendObjections'])->name('objection.getDymcaSendObjections');
+
+
+    // Pending Objection
+    Route::get('pending-objection', [App\Http\Controllers\PendingAuditObjectionController::class, 'pendingAuditObjection'])->name('pending-audit-objection.index');
+    Route::get('pending-view-objection', [App\Http\Controllers\PendingAuditObjectionController::class, 'viewPendingObjection'])->name('pending-view-objection');
+    Route::post('pending-change-objection-status', [App\Http\Controllers\PendingAuditObjectionController::class, 'changePendingObjectionStatus'])->name('pending-change-objection-status');
 });
 
 Route::get('check/pdf', [App\Http\Controllers\Admin\DashboardController::class, 'pdf']);

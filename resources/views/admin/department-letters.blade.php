@@ -28,7 +28,6 @@
                                         <th>Date</th>
                                         <th>Description</th>
                                         <th>View Letter</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -39,16 +38,8 @@
                                             <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                             <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '50') }}</span></td>
                                             <td>
-                                                @if($audit->dl_file_path)
-                                                    <a href="{{ asset($audit->dl_file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($audit->status == 3 || $audit->status == 1)
-                                                    <button class="btn btn-secondary edit-element px-2 py-1" title="Edit audit" data-id="{{ $audit->id }}"><i data-feather="edit"></i></button>
-                                                @endif
-                                                @if($audit->status == 1)
-                                                    <button class="btn btn-danger rem-element px-2 py-1" title="Delete audit" data-id="{{ $audit->id }}"><i data-feather="trash-2"></i> </button>
+                                                @if($audit->file_path)
+                                                    <a href="{{ asset('storage/'.$audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                                 @endif
                                             </td>
                                         </tr>

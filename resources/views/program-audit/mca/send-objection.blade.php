@@ -29,7 +29,7 @@
                         @endphp
                         @endforeach
                         <div>
-                            <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $ids]) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                            <a href="{{ asset('storage/'.$auditss[0]->clerk_send_hmm_draft_letter) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                             <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $ids]) }}" target="_blank" class="btn btn-primary btn-sm">View Details</a>
                         </div>
                     </div>

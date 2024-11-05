@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::table('audit_objections', function (Blueprint $table) {
             $table->string('hmm_draft_number')->nullable()->after('draft_description');
-            $table->integer('hmm_draft_dymca_status')->nullable()->comment('blank => Pending, 1 => Approve, 2 => Reject')->after('hmm_draft_number');
+            $table->string('clerk_send_hmm_draft_letter')->nullable()->after('hmm_draft_number');
+            $table->integer('hmm_draft_dymca_status')->nullable()->comment('blank => Pending, 1 => Approve, 2 => Reject')->after('clerk_send_hmm_draft_letter');
             $table->text('hmm_draft_dymca_remark')->nullable()->after('hmm_draft_dymca_status');
             $table->integer('hmm_draft_mca_status')->nullable()->comment('blank => Pending, 1 => Approve, 2 => Reject')->after('hmm_draft_dymca_remark');
             $table->text('hmm_draft_mca_remark')->nullable()->after('hmm_draft_mca_status');
+            $table->string('hmm_draft_letter')->nullable()->after('hmm_draft_mca_remark');
         });
     }
 

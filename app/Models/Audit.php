@@ -62,6 +62,16 @@ class Audit extends BaseModel
         return $this->hasOne(ParaAudit::class, 'audit_id', 'id');
     }
 
+    public function from()
+    {
+        return $this->belongsTo(FiscalYear::class, 'from_year', 'id');
+    }
+
+    public function to()
+    {
+        return $this->belongsTo(FiscalYear::class, 'to_year', 'id');
+    }
+
 
 
 
