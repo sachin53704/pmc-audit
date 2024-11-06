@@ -23,6 +23,9 @@ use App\Models\AuditObjectionMcaStatus;
 use App\Models\PendingAuditObjection;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use PDF;
 
 class AuditorAuditController extends Controller
 {
@@ -269,6 +272,16 @@ class AuditorAuditController extends Controller
         }
     }
 
+    public function generatePdf($audit)
+    {
+        $pdf = PDF::loadView('letter.3', compact('audit'));
+
+        $name = 'letter/' . Str::random(60) . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
+    }
+
     public function changeObjectionStatus(Request $request)
     {
         if ($request->ajax()) {
@@ -334,10 +347,14 @@ class AuditorAuditController extends Controller
                             $this->changeAuditStatus($request, $prevStatus, $currentStatus);
 
                             if ($auditObjection->pending_sub_unit > 0) {
+                                $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
+                                $name = $this->generatePdf($audits);
+
                                 PendingAuditObjection::create([
                                     'audit_objection_id' => $auditObjection->id,
                                     'sub_unit' => $auditObjection->pending_sub_unit,
                                     'pending_description' => $auditObjection->auditor_draft_description,
+                                    'hmm_draft_letter' => $name,
                                     'status' => 1
                                 ]);
                             }

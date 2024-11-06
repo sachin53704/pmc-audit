@@ -55,7 +55,7 @@
                                         <td>{{ $pendingAuditObjection->auditObjection->objection_no }}</td>                                        
                                         <td>{{ $pendingAuditObjection->sub_unit }}</td>
                                         <td>
-                                            <a href="javascript:void(0)" class="btn btn-primary btn-sm">View Letter</a>
+                                            <a href="{{ asset('storage/'.$pendingAuditObjection->hmm_draft_letter) }}" class="btn btn-primary btn-sm">View Letter</a>
                                         </td>
                                         <td>
                                             <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-id="{{ $pendingAuditObjection->id }}">

@@ -5,43 +5,44 @@
 
 
         @if(session('LOGIN_TYPE') == 1)
-        @for($i=0; $i <= 6; $i++)
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Pending</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>First</th>
-                                        <th>First</th>
-                                        <th>First</th>
-                                        <th>First</th>
-                                        <th>First</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for($i=0; $i <= 10; $i++)
-                                    <tr>
-                                        <td>First</td>
-                                        <td>First</td>
-                                        <td>First</td>
-                                        <td>First</td>
-                                        <td>First</td>
-                                    </tr>
-                                    @endfor
-                                </tbody>
-                            </table>
+            @for($i=0; $i <= 6; $i++)
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Pending</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="buttons-datatables" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>First</th>
+                                            <th>First</th>
+                                            <th>First</th>
+                                            <th>First</th>
+                                            <th>First</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for($j=0; $j <= 10; $j++)
+                                        <tr>
+                                            <td>First</td>
+                                            <td>First</td>
+                                            <td>First</td>
+                                            <td>First</td>
+                                            <td>First</td>
+                                        </tr>
+                                        @endfor
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @endfor
+            @endfor
+
             <div class="row">
                 <div class="col-xl-3 col-md-6">
                     <!-- card -->

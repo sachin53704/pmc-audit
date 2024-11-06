@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('completed_sub_unit')->nullable();
             $table->integer('pending_sub_unit')->nullable();
             $table->longText('pending_description')->nullable();
+            $table->string('hmm_draft_letter')->nullable();
             $table->integer('status')->nullable();
             $table->longText('department_remark')->nullable();
             $table->longText('department_draft_remark')->nullable();

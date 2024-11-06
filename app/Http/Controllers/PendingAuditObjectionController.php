@@ -10,10 +10,13 @@ use App\Models\Zone;
 use App\Models\FiscalYear;
 use App\Models\AuditType;
 use App\Models\Severity;
+use App\Models\Audit;
 use App\Models\AuditParaCategory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use PDF;
 
 class PendingAuditObjectionController extends Controller
 {
@@ -150,11 +153,16 @@ class PendingAuditObjectionController extends Controller
                     $pendingAuditObjection->save();
 
                     if ($pendingAuditObjection->pending_sub_unit > 0) {
+                        $auditObjection = AuditObjection::find($pendingAuditObjection->audit_objection_id);
+                        $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
+                        $name = $this->generatePdf($audits);
+
                         PendingAuditObjection::create([
                             'audit_objection_id' => $pendingAuditObjection->audit_objection_id,
                             'sub_unit' => $pendingAuditObjection->pending_sub_unit,
                             'pending_description' => $pendingAuditObjection->auditor_draft_description,
                             'status' => 1,
+                            'hmm_draft_letter' => $name,
                             'parent_id' => $pendingAuditObjection->id
                         ]);
                     }
@@ -210,5 +218,15 @@ class PendingAuditObjectionController extends Controller
                 }
             }
         }
+    }
+
+    public function generatePdf($audit)
+    {
+        $pdf = PDF::loadView('letter.3', compact('audit'));
+
+        $name = 'letter/' . Str::random(60) . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
     }
 }
