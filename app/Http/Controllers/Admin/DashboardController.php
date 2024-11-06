@@ -9,6 +9,8 @@ use App\Models\SubPaymentReceipt;
 use App\Models\SubReceipt;
 use App\Models\PaymentReceipt;
 use App\Models\UserAssignedAudit;
+use App\Models\PendingAuditObjection;
+use App\Models\AuditObjection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use PDF;
@@ -22,24 +24,75 @@ class DashboardController extends Controller
         $userRole = $user->roles()->get()[0];
 
         if ($userRole->name == "Clerk") {
-            // return Auth::user()->department_id;
-            $totalAuditCount = Audit::count();
-            $approvedAuditCount = Audit::where(['mca_status' => 2])->count();
-            $rejectedAuditCount = Audit::where('mca_status', 3)->orWhere('dymca_status', 3)->count();
+
+            $audits = AuditObjection::query()->with(['department'])->where('mca_status', 1)
+                ->where('is_objection_send', 0)->withWhereHas('audit', function ($q) {
+                    $q->where('status', '>=', 6);
+                })
+                ->where('status', '3')
+                ->whereNull('hmm_draft_number')
+                ->latest()->get();
 
             return view('dashboard.clerk')->with([
-                'totalAuditCount' => $totalAuditCount,
-                'approvedAuditCount' => $approvedAuditCount,
-                'rejectedAuditCount' => $rejectedAuditCount
+                'audits' => $audits,
             ]);
         } elseif ($userRole->name == "MCA" || $userRole->name == "DY MCA") {
-            $pendingAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 1]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['dymca_status' => 1]))->count();
+            $hmms = AuditObjection::query()->with('department')->withWhereHas('audit', function ($q) {
+                $q->where('status', '>=', 5);
+            })->when(Auth::user()->hasRole('MCA'), function ($q) {
+                $q->whereNull('mca_status')
+                    ->where('dymca_status', 1)
+                    ->where('is_draft_send', 1);
+            })->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+                $q->whereNull('dymca_status')
+                    ->where('is_draft_send', 1);
+            })
+                ->latest()
+                ->get();
 
-            $approvedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 2]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['dymca_status' => 2]))->count();
+            $hmmDrafts = AuditObjection::query()->with(['department'])->where('mca_status', 1)
+                ->where('is_objection_send', 1)->withWhereHas('audit', function ($q) {
+                    $q->where('status', '>=', 6);
+                })
+                ->where('status', '4')
+                ->whereNotNull('hmm_draft_number')
+                ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+                    $q->whereNull('hmm_draft_mca_status');
+                })->when(Auth::user()->hasRole('MCA'), function ($q) {
+                    $q->where('hmm_draft_dymca_status', 1)
+                        ->whereNull('hmm_draft_mca_status');
+                })
+                ->latest()->get();
 
-            $rejectedAuditCount = Audit::when(Auth::user()->hasRole('MCA'), fn($q) => $q->where(['mca_status' => 3]))->when(Auth::user()->hasRole('DY MCA'), fn($q) => $q->where(['dymca_status' => 3]))->count();
+            $status = 0;
+            if (Auth::user()->hasRole('MCA')) {
+                $status = 9;
+            } elseif (Auth::user()->hasRole('DY MCA')) {
+                $status = 11;
+            }
+            $compliances = AuditObjection::with(['department', 'audit'])
+                ->whereHas('audit', function ($q) use ($status) {
+                    $q->where('status', '>=', $status);
+                })
+                ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+                    $q->where('status', '>=', 9)
+                        ->whereNull('dymca_final_status');
+                })
+                ->when(Auth::user()->hasRole('MCA'), function ($q) {
+                    $q->where('status', '>=', 7)
+                        ->whereNull('department_mca_second_status');
+                })
+                ->get();
 
-            $draftAuditCount = Audit::where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)->count();
+            $pendingAuditObjections = PendingAuditObjection::with(['auditObjection.department'])
+                ->where('is_objection_completed', 0)
+                ->when(Auth::user()->hasRole(['MCA']), function ($q) {
+                    $q->where('status', '>=', 2)->whereNull('department_mca_second_status');
+                })
+                ->when(Auth::user()->hasRole(['DY MCA']), function ($q) {
+                    $q->where('status', '>=', 4)->whereNull('dymca_final_status');
+                })
+                ->get();
 
 
             $columnName = strtolower(str_replace(' ', '_', $userRole->name));
@@ -66,10 +119,10 @@ class DashboardController extends Controller
 
 
             return view('dashboard.mca')->with([
-                'pendingAuditCount' => $pendingAuditCount,
-                'approvedAuditCount' => $approvedAuditCount,
-                'rejectedAuditCount' => $rejectedAuditCount,
-                'draftAuditCount' => $draftAuditCount,
+                'hmms' => $hmms,
+                'hmmDrafts' => $hmmDrafts,
+                'compliances' => $compliances,
+                'pendingAuditObjections' => $pendingAuditObjections,
                 'pendingReceipts' => $pendingReceipts,
                 'approvedReceipts' => $approvedReceipts,
                 'rejectedReceipts' => $rejectedReceipts,
@@ -78,7 +131,22 @@ class DashboardController extends Controller
                 'rejectedPaymentReceipts' => $rejectedPaymentReceipts,
             ]);
         } elseif ($userRole->name == "Department") {
-            $totalDepartmentLetters = Audit::where('department_id', $user->department_id)->whereNot('dl_file_path', null)->count();
+
+            $hmmObjections = AuditObjection::with(['department', 'audit'])
+                ->whereHas('audit', function ($q) {
+                    $q->where('status', '>=', 7)
+                        ->where('department_id', Auth::user()->department_id);
+                })->where('is_department_hod_forward', 1)
+                ->whereNull('compliance_submit_date')
+                ->where('status', 5)
+                ->get();
+
+            $pendingAuditObjections = PendingAuditObjection::with(['auditObjection.department'])
+                ->where('is_objection_completed', 0)->where('status', '>=', 1)
+                ->whereHas('auditObjection', function ($q) {
+                    $q->where('department_id', Auth::user()->department_id);
+                })
+                ->get();
 
             $pendingReceipts = '';
             $approvedReceipts = '';
@@ -99,7 +167,8 @@ class DashboardController extends Controller
 
             return view('dashboard.department')->with([
                 'user' => $user,
-                'totalDepartmentLetters' => $totalDepartmentLetters,
+                'hmmObjections' => $hmmObjections,
+                'pendingAuditObjections' => $pendingAuditObjections,
                 'pendingReceipts' => $pendingReceipts,
                 'approvedReceipts' => $approvedReceipts,
                 'rejectedReceipts' => $rejectedReceipts,
@@ -107,19 +176,64 @@ class DashboardController extends Controller
                 'approvedPaymentReceipts' => $approvedPaymentReceipts,
                 'rejectedPaymentReceipts' => $rejectedPaymentReceipts,
             ]);
+        } elseif ($userRole->name == "Department HOD") {
+
+            $hmms = AuditObjection::query()->with(['audit', 'department'])
+                ->where('is_draft_send', 1)
+                ->where('is_department_hod_forward', 0)
+                ->where('hmm_draft_mca_status', 1)
+                ->where('department_id', Auth::user()->department_id)
+                ->latest()
+                ->get();
+
+            $compliances = AuditObjection::with(['department', 'audit'])
+                ->whereHas('audit', function ($q) {
+                    $q->where('status', '>=', 8);
+                })
+                ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                    $q->where('is_department_draft_save', 0)
+                        ->whereNotNull('department_remark')
+                        ->where('status', '>=', 6)
+                        ->where('department_id', Auth::user()->department_id);
+                })
+                ->get();
+
+            $pendingAuditObjections = PendingAuditObjection::with(['auditObjection.department'])
+                ->where('is_objection_completed', 0)->where('status', '>=', 1)->whereNull('department_hod_final_status')
+                ->whereHas('auditObjection', function ($q) {
+                    $q->where('department_id', Auth::user()->department_id);
+                })
+                ->get();
+
+            return view('dashboard.department-hod')->with([
+                'user' => $user,
+                'hmms' => $hmms,
+                'compliances' => $compliances,
+                'pendingAuditObjections' => $pendingAuditObjections,
+            ]);
         } elseif ($userRole->name == "Auditor") {
-            $totalAssignedAudits = UserAssignedAudit::where('user_id', $user->id)->count();
-            $totalHmmList = Audit::query()
-                ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))
-                ->where('status', '>=', Audit::AUDIT_STATUS_LETTER_SENT_TO_DEPARTMENT)->count();
-            $totalAnsweredQuestions = Audit::query()
-                ->where('status', Audit::AUDIT_STATUS_DEPARTMENT_ADDED_COMPLIANCE)
-                ->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id))->count();
+            $complianceObjections = AuditObjection::with(['department', 'audit'])
+                ->whereHas('audit', function ($q) {
+                    $q->where('status', '>=', 9)
+                        ->whereHas('assignedAuditors', function ($q) {
+                            $q->where('user_id', Auth::user()->id);
+                        });
+                })
+                ->where('user_id', Auth::user()->id)->where('status', '>=', 8)
+                ->whereNull('auditor_status')
+                ->where('department_mca_second_status', 1)
+                ->get();
+
+            $pendingAuditObjections = PendingAuditObjection::with(['auditObjection.department'])
+                ->where('is_objection_completed', 0)
+                ->whereNull('auditor_status')
+                ->where('department_mca_second_status', 1)
+                ->get();
+
 
             return view('dashboard.auditor')->with([
-                'totalAssignedAudits' => $totalAssignedAudits,
-                'totalHmmList' => $totalHmmList,
-                'totalAnsweredQuestions' => $totalAnsweredQuestions,
+                'complianceObjections' => $complianceObjections,
+                'pendingAuditObjections' => $pendingAuditObjections
             ]);
         } elseif ($userRole->name == "DY Auditor") {
             $pendingReceipts = SubReceipt::where('dy_auditor_status', 0)->distinct('receipt_id')->count();

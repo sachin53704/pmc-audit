@@ -6,100 +6,90 @@
 
 
     <div class="row">
-        <div class="col-xl-3 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="card-title">Compliance Objection</h3>
+                    <a href="{{ route('answered-questions') }}" class="btn btn-primary btn-sm">View</a>
+                </div>
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Assigned Auditor</p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <h5 class="text-success fs-14 mb-0">
-                                {{-- <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +16.24 % --}}
-                            </h5>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered dashboardDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Date</th>
+                                    <th>HMM No.</th>
+                                    <th>Subject</th>
+                                    <th>Entry Date</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($complianceObjections as $complianceObjection)
+                                <tr>
+                                    <td>{{ $complianceObjection->department?->name }}</td>
+                                    <td>{{ Carbon\Carbon::parse($complianceObjection->audit?->date)->format('d-m-Y') }}</td>
+                                    <td>{{ $complianceObjection->objection_no }}</td>
+                                    <td>{{ $complianceObjection->subject }}</td>
+                                    <td>{{ Carbon\Carbon::parse($complianceObjection->entry_date)->format('d-m-Y') }}</td>
+                                    <td>@if($complianceObjection->audit?->description) <span style="cursor: pointer" title="{{ $complianceObjection->audit?->description }}">{{ Str::limit($complianceObjection->audit?->description, '30') }}</span>@else - @endif</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
-                        <div>
-                            <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $totalAssignedAudits }}</h4>
-                            <a href="#" class="text-decoration-underline"></a>
-                        </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                <i class="bx bx-file text-primary"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-
-        <div class="col-xl-3 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                         <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total HMM List</p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <h5 class="text-danger fs-14 mb-0">
-                                {{-- <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -3.57 % --}}
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
-                        <div>
-                            <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $totalHmmList }}</h4>
-                            <a href="#" class="text-decoration-underline"></a>
-                        </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                <i class="bx bx-file text-primary"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-
-        <div class="col-xl-3 col-md-6">
-            <!-- card -->
-            <div class="card card-animate">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-grow-1 overflow-hidden">
-                            <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Total Complienced Objection</p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <h5 class="text-success fs-14 mb-0">
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-end justify-content-between mt-4">
-                        <div>
-                            <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $totalAnsweredQuestions }} </h4>
-                            <a href="#" class="text-decoration-underline"></a>
-                        </div>
-                        <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                <i class="bx bx-file text-primary"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-
-
+                </div>
+            </div>
+        </div>
     </div>
 
 
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h3 class="card-title">Pending Objection</h3>
+                    <a href="{{ route('answered-questions') }}" class="btn btn-primary btn-sm">View</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered dashboardDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>HMM No.</th>
+                                    <th>Pending Objection</th>
+                                    <th>Letter</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($pendingAuditObjections as $pendingAuditObjection)
+                                <tr>
+                                    <td>{{ $pendingAuditObjection->auditObjection->department?->name }}</td>
+                                    
+                                    <td>{{ $pendingAuditObjection->auditObjection->objection_no }}</td>
+                                    <td>{!! $pendingAuditObjection->pending_description !!}</td>
+                                    <td>
+                                        <a href="{{ asset('storage/'.$pendingAuditObjection->hmm_draft_letter) }}" class="btn btn-primary btn-sm">View Letter</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    @push('scripts')
-    @endpush
 
 </x-admin.layout>
+
+<script>
+    $(document).ready(function(){
+        $('.dashboardDataTable').DataTable({
+            pageLength: 5,
+        });
+    });
+</script>

@@ -5,35 +5,53 @@
 
 
         @if(session('LOGIN_TYPE') == 1)
-            @for($i=0; $i <= 6; $i++)
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Pending</h3>
+                        <div class="card-header d-flex justify-content-between">
+                            <h3 class="card-title">Hmm</h3>
+                            <a href="{{ route('hmmMcaStatus') }}" class="btn btn-primary btn-sm">View</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="buttons-datatables" class="table table-bordered">
+                                <table class="table dashboardDataTable">
                                     <thead>
                                         <tr>
-                                            <th>First</th>
-                                            <th>First</th>
-                                            <th>First</th>
-                                            <th>First</th>
-                                            <th>First</th>
+                                            <th>Department</th>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Hmm No.</th>
+                                            <th>DYMCA Status</th>
+                                            <th>MCA Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for($j=0; $j <= 10; $j++)
+                                        @foreach($hmms as $hmm)
                                         <tr>
-                                            <td>First</td>
-                                            <td>First</td>
-                                            <td>First</td>
-                                            <td>First</td>
-                                            <td>First</td>
+                                            <td>{{ $hmm->department->name }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($hmm->audit->date)) }}</td>
+                                            <td><span style="cursor: pointer" title="{{ $hmm->audit?->description }}">{{ Str::limit($hmm->audit?->description, '30') }}</span></td>
+                                            <td>{{ $hmm->objection_no }}</td>
+                                            <td>
+                                                @if($hmm->dymca_status == "1")
+                                                <span class="badge bg-success">Approve</span>
+                                                @elseif($hmm->dymca_status == "2")
+                                                <span class="badge bg-danger">Forward To Auditor</span>
+                                                @else
+                                                <span class="badge bg-warning">Pending</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($hmm->mca_status == "1")
+                                                <span class="badge bg-success">Approve</span>
+                                                @elseif($hmm->mca_status == "2")
+                                                <span class="badge bg-danger">Forward To Auditor</span>
+                                                @else
+                                                <span class="badge bg-warning">Pending</span>
+                                                @endif
+                                            </td>
                                         </tr>
-                                        @endfor
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -41,124 +59,122 @@
                     </div>
                 </div>
             </div>
-            @endfor
 
             <div class="row">
-                <div class="col-xl-3 col-md-6">
-                    <!-- card -->
-                    <div class="card card-animate">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h3 class="card-title">Hmm Draft</h3>
+                            <a href="{{ route('objection.clerk-send-hmm-draft') }}" class="btn btn-primary btn-sm">View</a>
+                        </div>
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 overflow-hidden">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Pending PG Audit</p>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <h5 class="text-success fs-14 mb-0">
-                                        {{-- <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +16.24 % --}}
-                                    </h5>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered dashboardDataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Department</th>
+                                            <th>Date</th>
+                                            <th>HMM No.</th>
+                                            <th>Subject</th>
+                                            <th>Entry Date</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($hmmDrafts as $hmmDraft)
+                                        <tr>
+                                            <td>{{ $hmmDraft->department?->name }}</td>
+                                            <td>{{ Carbon\Carbon::parse($hmmDraft->audit?->date)->format('d-m-Y') }}</td>
+                                            <td>{{ $hmmDraft->objection_no }}</td>
+                                            <td>{{ $hmmDraft->subject }}</td>
+                                            <td>{{ Carbon\Carbon::parse($hmmDraft->entry_date)->format('d-m-Y') }}</td>
+                                            <td>@if($hmmDraft->audit?->description) <span style="cursor: pointer" title="{{ $hmmDraft->audit?->description }}">{{ Str::limit($hmmDraft->audit?->description, '30') }}</span>@else - @endif</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="d-flex align-items-end justify-content-between mt-4">
-                                <div>
-                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $pendingAuditCount }}</h4>
-                                    <a href="{{ route('audit-list.status', ['status' => 'pending']) }}" class="text-decoration-underline">View</a>
-                                </div>
-                                <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                        <i class="bx bx-file text-primary"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div><!-- end col -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <div class="col-xl-3 col-md-6">
-                    <!-- card -->
-                    <div class="card card-animate">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h3 class="card-title">Compliance</h3>
+                            <a href="{{ route('draft-review') }}" class="btn btn-primary btn-sm">View</a>
+                        </div>
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 overflow-hidden">
-                                <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Approved PG AUdit</p>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <h5 class="text-danger fs-14 mb-0">
-                                        {{-- <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -3.57 % --}}
-                                    </h5>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table dashboardDataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Department</th>
+                                            <th>Date</th>
+                                            <th>HMM No.</th>
+                                            <th>Subject</th>
+                                            <th>Entry Date</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($compliances as $compliance)
+                                        <tr>
+                                            <td>{{ $compliance->department->name }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($compliance->audit->date)) }}</td>
+                                            <td>{{ $compliance->objection_no }}</td>
+                                            <td>{{ $compliance->subject }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($compliance->entry_date)) }}</td>
+                                            <td>@if($compliance->audit?->description) <span style="cursor: pointer" title="{{ $compliance->audit?->description }}">{{ Str::limit($compliance->audit?->description, '30') }}</span>@else - @endif</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="d-flex align-items-end justify-content-between mt-4">
-                                <div>
-                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $approvedAuditCount }}</h4>
-                                    <a href="#" class="text-decoration-underline"></a>
-                                </div>
-                                <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                        <i class="bx bx-file text-primary"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div><!-- end col -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <div class="col-xl-3 col-md-6">
-                    <!-- card -->
-                    <div class="card card-animate">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <h3 class="card-title">Pending Objection</h3>
+                            <a href="{{ route('objection.send-hmm-draft') }}" class="btn btn-primary btn-sm">View</a>
+                        </div>
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 overflow-hidden">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Rejected PG Audit</p>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <h5 class="text-success fs-14 mb-0">
-                                        {{-- <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 % --}}
-                                    </h5>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table dashboardDataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Department</th>
+                                            <th>HMM No.</th>
+                                            <th>Pending Objection</th>
+                                            <th>Letter</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($pendingAuditObjections as $pendingAuditObjection)
+                                        <tr>
+                                            <td>{{ $pendingAuditObjection->auditObjection->department->name }}</td>
+                                            <td>{{ $pendingAuditObjection->auditObjection->objection_no }}</td>
+                                            <td>
+                                                {!! $pendingAuditObjection->pending_description !!}
+                                            </td>
+                                            <td>
+                                                <a href="{{ asset('storage/'.$pendingAuditObjection->hmm_draft_letter) }}" class="btn btn-primary btn-sm">View Letter</a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="d-flex align-items-end justify-content-between mt-4">
-                                <div>
-                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $rejectedAuditCount }} </h4>
-                                    <a href="#" class="text-decoration-underline"></a>
-                                </div>
-                                <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                        <i class="bx bx-file text-primary"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div><!-- end col -->
-
-                <div class="col-xl-3 col-md-6">
-                    <!-- card -->
-                    <div class="card card-animate">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 overflow-hidden">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Draft Review PG Audit</p>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <h5 class="text-success fs-14 mb-0">
-                                        {{-- <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 % --}}
-                                    </h5>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-end justify-content-between mt-4">
-                                <div>
-                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ $draftAuditCount }} </h4>
-                                    <a href="#" class="text-decoration-underline"></a>
-                                </div>
-                                <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                        <i class="bx bx-file text-primary"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div><!-- end col -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
         @else
@@ -344,10 +360,12 @@
         @endif
 
 
-
-
-
-    @push('scripts')
-    @endpush
-
 </x-admin.layout>
+
+<script>
+    $(document).ready(function(){
+        $('.dashboardDataTable').DataTable({
+            pageLength: 5,
+        });
+    });
+</script>
