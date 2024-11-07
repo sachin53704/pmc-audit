@@ -204,12 +204,9 @@ class AuditorAuditController extends Controller
             DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
 
-            // $auditStatus = $audit->status;
-
             $audit->update([
                 'obj_date' => $request->date,
                 'obj_subject' => $request->subject,
-                // 'status' => ($auditStatus > 6) ? $auditStatus : 6,
             ]);
 
             $document = null;
@@ -221,7 +218,7 @@ class AuditorAuditController extends Controller
                 'user_id' => Auth::user()->id,
                 'audit_id' => $audit->id,
                 'objection_no' => $request->objection_no,
-                'entry_date' => date('Y-m-d', strtotime($request->entry_date)),
+                'entry_date' => date('Y-m-d'),
                 'department_id' => $request->department_id,
                 'zone_id' => $request->zone_id,
                 'from_year' => $request->from_year,

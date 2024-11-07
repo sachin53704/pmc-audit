@@ -18,7 +18,7 @@
                                 </div>
                                 <div>
                                     <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-warning text-primary rounded-2 fs-2">
+                                        <span class="avatar-title bg-warning text-white rounded-2 fs-2">
                                             <i class="bx bx-notepad"></i>
                                         </span>
                                     </div>
@@ -40,7 +40,52 @@
                                 </div>
                                 <div>
                                     <div class="avatar-sm flex-shrink-0">
-                                        <span class="avatar-title bg-success text-primary rounded-2 fs-2">
+                                        <span class="avatar-title bg-success text-white rounded-2 fs-2">
+                                            <i class="bx bx-notepad"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </a>
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+
+
+            <div class="col-md-3 col-lg-3 col-6">
+                <div class="card card-animate card-height-100 bg-info ">
+                     <a href="{{ route('draft-review') }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-uppercase fw-medium text-white mb-0">Compliance</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="{{ count($compliances) }}">{{ count($compliances) }}</span></h2>
+                                </div>
+                                <div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-info text-white rounded-2 fs-2">
+                                            <i class="bx bx-notepad"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </a>
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+
+            <div class="col-md-3 col-lg-3 col-6">
+                <div class="card card-animate card-height-100 bg-primary ">
+                     <a href="{{ route('pending-audit-objection.index') }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p class="text-uppercase fw-medium text-white mb-0">Pending Objection</p>
+                                    <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="{{ count($pendingAuditObjections) }}">{{ count($pendingAuditObjections) }}</span></h2>
+                                </div>
+                                <div>
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-primary text-white rounded-2 fs-2">
                                             <i class="bx bx-notepad"></i>
                                         </span>
                                     </div>
@@ -191,7 +236,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <h3 class="card-title">Pending Objection</h3>
-                            <a href="{{ route('objection.send-hmm-draft') }}" class="btn btn-primary btn-sm">View</a>
+                            <a href="{{ route('pending-audit-objection.index') }}" class="btn btn-primary btn-sm">View</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">

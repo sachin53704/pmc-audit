@@ -19,7 +19,7 @@
                             </div>
                             <div>
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-warning text-primary rounded-2 fs-2">
+                                    <span class="avatar-title bg-warning text-white rounded-2 fs-2">
                                         <i class="bx bx-notepad"></i>
                                     </span>
                                 </div>
@@ -41,7 +41,7 @@
                             </div>
                             <div>
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-success text-primary rounded-2 fs-2">
+                                    <span class="avatar-title bg-success text-white rounded-2 fs-2">
                                         <i class="bx bx-notepad"></i>
                                     </span>
                                 </div>

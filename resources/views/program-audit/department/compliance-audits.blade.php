@@ -221,7 +221,7 @@
                                                                 Department HOD Status
                                                             </button>
                                                         </h2>
-                                                        <div id="departmentHodStatus" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="departmentHodStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                     
                                                                 <div class="col-6">
@@ -245,7 +245,7 @@
                                                                 MCA Forward To Auditor
                                                             </button>
                                                         </h2>
-                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                     
                                                                 <div class="col-6">
@@ -269,7 +269,7 @@
                                                                 Auditor Status
                                                             </button>
                                                         </h2>
-                                                        <div id="auditorStatus" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="auditorStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-12 mb-3">
@@ -727,10 +727,10 @@
                 $('#viewObjectionDetails').removeClass('d-none');
                 $('#viewFooterObjectionDetails').removeClass('d-none');
 
-                if(data.auditObjection.is_department_draft_save){
-                    $('#saveDraftObjectionStatus').removeClass('d-none');
-                }else{
+                if(data.auditObjection.is_department_draft_save == "0"){
                     $('#saveDraftObjectionStatus').addClass('d-none');
+                }else{
+                    $('#saveDraftObjectionStatus').removeClass('d-none');
                 }
 
                 $("#addObjectionModal").modal("show");

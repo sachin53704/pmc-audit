@@ -71,7 +71,7 @@
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
-                                <input type="date" name="entry_date" id="entry_date" class="form-control">
+                                <input type="date" name="entry_date" readonly value="{{ date('Y-m-d') }}" id="entry_date" class="form-control">
                                 <span class="text-danger is-invalid entry_date_err"></span>
                             </div>
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
@@ -230,7 +230,7 @@
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
-                                <input type="date" name="entry_date" id="entry_date" class="form-control">
+                                <input type="date" name="entry_date" readonly id="entry_date" class="form-control">
                                 <span class="text-danger is-invalid entry_date_err"></span>
                             </div>
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
@@ -332,12 +332,12 @@
                                 <label for="description">Description <span class="text-danger">*</span></label>
                                 <textarea type="text" name="description" id="viewDescription" class="form-control"></textarea>
                             </div>
-                            <input type="hidden" name="isDrafSave" value="" id="isDrafSave">
+                            <input type="hidden" name="isDrafSave" value="" id="updateIsDrafSave">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div class="d-none viewObjectionDetails hideFormSubmit">
-                            <button class="btn btn-secondary" type="submit" value="1" id="draftSave">Draft Save</button>
+                            <button class="btn btn-secondary" type="submit" value="1" id="updateDraftSave">Draft Save</button>
                             <button class="btn btn-primary" id="updateObjectionSubmit" value="1" type="submit">Submit</button>
                         </div>
                     </div>
@@ -578,6 +578,14 @@
         });
         $('#addObjectionSubmit').click(function(){
             $('#isDrafSave').val(0)
+        });
+
+
+        $('#updateDraftSave').click(function(){
+            $('#updateIsDrafSave').val(1)
+        });
+        $('#updateObjectionSubmit').click(function(){
+            $('#updateIsDrafSave').val(0)
         });
 
         // Submit Objection Form

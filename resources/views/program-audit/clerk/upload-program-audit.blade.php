@@ -53,7 +53,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
+                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" max="{{ date('Y-m-d') }}" required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -125,7 +125,7 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
+                                <input class="form-control" name="date" max="{{ date('Y-m-d') }}" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             {{-- <div class="col-md-1 mt-3">

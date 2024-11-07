@@ -51,12 +51,24 @@
                     <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/admin/images/logo-dark.png'))) }}" style="width: 100px; margin-left:18px" alt="">
                 </td>
                 <td align="right">
-                    <h2>पनवेल महानगरपालिका</h2> 
-                    <h4>ता. पनवेल, जि. रायगड, पनवेल ४१०२०६</h4> 
-                    <h3>अंतर्गत लेखापरिक्षण विभाग</h3>
+                    <div>
+                        <h2>पनवेल महानगरपालिका &nbsp;&nbsp;</h2> 
+                        <h4>ता. पनवेल, जि. रायगड, पनवेल ४१०२०६</h4> 
+                        <h3>अंतर्गत लेखापरिक्षण विभाग&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+                    </div>
                 </td>
             </tr>            
         </table>
         <hr>
-        <p style="margin-top:-2px;">पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./   /२०२४ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; दिनांक {{ convertToMarathiNumerals(date('d')) }}/ {{ convertToMarathiNumerals(date('m')) }}/ २०२४</p>
+
+        <table>
+            <tr>
+                <td>
+                    पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/२०२४
+                </td>
+                <td align="right">
+                    दिनांक&nbsp;&nbsp;{{ convertToMarathiNumerals(date('d')) }}/ {{ convertToMarathiNumerals(date('m')) }}/ २०२४</p>
+                </td>
+            </tr>            
+        </table>
     </section>

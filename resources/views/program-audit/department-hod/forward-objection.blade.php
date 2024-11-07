@@ -20,7 +20,7 @@
                             @endphp
                             @endforeach
                             <div>
-                                <a href="{{ $file }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
+                                <a href="{{ $file }}" target="_blank" class="btn btn-primary btn-sm">Covering letter</a>
                                 <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data]) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                             </div>
                         </div>

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('audit_objections', function (Blueprint $table) {
-            $table->boolean('is_department_draft_save')->default(0)->after('is_draft_send');
+            $table->boolean('is_department_draft_save')->nullable()->after('is_draft_send');
             $table->boolean('is_department_hod_forward')->default(0)->after('is_objection_send');
             $table->text('department_hod_remark')->nullable()->after('is_department_hod_forward');
         });

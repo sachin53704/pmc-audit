@@ -148,9 +148,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="row">
+                                
                                 <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
                                     <input type="hidden" name="audit_para_value" id="auditParaValue">
@@ -168,7 +166,7 @@
                                 
                                 <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="subject">Subject <span class="text-danger">*</span></label>
-                                    <input type="text" name="subject" id="subject" class="form-control" readonly>
+                                    <textarea name="subject" id="subject" class="form-control" readonly></textarea>
                                 </div>
                                 
                                 <div class="col-lg-4 col-md-4 col-12 mb-3">
@@ -314,7 +312,7 @@
 
 
                     $("#addForm input[name='amount']").val(data.auditObjection.amount);
-                    $("#addForm input[name='subject']").val(data.auditObjection.subject);
+                    $("#addForm textarea[name='subject']").val(data.auditObjection.subject);
 
                     if(data.auditObjection.document && data.auditObjection.document != ""){
                         var file = "{{ asset('storage') }}/"+data.auditObjection.document;
@@ -361,68 +359,7 @@
 
     {{-- Open modal and Add more --}}
     <script>
-        var questionCounter = 1;
-
-        // $("#buttons-datatables").on("click", ".add-objection", function(e) {
-        //     e.preventDefault();
-        //     var model_id = $(this).attr("data-id");
-        //     $('#audit_id').val(model_id)
-        //     var url = "{{ route('ajax.viewAuditorObjection') }}";
-        //     let status = @if(Auth::user()->hasRole('DY MCA'))1 @elseif(Auth::user()->hasRole('MCA'))2 @endif
-
-        //     $.ajax({
-        //         url: url,
-        //         type: 'GET',
-        //         data: {
-        //             'audit_id': model_id,
-        //             'status': status
-        //         },
-        //         beforeSend: function()
-        //         {
-        //             $('#preloader').css('opacity', '0.5');
-        //             $('#preloader').css('visibility', 'visible');
-        //         },
-        //         success: function(data, textStatus, jqXHR)
-        //         {
-        //             if (!data.error)
-        //             {
-        //                 var html = ``;
-        //                 var count = 1;
-        //                 $.each(data.auditObjections, function(index, value){
-        //                     html += `<tr>
-        //                         <td>${count++}</td>
-        //                         <td>${value?.department?.name}</td>
-        //                         <td>${value.objection_no}</td>
-        //                         <td>${value.subject}</td>
-        //                         <td>${ (value.dymca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.dymca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
-        //                         <td>${ (value.dymca_remark) ? value.dymca_remark : '-' }</td>
-        //                         <td>${ (value.mca_status == "1") ? '<span class="badge bg-success">Approve</span>' : ((value.mca_status == "2") ? '<span class="badge bg-warning">Forward To Auditor</span>' : '-') }</td>
-        //                         <td>${ (value.mca_remark) ? value.mca_remark : '-' }</td>
-        //                         <td><button type="button" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}" data-department-name="${data.departmentName}" data-department-id="${data.department}">View Objection</button></td>
-        //                     </tr>`;
-        //                 });
-        //                 $('#modelObjectionId').html(html);
-
-        //                 $('.viewObjectionDetails').addClass('d-none')
-
-        //                 $("#addObjectionModal").modal("show");
-        //             } else {
-        //                 swal("Error!", data.error, "error");
-        //             }
-        //         },
-        //         error: function(error, jqXHR, textStatus, errorThrown) {
-        //             swal("Error!", "Some thing went wrong", "error");
-        //         },
-        //         complete: function() {
-        //             $('#preloader').css('opacity', '0');
-        //             $('#preloader').css('visibility', 'hidden');
-        //         },
-        //     });
-
-        //     $('#assign-role-modal').modal('show');
-        // });
-
-
+       
         // Submit Objection Form
         $("#addForm").submit(function(e) {
             e.preventDefault();
