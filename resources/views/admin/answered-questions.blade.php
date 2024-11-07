@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
+                        <table id="buttons-datatables" class="table table-bordered align-middle" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Sr No</th>

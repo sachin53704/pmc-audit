@@ -31,7 +31,7 @@
 
         <div class="col-md-3 col-lg-3 col-6">
             <div class="card card-animate card-height-100 bg-success ">
-                 <a href="{{ route('compliance.create') }}">
+                 <a href="{{ route('draft-review') }}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
@@ -62,7 +62,7 @@
                             </div>
                             <div>
                                 <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-success text-primary rounded-2 fs-2">
+                                    <span class="avatar-title bg-danger text-primary rounded-2 fs-2">
                                         <i class="bx bx-notepad"></i>
                                     </span>
                                 </div>
@@ -119,7 +119,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3 class="card-title">Compliance</h3>
-                    <a href="{{ route('compliance.create') }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{{ route('draft-review') }}" class="btn btn-primary btn-sm">View</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

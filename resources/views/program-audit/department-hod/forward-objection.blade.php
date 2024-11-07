@@ -39,7 +39,7 @@
                                 <table class="table table-bordered nowrap align-middle" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th><label style="cursor: pointer"><input type="checkbox" class="form-check-input parentCheckBox" style="font-size: 15px;"> &nbsp;&nbsp;Select All</label></th>
+                                            <th><label style="cursor: pointer"><input type="checkbox" class="form-check-input parentCheckBox" style="font-size: 15px;"></label></th>
                                             <th>Department</th>
                                             <th>Date</th>
                                             <th>File Description</th>

@@ -50,17 +50,13 @@
                 <td>
                     <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/admin/images/logo-dark.png'))) }}" style="width: 100px; margin-left:18px" alt="">
                 </td>
-                <td align="center">
+                <td align="right">
                     <h2>पनवेल महानगरपालिका</h2> 
                     <h4>ता. पनवेल, जि. रायगड, पनवेल ४१०२०६</h4> 
                     <h3>अंतर्गत लेखापरिक्षण विभाग</h3>
                 </td>
-                <td>
-                    @for($i=1; $i <= 6; $i++)
-                    &nbsp;&nbsp;&nbsp;
-                    @endfor
-                </td>
             </tr>            
         </table>
-        <p style="margin-top:-2px;">पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./२०२४ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; दिनांक {{ convertToMarathiNumerals(date('d')) }}/ {{ convertToMarathiNumerals(date('m')) }}/ २०२४</p>
+        <hr>
+        <p style="margin-top:-2px;">पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./   /२०२४ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; दिनांक {{ convertToMarathiNumerals(date('d')) }}/ {{ convertToMarathiNumerals(date('m')) }}/ २०२४</p>
     </section>

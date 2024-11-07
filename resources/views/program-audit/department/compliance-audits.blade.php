@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
+                        <table id="buttons-datatables" class="table table-bordered align-middle" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Sr No</th>
@@ -33,7 +33,7 @@
                                         <td>{{ Carbon\Carbon::parse($audit->entry_date)->format('d-m-Y') }}</td>
                                         <td>@if($audit->audit?->description) <span style="cursor: pointer" title="{{ $audit->audit?->description }}">{{ Str::limit($audit->audit?->description, '30') }}</span>@else - @endif</td>
                                         <td>
-                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="Add Compliance" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="file-plus"></i> Add Compliance</button>
+                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="Add Compliance" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}">@if(Auth::user()->hasRole('Department'))<i data-feather="file-plus"></i> Add Compliance @else View Compliance @endif</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -197,7 +197,7 @@
                                                                 Department Compliance 
                                                             </button>
                                                         </h2>
-                                                        <div id="departmentCompliance" class="accordion-collapse collapse @if(Auth::user()->hasRole('Department')) show @endif" aria-labelledby="accordionwithplusExample1" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="departmentCompliance" class="accordion-collapse collapse show " aria-labelledby="accordionwithplusExample1" data-bs-parent="#accordionWithplusicon">
                                                             
                                                             <div class="row px-3 py-2">
                                                                 <div class="col-12 mb-3">
@@ -221,7 +221,7 @@
                                                                 Department HOD Status
                                                             </button>
                                                         </h2>
-                                                        <div id="departmentHodStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('Department HOD')) show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="departmentHodStatus" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                     
                                                                 <div class="col-6">
@@ -245,7 +245,7 @@
                                                                 MCA Forward To Auditor
                                                             </button>
                                                         </h2>
-                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse @if(Auth::user()->hasRole('MCA')) show @endif" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                     
                                                                 <div class="col-6">
@@ -269,7 +269,7 @@
                                                                 Auditor Status
                                                             </button>
                                                         </h2>
-                                                        <div id="auditorStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('Auditor')) show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="auditorStatus" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-12 mb-3">
