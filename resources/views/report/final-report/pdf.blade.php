@@ -59,9 +59,35 @@
         
         @php $count = 1; @endphp
         @foreach($reports as $report)
-        <div>
-            {!! $report->pending_description !!}
-        </div>
+        <section style="border: 1px solid;margin-bottom:15px;padding:5px">
+            <div>
+                {!! $report->pending_description !!}
+            </div>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Objection No</th>
+                        <th>Department</th>
+                        <th>Date</th>
+                        <th>From Year</th>
+                        <th>To Year</th>
+                        <th>Auditor No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="center">{{ $report->auditObjection->objection_no }}</td>
+                        <td align="center">{{ $report->auditObjection->audit->department->name }}</td>
+                        <td align="center">{{ date('d-m-Y', strtotime($report->auditObjection->entry_date)) }}</td>
+                        <td align="center">{{ $report->auditObjection->from->name }}</td>
+                        <td align="center">{{ $report->auditObjection->to->name }}</td>
+                        <td align="center">{{ $report->auditObjection->user->auditor_no }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
 
         @php $count = $count + 1; @endphp
         @endforeach

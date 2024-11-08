@@ -50,15 +50,15 @@ class ReportController extends Controller
 
         if (isset($request->pdf) && $request->pdf == "Yes") {
 
-            $reports = ParaAudit::with(['audit.department'])
-                ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
-                    $q->whereHas('audit', function ($q) use ($request) {
-                        $q->where('department_id', $request->department);
-                    });
-                })
-                ->get();
+            // $reports = ParaAudit::with(['audit.department'])
+            //     ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
+            //         $q->whereHas('audit', function ($q) use ($request) {
+            //             $q->where('department_id', $request->department);
+            //         });
+            //     })
+            //     ->get();
 
-            $reports = PendingAuditObjection::whereHas('auditObjection', function ($q) use ($request) {
+            $reports = PendingAuditObjection::whereHas('auditObjection.audit.department', function ($q) use ($request) {
                 $q->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
                     $q->where('department_id', $request->department);
                 })->when(isset($request->from) && $request->from != "", function ($q) use ($request) {
