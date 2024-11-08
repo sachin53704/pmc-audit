@@ -10,19 +10,22 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <h5 class="modal-title">Forward HMM To Department</h5>
-                            @php $data = []; $file = "javascript:void(0)" @endphp
+                            @php $data = []; $file = "javascript:void(0)";$count = 0; @endphp
                             @foreach($audits as $audit)
                             @php 
                                 array_push($data, $audit->id);
                                 if($loop->iteration == "1"){
                                     $file = asset('storage/'.$audit->hmm_draft_letter);
                                 }
+                                $count = $count + 1;
                             @endphp
                             @endforeach
+                            @if($count > 0)
                             <div>
                                 <a href="{{ $file }}" target="_blank" class="btn btn-primary btn-sm">Covering letter</a>
                                 <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data]) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                             </div>
+                            @endif
                         </div>
                         {{-- <div class="card-header">
                             <div class="row">

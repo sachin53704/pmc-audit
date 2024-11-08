@@ -754,6 +754,29 @@
                     $('#saveDraftObjectionStatus').removeClass('d-none');
                 }
 
+                @if(Auth::user()->hasRole('Department'))
+                    if(data.auditObjection.is_department_draft_save == "0"){
+                        $('#saveObjectionStatus').addClass('d-none');
+                        $('#saveDraftObjectionStatus').addClass('d-none');
+                    }
+                @elseif(Auth::user()->hasRole('Department HOD'))
+                    if(data.auditObjection.department_hod_final_status == "1"){
+                        $('#saveObjectionStatus').addClass('d-none');
+                        $('#saveDraftObjectionStatus').addClass('d-none');
+                    }
+                @elseif(Auth::user()->hasRole('MCA'))
+                    if(data.auditObjection.mca_final_status == "1"){
+                        $('#saveObjectionStatus').addClass('d-none');
+                        $('#saveDraftObjectionStatus').addClass('d-none');
+                    }
+                @elseif(Auth::user()->hasRole('DY MCA'))
+                    if(data.auditObjection.dymca_final_status == "1"){
+                        $('#saveObjectionStatus').addClass('d-none');
+                        $('#saveDraftObjectionStatus').addClass('d-none');
+                    }
+                @endif
+
+
                 $("#addObjectionModal").modal("show");
             },
             error: function(error, jqXHR, textStatus, errorThrown) {
