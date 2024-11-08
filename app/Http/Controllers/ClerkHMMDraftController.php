@@ -173,7 +173,7 @@ class ClerkHMMDraftController extends Controller
 
     public function generateFinalPdf($audit)
     {
-        $pdf = PDF::loadView('letter.3', compact('audit'));
+        $pdf = PDF::loadView('letter.4', compact('audit'));
 
         $name = 'letter/' . Str::random(60) . '.pdf';
 

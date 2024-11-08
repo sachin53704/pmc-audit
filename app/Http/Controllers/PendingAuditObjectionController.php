@@ -94,6 +94,8 @@ class PendingAuditObjectionController extends Controller
                 }
                 $pendingAuditObjection->department_file = $files;
 
+
+
                 if ($request->is_draft_save) {
                     $pendingAuditObjection->department_draft_remark = $request->department_remark;
                 } else {
@@ -101,8 +103,13 @@ class PendingAuditObjectionController extends Controller
                         $pendingAuditObjection->status = 1;
                     }
 
+                    $auditObjection = AuditObjection::find($pendingAuditObjection->audit_objection_id);
+                    $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
+                    $name = $this->generateFinalPdf($audits);
+
                     $pendingAuditObjection->department_draft_remark = $request->department_remark;
                     $pendingAuditObjection->department_remark = $request->department_remark;
+                    $pendingAuditObjection->department_letter = $name;
                 }
                 if ($pendingAuditObjection->save()) {
                     if ($request->is_draft_save) {
@@ -221,6 +228,16 @@ class PendingAuditObjectionController extends Controller
     }
 
     public function generatePdf($audit)
+    {
+        $pdf = PDF::loadView('letter.4', compact('audit'));
+
+        $name = 'letter/' . Str::random(60) . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
+    }
+
+    public function generateFinalPdf($audit)
     {
         $pdf = PDF::loadView('letter.3', compact('audit'));
 

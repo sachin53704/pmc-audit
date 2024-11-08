@@ -100,6 +100,9 @@ class DepartmentHodController extends Controller
             try {
                 DB::beginTransaction();
 
+                $audit = Audit::with(['from', 'to', 'department'])->find($request->audit_id);
+                $name = $this->generateFinalPdf($audit);
+
                 $auditObjection = AuditObjection::find($request->audit_objection_id);
 
                 $auditObjection->department_draft_remark = $request->department_remark;
@@ -107,6 +110,7 @@ class DepartmentHodController extends Controller
                     $auditObjection->is_department_draft_save = 1;
                 } else {
                     $auditObjection->is_department_draft_save = 0;
+                    $auditObjection->department_letter = $name;
                     $auditObjection->compliance_submit_date = now();
                     $auditObjection->department_remark = $request->department_remark;
                 }
@@ -152,5 +156,16 @@ class DepartmentHodController extends Controller
                 ]);
             }
         }
+    }
+
+
+    public function generateFinalPdf($audit)
+    {
+        $pdf = PDF::loadView('letter.3', compact('audit'));
+
+        $name = 'letter/' . Str::random(60) . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
     }
 }

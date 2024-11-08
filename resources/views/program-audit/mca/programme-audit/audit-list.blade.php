@@ -31,7 +31,7 @@
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                        
                                         <td>
-                                            <a href="{{ asset($audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                            <a href="{{ asset('storage/'.$audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                                         </td>
                                         <td>
                                             @foreach($audit->assignedAuditors as $auditor)
