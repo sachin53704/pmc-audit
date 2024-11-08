@@ -662,6 +662,7 @@
                 if(data.auditObjection.department_file && data.auditObjection.department_file != ""){
                     $('.complianceFile').removeClass('d-none');
                     $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.auditObjection.department_file);
+                    $('#department_file').attr('disabled', true)
                 }
                 
                 if(data.auditObjection.department_remark != "" && data.auditObjection.department_letter){
@@ -774,6 +775,9 @@
                         $('#saveObjectionStatus').addClass('d-none');
                         $('#saveDraftObjectionStatus').addClass('d-none');
                     }
+                @else
+                    $('#saveObjectionStatus').removeClass('d-none');
+                        $('#saveDraftObjectionStatus').removeClass('d-none');
                 @endif
 
 

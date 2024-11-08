@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Audit Para Summary Report</title>
+    <title>Audit Para Current Status</title>
     <style>
         body {
             font-family: 'freeserif', 'normal';
@@ -62,9 +62,9 @@
             <thead>
                 <tr>
                     <th>Financial Year</th>
-                    <th>Total Para Audit</th>
-                    <th>Completed Para Audit</th>
-                    <th>Pending Para Audit</th>
+                    <th>Total Objection</th>
+                    <th>Completed Objection</th>
+                    <th>Pending Objection</th>
                 </tr>
             </thead>
             <tbody>
