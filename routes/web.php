@@ -192,6 +192,8 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('pending-objection', [App\Http\Controllers\PendingAuditObjectionController::class, 'pendingAuditObjection'])->name('pending-audit-objection.index');
     Route::get('pending-view-objection', [App\Http\Controllers\PendingAuditObjectionController::class, 'viewPendingObjection'])->name('pending-view-objection');
     Route::post('pending-change-objection-status', [App\Http\Controllers\PendingAuditObjectionController::class, 'changePendingObjectionStatus'])->name('pending-change-objection-status');
+
+    Route::get('objection/view-pdf/{type}/{column}/{id}', [App\Http\Controllers\PendingAuditObjectionController::class, 'viewObjectionPdf'])->name('view-objection-pdf');
 });
 
 Route::get('check/pdf', [App\Http\Controllers\Admin\DashboardController::class, 'pdf']);

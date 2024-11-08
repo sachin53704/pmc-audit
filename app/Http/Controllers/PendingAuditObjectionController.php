@@ -244,4 +244,17 @@ class PendingAuditObjectionController extends Controller
         Storage::put($name, $pdf->output());
         return $name;
     }
+
+    public function viewObjectionPdf($type, $column, $id)
+    {
+        if ($type == "1") {
+            $data = AuditObjection::where('id', $id)->value($column);
+        } else {
+            $data = PendingAuditObjection::where('id', $id)->value($column);
+        }
+
+        $pdf = PDF::loadView('pdf.document', compact('data'));
+
+        return $pdf->stream('document.pdf');
+    }
 }

@@ -171,7 +171,10 @@
 
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <label for="description">Objection Description</label>
+                                <div class="d-flex justify-content-between">
+                                    <label for="description">Objection Description</label>
+                                    <a href="#" target="_blank" class="btn btn-primary btn-sm viewObjectionDescription">View Details</a>
+                                </div>
                                 <textarea type="text" name="description" id="description" class="form-control" disabled></textarea>
                             </div>
                         </div>
@@ -251,6 +254,14 @@
                 $("#viewForm #documentFile").attr('href', file);
                 $("#viewForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
                 editorInstance.setData(data.auditObjection.description);
+
+                if(data.auditObjection.description != ""){
+                    var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
+                    url = url.replace(':type', 1)
+                            .replace(':column', 'description')
+                            .replace(':id', data.auditObjection.id);
+                    $('.viewObjectionDescription').attr('href', url);
+                }
 
                 $('#addObjectionModal').modal("show")
             },

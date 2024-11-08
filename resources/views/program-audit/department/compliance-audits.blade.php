@@ -663,11 +663,17 @@
                     $('.complianceFile').removeClass('d-none');
                     $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.auditObjection.department_file);
                 }
-
-                if(data.audit.department_file != "" && data.audit.department_letter){
+                
+                if(data.auditObjection.department_remark != "" && data.auditObjection.department_letter){
                     $('#departmentCoveringLetter').removeClass('d-none');
-                    $('#departmentCoveringLetter').find('.coveringLetter').attr('href', "{{ asset('storage') }}/"+data.audit.department_letter);
-                    // $('#departmentCoveringLetter').find('.viewFile').attr('href', "{{ asset('storage') }}/"+data.audit.department_file);
+                    $('#departmentCoveringLetter').find('.coveringLetter').attr('href', "{{ asset('storage') }}/"+data.auditObjection.department_letter);
+
+                    var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
+                    url = url.replace(':type', 1)
+                            .replace(':column', 'department_remark')
+                            .replace(':id', data.auditObjection.id);
+
+                    $('#departmentCoveringLetter').find('.viewFile').attr('href', url);
                 }else{
                     $('#departmentCoveringLetter').addClass('d-none');
                 }
