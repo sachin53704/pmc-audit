@@ -242,7 +242,15 @@
                                                                 </div>
 
                                                                 <div class="col-12 mb-3">
-                                                                    <label for="department_remark">Compliance Description <span class="text-danger">*</span></label>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <label for="department_remark">
+                                                                            Compliance Description <span class="text-danger">*</span>
+                                                                        </label>
+                                                                        <div id="departmentCoveringLetter">
+                                                                            <a href="#" class="btn btn-primary btn-sm coveringLetter" target="_blank">Covering letter</a>
+                                                                            <a href="#" class="btn btn-primary btn-sm viewFile" target="_blank">View Details</a>
+                                                                        </div>
+                                                                    </div>
                                                                     <textarea name="department_remark" id="department_remark" class="form-control"></textarea>
                                                                 </div>
                                                             </div>
@@ -691,6 +699,14 @@
                             $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.audit.department_file);
                         }else{
                             $('.complianceFile').addClass('d-none'); 
+                        }
+
+                        if(data.audit.department_file != "" && data.audit.department_letter){
+                            $('#departmentCoveringLetter').removeClass('d-none');
+                            $('#departmentCoveringLetter').find('.coveringLetter').attr('href', "{{ asset('storage') }}/"+data.audit.department_letter);
+                            // $('#departmentCoveringLetter').find('.viewFile').attr('href', "{{ asset('storage') }}/"+data.audit.department_file);
+                        }else{
+                            $('#departmentCoveringLetter').addClass('d-none');
                         }
                         
                         if(data.audit.department_hod_final_status == "1"){

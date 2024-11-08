@@ -10,6 +10,7 @@ use App\Models\AuditObjection;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use PDF;
 
 class DepartmentHodController extends Controller

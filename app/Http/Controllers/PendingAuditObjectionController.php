@@ -43,8 +43,6 @@ class PendingAuditObjectionController extends Controller
             })
             ->get();
 
-        // return $pendingAuditObjections;
-
         $departments = Department::select('id', 'name')->get();
 
         $zones = Zone::where('status', 1)->select('id', 'name')->get();
