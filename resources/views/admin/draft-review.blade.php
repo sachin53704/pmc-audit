@@ -238,7 +238,14 @@
                                                                 </div>
 
                                                                 <div class="col-12 mb-3">
-                                                                    <label for="department_remark">Compliance Description <span class="text-danger">*</span></label>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <label for="department_remark">Compliance Description <span class="text-danger">*</span></label>
+
+                                                                        <div id="departmentCoveringLetter">
+                                                                            <a href="#" class="btn btn-primary btn-sm coveringLetter" target="_blank">Covering letter</a>
+                                                                            <a href="#" class="btn btn-primary btn-sm viewFile" target="_blank">View Details</a>
+                                                                        </div>
+                                                                    </div>
                                                                     <textarea name="department_remark" id="department_remark" class="form-control"></textarea>
                                                                 </div>
                                                             </div>
@@ -302,7 +309,13 @@
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-12 mb-3">
-                                                                    <label for="auditor_description">Description <span class="text-danger">*</span></label>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <label for="department_remark">Description <span class="text-danger">*</span></label>
+
+                                                                        <div id="auditorStatusDescription">
+                                                                            <a href="#" class="btn btn-primary btn-sm viewFile" target="_blank">View Details</a>
+                                                                        </div>
+                                                                    </div>
                                                                     <textarea name="auditor_description" id="auditor_description" class="form-control"></textarea>
                                                                 </div>
 
@@ -670,6 +683,20 @@
                         if(data.auditObjection.department_hod_final_status == "1" || data.auditObjection.mca_final_status != "0"){
                             $('.complianceFile').prop('disabled', true)
                         }
+
+                        if(data.auditObjection.department_remark != "" && data.auditObjection.department_letter){
+                            $('#departmentCoveringLetter').removeClass('d-none');
+                            $('#departmentCoveringLetter').find('.coveringLetter').attr('href', "{{ asset('storage') }}/"+data.auditObjection.department_letter);
+
+                            var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
+                            url = url.replace(':type', 1)
+                                    .replace(':column', 'department_remark')
+                                    .replace(':id', data.auditObjection.id);
+
+                            $('#departmentCoveringLetter').find('.viewFile').attr('href', url);
+                        }else{
+                            $('#departmentCoveringLetter').addClass('d-none');
+                        }
                         
 
                         
@@ -697,6 +724,17 @@
 
                         $("#addForm select[name='auditor_status']").val(data.auditObjection.auditor_status);
                         $("#addForm textarea[name='auditor_remark']").val(data.auditObjection.auditor_remark);
+
+                        if(data.auditObjection.auditor_description != ""){
+                            var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
+                            url = url.replace(':type', 1)
+                                    .replace(':column', 'auditor_description')
+                                    .replace(':id', data.auditObjection.id);
+
+                            $('#auditorStatusDescription').find('.viewFile').attr('href', url);
+                        }else{
+                            $('#auditorStatusDescription').addClass('d-none');
+                        }
 
                         $("#addForm input[name='completed_sub_unit']").val(data.auditObjection.completed_sub_unit);
                         $("#addForm input[name='pending_sub_unit']").val(data.auditObjection.pending_sub_unit);
@@ -742,6 +780,31 @@
 
                         // $('#mca_action_status').val(data.auditObjection.mca_action_status)
                         // $('#mca_remark').val(data.auditObjection.mca_remark)
+
+                        @if(Auth::user()->hasRole('Department'))
+                            if(data.auditObjection.is_department_draft_save == "0" && data.auditObjection.department_remark != null){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @elseif(Auth::user()->hasRole('Department HOD'))
+                            if(data.auditObjection.department_hod_final_status == "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @elseif(Auth::user()->hasRole('MCA'))
+                            if(data.auditObjection.mca_final_status == "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @elseif(Auth::user()->hasRole('DY MCA'))
+                            if(data.auditObjection.dymca_final_status == "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @else
+                            $('#saveObjectionStatus').removeClass('d-none');
+                            $('#saveDraftObjectionStatus').removeClass('d-none');
+                        @endif
 
 
                         $('#viewObjectionDetails').removeClass('d-none');

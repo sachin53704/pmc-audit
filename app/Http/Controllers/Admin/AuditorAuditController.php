@@ -436,6 +436,7 @@ class AuditorAuditController extends Controller
                     $auditObjection = AuditObjection::find($request->audit_objection_id);
                     $auditObjection->auditor_status = $request->auditor_status;
                     $auditObjection->auditor_remark = $request->auditor_remark;
+                    $auditObjection->is_draft_save = $request->is_draft_save;
                     $auditObjection->completed_sub_unit = $request->completed_sub_unit;
                     $auditObjection->pending_sub_unit = $request->pending_sub_unit;
                     $auditObjection->auditor_draft_description = $request->auditor_description;

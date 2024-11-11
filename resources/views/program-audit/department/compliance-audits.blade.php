@@ -280,7 +280,13 @@
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-12 mb-3">
-                                                                    <label for="auditor_description">Description <span class="text-danger">*</span></label>
+                                                                    <div class="d-flex justify-content-between">
+                                                                        <label for="department_remark">Description <span class="text-danger">*</span></label>
+
+                                                                        <div id="auditorStatusDescription">
+                                                                            <a href="#" class="btn btn-primary btn-sm viewFile" target="_blank">View Details</a>
+                                                                        </div>
+                                                                    </div>
                                                                     <textarea name="auditor_description" id="auditor_description" class="form-control"></textarea>
                                                                 </div>
 
@@ -714,6 +720,18 @@
 
                 $("#addForm select[name='auditor_status']").val(data.auditObjection.auditor_status);
                 $("#addForm textarea[name='auditor_remark']").val(data.auditObjection.auditor_remark);
+
+                if(data.auditObjection.auditor_description != ""){
+                    var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
+                    url = url.replace(':type', 1)
+                            .replace(':column', 'auditor_description')
+                            .replace(':id', data.auditObjection.id);
+
+                    $('#auditorStatusDescription').find('.viewFile').attr('href', url);
+                }else{
+                    $('#auditorStatusDescription').addClass('d-none');
+                }
+
                 $("#addForm input[name='completed_sub_unit']").val(data.auditObjection.completed_sub_unit);
                 $("#addForm input[name='pending_sub_unit']").val(data.auditObjection.pending_sub_unit);
                 auditorDescription.setData(data.auditObjection.auditor_description ?? '');
@@ -756,7 +774,7 @@
                 }
 
                 @if(Auth::user()->hasRole('Department'))
-                    if(data.auditObjection.is_department_draft_save == "0"){
+                    if(data.auditObjection.is_department_draft_save == "0" && data.auditObjection.department_remark != null){
                         $('#saveObjectionStatus').addClass('d-none');
                         $('#saveDraftObjectionStatus').addClass('d-none');
                     }

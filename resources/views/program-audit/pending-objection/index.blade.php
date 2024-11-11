@@ -701,17 +701,24 @@
                             $('.complianceFile').addClass('d-none'); 
                         }
 
-                        if(data.audit.department_file != "" && data.audit.department_letter){
-                            $('#departmentCoveringLetter').removeClass('d-none');
-                            $('#departmentCoveringLetter').find('.coveringLetter').attr('href', "{{ asset('storage') }}/"+data.audit.department_letter);
-                            // $('#departmentCoveringLetter').find('.viewFile').attr('href', "{{ asset('storage') }}/"+data.audit.department_file);
-                        }else{
-                            $('#departmentCoveringLetter').addClass('d-none');
-                        }
                         
                         if(data.audit.department_hod_final_status == "1"){
                             $('#department_file').addClass('d-none');
                             deditorInstance.enableReadOnlyMode('reason');
+                        }
+
+                        if(data.audit.department_remark != "" && data.audit.department_letter){
+                            $('#departmentCoveringLetter').removeClass('d-none');
+                            $('#departmentCoveringLetter').find('.coveringLetter').attr('href', "{{ asset('storage') }}/"+data.audit.department_letter);
+
+                            var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
+                            url = url.replace(':type', 0)
+                                    .replace(':column', 'department_remark')
+                                    .replace(':id', data.audit.id);
+
+                            $('#departmentCoveringLetter').find('.viewFile').attr('href', url);
+                        }else{
+                            $('#departmentCoveringLetter').addClass('d-none');
                         }
                         
 
@@ -743,6 +750,18 @@
 
                         $("#addForm select[name='auditor_status']").val(data.audit.auditor_status);
                         $("#addForm textarea[name='auditor_remark']").val(data.audit.auditor_remark);
+
+                        if(data.audit.auditor_description != ""){
+                            var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
+                            url = url.replace(':type', 0)
+                                    .replace(':column', 'auditor_description')
+                                    .replace(':id', data.audit.id);
+
+                            $('#auditorStatusDescription').find('.viewFile').attr('href', url);
+                        }else{
+                            $('#auditorStatusDescription').addClass('d-none');
+                        }
+
 
                         $("#addForm input[name='completed_sub_unit']").val(data.audit.completed_sub_unit);
                         $("#addForm input[name='pending_sub_unit']").val(data.audit.pending_sub_unit);
@@ -782,6 +801,31 @@
 
                         // $('#mca_action_status').val(data.auditObjection.mca_action_status)
                         // $('#mca_remark').val(data.auditObjection.mca_remark)
+
+                        @if(Auth::user()->hasRole('Department'))
+                            if(data.audit.is_department_draft_save == "0" && data.audit.department_remark != null){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @elseif(Auth::user()->hasRole('Department HOD'))
+                            if(data.audit.department_hod_final_status == "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @elseif(Auth::user()->hasRole('MCA'))
+                            if(data.audit.mca_final_status == "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @elseif(Auth::user()->hasRole('DY MCA'))
+                            if(data.audit.dymca_final_status == "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @else
+                            $('#saveObjectionStatus').removeClass('d-none');
+                            $('#saveDraftObjectionStatus').removeClass('d-none');
+                        @endif
 
 
                         $('#viewObjectionDetails').removeClass('d-none');
