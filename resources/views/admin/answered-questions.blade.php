@@ -708,7 +708,7 @@
                                 $('#saveDraftObjectionStatus').addClass('d-none');
                             }
                         @elseif(Auth::user()->hasRole('Auditor'))
-                            if(data.auditObjection.is_draft_save == "0"){
+                            if(data.auditObjection.department_hod_final_status == "1"){
                                 $('#saveObjectionStatus').addClass('d-none');
                                 $('#saveDraftObjectionStatus').addClass('d-none');
                             }

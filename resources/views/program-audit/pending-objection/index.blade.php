@@ -803,7 +803,7 @@
                         // $('#mca_remark').val(data.auditObjection.mca_remark)
 
                         @if(Auth::user()->hasRole('Department'))
-                            if(data.audit.is_department_draft_save == "0" && data.audit.department_remark != null){
+                            if(data.audit.is_department_draft_save == "0" && data.audit.department_remark != null && data.audit.department_hod_final_status == "1"){
                                 $('#saveObjectionStatus').addClass('d-none');
                                 $('#saveDraftObjectionStatus').addClass('d-none');
                             }
@@ -814,6 +814,11 @@
                             }
                         @elseif(Auth::user()->hasRole('MCA'))
                             if(data.audit.mca_final_status == "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
+                        @elseif(Auth::user()->hasRole('Auditor'))
+                            if(data.audit.department_hod_final_status == "1"){
                                 $('#saveObjectionStatus').addClass('d-none');
                                 $('#saveDraftObjectionStatus').addClass('d-none');
                             }
