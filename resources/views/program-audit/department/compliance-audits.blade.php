@@ -774,7 +774,7 @@
                 }
 
                 @if(Auth::user()->hasRole('Department'))
-                    if(data.auditObjection.is_department_draft_save == "0" && data.auditObjection.department_remark != null){
+                    if(data.auditObjection.is_department_draft_save == "0" && data.auditObjection.department_remark != null && data.auditObjection.department_hod_final_status == "1"){
                         $('#saveObjectionStatus').addClass('d-none');
                         $('#saveDraftObjectionStatus').addClass('d-none');
                     }
