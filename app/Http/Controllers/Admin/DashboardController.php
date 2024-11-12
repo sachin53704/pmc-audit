@@ -271,11 +271,9 @@ class DashboardController extends Controller
 
     public function pdf()
     {
-        $data = [
-            'foo' => 'bar'
-        ];
+        $audit = Audit::with(['from', 'to', 'department'])->find(1);
 
-        $pdf = PDF::loadView('letter.4', $data);
+        $pdf = PDF::loadView('letter.1', compact('audit'));
 
         return $pdf->stream('document.pdf');
     }
