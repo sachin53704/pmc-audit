@@ -47,6 +47,7 @@ class ClerkAuditController extends Controller
             $request['file_path'] = 'file';
             $request['dymca_status'] = 1;
             $request['audit_no'] = Audit::generateAuditNo();
+            $request['audit_start_date'] = date('Y-m-d', strtotime($request->audit_start_date));
 
             $audit = Audit::create($request->all());
 
@@ -87,6 +88,7 @@ class ClerkAuditController extends Controller
             $request['status'] = 1;
             $request['dymca_status'] = 1;
             $request['mca_status'] = null;
+            $request['audit_start_date'] = date('Y-m-d', strtotime($request->audit_start_date));
             $audit->update($request->all());
 
             $audits = Audit::with(['from', 'to', 'department'])->find($audit->id);

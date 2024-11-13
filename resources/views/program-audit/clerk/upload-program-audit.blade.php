@@ -57,6 +57,11 @@
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="audit_start_date"> Audit Start Date <span class="text-danger">*</span></label>
+                                <input class="form-control" name="audit_start_date" type="date" onclick="this.showPicker()" placeholder="Select Audit Start Date" max="{{ date('Y-m-d') }}" required>
+                                <span class="text-danger is-invalid audit_start_date_err"></span>
+                            </div>
+                            <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="description">Description</label>
                                 <textarea class="form-control" name="description"></textarea>
                                 <span class="text-danger is-invalid description_err"></span>
@@ -128,6 +133,11 @@
                                 <input class="form-control" name="date" max="{{ date('Y-m-d') }}" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
+                            <div class="col-md-4 mt-3">
+                                <label class="col-form-label" for="audit_start_date"> Audit Start Date <span class="text-danger">*</span></label>
+                                <input class="form-control" name="audit_start_date" type="date" onclick="this.showPicker()" placeholder="Select Audit Start Date" max="{{ date('Y-m-d') }}" required>
+                                <span class="text-danger is-invalid audit_start_date_err"></span>
+                            </div>
                             {{-- <div class="col-md-1 mt-3">
                                 <div class="edit_file pt-3 mt-3"></div>
                             </div> --}}
@@ -171,6 +181,7 @@
                                     <th>Sr No</th>
                                     <th>Department</th>
                                     <th>Date</th>
+                                    <th>Audit Start Date</th>
                                     {{-- <th>Description</th> --}}
                                     <th>View Letter</th>
                                     <th>Dy MCA Reject Reason</th>
@@ -184,6 +195,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $audit->department?->name }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
+                                        <td>{{ Carbon\Carbon::parse($audit->audit_start_date)->format('d-m-Y') }}</td>
                                         {{-- <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}<span></td> --}}
                                         <td>
                                             <a href="{{ asset('storage/'.$audit->file_path) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
@@ -297,6 +309,7 @@
                             $("#editForm input[name='date']").val(data.audit.date);
                             $("#editForm textarea[name='description']").val(data.audit.description);
                             $("#editForm select[name='from_year']").val(data.audit.from_year);
+                            $("#editForm input[name='audit_start_date']").val(data.audit.audit_start_date);
                             $("#editForm select[name='to_year']").val(data.audit.to_year);
                         }
                         else

@@ -23,7 +23,7 @@ class Audit extends BaseModel
     // const AUDIT_STATUS_MCA_APPROVED_COMPLIANCE = 10;
     // const AUDIT_STATUS_MCA_REJECTED_COMPLIANCE = 11;
 
-    protected $fillable = ['department_id', 'audit_no', 'date', 'description', 'file_path', 'status', 'reject_reason', 'dl_description', 'dl_file_path', 'obj_date', 'obj_subject', 'dymca_status', 'dymca_remark', 'mca_status', 'mca_remark', 'from_year', 'to_year'];
+    protected $fillable = ['department_id', 'audit_no', 'date', 'description', 'file_path', 'status', 'reject_reason', 'dl_description', 'dl_file_path', 'obj_date', 'obj_subject', 'dymca_status', 'dymca_remark', 'mca_status', 'mca_remark', 'from_year', 'to_year', 'audit_start_date'];
 
     protected $appends = ['status_name'];
 
