@@ -23,7 +23,7 @@
                                     <tr>
                                         <th>Sr No</th>
                                         <th>Department</th>
-                                        <th>Date</th>
+                                        <th>Entry Date</th>
                                         <th>File Description</th>
                                         <th>HMM No.</th>
                                         <th>DYMCA Status</th>
@@ -36,7 +36,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $audit->department?->name }}</td>
-                                            <td>{{ Carbon\Carbon::parse($audit->audit?->date)->format('d-m-Y') }}</td>
+                                            <td>{{ Carbon\Carbon::parse($audit->entry_date)->format('d-m-Y') }}</td>
                                             <td><span style="cursor: pointer" title="{{ $audit->audit?->description }}">{{ Str::limit($audit->audit?->description, '30') }}</span></td>
                                             <td>{{ $audit->objection_no }}</td>
                                             <td>

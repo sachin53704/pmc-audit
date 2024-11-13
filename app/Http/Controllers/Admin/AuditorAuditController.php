@@ -502,6 +502,7 @@ class AuditorAuditController extends Controller
             ->when(Auth::user()->hasRole('Auditor'), function ($q) {
                 $q->where('user_id', Auth::user()->id)->where('status', '>=', 8);
             })
+            ->orderBy('entry_date', 'desc')
             ->get();
 
         $departments = Department::select('id', 'name')->get();

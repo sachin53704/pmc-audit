@@ -41,6 +41,7 @@ class PendingAuditObjectionController extends Controller
             ->when(Auth::user()->hasRole(['Clerk']), function ($q) {
                 $q->where('status', '>=', 44);
             })
+            ->latest()
             ->get();
 
         $departments = Department::select('id', 'name')->get();
@@ -248,13 +249,28 @@ class PendingAuditObjectionController extends Controller
     public function viewObjectionPdf($type, $column, $id)
     {
         if ($type == "1") {
-            $data = AuditObjection::where('id', $id)->value($column);
+            $data = AuditObjection::with(['department', 'zone', 'from', 'to'])->where('id', $id)->first();
+            $name = $data?->department->name;
+            $objectionNo = $data->objection_no;
+            $entryDate = date('d-m-Y', strtotime($data->entry_date));
+            $department = $data->department->name;
+            $zone = $data->zone->name;
+            $from = $data->from->name;
+            $to = $data->to->name;
         } else {
-            $data = PendingAuditObjection::where('id', $id)->value($column);
+            $data = PendingAuditObjection::with(['auditObjection.department', 'auditObjection.zone', 'auditObjection.from', 'auditObjection.to'])->where('id', $id)->first();
+            $name = $data->auditObjection?->department->name;
+            $objectionNo = $data->auditObjection->objection_no;
+            $entryDate = date('d-m-Y', strtotime($data->auditObjection->entry_date));
+            $department = $data->auditObjection->department->name;
+            $zone = $data->auditObjection->zone->name;
+            $from = $data->auditObjection->from->name;
+            $to = $data->auditObjection->to->name;
         }
 
-        $pdf = PDF::loadView('pdf.document', compact('data'));
+        $name = $name . "_auditor_status_" . date('d-m-Y');
+        $pdf = PDF::loadView('pdf.document', compact('data', 'column', 'name', 'objectionNo', 'entryDate', 'department', 'zone', 'from', 'to'));
 
-        return $pdf->stream('document.pdf');
+        return $pdf->stream($name . '.pdf');
     }
 }

@@ -38,7 +38,7 @@ class DepartmentAuditController extends Controller
                 $q->where('status', '>=', 7)
                     ->where('department_id', Auth::user()->department_id);
             })->where('is_department_hod_forward', 1)->where('status', '>=', 5)
-            ->latest()
+            ->orderBy('entry_date', 'desc')
             ->get();
 
         $departments = Department::select('id', 'name')->get();

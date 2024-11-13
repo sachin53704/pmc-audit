@@ -15,7 +15,9 @@ class DiaryController extends Controller
     {
         $diaries = Diary::with(['user'])->when(Auth::user()->hasRole('AG Audit') || Auth::user()->hasRole('Auditor'), function ($q) {
             return $q->where('user_id', Auth::user()->id);
-        })->get();
+        })
+            ->latest()
+            ->get();
 
         $departments = Department::where('is_audit', 0)->get();
 

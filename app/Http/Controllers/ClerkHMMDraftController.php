@@ -131,7 +131,8 @@ class ClerkHMMDraftController extends Controller
             })->when(Auth::user()->hasRole('MCA'), function ($q) {
                 $q->where('hmm_draft_dymca_status', 1);
             })
-            ->latest()->get();
+            ->orderBy('entry_date', 'desc')
+            ->get();
 
         $audits = $audits->groupBy('hmm_draft_number');
 

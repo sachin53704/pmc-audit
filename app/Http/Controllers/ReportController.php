@@ -86,22 +86,24 @@ class ReportController extends Controller
     {
         $departments = Department::where('is_audit', 0)->get();
 
-        $auditObjections = AuditObjection::when(isset($request->department) && $request->department != "", function ($q) use ($request) {
-            $q->where('audit_objections.department_id', $request->department);
-        })->when(isset($request->from) && $request->from != "", function ($q) use ($request) {
-            $q->where('audit_objections.entry_date', '>=', $request->from);
-        })->when(isset($request->to) && $request->to != "", function ($q) use ($request) {
-            $q->where('audit_objections.entry_date', '<=', $request->to);
-        })
-            ->leftJoin('fiscal_years', 'fiscal_years.id', '=', 'audit_objections.from_year')
-            ->leftJoin('departments', 'departments.id', '=', 'audit_objections.department_id')
-            ->select('departments.name as dept_name', 'fiscal_years.name as from_year', 'audit_objections.sub_unit', 'audit_objections.completed_sub_unit', 'audit_objections.pending_sub_unit')
-            ->get();
+        $reports = [];
+        if (isset($request->department) && $request->department != "") {
+            $auditObjections = AuditObjection::when(isset($request->department) && $request->department != "", function ($q) use ($request) {
+                $q->when(isset($request->department) && $request->department != "all", function ($q) use ($request) {
+                    $q->where('audit_objections.department_id', $request->department);
+                });
+            })->when(isset($request->from) && $request->from != "", function ($q) use ($request) {
+                $q->where('audit_objections.entry_date', '>=', $request->from);
+            })->when(isset($request->to) && $request->to != "", function ($q) use ($request) {
+                $q->where('audit_objections.entry_date', '<=', $request->to);
+            })
+                ->leftJoin('fiscal_years', 'fiscal_years.id', '=', 'audit_objections.from_year')
+                ->leftJoin('departments', 'departments.id', '=', 'audit_objections.department_id')
+                ->select('departments.name as dept_name', 'fiscal_years.name as from_year', 'audit_objections.sub_unit', 'audit_objections.completed_sub_unit', 'audit_objections.pending_sub_unit')
+                ->get();
 
-
-        // return $auditObjections->groupBy('dept_name');
-
-        $reports = $auditObjections->groupBy('dept_name');
+            $reports = $auditObjections->groupBy('dept_name');
+        }
 
         if (isset($request->pdf) && $request->pdf == "Yes") {
 

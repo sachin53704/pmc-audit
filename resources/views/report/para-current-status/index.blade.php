@@ -15,7 +15,8 @@
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     <label for="department">Select Department</label>
                                     <select name="department" id="department" class="form-select">
-                                        <option value="">All</option>
+                                        <option value="">Select</option>
+                                        <option value="all">All</option>
                                         @foreach($departments as $department)
                                         <option {{ (isset(request()->department) && request()->department == $department->id) ? 'selected' : '' }} value="{{ $department->id }}">{{ $department->name }}</option>
                                         @endforeach
@@ -40,32 +41,49 @@
                         </form>
                     </div>
                     <div class="card-body">
-                        @foreach($reports as $key => $report)
-                        <h3>{{ $key }}</h3>
+                       
                         <hr>
                         <div class="table-responsive">
                             <table class="table table-bordered nowrap align-middle" style="width:100%">
                                 <thead>
                                     <tr>
+                                        <th>Department</th>
                                         <th>Financial Year</th>
-                                        <th>Total Para Audit</th>
-                                        <th>Completed Para Audit</th>
-                                        <th>Pending Para Audit</th>
+                                        <th>Total Audit Para</th>
+                                        <th>Completed Audit Para</th>
+                                        <th>Pending Audit Para</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($report->groupBy('from_year') as $key => $department)
+                                    @forelse($reports as $key => $report)
+                                    @php $count = 0; @endphp
+                                    @foreach($report->groupBy('from_year') as $keys => $department)
+                                    @if($count == 0)
                                     <tr>
-                                        <td>{{ $key }}</td>
+                                        <td style="text-align: center" rowspan="{{ count($report->groupBy('from_year')) }}">{{ $key }}</td>
+                                        <td>{{ $keys }}</td>
                                         <td>{{ $department->sum('sub_unit') }}</td>
                                         <td>{{ $department->sum('completed_sub_unit') }}</td>
                                         <td>{{ $department->sum('pending_sub_unit') }}</td>
                                     </tr>
+                                    @else
+                                    <tr>
+                                        <td>{{ $keys }}</td>
+                                        <td>{{ $department->sum('sub_unit') }}</td>
+                                        <td>{{ $department->sum('completed_sub_unit') }}</td>
+                                        <td>{{ $department->sum('pending_sub_unit') }}</td>
+                                    </tr>
+                                    @endif
+                                    @php $count = $count + 1; @endphp
                                     @endforeach
+                                    @empty
+                                        <tr>
+                                            <th style="text-align: center" colspan="5">No Data Found</th>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
-                        @endforeach
                     </div>
                 </div>
             </div>
