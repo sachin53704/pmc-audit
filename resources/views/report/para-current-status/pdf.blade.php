@@ -56,29 +56,46 @@
     </section>
 
     <section id="content">
-        @foreach($reports as $key => $report)
-        <h3>{{ $key }}</h3>
+       
         <table>
             <thead>
                 <tr>
+                    <th>Department</th>
                     <th>Financial Year</th>
-                    <th>Total Objection</th>
-                    <th>Completed Objection</th>
-                    <th>Pending Objection</th>
+                    <th>Total Audit Para</th>
+                    <th>Completed Audit Para</th>
+                    <th>Pending Audit Para</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($report->groupBy('from_year') as $key => $department)
+                @forelse($reports as $key => $report)
+                @php $count = 0; @endphp
+                @foreach($report->groupBy('from_year') as $keys => $department)
+                @if($count == 0)
                 <tr>
-                    <td align="center">{{ $key }}</td>
-                    <td align="center">{{ $department->sum('sub_unit') }}</td>
-                    <td align="center">{{ $department->sum('completed_sub_unit') }}</td>
-                    <td align="center">{{ $department->sum('pending_sub_unit') }}</td>
+                    <td style="text-align: center" rowspan="{{ count($report->groupBy('from_year')) }}">{{ $key }}</td>
+                    <td>{{ $keys }}</td>
+                    <td>{{ $department->sum('sub_unit') }}</td>
+                    <td>{{ $department->sum('completed_sub_unit') }}</td>
+                    <td>{{ $department->sum('pending_sub_unit') }}</td>
                 </tr>
+                @else
+                <tr>
+                    <td>{{ $keys }}</td>
+                    <td>{{ $department->sum('sub_unit') }}</td>
+                    <td>{{ $department->sum('completed_sub_unit') }}</td>
+                    <td>{{ $department->sum('pending_sub_unit') }}</td>
+                </tr>
+                @endif
+                @php $count = $count + 1; @endphp
                 @endforeach
+                @empty
+                    <tr>
+                        <th style="text-align: center" colspan="5">No Data Found</th>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
-        @endforeach
     </section>
 </body>
 </html>
