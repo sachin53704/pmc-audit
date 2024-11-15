@@ -24,7 +24,7 @@
     <section>
         <p style="text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;आपल्या विभागाकडील उपरोक्त संदर्भिय पत्रान्वये सन {{ $audit->from->name }} ते {{ $audit->from->name }} या कालावधीतील अंतर्गत लेखापरीक्षण अहवालात समाविष्ट करण्यात आलेले एकूण प्रारूप परिच्छेद पूर्तता करण्यासाठी {{ $audit->department->name }} या विभागाकडे सादर करण्यात आले होते.</p>
         <p style="text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;सदर प्रारूप परिच्छेदामध्ये घेण्यात आलेल्या आक्षेपांची पूर्तता करण्यात आली असून सोबत विहित नमुन्यात अनुपालन अहवाल दोन प्रतीत सादर केला आहे.</p>
-        <p style="text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;तरी कृपया अनुपालन मान्य करून सदरचे परिच्छेद वागळण्यास विनंती आहे.</p>
+        <p style="text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;तरी कृपया अनुपालन मान्य करून सदरचे परिच्छेद वगळण्यास विनंती आहे.</p>
     </section>
     <p>
         सोबत - परिच्छेद क्र. {{ $audit->from->name }} ते {{ $audit->from->name }}

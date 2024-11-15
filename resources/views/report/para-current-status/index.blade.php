@@ -14,9 +14,9 @@
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     <label for="department">Select Department</label>
-                                    <select name="department" id="department" class="form-select">
+                                    <select name="department" id="department" class="form-select" required>
                                         <option value="">Select</option>
-                                        <option value="all">All</option>
+                                        <option {{ (isset(request()->department) && request()->department == "all") ? 'selected' : '' }} value="all">All</option>
                                         @foreach($departments as $department)
                                         <option {{ (isset(request()->department) && request()->department == $department->id) ? 'selected' : '' }} value="{{ $department->id }}">{{ $department->name }}</option>
                                         @endforeach
@@ -25,12 +25,12 @@
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     <label for="from">Select From Date</label>
-                                    <input type="date" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control" id="from">
+                                    <input type="date" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control" id="from" required>
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     <label for="to">Select To Date</label>
-                                    <input type="date" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control" id="to">
+                                    <input type="date" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control" id="to" required>
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
