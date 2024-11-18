@@ -17,7 +17,7 @@
     <style>
         body {
             font-family: 'freeserif', 'normal';
-            padding: 0;
+            padding: 0px;
             margin: 0;
             font-size: 16px;
         }
@@ -44,6 +44,7 @@
     </style>
 </head>
 <body>
+    <div style="padding:0px 30px;">
     <section id="header">
         <table>
             <tr>
@@ -67,10 +68,10 @@
         <table>
             <tr>
                 <td>
-                    पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/२०२४
+                    पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/{{ convertToMarathiNumerals(date('Y')) }}
                 </td>
                 <td align="right">
-                    दिनांक&nbsp;&nbsp;{{ convertToMarathiNumerals(date('d')) }}/ {{ convertToMarathiNumerals(date('m')) }}/ २०२४</p>
+                    दिनांक&nbsp;&nbsp;{{ convertToMarathiNumerals(date('d')) }}/ {{ convertToMarathiNumerals(date('m')) }}/ २०२४&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                 </td>
             </tr>            
         </table>

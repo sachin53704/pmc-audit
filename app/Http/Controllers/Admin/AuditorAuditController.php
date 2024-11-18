@@ -20,6 +20,7 @@ use App\Models\AuditParaCategory;
 use App\Models\AuditDepartmentAnswer;
 use App\Http\Requests\AddObjectionRequest;
 use App\Models\AuditObjectionMcaStatus;
+use App\Models\Sequence;
 use App\Models\PendingAuditObjection;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
@@ -256,6 +257,7 @@ class AuditorAuditController extends Controller
                     return response()->json(['success' => 'Objection updated successfully']);
                 }
             } else {
+                $hmmNo = Sequence::with(['department', 'financialYear'])->where('status', 1)->first();
                 AuditObjection::create($arrData);
                 DB::commit();
                 if ($request->isDrafSave) {

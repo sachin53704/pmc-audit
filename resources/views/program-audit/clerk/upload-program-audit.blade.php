@@ -53,12 +53,12 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="date" type="date" onclick="this.showPicker()" placeholder="Select Date" max="{{ date('Y-m-d') }}" required>
+                                <input class="form-control datepicker" name="date" type="text" placeholder="Select Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="audit_start_date"> Audit Start Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="audit_start_date" type="date" onclick="this.showPicker()" placeholder="Select Audit Start Date" max="{{ date('Y-m-d') }}" required>
+                                <input class="form-control fdatepicker" name="audit_start_date" type="text" placeholder="Select Audit Start Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid audit_start_date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -130,12 +130,12 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="date" max="{{ date('Y-m-d') }}" type="date" onclick="this.showPicker()" placeholder="Select Date" required>
+                                <input class="form-control datepicker" name="date" type="text" placeholder="Select Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="audit_start_date"> Audit Start Date <span class="text-danger">*</span></label>
-                                <input class="form-control" name="audit_start_date" type="date" onclick="this.showPicker()" placeholder="Select Audit Start Date" max="{{ date('Y-m-d') }}" required>
+                                <input class="form-control fdatepicker" name="audit_start_date" type="text" placeholder="Select Audit Start Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid audit_start_date_err"></span>
                             </div>
                             {{-- <div class="col-md-1 mt-3">
@@ -306,10 +306,15 @@
                         {
                             $("#editForm input[name='edit_model_id']").val(data.audit.id);
                             $("#editForm select[name='department_id']").val(data.audit.department_id);
-                            $("#editForm input[name='date']").val(data.audit.date);
+                            let date = new Date(data.audit.date);
+                            date = $.datepicker.formatDate("dd-mm-yy", date);
+                            $("#editForm input[name='date']").val(date);
                             $("#editForm textarea[name='description']").val(data.audit.description);
                             $("#editForm select[name='from_year']").val(data.audit.from_year);
-                            $("#editForm input[name='audit_start_date']").val(data.audit.audit_start_date);
+
+                            let startDate = new Date(data.audit.audit_start_date);
+                            startDate = $.datepicker.formatDate("dd-mm-yy", startDate);
+                            $("#editForm input[name='audit_start_date']").val(startDate);
                             $("#editForm select[name='to_year']").val(data.audit.to_year);
                         }
                         else

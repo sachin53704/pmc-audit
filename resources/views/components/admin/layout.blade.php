@@ -22,6 +22,14 @@
     <link href="{{ asset('admin/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('admin/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('admin/css/all.min.css') }}" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <style>
+        .datepicker, .fdatepicker{
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            background: #fff !important;
+        }
+    </style>
 
     @stack('styles')
 </head>
@@ -121,6 +129,7 @@
     <script src="{{ asset('admin/datatables/ajax/libs/pdfmake/0.1.53/vfs_fonts.js') }}"></script>
     <script src="{{ asset('admin/datatables/ajax/libs/jszip/3.1.3/jszip.min.js') }}"></script>
     <script src="{{ asset('admin/js/pages/datatables.init.js') }}"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 </body>
 
 {{-- AddForm n EditForm Open/Close jquery --}}
@@ -198,6 +207,25 @@
         $("#editContainer").slideDown();
         $("html, body").animate({ scrollTop: 0 }, "slow");
     }
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeYear: true,
+            changeMonth: true,
+            showButtonPanel: true,
+            maxDate: 0,
+        });
+
+        $('.fdatepicker').datepicker({
+            dateFormat: 'dd-mm-yy',
+            changeYear: true,
+            changeMonth: true,
+            showButtonPanel: true,
+        });
+    });
 </script>
 
 

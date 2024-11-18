@@ -23,6 +23,7 @@ class StoreDepartmentRequest extends FormRequest
     {
         return [
             'name' => 'required|max:200|unique:departments,name',
+            'initial' => 'required',
             'is_audit' => 'required',
         ];
     }

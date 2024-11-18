@@ -23,6 +23,7 @@ class UpdateDepartmentRequest extends FormRequest
     {
         return [
             'name' => 'required|max:200',
+            'initial' => 'required',
             'is_audit' => 'required',
         ];
     }

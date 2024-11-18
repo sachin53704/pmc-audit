@@ -3,18 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Controller;
-use App\Http\Requests\Admin\AssignAuditorRequest;
 use App\Http\Requests\Admin\StoreAuditRequest;
 use App\Http\Requests\Admin\UpdateAuditRequest;
 use App\Models\Audit;
 use App\Models\Department;
-use App\Models\User;
-use App\Models\UserAssignedAudit;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use App\Models\FiscalYear;
 use PDF;
 
@@ -48,6 +42,7 @@ class ClerkAuditController extends Controller
             $request['dymca_status'] = 1;
             $request['audit_no'] = Audit::generateAuditNo();
             $request['audit_start_date'] = date('Y-m-d', strtotime($request->audit_start_date));
+            $request['date'] = date('Y-m-d', strtotime($request->date));
 
             $audit = Audit::create($request->all());
 
@@ -89,6 +84,7 @@ class ClerkAuditController extends Controller
             $request['dymca_status'] = 1;
             $request['mca_status'] = null;
             $request['audit_start_date'] = date('Y-m-d', strtotime($request->audit_start_date));
+            $request['date'] = date('Y-m-d', strtotime($request->date));
             $audit->update($request->all());
 
             $audits = Audit::with(['from', 'to', 'department'])->find($audit->id);
@@ -123,7 +119,7 @@ class ClerkAuditController extends Controller
     {
         $pdf = PDF::loadView('letter.1', compact('audit'));
 
-        $name = 'letter/' . Str::random(60) . '.pdf';
+        $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;

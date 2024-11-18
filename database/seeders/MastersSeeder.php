@@ -24,21 +24,25 @@ class MastersSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Accounts',
+                'initial' => 'acc',
                 'is_audit' => '0',
             ],
             [
                 'id' => 2,
                 'name' => 'Information Technology',
+                'initial' => 'it',
                 'is_audit' => '0',
             ],
             [
                 'id' => 3,
                 'name' => 'Audit',
+                'initial' => 'audit',
                 'is_audit' => '1',
             ],
             [
                 'id' => 4,
                 'name' => 'Home Audit',
+                'initial' => 'home_audit',
                 'is_audit' => '1',
             ],
         ];
@@ -49,6 +53,7 @@ class MastersSeeder extends Seeder
             ], [
                 'id' => $department['id'],
                 'name' => $department['name'],
+                'initial' => $department['initial'],
                 'is_audit' => $department['is_audit']
             ]);
         }

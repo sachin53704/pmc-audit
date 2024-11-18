@@ -43,13 +43,13 @@
 
                     @if(session()->get('LOGIN_TYPE') == 1)
 
-                        @canany(['fiscal_years.view', 'departments.view', 'audit-para-category.index', 'audit-type.index', 'severity.index', 'zone.index', 'working-day.index', 'signature.edit'])
+                        @canany(['fiscal_years.view', 'departments.view', 'audit-para-category.index', 'audit-type.index', 'severity.index', 'zone.index', 'working-day.index', 'signature.edit', 'sequence.view'])
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') || request()->routeIs('signature.edit') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
+                                <a class="nav-link menu-link {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') || request()->routeIs('sequence.index') || request()->routeIs('signature.edit') ? 'active' : '' }}" href="#sidebarMasterLayouts" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMasterLayouts">
                                     <i class="ri-layout-3-line"></i>
                                     <span data-key="t-layouts">@lang('menu.masters')</span>
                                 </a>
-                                <div class="collapse menu-dropdown {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') || request()->routeIs('signature.edit') ? 'show' : '' }}" id="sidebarMasterLayouts">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('fiscal_years.index') || request()->routeIs('departments.index') || request()->routeIs('audit-para-category.index') || request()->routeIs('audit-type.index') || request()->routeIs('severity.index') || request()->routeIs('zone.index') || request()->routeIs('sequence.index') || request()->routeIs('signature.edit') ? 'show' : '' }}" id="sidebarMasterLayouts">
                                     <ul class="nav nav-sm flex-column">
                                         @can('fiscal_years.view')
                                             <li class="nav-item">
@@ -92,15 +92,16 @@
                                         </li>
                                         @endcan
                                         
-                                        @can('working-day.index')
-                                        <li class="nav-item">
-                                            <a href="{{ route('working-day.index') }}" class="nav-link {{ request()->routeIs('working-day.index') ? 'active' : '' }}" data-key="t-horizontal">@lang('menu.working_day')</a>
-                                        </li>
-                                        @endcan
                                         
                                         @can('signature.edit')
                                         <li class="nav-item">
                                             <a href="{{ route('signature.edit') }}" class="nav-link {{ request()->routeIs('signature.edit') ? 'active' : '' }}" data-key="t-horizontal">@lang('menu.signature')</a>
+                                        </li>
+                                        @endcan
+                                        
+                                        @can('sequence.view')
+                                        <li class="nav-item">
+                                            <a href="{{ route('sequence.index') }}" class="nav-link {{ request()->routeIs('sequence.index') ? 'active' : '' }}" data-key="t-horizontal">Sequence</a>
                                         </li>
                                         @endcan
                                     </ul>
@@ -306,13 +307,15 @@
                                 </a>
                             </li> --}}
                         @endcan
-
+                        
+                        @can('pending-objection.view')
                         <li class="nav-item">
                             <a class="nav-link menu-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }}" href="{{ route('pending-audit-objection.index') }}" >
                                 <i class="ri-draft-line"></i>
                                 <span data-key="t-dashboards">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</span>
                             </a>
                         </li>
+                        @endcan
                         
                         @canany(['report.audit-para-summary-report', 'report.final-report', 'report.para-current-status'])
                         <li class="nav-item">

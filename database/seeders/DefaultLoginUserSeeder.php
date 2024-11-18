@@ -19,8 +19,8 @@ class DefaultLoginUserSeeder extends Seeder
 
         // Super Admin Seeder ##
         $superAdminRole = Role::updateOrCreate(['name' => 'Super Admin']);
-        $permissions = Permission::pluck('id', 'id')->all();
-        $superAdminRole->syncPermissions($permissions);
+        // $permissions = Permission::pluck('id', 'id')->all();
+        // $superAdminRole->syncPermissions($permissions);
 
         $superAdmin = User::updateOrCreate([
             'email' => 'superadmin@gmail.com'
@@ -37,14 +37,14 @@ class DefaultLoginUserSeeder extends Seeder
         ]);
         $superAdmin->assignRole([$superAdminRole->id]);
 
-        $superAdmin->syncPermissions(['dashboard.view', 'audit-para-category.index', 'audit-para-category.create', 'audit-para-category.edit', 'audit-type.index', 'audit-type.create', 'audit-type.edit', 'severity.index', 'severity.create', 'severity.edit', 'zone.index', 'zone.create', 'zone.edit', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete']);
+        $superAdmin->syncPermissions(['dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete', 'audit-para-category.index', 'audit-para-category.create', 'audit-para-category.edit', 'audit-type.index', 'audit-type.create', 'audit-type.edit', 'severity.index', 'severity.create', 'severity.edit', 'zone.index', 'zone.create', 'zone.edit', 'signature.edit', 'sequence.view', 'sequence.create', 'sequence.edit']);
 
 
 
 
         // Admin Seeder ##
         $adminRole = Role::updateOrCreate(['name' => 'Admin']);
-        $adminRole->syncPermissions(['dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete']);
+        $adminRole->syncPermissions(['dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete', 'audit-para-category.index', 'audit-para-category.create', 'audit-para-category.edit', 'audit-type.index', 'audit-type.create', 'audit-type.edit', 'severity.index', 'severity.create', 'severity.edit', 'zone.index', 'zone.create', 'zone.edit', 'signature.edit', 'sequence.view', 'sequence.create', 'sequence.edit']);
 
         $admin = User::updateOrCreate([
             'email' => 'admin@gmail.com'
@@ -65,7 +65,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // Department Seeder ##
         $departmentHodRole = Role::updateOrCreate(['name' => 'Department HOD']);
-        $departmentHodRole->syncPermissions(['department_letter.view', 'draft-review.view', 'receipt.view', 'receipt.create', 'payment-receipt.view', 'payment-receipt.create']);
+        $departmentHodRole->syncPermissions(['department_letter.view', 'draft-review.view', 'receipt.view', 'receipt.create', 'payment-receipt.view', 'payment-receipt.create', 'pending-objection.view']);
 
         $departmenthod = User::updateOrCreate([
             'email' => 'departmenthod@gmail.com'
@@ -86,7 +86,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // Department Seeder ##
         $departmentRole = Role::updateOrCreate(['name' => 'Department']);
-        $departmentRole->syncPermissions(['department_letter.view', 'compliance.create', 'compliance.store', 'receipt.view', 'receipt.create', 'payment-receipt.view', 'payment-receipt.create']);
+        $departmentRole->syncPermissions(['department_letter.view', 'compliance.create', 'compliance.store', 'receipt.view', 'receipt.create', 'payment-receipt.view', 'payment-receipt.create', 'pending-objection.view']);
 
         $department = User::updateOrCreate([
             'email' => 'department@gmail.com'
@@ -108,7 +108,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // Auditor Seeder ##
         $auditorRole = Role::updateOrCreate(['name' => 'Auditor']);
-        $auditorRole->syncPermissions(['assigned_audit.view', 'send_letter.department', 'objection.create', 'objection.store', 'answered-questions.view', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'report.para-audit', 'report.complience-answer', 'report.department', 'para-audit.index', 'para-audit.create']);
+        $auditorRole->syncPermissions(['assigned_audit.view', 'send_letter.department', 'objection.create', 'objection.store', 'answered-questions.view', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'report.para-audit', 'report.complience-answer', 'report.department', 'para-audit.index', 'para-audit.create', 'pending-objection.view']);
 
         $user = User::updateOrCreate([
             'email' => 'auditor@gmail.com'
@@ -130,7 +130,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // MCA Seeder ##
         $mcaRole = Role::updateOrCreate(['name' => 'MCA']);
-        $mcaRole->syncPermissions(['audit_list.approved', 'audit_list.assign', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'report.audit-para-summary-report', 'report.final-report', 'report.para-current-status', 'hmm-status.view', 'para-audit.index', 'para-audit.create']);
+        $mcaRole->syncPermissions(['audit_list.approved', 'audit_list.assign', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'report.audit-para-summary-report', 'report.final-report', 'report.para-current-status', 'hmm-status.view', 'para-audit.index', 'para-audit.create', 'pending-objection.view']);
 
         $user = User::updateOrCreate([
             'email' => 'mca@gmail.com'
@@ -151,7 +151,7 @@ class DefaultLoginUserSeeder extends Seeder
 
         // DY MCA Seeder ##
         $dyRole = Role::updateOrCreate(['name' => 'DY MCA']);
-        $dyRole->syncPermissions(['audit_list.approved', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'receipt.pending-list', 'receipt.approve-list', 'receipt.reject-list', 'receipt.approve', 'receipt.reject', 'report.audit-para-summary-report', 'report.final-report', 'report.para-current-status', 'hmm-status.view', 'para-audit.index', 'para-audit.create', 'send-hmm.view']);
+        $dyRole->syncPermissions(['audit_list.approved', 'audit_list.pending', 'audit_list.rejected', 'draft-review.view', 'report.final-report', 'report.para-audit', 'report.complience-answer', 'report.department', 'payment-receipt.pending-list', 'payment-receipt.approve-list', 'payment-receipt.reject-list', 'payment-receipt.approve', 'payment-receipt.reject', 'diary.index', 'diary.create', 'diary.edit', 'diary.delete', 'diary.view', 'receipt.pending-list', 'receipt.approve-list', 'receipt.reject-list', 'receipt.approve', 'receipt.reject', 'report.audit-para-summary-report', 'report.final-report', 'report.para-current-status', 'hmm-status.view', 'para-audit.index', 'para-audit.create', 'send-hmm.view', 'pending-objection.view']);
 
         $user = User::updateOrCreate([
             'email' => 'dymca@gmail.com'

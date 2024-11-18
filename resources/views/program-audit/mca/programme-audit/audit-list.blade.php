@@ -112,7 +112,7 @@
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label" for="assign_auditor_date">Date : </label>
                             <div class="col-sm-9" style="max-height: 60px">
-                                <input type="date" name="assign_auditor_date" id="assign_auditor_date" class="form-control" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+                                <input type="text" readonly autocomplete="off" name="assign_auditor_date" id="assign_auditor_date" class="form-control datepicker" value="{{ date('d-m-Y') }}">
                                 <span class="text-danger is-invalid assign_auditor_date_err"></span>
                             </div>
                         </div>

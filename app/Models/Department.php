@@ -11,7 +11,7 @@ class Department extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'is_audit', 'created_by', 'updated_by', 'deleted_by'];
+    protected $fillable = ['name', 'initial', 'is_audit', 'created_by', 'updated_by', 'deleted_by'];
 
     public function audit()
     {

@@ -423,6 +423,26 @@ class PermissionTableSeeder extends Seeder
                 'id' => 83,
                 'name' => 'send-hmm.view',
                 'group' => 'send hmm'
+            ],
+            [
+                'id' => 84,
+                'name' => 'pending-objection.view',
+                'group' => 'Pending Objection'
+            ],
+            [
+                'id' => 85,
+                'name' => 'sequence.view',
+                'group' => 'Sequence'
+            ],
+            [
+                'id' => 86,
+                'name' => 'sequence.create',
+                'group' => 'Sequence'
+            ],
+            [
+                'id' => 87,
+                'name' => 'sequence.edit',
+                'group' => 'Sequence'
             ]
         ];
 
