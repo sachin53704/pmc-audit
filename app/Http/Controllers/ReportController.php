@@ -25,7 +25,6 @@ class ReportController extends Controller
             })->with('audit', 'department', 'user');
         })->where('is_objection_completed', 0)->get();
 
-        // return $reports;
         if (isset($request->pdf) && $request->pdf == "Yes") {
 
             $department = "All";

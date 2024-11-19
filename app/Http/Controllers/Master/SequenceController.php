@@ -31,7 +31,7 @@ class SequenceController extends Controller
         try {
             if ($request->ajax()) {
                 if ($request->status) {
-                    Sequence::whereNotNull('created_at')->update(['status' => 0]);
+                    Sequence::where('department_id', $request->department_id)->update(['status' => 0]);
                 }
                 $sequence = Sequence::create($request->all());
 
@@ -58,7 +58,7 @@ class SequenceController extends Controller
         try {
             if ($request->ajax()) {
                 if ($request->status) {
-                    Sequence::whereNotNull('created_at')->update(['status' => 0]);
+                    Sequence::where('department_id', $request->department_id)->update(['status' => 0]);
                 }
                 $sequence = Sequence::find($id);
 

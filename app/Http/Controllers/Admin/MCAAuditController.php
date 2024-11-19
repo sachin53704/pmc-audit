@@ -115,12 +115,11 @@ class MCAAuditController extends Controller
         $userAssignedAudit = UserAssignedAudit::where('audit_id', $audit->id)->latest()->pluck('user_id')->toArray();
         $auditors = User::withWhereHas('roles', fn($q) => $q->where('name', 'Auditor'))->orderBy('id', 'DESC')->get()->append('full_name');
 
-        $auditorsHtml = '<span>';
+        $auditorsHtml = '';
         foreach ($auditors as $auditor) :
             $is_select = in_array($auditor->id, $userAssignedAudit) ? "selected" : "";
             $auditorsHtml .= '<option value="' . $auditor->id . '" ' . $is_select . '>' . $auditor->full_name . '(' . $auditor->auditor_no . ')' . '</option>';
         endforeach;
-        $auditorsHtml .= '</span>';
 
         $response = [
             'result' => 1,

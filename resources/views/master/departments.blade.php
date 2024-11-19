@@ -22,6 +22,11 @@
                                     <span class="text-danger is-invalid name_err"></span>
                                 </div>
                                 <div class="col-md-4">
+                                    <label class="col-form-label" for="initial">Department Initial <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="initial" name="initial" type="text" placeholder="Enter Department Initial">
+                                    <span class="text-danger is-invalid initial_err"></span>
+                                </div>
+                                <div class="col-md-4">
                                     <label class="col-form-label" for="initial">Is Audit Dept. ?<span class="text-danger">*</span></label>
                                     <select name="is_audit" id="is_audit" class="form-control">
                                         <option value="0">No</option>
@@ -59,6 +64,11 @@
                                     <label class="col-form-label" for="name">Department Name <span class="text-danger">*</span></label>
                                     <input class="form-control" id="name" name="name" type="text" placeholder="Enter Department Name">
                                     <span class="text-danger is-invalid name_err"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="col-form-label" for="initial">Department Initial <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="initial" name="initial" type="text" placeholder="Enter Department Initial">
+                                    <span class="text-danger is-invalid initial_err"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="col-form-label" for="initial">Is Audit Dept. ?<span class="text-danger">*</span></label>
@@ -101,6 +111,7 @@
                                     <tr>
                                         <th>Sr No</th>
                                         <th>Name</th>
+                                        <th>Initial</th>
                                         <th>Is Audit Dept.</th>
                                         <th>Action</th>
                                     </tr>
@@ -110,6 +121,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $department->name }}</td>
+                                            <td>{{ $department->initial }}</td>
                                             <td>{{ $department->is_audit == 1 ? 'YES' : 'NO' }}</td>
                                             <td>
                                                 <button class="edit-element btn text-secondary px-2 py-1" title="Edit department" data-id="{{ $department->id }}"><i data-feather="edit"></i></button>
@@ -197,13 +209,14 @@
             {
                 $('#preloader').css('opacity', '0.5');
                 $('#preloader').css('visibility', 'visible');
-            },s
+            },
             success: function(data, textStatus, jqXHR) {
                 editFormBehaviour();
                 if (!data.error)
                 {
                     $("#editForm input[name='edit_model_id']").val(data.department.id);
                     $("#editForm input[name='name']").val(data.department.name);
+                    $("#editForm input[name='initial']").val(data.department.initial);
                     $("#editForm select[name='is_audit']").val(data.department.is_audit);
                 }
                 else

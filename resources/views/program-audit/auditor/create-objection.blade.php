@@ -63,11 +63,11 @@
                         <input type="hidden" name="audit_id" value="" id="audit_id">
                         <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
                         <div class="row">
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
+                            {{-- <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="objection_no">HMM No. <span class="text-danger">*</span></label>
                                 <input type="text" name="objection_no" id="objection_no" class="form-control" value="{{ time() }}" readonly>
                                 <span class="text-danger is-invalid objection_no_err"></span>
-                            </div>
+                            </div> --}}
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
@@ -222,11 +222,11 @@
                             <hr>
                             <input type="hidden" name="audit_id" value="" id="audit_id">
                             <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
-                            {{-- <div class="col-lg-4 col-md-6 col-12 mb-3">
+                            <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="objection_no">HMM No. <span class="text-danger">*</span></label>
                                 <input type="text" name="objection_no" id="objection_no" class="form-control" value="{{ time() }}" readonly>
                                 <span class="text-danger is-invalid objection_no_err"></span>
-                            </div> --}}
+                            </div>
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
@@ -469,9 +469,14 @@
                     if(data.auditObjection.document && data.auditObjection.document != ""){
                         var file = "{{ asset('storage') }}/"+data.auditObjection.document;
                     }else{
-                        var file = "javascript:void(0)";
+                        var file = "";
                     }
-                    $("#updateForm #documentFile").attr('href', file);
+                    if(file != ""){
+                        $("#updateForm #documentFile").attr('href', file);
+                        $("#updateForm #documentFile").removeClass('d-none');
+                    }else{
+                        $("#updateForm #documentFile").addClass('d-none');
+                    }
                     $("#updateForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
                     viewEditorInstance.setData(data.auditObjection.draft_description);
 

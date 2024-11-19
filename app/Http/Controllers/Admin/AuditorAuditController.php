@@ -200,7 +200,6 @@ class AuditorAuditController extends Controller
 
     public function storeObjection(AddObjectionRequest $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
@@ -218,7 +217,7 @@ class AuditorAuditController extends Controller
             $arrData = [
                 'user_id' => Auth::user()->id,
                 'audit_id' => $audit->id,
-                'objection_no' => $request->objection_no,
+                // 'objection_no' => $request->objection_no,
                 'entry_date' => date('Y-m-d'),
                 'department_id' => $request->department_id,
                 'zone_id' => $request->zone_id,
@@ -257,7 +256,11 @@ class AuditorAuditController extends Controller
                     return response()->json(['success' => 'Objection updated successfully']);
                 }
             } else {
-                $hmmNo = Sequence::with(['department', 'financialYear'])->where('status', 1)->first();
+                $hmmNo = Sequence::with(['department', 'financialYear'])->where('status', 1)->where('department_id', $request->department_id)->first();
+                $sequenceNo = $hmmNo->department->initial . "_" . date('d-m-Y') . "_" . $hmmNo->serial_no;
+                $arrData = array_merge($arrData, ['objection_no' => $sequenceNo]);
+                Sequence::where('id', $hmmNo->id)->increment('serial_no', 1);
+
                 AuditObjection::create($arrData);
                 DB::commit();
                 if ($request->isDrafSave) {

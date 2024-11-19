@@ -22,7 +22,7 @@ class AddObjectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'objection_no' => 'required',
+            // 'objection_no' => 'required',
             'entry_date' => 'required',
             'department_id' => 'required',
             'zone_id' => 'required',
@@ -42,7 +42,7 @@ class AddObjectionRequest extends FormRequest
     public function messages()
     {
         return [
-            'objection_no.required' => 'Please enter audit para no',
+            // 'objection_no.required' => 'Please enter audit para no',
             'entry_date.required' => 'Please select entry date',
             'department_id.required' => 'Please select department',
             'zone_id.required' => 'Please select zone',

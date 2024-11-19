@@ -24,12 +24,12 @@
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     <label for="from">Select From Date</label>
-                                    <input type="date" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control" id="from">
+                                    <input type="text" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control fdatepicker" id="from" autocomplete="off" placeholder="Select from date">
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
                                     <label for="to">Select To Date</label>
-                                    <input type="date" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control" id="to">
+                                    <input type="text" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control fdatepicker" id="to" autocomplete="off" placeholder="Select to date">
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">

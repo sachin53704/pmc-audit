@@ -22,7 +22,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Audit::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->unsignedInteger('objection_no');
+            $table->string('objection_no');
             $table->date('entry_date');
             $table->foreignIdFor(Department::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Zone::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();

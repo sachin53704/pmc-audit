@@ -118,48 +118,50 @@
         // Submit Objection Form
         $("#addForm").submit(function(e) {
             e.preventDefault();
-            $("#addObjectionSubmit").prop('disabled', true);
+            if (confirm('Are you sure you want to forward this objection to department?')) {
+                $("#addObjectionSubmit").prop('disabled', true);
 
-            var formdata = new FormData(this);
+                var formdata = new FormData(this);
 
-            $.ajax({
-                url: '{{ route('storeForwardObjectionToDepartment') }}',
-                type: 'POST',
-                data: formdata,
-                contentType: false,
-                processData: false,
-                beforeSend: function()
-                {
-                    $('#preloader').css('opacity', '0.5');
-                    $('#preloader').css('visibility', 'visible');
-                },
-                success: function(data)
-                {
-                    $("#addObjectionSubmit").prop('disabled', false);
-                    if (!data.error)
-                        swal("Successful!", data.success, "success")
-                            .then((action) => {
-                                window.location.reload();
-                            });
-                    else
-                        swal("Error!", data.error, "error");
-                },
-                statusCode: {
-                    422: function(responseObject, textStatus, jqXHR) {
-                        $("#addObjectionSubmit").prop('disabled', false);
-                        resetErrors();
-                        printErrMsg(responseObject.responseJSON.errors);
+                $.ajax({
+                    url: '{{ route('storeForwardObjectionToDepartment') }}',
+                    type: 'POST',
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
                     },
-                    500: function(responseObject, textStatus, errorThrown) {
+                    success: function(data)
+                    {
                         $("#addObjectionSubmit").prop('disabled', false);
-                        swal("Error occured!", "Something went wrong please try again", "error");
-                    }
-                },
-                complete: function() {
-                    $('#preloader').css('opacity', '0');
-                    $('#preloader').css('visibility', 'hidden');
-                },
-            });
+                        if (!data.error)
+                            swal("Successful!", data.success, "success")
+                                .then((action) => {
+                                    window.location.reload();
+                                });
+                        else
+                            swal("Error!", data.error, "error");
+                    },
+                    statusCode: {
+                        422: function(responseObject, textStatus, jqXHR) {
+                            $("#addObjectionSubmit").prop('disabled', false);
+                            resetErrors();
+                            printErrMsg(responseObject.responseJSON.errors);
+                        },
+                        500: function(responseObject, textStatus, errorThrown) {
+                            $("#addObjectionSubmit").prop('disabled', false);
+                            swal("Error occured!", "Something went wrong please try again", "error");
+                        }
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
+                    },
+                });
+            }
 
         });
     </script>

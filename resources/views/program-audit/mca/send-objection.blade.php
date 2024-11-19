@@ -281,43 +281,45 @@
     $(".addForm").submit(function(e) {
             e.preventDefault();
 
-            var formdata = new FormData(this);
+            if (confirm('Are you sure you want to approve this objection?')) {
+                var formdata = new FormData(this);
 
-            $.ajax({
-                url: '{{ route('objection.update-clerk-send-hmm-draft') }}',
-                type: 'POST',
-                data: formdata,
-                contentType: false,
-                processData: false,
-                beforeSend: function()
-                {
-                    $('#preloader').css('opacity', '0.5');
-                    $('#preloader').css('visibility', 'visible');
-                },
-                success: function(data)
-                {
-                    if (!data.error)
-                        swal("Successful!", data.success, "success")
-                            .then((action) => {
-                                window.location.reload();
-                            });
-                    else
-                        swal("Error!", data.error, "error");
-                },
-                statusCode: {
-                    422: function(responseObject, textStatus, jqXHR) {
-                        resetErrors();
-                        printErrMsg(responseObject.responseJSON.errors);
+                $.ajax({
+                    url: '{{ route('objection.update-clerk-send-hmm-draft') }}',
+                    type: 'POST',
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
                     },
-                    500: function(responseObject, textStatus, errorThrown) {
-                        swal("Error occured!", "Something went wrong please try again", "error");
-                    }
-                },
-                complete: function() {
-                    $('#preloader').css('opacity', '0');
-                    $('#preloader').css('visibility', 'hidden');
-                },
-            });
+                    success: function(data)
+                    {
+                        if (!data.error)
+                            swal("Successful!", data.success, "success")
+                                .then((action) => {
+                                    window.location.reload();
+                                });
+                        else
+                            swal("Error!", data.error, "error");
+                    },
+                    statusCode: {
+                        422: function(responseObject, textStatus, jqXHR) {
+                            resetErrors();
+                            printErrMsg(responseObject.responseJSON.errors);
+                        },
+                        500: function(responseObject, textStatus, errorThrown) {
+                            swal("Error occured!", "Something went wrong please try again", "error");
+                        }
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
+                    },
+                });
+            }
 
         });
 </script>

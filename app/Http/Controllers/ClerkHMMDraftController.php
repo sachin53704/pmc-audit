@@ -127,9 +127,10 @@ class ClerkHMMDraftController extends Controller
             ->where('status', '4')
             ->whereNotNull('hmm_draft_number')
             ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
-                $q->whereNull('hmm_draft_mca_status');
+                $q->whereNull('hmm_draft_dymca_status');
             })->when(Auth::user()->hasRole('MCA'), function ($q) {
-                $q->where('hmm_draft_dymca_status', 1);
+                $q->whereNull('hmm_draft_mca_status')
+                    ->where('hmm_draft_dymca_status', 1);
             })
             ->orderBy('entry_date', 'desc')
             ->get();
