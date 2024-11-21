@@ -19,9 +19,9 @@ class ReportController extends Controller
             $q->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
                 $q->where('department_id', $request->department);
             })->when(isset($request->from) && $request->from != "", function ($q) use ($request) {
-                $q->where('from_year', '>=', date('Y-m-d', strtotime($request->from)));
+                $q->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($q) use ($request) {
-                $q->where('to_year', '<=', date('Y-m-d', strtotime($request->to)));
+                $q->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
             })->with('audit', 'department', 'user');
         })->where('is_objection_completed', 0)->get();
 
@@ -61,9 +61,9 @@ class ReportController extends Controller
                 $q->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
                     $q->where('department_id', $request->department);
                 })->when(isset($request->from) && $request->from != "", function ($q) use ($request) {
-                    $q->where('from_year', '>=', date('Y-m-d', strtotime($request->from)));
+                    $q->where('entry_date', '>=', date('Y-m-d', strtotime($request->from)));
                 })->when(isset($request->to) && $request->to != "", function ($q) use ($request) {
-                    $q->where('to_year', '<=', date('Y-m-d', strtotime($request->to)));
+                    $q->where('entry_date', '<=', date('Y-m-d', strtotime($request->to)));
                 });
             })->where('is_objection_completed', 0)->get();
 
