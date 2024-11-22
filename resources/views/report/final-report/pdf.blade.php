@@ -67,7 +67,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Objection No</th>
+                        <th>Hmm No.</th>
                         <th>Department</th>
                         <th>Date</th>
                         <th>From Year</th>

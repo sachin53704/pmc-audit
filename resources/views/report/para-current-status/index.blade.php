@@ -13,7 +13,7 @@
                         <form method="get" id="serachForm">
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-                                    <label for="department">Select Department</label>
+                                    <label for="department">Select Department <span class="text-danger">*</span></label>
                                     <select name="department" id="department" class="form-select" required>
                                         <option value="">Select</option>
                                         <option {{ (isset(request()->department) && request()->department == "all") ? 'selected' : '' }} value="all">All</option>
@@ -24,13 +24,13 @@
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-                                    <label for="from">Select From Date</label>
-                                    <input type="text" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control fdatepicker" id="from" autocomplete="off" placeholder="Select from date" required>
+                                    <label for="from">Select From Date <span class="text-danger">*</span></label>
+                                    <input type="text" value="{{ (isset(request()->from) && request()->from !="") ? request()->from : '' }}" name="from" class="form-control fdatepicker" id="from" required autocomplete="off" placeholder="Select from date" required>
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
-                                    <label for="to">Select To Date</label>
-                                    <input type="text" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control fdatepicker" autocomplete="off" placeholder="Select from date" id="to" required>
+                                    <label for="to">Select To Date <span class="text-danger">*</span></label>
+                                    <input type="text" value="{{ (isset(request()->to) && request()->to !="") ? request()->to : '' }}" name="to" class="form-control fdatepicker" autocomplete="off" required placeholder="Select from date" id="to" required>
                                 </div>
 
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-12">
