@@ -239,7 +239,9 @@
                                                                     @if(Auth::user()->hasRole('Department'))
                                                                     <input type="file" name="department_files" id="department_file" class="form-control">
                                                                     @endif
+                                                                    <span class="text-danger is-invalid department_file_err"></span>
                                                                 </div>
+                                                                <input type="hidden" value="0" name="departmentCompliaceFile" id="departmentCompliaceFile">
 
                                                                 <div class="col-12 mb-3">
                                                                     <div class="d-flex justify-content-between">
@@ -252,7 +254,15 @@
                                                                         </div>
                                                                     </div>
                                                                     <textarea name="department_remark" id="department_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid department_remark_err"></span>
                                                                 </div>
+
+                                                                <div class="col-12 mb-3">
+                                                                    <label for="submit_compliance">Submitted Compliance <span class="text-danger">*</span></label>
+                                                                    <input type="number" name="submit_compliance" id="submit_compliance" class="form-control">
+                                                                    <span class="text-danger is-invalid submit_compliance_err"></span>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -266,16 +276,18 @@
                                                             <div class="row px-3 py-2">
                                                     
                                                                 <div class="col-6">
-                                                                    <label for="department_hod_final_status">Department HOD Status</label>
+                                                                    <label for="department_hod_final_status">Department HOD Status <span class="text-danger">*</span></label>
                                                                     <select name="department_hod_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
                                                                         <option value="0">Reject</option>
                                                                     </select>
+                                                                    <span class="text-danger is-invalid department_hod_final_status_err"></span>
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <label for="department_hod_final_remark">Department HOD Remark</label>
                                                                     <textarea name="department_hod_final_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid department_hod_final_remark_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -290,15 +302,17 @@
                                                             <div class="row px-3 py-2">
                                                                     
                                                                 <div class="col-6">
-                                                                    <label for="department_mca_second_status">MCA Status</label>
+                                                                    <label for="department_mca_second_status">MCA Status <span class="text-danger">*</span></label>
                                                                     <select name="department_mca_second_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Forward To Auditor</option>
                                                                     </select>
+                                                                    <span class="text-danger is-invalid department_mca_second_status_err"></span>
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <label for="department_mca_second_remark">MCA Remark</label>
                                                                     <textarea  name="department_mca_second_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid department_mca_second_remark_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -316,16 +330,19 @@
                                                                 <div class="col-12 mb-3">
                                                                     <label for="auditor_description">Description <span class="text-danger">*</span></label>
                                                                     <textarea name="auditor_description" id="auditor_description" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid auditor_description_err"></span>
                                                                 </div>
 
                                                                 <div class="col-3 px-3 pt-2">
                                                                     <label for="auditor_status">Completed Objection <span class="text-danger">*</span></label>
                                                                     <input type="number" class="form-control" name="completed_sub_unit">
+                                                                    <span class="text-danger is-invalid completed_sub_unit_err"></span>
                                                                 </div>
 
                                                                 <div class="col-3 px-3 pt-2">
                                                                     <label for="auditor_status">Pending Objection <span class="text-danger">*</span></label>
                                                                     <input type="number" class="form-control" name="pending_sub_unit">
+                                                                    <span class="text-danger is-invalid pending_sub_unit_err"></span>
                                                                 </div>
 
                                                                 <div class="col-3 px-3 pt-2">
@@ -335,10 +352,12 @@
                                                                         <option value="1">Proposal to Approve / Delete</option>
                                                                         <option value="0">Proposal to convert para</option>
                                                                     </select>
+                                                                    <span class="text-danger is-invalid auditor_status_err"></span>
                                                                 </div>
                                                                 <div class="col-3">
                                                                     <label for="auditor_remark">Auditor Remark <span class="text-danger">*</span></label>
                                                                     <textarea name="auditor_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid auditor_remark_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -355,15 +374,17 @@
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-6">
-                                                                    <label for="dymca_final_status">Dymca Status</label>
+                                                                    <label for="dymca_final_status">Dymca Status <span class="text-danger">*</span></label>
                                                                     <select name="dymca_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
                                                                     </select>
+                                                                    <span class="text-danger is-invalid dymca_final_status_err"></span>
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <label for="dymca_final_remark">Dymca Remark</label>
                                                                     <textarea name="dymca_final_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid dymca_final_remark_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -380,15 +401,17 @@
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-6">
-                                                                    <label for="mca_final_status">MCA Status</label>
+                                                                    <label for="mca_final_status">MCA Status <span class="text-danger">*</span></label>
                                                                     <select name="mca_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
                                                                     </select>
+                                                                    <span class="text-danger is-invalid mca_final_status_err"></span>
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <label for="mca_final_remark">MCA Remark</label>
                                                                     <textarea name="mca_final_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid mca_final_remark_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -572,8 +595,16 @@
                             swal("Error!", data.error, "error");
                         }
                     },
-                    error: function(error, jqXHR, textStatus, errorThrown) {
-                        swal("Error!", "Some thing went wrong", "error");
+                    statusCode: {
+                        422: function(responseObject, textStatus, jqXHR) {
+                            // $("#addSubmit").prop('disabled', false);
+                            resetErrors();
+                            printErrMsg(responseObject.responseJSON.errors);
+                        },
+                        500: function(responseObject, textStatus, errorThrown) {
+                            $("#addSubmit").prop('disabled', false);
+                            swal("Error occured!", "Something went wrong please try again", "error");
+                        }
                     },
                     complete: function() {
                         $('#preloader').css('opacity', '0');
@@ -697,13 +728,18 @@
                         if(data.audit.department_file){
                             $('.complianceFile').removeClass('d-none');
                             $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.audit.department_file);
+                            $('#departmentCompliaceFile').val(0);
                         }else{
                             $('.complianceFile').addClass('d-none'); 
+                            $('#departmentCompliaceFile').val(1);
                         }
+                        
+                        $('#submit_compliance').val(data.audit.submit_compliance);
 
                         
                         if(data.audit.department_hod_final_status == "1"){
                             $('#department_file').addClass('d-none');
+                            $('#submit_compliance').prop('disabled', true);
                             deditorInstance.enableReadOnlyMode('reason');
                         }
 

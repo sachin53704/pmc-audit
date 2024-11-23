@@ -206,7 +206,9 @@
                                                                     @if(Auth::user()->hasRole('Department'))
                                                                     <input type="file" name="department_files" id="department_file" class="form-control">
                                                                     @endif
+                                                                    <span class="text-danger is-invalid department_files_err"></span>
                                                                 </div>
+                                                                <input type="hidden" name="filevalue" value="1" id="filevalue">
 
                                                                 <div class="col-12 mb-3">
                                                                     <div class="d-flex justify-content-between">
@@ -218,6 +220,13 @@
                                                                         </div>
                                                                     </div>
                                                                     <textarea @if(!Auth::user()->hasRole('Department'))disabled @endif  name="department_remark" id="department_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid department_remark_err"></span>
+                                                                </div>
+
+                                                                <div class="col-12 mb-3">
+                                                                    <label for="submit_compliance">Submitted Compliance <span class="text-danger">*</span></label>
+                                                                    <input type="number" name="submit_compliance" id="submit_compliance" class="form-control">
+                                                                    <span class="text-danger is-invalid submit_compliance_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -506,57 +515,6 @@
 </script>
 
 
-{{-- <script>
-    $("#buttons-datatables").on("click", ".edit-element", function(e) {
-        e.preventDefault();
-        var model_id = $(this).attr("data-id");
-        var url = "{{ route('ajax.viewAuditorObjection') }}";
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            data: {
-                'audit_id': model_id,
-            },
-            beforeSend: function()
-            {
-                $('#preloader').css('opacity', '0.5');
-                $('#preloader').css('visibility', 'visible');
-            },
-            success: function(data, textStatus, jqXHR) {
-                editFormBehaviour();
-                if (!data.error)
-                {
-                    var html = ``;
-                    var count = 1;
-                    $.each(data.auditObjections, function(index, value){
-                        html += `<tr>
-                            <td>${count++}</td>
-                            <td>${value?.department?.name}</td>
-                            <td>${value.objection_no}</td>
-                            <td>${value.subject}</td>
-                            <td>${(value.compliance_submit_date) ? value.compliance_submit_date : '-'}</td>
-                            <td><button type="button" target="_blank" class="btn btn-sm btn-primary viewObjection" data-id="${value.id}">View Objection</button></td>
-                        </tr>`;
-                    });
-                    $('#modelObjectionId').html(html);
-
-                    $("#addObjectionModal").modal("show");
-                } else {
-                    swal("Error!", data.error, "error");
-                }
-            },
-            error: function(error, jqXHR, textStatus, errorThrown) {
-                alert("Some thing went wrong");
-            },
-            complete: function() {
-                $('#preloader').css('opacity', '0');
-                $('#preloader').css('visibility', 'hidden');
-            },
-        });
-    });
-</script> --}}
-
 
 <script>
     $(document).ready(function() {
@@ -657,18 +615,18 @@
                 editorInstance.setData(data.auditObjection.description);
 
 
-
-
                 let roleName = "{{ Auth::user()->roles[0]->name }}";
                         
                 // department status                        
                 if(data.auditObjection.department_draft_remark){
                     deditorInstance.setData(data.auditObjection.department_draft_remark);
                 }
+                $('#submit_compliance').val(data.auditObjection.submit_compliance);
                 if(data.auditObjection.department_file && data.auditObjection.department_file != ""){
                     $('.complianceFile').removeClass('d-none');
                     $('.complianceFile').prop('href', "{{ asset('storage') }}/"+data.auditObjection.department_file);
-                    $('#department_file').attr('disabled', true)
+                    // $('#department_file').attr('disabled', true);
+                    $('#filevalue').val(0)
                 }
                 
                 if(data.auditObjection.department_remark != "" && data.auditObjection.department_letter){
@@ -687,8 +645,9 @@
                 
                 if(data.auditObjection.department_hod_final_status == "1" && data.auditObjection.mca_final_status != "0"){
                     $('.complianceFile').prop('disabled', true)
-                    deditorInstance.enableReadOnlyMode('reason')
-                    $('#department_file').addClass('d-none')
+                    deditorInstance.enableReadOnlyMode('reason');
+                    $('#department_file').addClass('d-none');
+                    $('#submit_compliance').prop('disabled', true)
                 }else if(roleName != "Department"){
                     $(".complianceFile").prop('disabled', true);
                     deditorInstance.enableReadOnlyMode('reason')
@@ -846,8 +805,16 @@
                     swal("Error!", data.error, "error");
                 }
             },
-            error: function(error, jqXHR, textStatus, errorThrown) {
-                swal("Error!", "Some thing went wrong", "error");
+            statusCode: {
+                422: function(responseObject, textStatus, jqXHR) {
+                    // $("#addSubmit").prop('disabled', false);
+                    resetErrors();
+                    printErrMsg(responseObject.responseJSON.errors);
+                },
+                500: function(responseObject, textStatus, errorThrown) {
+                    $("#addSubmit").prop('disabled', false);
+                    swal("Error occured!", "Something went wrong please try again", "error");
+                }
             },
             complete: function() {
                 $('#preloader').css('opacity', '0');

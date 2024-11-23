@@ -28,7 +28,7 @@
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
-                                    <span class="text-danger is-invalid text_err"></span>
+                                    <span class="text-danger is-invalid status_err"></span>
                                 </div>
                             </div>
 
@@ -69,7 +69,7 @@
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
-                                    <span class="text-danger is-invalid text_err"></span>
+                                    <span class="text-danger is-invalid status_err"></span>
                                 </div>
                             </div>
 

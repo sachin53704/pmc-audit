@@ -98,6 +98,17 @@ class DepartmentHodController extends Controller
     {
         // dd($request->all());
         if ($request->ajax()) {
+            $validatedData = $request->validate([
+                'department_files' => 'required_if:filevalue,1',
+                'department_remark' => 'required',
+                'submit_compliance' => 'required',
+            ], [
+                'department_files.required_if' => 'Please select compliance file.',
+                'department_remark.required' => 'Please enter compliance remark.',
+                'submit_compliance.required' => 'Please select submitted compliance.',
+            ]);
+
+
             try {
                 DB::beginTransaction();
 
@@ -107,6 +118,7 @@ class DepartmentHodController extends Controller
                 $auditObjection = AuditObjection::find($request->audit_objection_id);
 
                 $auditObjection->department_draft_remark = $request->department_remark;
+                $auditObjection->submit_compliance = $request->submit_compliance;
                 if ($request->is_draft_save == 1) {
                     $auditObjection->is_department_draft_save = 1;
                 } else {

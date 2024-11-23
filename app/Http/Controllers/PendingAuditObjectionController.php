@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PDF;
+use Illuminate\Support\Facades\Validator;
 
 class PendingAuditObjectionController extends Controller
 {
@@ -83,6 +84,21 @@ class PendingAuditObjectionController extends Controller
     {
         if ($request->ajax()) {
             if (Auth::user()->hasRole(['Department'])) {
+
+                $validator = Validator::make($request->all(), [
+                    'department_files' => 'required_if:departmentCompliaceFile,1',
+                    'department_remark' => 'required',
+                    'submit_compliance' => 'required',
+                ], [
+                    'department_files.required_if' => 'Please select compliance file',
+                    'department_remark.required' => 'Please enter compliance description',
+                    'submit_compliance.required' => 'Please enter submitted compliance',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
+
                 $pendingAuditObjection = PendingAuditObjection::find($request->pending_audit_objection_id);
                 $files = $pendingAuditObjection->department_file;
                 if ($request->hasFile('department_files')) {
@@ -92,6 +108,7 @@ class PendingAuditObjectionController extends Controller
                     $files = $request->department_files->store('pending-objection');
                 }
                 $pendingAuditObjection->department_file = $files;
+                $pendingAuditObjection->submit_compliance = $request->submit_compliance;
 
 
 
@@ -118,6 +135,17 @@ class PendingAuditObjectionController extends Controller
                     }
                 }
             } elseif (Auth::user()->hasRole(['Department HOD'])) {
+
+                $validator = Validator::make($request->all(), [
+                    'department_hod_final_status' => 'required',
+                ], [
+                    'department_hod_final_status.required' => 'Please select status',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
+
                 $pendingAuditObjection = PendingAuditObjection::find($request->pending_audit_objection_id);
                 $pendingAuditObjection->department_hod_final_status = $request->department_hod_final_status;
                 $pendingAuditObjection->department_hod_final_remark = $request->department_hod_final_remark;
@@ -134,6 +162,29 @@ class PendingAuditObjectionController extends Controller
                     return response()->json(['success' => 'Compliance rejected successfully']);
                 }
             } elseif (Auth::user()->hasRole(['MCA'])) {
+                if ($request->has('department_mca_second_status')) {
+                    $validator = Validator::make($request->all(), [
+                        'department_mca_second_status' => 'required',
+                    ], [
+                        'department_mca_second_status.required' => 'Please select status',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response()->json(['errors' => $validator->errors()], 422);
+                    }
+                }
+
+                if ($request->has('mca_final_status')) {
+                    $validator = Validator::make($request->all(), [
+                        'mca_final_status' => 'required',
+                    ], [
+                        'mca_final_status.required' => 'Please select status',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response()->json(['errors' => $validator->errors()], 422);
+                    }
+                }
                 if (isset($request->department_mca_second_status)) {
                     $pendingAuditObjection = PendingAuditObjection::find($request->pending_audit_objection_id);
                     $pendingAuditObjection->department_mca_second_status = $request->department_mca_second_status;
@@ -179,6 +230,17 @@ class PendingAuditObjectionController extends Controller
 
                 return response()->json(['success' => 'Compliance forward to auditor successfully']);
             } elseif (Auth::user()->hasRole(['DY MCA'])) {
+                if ($request->has('dymca_final_status')) {
+                    $validator = Validator::make($request->all(), [
+                        'dymca_final_status' => 'required',
+                    ], [
+                        'dymca_final_status.required' => 'Please select status',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response()->json(['errors' => $validator->errors()], 422);
+                    }
+                }
                 $pendingAuditObjection = PendingAuditObjection::find($request->pending_audit_objection_id);
                 $pendingAuditObjection->dymca_final_status = $request->dymca_final_status;
                 $pendingAuditObjection->dymca_final_remark = $request->dymca_final_remark;
@@ -189,6 +251,25 @@ class PendingAuditObjectionController extends Controller
 
                 return response()->json(['success' => 'Objection approve successfully']);
             } elseif (Auth::user()->hasRole(['Auditor'])) {
+
+
+                $validator = Validator::make($request->all(), [
+                    'auditor_description' => 'required',
+                    'completed_sub_unit' => 'required',
+                    'pending_sub_unit' => 'required',
+                    'auditor_remark' => 'required',
+                    'auditor_status' => 'required',
+                ], [
+                    'auditor_description.required' => 'Please enter description',
+                    'completed_sub_unit.required' => 'Please enter completed objection',
+                    'pending_sub_unit.required' => 'Please enter pending objection',
+                    'auditor_remark.required' => 'Please enter remark',
+                    'auditor_status.required' => 'Please select status',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
 
                 try {
                     DB::beginTransaction();

@@ -291,6 +291,33 @@ class AuditorAuditController extends Controller
                 try {
                     DB::beginTransaction();
                     if (Auth::user()->hasRole('MCA')) {
+
+                        if ($request->has('department_mca_second_status')) {
+
+                            $validator = Validator::make($request->all(), [
+                                'department_mca_second_status' => 'required',
+                            ], [
+                                'department_mca_second_status.required' => 'Please select status',
+                            ]);
+
+                            if ($validator->fails()) {
+                                return response()->json(['errors' => $validator->errors()], 422);
+                            }
+                        }
+
+                        if ($request->has('mca_final_status')) {
+
+                            $validator = Validator::make($request->all(), [
+                                'mca_final_status' => 'required',
+                            ], [
+                                'mca_final_status.required' => 'Please select status',
+                            ]);
+
+                            if ($validator->fails()) {
+                                return response()->json(['errors' => $validator->errors()], 422);
+                            }
+                        }
+
                         if (isset($request->department_mca_second_status) && $request->department_mca_second_status != "") {
 
                             $auditObjection = AuditObjection::find($request->audit_objection_id);
@@ -366,6 +393,17 @@ class AuditorAuditController extends Controller
                             return response()->json(['success' => 'Objection approve successfully']);
                         }
                     } else {
+
+                        $validator = Validator::make($request->all(), [
+                            'dymca_final_status' => 'required',
+                        ], [
+                            'dymca_final_status.required' => 'Please select status',
+                        ]);
+
+                        if ($validator->fails()) {
+                            return response()->json(['errors' => $validator->errors()], 422);
+                        }
+
                         $auditObjection = AuditObjection::find($request->audit_objection_id);
                         $auditObjection->dymca_final_status = $request->dymca_final_status;
                         $auditObjection->dymca_final_remark = $request->dymca_final_remark;
@@ -381,11 +419,29 @@ class AuditorAuditController extends Controller
                         DB::commit();
                         return response()->json(['success' => 'Objection approve successfully']);
                     }
+                    return response()->json(['error' => 'Something went wrong please try later!']);
                 } catch (\Exception $e) {
+                    \Log::error('Failed to freeze pension:', [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+
                     DB::rollback();
                     return response()->json(['error' => 'Something went wrong!']);
                 }
             } else if (Auth::user()->hasRole('Department HOD')) {
+
+                $validator = Validator::make($request->all(), [
+                    'department_hod_final_status' => 'required',
+                ], [
+                    'department_hod_final_status.required' => 'Please select status',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
                 DB::beginTransaction();
                 try {
                     $auditObjection = AuditObjection::find($request->audit_objection_id);
@@ -435,7 +491,25 @@ class AuditorAuditController extends Controller
                     response()->json(['error' => 'Something went wrong!']);
                 }
             } else if (Auth::user()->hasRole('Auditor')) {
-                // dd($request->all());
+
+                $validator = Validator::make($request->all(), [
+                    'auditor_status' => 'required',
+                    'auditor_description' => 'required',
+                    'completed_sub_unit' => 'required',
+                    'pending_sub_unit' => 'required',
+                    'auditor_remark' => 'required',
+                ], [
+                    'auditor_status.required' => 'Please select status',
+                    'auditor_description.required' => 'Please enter description',
+                    'completed_sub_unit.required' => 'Please enter completed objection',
+                    'pending_sub_unit.required' => 'Please enter pending objection',
+                    'auditor_remark.required' => 'Please enter remark',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors()], 422);
+                }
+
                 DB::beginTransaction();
                 try {
                     $auditObjection = AuditObjection::find($request->audit_objection_id);
