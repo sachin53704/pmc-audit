@@ -64,7 +64,7 @@
                                         <td style="text-align: center" rowspan="{{ count($report->groupBy('from_year')) }}">{{ $key }}</td>
                                         <td>{{ $keys }}</td>
                                         <td>{{ $department->sum('sub_unit') }}</td>
-                                        <td>{{ $department->sum('pending_sub_unit') - $department->sum('submit_compliance') }}</td>
+                                        <td>{{ $department->sum('submit_compliance') }}</td>
                                         <td>{{ $department->sum('completed_sub_unit') }}</td>
                                         <td>{{ $department->sum('pending_sub_unit') }}</td>
                                     </tr>
@@ -72,7 +72,7 @@
                                     <tr>
                                         <td>{{ $keys }}</td>
                                         <td>{{ $department->sum('sub_unit') }}</td>
-                                        <td>{{ $department->sum('pending_sub_unit') - $department->sum('submit_compliance') }}</td>
+                                        <td>{{ $department->sum('submit_compliance') }}</td>
                                         <td>{{ $department->sum('completed_sub_unit') }}</td>
                                         <td>{{ $department->sum('pending_sub_unit') }}</td>
                                     </tr>
