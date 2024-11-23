@@ -44,6 +44,7 @@
                     <h2>Panvel Munciple Corporation</h2>
                     <h4>Audit Department</h4>
                     <h4>Audit Para Final Report</h4>
+                    <h5>Form Date: {{ (request()->from != "") ? date('d-m-Y', strtotime(request()->from)) : '' }}  To Date: {{ (request()->to) ? date('d-m-Y', strtotime(request()->to)) : '' }}</h5>
                 </td>
                 <td>
                     <p>Date : {{ date('d-m-Y') }}</p>

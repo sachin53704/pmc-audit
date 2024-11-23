@@ -92,16 +92,17 @@ class ReportController extends Controller
                     $q->where('audit_objections.department_id', $request->department);
                 });
             })->when(isset($request->from) && $request->from != "", function ($q) use ($request) {
-                $q->where('audit_objections.entry_date', '>=', $request->from);
+                $q->where('audit_objections.entry_date', '>=', date('Y-m-d', strtotime($request->from)));
             })->when(isset($request->to) && $request->to != "", function ($q) use ($request) {
-                $q->where('audit_objections.entry_date', '<=', $request->to);
+                $q->where('audit_objections.entry_date', '<=', date('Y-m-d', strtotime($request->to)));
             })
                 ->leftJoin('fiscal_years', 'fiscal_years.id', '=', 'audit_objections.from_year')
                 ->leftJoin('departments', 'departments.id', '=', 'audit_objections.department_id')
-                ->select('departments.name as dept_name', 'fiscal_years.name as from_year', 'audit_objections.sub_unit', 'audit_objections.completed_sub_unit', 'audit_objections.pending_sub_unit')
+                ->select('departments.name as dept_name', 'fiscal_years.name as from_year', 'audit_objections.sub_unit', 'audit_objections.completed_sub_unit', 'audit_objections.pending_sub_unit', 'audit_objections.submit_compliance')
                 ->get();
 
             $reports = $auditObjections->groupBy('dept_name');
+            // return $reports;
         }
 
         if (isset($request->pdf) && $request->pdf == "Yes") {

@@ -82,6 +82,18 @@
     $(document).ready(function(){
         $('#generatePdf').click(function(){
             
+            var from = $('#from').val();
+            var to = $('#to').val();
+            if(from == ""){
+                alert('Please select from date');
+                return false;
+            }
+
+            if(to == ""){
+                alert('Please select to date');
+                return true;
+            }
+
             var url = $('#serachForm').serialize();
             url = "{{ route('report.audit-para-summary-report') }}"+ '?pdf=Yes&'+ url
             window.open(

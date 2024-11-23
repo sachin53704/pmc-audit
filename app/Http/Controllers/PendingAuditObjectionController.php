@@ -294,6 +294,7 @@ class PendingAuditObjectionController extends Controller
                     AuditObjection::where('id', $pendingAuditObjection->audit_objection_id)->update([
                         'completed_sub_unit' => $request->completed_sub_unit,
                         'pending_sub_unit' => $request->pending_sub_unit,
+                        'submit_compliance' => $pendingAuditObjection->submit_compliance
                     ]);
 
                     DB::commit();

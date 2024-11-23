@@ -50,6 +50,7 @@
                                         <th>Department</th>
                                         <th>Financial Year</th>
                                         <th>Total Audit Para</th>
+                                        <th>Submited Compliance</th>
                                         <th>Completed Audit Para</th>
                                         <th>Pending Audit Para</th>
                                     </tr>
@@ -63,6 +64,7 @@
                                         <td style="text-align: center" rowspan="{{ count($report->groupBy('from_year')) }}">{{ $key }}</td>
                                         <td>{{ $keys }}</td>
                                         <td>{{ $department->sum('sub_unit') }}</td>
+                                        <td>{{ $department->sum('pending_sub_unit') - $department->sum('submit_compliance') }}</td>
                                         <td>{{ $department->sum('completed_sub_unit') }}</td>
                                         <td>{{ $department->sum('pending_sub_unit') }}</td>
                                     </tr>
@@ -70,6 +72,7 @@
                                     <tr>
                                         <td>{{ $keys }}</td>
                                         <td>{{ $department->sum('sub_unit') }}</td>
+                                        <td>{{ $department->sum('pending_sub_unit') - $department->sum('submit_compliance') }}</td>
                                         <td>{{ $department->sum('completed_sub_unit') }}</td>
                                         <td>{{ $department->sum('pending_sub_unit') }}</td>
                                     </tr>
@@ -96,6 +99,18 @@
 <script>
     $(document).ready(function(){
         $('#generatePdf').click(function(){
+            
+            var from = $('#from').val();
+            var to = $('#to').val();
+            if(from == ""){
+                alert('Please select from date');
+                return false;
+            }
+
+            if(to == ""){
+                alert('Please select to date');
+                return true;
+            }
             
             var url = $('#serachForm').serialize();
             url = "{{ route('report.para-current-status-report') }}"+ '?pdf=Yes&'+ url
