@@ -9,58 +9,63 @@
         .page-break {
             page-break-after: always;
         }
-        </style>
+        body {
+            font-family: 'freeserif', 'normal';
+            padding: 0;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
     @foreach($objections as $objection)
     <table border="1" style="width:100%">
         <thead>
             <tr>
-                <th>HMM NO.</th>
+                <td><b>HMM NO.</b></td>
                 <td>{{ $objection->objection_no }}</td>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <th>Entry Date</th>
+                <td><b>Entry Date</b></td>
                 <td>{{ date('d-m-Y', strtotime($objection->entry_date)) }}</td>
             </tr>
             <tr>
-                <th>Department</th>
+                <td><b>Department</b></td>
                 <td>{{ $objection->department?->name }}</td>
             </tr>
             <tr>
-                <th>From Year</th>
+                <td><b>From Year</b></td>
                 <td>{{ $objection->from?->name }}</td>
             </tr>
             <tr>
-                <th>To Year</th>
+                <td><b>To Year</b></td>
                 <td>{{ $objection->to?->name }}</td>
             </tr>
             
             <tr>
-                <th>Zone</th>
+                <td><b>Zone</b></td>
                 <td>{{ $objection->zone?->name }}</td>
             </tr>
 
             <tr>
-                <th>Audit Type</th>
+                <td><b>Audit Type</b></td>
                 <td>{{ $objection->auditType?->name }}</td>
             </tr>
             <tr>
-                <th>Severity</th>
+                <td><b>Severity</b></td>
                 <td>{{ $objection->severity?->name }}</td>
             </tr>
             <tr>
-                <th>Audit Para Category</th>
+                <td><b>Audit Para Category</b></td>
                 <td>{{ $objection->auditParaCategory?->name }}</td>
             </tr>
             <tr>
-                <th>Amount</th>
+                <td><b>Amount</b></td>
                 <td>{{ $objection->amount ?? '-' }}</td>
             </tr>
             <tr>
-                <th>Subject</th>
+                <td><b>Subject</b></td>
                 <td>{{ $objection->subject }}</td>
             </tr>
         </tbody>

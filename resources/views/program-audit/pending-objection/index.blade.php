@@ -226,11 +226,11 @@
                                                 <div class="accordion custom-accordionwithicon-plus" id="accordionWithplusicon">
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample1">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#departmentCompliance" aria-expanded="true" aria-controls="departmentCompliance">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('Department'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#departmentCompliance" aria-expanded="@if(Auth::user()->hasRole('Department'))true @endif" aria-controls="departmentCompliance">
                                                                 Department Compliance 
                                                             </button>
                                                         </h2>
-                                                        <div id="departmentCompliance" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample1" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="departmentCompliance" class="accordion-collapse collapse @if(Auth::user()->hasRole('Department'))show @endif" aria-labelledby="accordionwithplusExample1" data-bs-parent="#accordionWithplusicon">
                                                             
                                                             <div class="row px-3 py-2">
                                                                 <div class="col-12 mb-3">
@@ -268,11 +268,11 @@
                                                     </div>
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#departmentHodStatus" aria-expanded="false" aria-controls="departmentHodStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('Department HOD'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#departmentHodStatus" aria-expanded="@if(Auth::user()->hasRole('Department HOD'))true @endif" aria-controls="departmentHodStatus">
                                                                 Department HOD Status
                                                             </button>
                                                         </h2>
-                                                        <div id="departmentHodStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="departmentHodStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('Department HOD'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                     
                                                                 <div class="col-6">
@@ -294,11 +294,11 @@
                                                     </div>
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample3">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcaForwardToAuditor" aria-expanded="false" aria-controls="mcaForwardToAuditor">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('MCA'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#mcaForwardToAuditor" aria-expanded="@if(Auth::user()->hasRole('MCA'))true @endif" aria-controls="mcaForwardToAuditor">
                                                                 MCA Forward To Auditor
                                                             </button>
                                                         </h2>
-                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse @if(Auth::user()->hasRole('MCA'))show @endif" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                     
                                                                 <div class="col-6">
@@ -320,11 +320,11 @@
 
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#auditorStatus" aria-expanded="false" aria-controls="auditorStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('Auditor'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#auditorStatus" aria-expanded="@if(Auth::user()->hasRole('Auditor'))true @endif" aria-controls="auditorStatus">
                                                                 Auditor Status
                                                             </button>
                                                         </h2>
-                                                        <div id="auditorStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="auditorStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('Auditor'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-12 mb-3">
@@ -366,11 +366,11 @@
 
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dymcaStatus" aria-expanded="false" aria-controls="dymcaStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('DY MCA'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#dymcaStatus" aria-expanded="@if(Auth::user()->hasRole('DY MCA'))true @endif" aria-controls="dymcaStatus">
                                                                 DyMca Status
                                                             </button>
                                                         </h2>
-                                                        <div id="dymcaStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="dymcaStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('DY MCA'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-6">
@@ -393,11 +393,11 @@
 
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcaStatus" aria-expanded="false" aria-controls="mcaStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('MCA'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#mcaStatus" aria-expanded="@if(Auth::user()->hasRole('MCA'))true @endif" aria-controls="mcaStatus">
                                                                 MCA Status
                                                             </button>
                                                         </h2>
-                                                        <div id="mcaStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="mcaStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('MCA'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-6">
