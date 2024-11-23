@@ -220,7 +220,9 @@ class PendingAuditObjectionController extends Controller
                             'pending_description' => $pendingAuditObjection->auditor_draft_description,
                             'status' => 1,
                             'hmm_draft_letter' => $name,
-                            'parent_id' => $pendingAuditObjection->id
+                            'parent_id' => $pendingAuditObjection->id,
+                            'ask_pending_auditor_remark' => $pendingAuditObjection->auditor_remark,
+                            'ask_pending_auditor_status' => $pendingAuditObjection->auditor_status,
                         ]);
                     }
 

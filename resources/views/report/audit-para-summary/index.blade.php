@@ -62,7 +62,7 @@
                                         <td>{{ $report->auditObjection?->objection_no }}</td>
                                         <td>{{ $report->auditObjection?->user?->auditor_no }}</td>
                                         <td>
-                                            {!! $report->pending_description !!}
+                                            {{ $report->ask_pending_auditor_remark }}
                                         </td>
                                     </tr>
                                     @endforeach

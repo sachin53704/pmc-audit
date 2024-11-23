@@ -384,7 +384,9 @@ class AuditorAuditController extends Controller
                                     'sub_unit' => $auditObjection->pending_sub_unit,
                                     'pending_description' => $auditObjection->auditor_draft_description,
                                     'hmm_draft_letter' => $name,
-                                    'status' => 1
+                                    'status' => 1,
+                                    'ask_pending_auditor_remark' => $auditObjection->auditor_remark,
+                                    'ask_pending_auditor_status' => $auditObjection->auditor_status,
                                 ]);
                             }
 
