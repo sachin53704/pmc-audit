@@ -278,7 +278,7 @@ class AuditorAuditController extends Controller
     {
         $pdf = PDF::loadView('letter.3', compact('audit'));
 
-        $name = 'letter/' . Str::random(60) . '.pdf';
+        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;

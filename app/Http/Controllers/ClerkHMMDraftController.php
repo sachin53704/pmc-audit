@@ -99,7 +99,7 @@ class ClerkHMMDraftController extends Controller
     {
         $pdf = PDF::loadView('letter.2', compact('audit'));
 
-        $name = 'letter/' . Str::random(60) . '.pdf';
+        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;
@@ -177,7 +177,7 @@ class ClerkHMMDraftController extends Controller
     {
         $pdf = PDF::loadView('letter.4', compact('audit'));
 
-        $name = 'letter/' . Str::random(60) . '.pdf';
+        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;
