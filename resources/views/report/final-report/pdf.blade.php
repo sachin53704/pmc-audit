@@ -60,6 +60,7 @@
         
         @php $count = 1; @endphp
         @foreach($reports as $report)
+        @if($report->pending_description && $report->pending_description != "")
         <section>
             <table>
                 <thead>
@@ -79,6 +80,7 @@
                     </tr>
                 </tbody>
             </table>
+            <br>
             <div>
                 {!! $report->pending_description !!}
             </div>
@@ -99,7 +101,8 @@
             </table>
         </section>
 
-        <br><br>
+        <br><br><br><br><br><br><br><br>
+        @endif
         
 
         @php $count = $count + 1; @endphp
