@@ -684,6 +684,7 @@
                     },
                     success: function(data, textStatus, jqXHR)
                     {
+                        $('#saveObjectionStatus').removeClass('d-none');
                         $('#addForm #pending_audit_objection_id').val(data.audit.id)
                         $('#addForm #audit_objection_id').val(data.audit?.audit_objection.id)
                         $("#addForm input[name='audit_id']").val(data.audit?.audit_objection.audit_id);

@@ -661,6 +661,7 @@
                     },
                     success: function(data, textStatus, jqXHR)
                     {
+                        $('#saveObjectionStatus').removeClass('d-none');
                         $('#addForm #audit_objection_id').val(data.auditObjection.id)
                         $("#addForm input[name='audit_id']").val(data.auditObjection.audit_id);
                         $("#addForm input[name='objection_no']").val(data.auditObjection.objection_no);
