@@ -697,7 +697,8 @@
 
                         let roleName = "{{ Auth::user()->roles[0]->name }}";
                         
-                        // department status                        
+                        // department status
+                        deditorInstance.setData("");                      
                         if(data.auditObjection.department_draft_remark){
                             deditorInstance.setData(data.auditObjection.department_draft_remark);
                         }
