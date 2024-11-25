@@ -49,14 +49,6 @@ class ReportController extends Controller
 
         if (isset($request->pdf) && $request->pdf == "Yes") {
 
-            // $reports = ParaAudit::with(['audit.department'])
-            //     ->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
-            //         $q->whereHas('audit', function ($q) use ($request) {
-            //             $q->where('department_id', $request->department);
-            //         });
-            //     })
-            //     ->get();
-
             $reports = PendingAuditObjection::whereHas('auditObjection.audit.department', function ($q) use ($request) {
                 $q->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
                     $q->where('department_id', $request->department);
@@ -99,6 +91,7 @@ class ReportController extends Controller
                 ->leftJoin('fiscal_years', 'fiscal_years.id', '=', 'audit_objections.from_year')
                 ->leftJoin('departments', 'departments.id', '=', 'audit_objections.department_id')
                 ->select('departments.name as dept_name', 'fiscal_years.name as from_year', 'audit_objections.sub_unit', 'audit_objections.completed_sub_unit', 'audit_objections.pending_sub_unit', 'audit_objections.submit_compliance')
+                ->where('mca_final_status', 1)
                 ->get();
 
             $reports = $auditObjections->groupBy('dept_name');
