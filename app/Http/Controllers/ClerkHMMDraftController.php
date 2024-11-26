@@ -132,7 +132,7 @@ class ClerkHMMDraftController extends Controller
                 $q->whereNull('hmm_draft_mca_status')
                     ->where('hmm_draft_dymca_status', 1);
             })
-            ->orderBy('entry_date', 'desc')
+            ->latest()
             ->get();
 
         $audits = $audits->groupBy('hmm_draft_number');

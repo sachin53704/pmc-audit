@@ -178,7 +178,7 @@ class MCAAuditController extends Controller
                     ->where('status', '>=', 6)
                     ->where('department_id', Auth::user()->department_id);
             })
-            ->orderBy('entry_date', 'desc')
+            ->latest()
             ->get();
 
         $departments = Department::select('id', 'name')->get();

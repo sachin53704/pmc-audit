@@ -29,7 +29,7 @@ class HmmMcaStatusController extends Controller
         })->when(Auth::user()->hasRole('Department HOD'), function ($q) {
             $q->where('is_draft_send', 1)->where('department_id', Auth::user()->department_id);
         })
-            ->orderBy('entry_date', 'desc')
+            ->latest()
             ->get();
 
         $departments = Department::select('id', 'name')->get();
