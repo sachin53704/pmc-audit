@@ -165,17 +165,6 @@
                                     <span class="text-danger is-invalid subject_err"></span>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                    <label for="work_name">Work Name</label>
-                                    <input type="text" name="work_name" disabled id="work_name" class="form-control">
-                                    <span class="text-danger is-invalid work_name_err"></span>
-                                </div>
-
-                                <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                    <label for="contractor_name">Contractor Name</label>
-                                    <input type="text" name="contractor_name" disabled id="contractor_name" class="form-control">
-                                    <span class="text-danger is-invalid contractor_name_err"></span>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <a href="#" id="documentFile" target="_blank" class="btn btn-primary mt-4">View File</a>
                                 </div>
                             
