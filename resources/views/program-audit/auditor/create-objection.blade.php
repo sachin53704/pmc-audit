@@ -512,7 +512,9 @@
             $('#addForm input[name="department_id"]').val(departmentId);
             $('#addForm input[name="department_name_id"]').val(departmentName);
 
-            $("#addObjectionModal").modal("show");
+            if(departmentId != ""){
+                $("#addObjectionModal").modal("show");
+            }
 
             // $('#assign-role-modal').modal('show');
         });

@@ -729,25 +729,29 @@
                         
 
                         
+                        $("#addForm select[name='department_hod_final_status']").prop('disabled', false);
+                        $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', false);
                         $("#addForm select[name='department_hod_final_status']").val(data.auditObjection.department_hod_final_status);
                         $("#addForm textarea[name='department_hod_final_remark']").val(data.auditObjection.department_hod_final_remark);
                         if((data.auditObjection.department_mca_second_status == "1" && data.auditObjection.department_draft_remark != "")){
-                            $("#addForm select[name='department_hod_final_status']").prop('disabled', true)
-                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true)
+                            $("#addForm select[name='department_hod_final_status']").prop('disabled', true);
+                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true);
                         }else if(roleName != "Department HOD"){
-                            $("#addForm select[name='department_hod_final_status']").prop('disabled', true)
-                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true)
+                            $("#addForm select[name='department_hod_final_status']").prop('disabled', true);
+                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', true);
                         }
 
 
+                        $("#addForm select[name='department_mca_second_status']").prop('disabled', false);
+                        $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', false);
                         $("#addForm select[name='department_mca_second_status']").val(data.auditObjection.department_mca_second_status);
                         $("#addForm textarea[name='department_mca_second_remark']").val(data.auditObjection.department_mca_second_remark);
                         if((data.auditObjection.auditor_status == "1" || data.auditObjection.auditor_status == "0")){
-                            $("#addForm select[name='department_mca_second_status']").prop('disabled', true)
-                            $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', true)
+                            $("#addForm select[name='department_mca_second_status']").prop('disabled', true);
+                            $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', true);
                         }else if(roleName != "MCA"){
-                            $("#addForm select[name='department_mca_second_status']").prop('disabled', true)
-                            $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', true)
+                            $("#addForm select[name='department_mca_second_status']").prop('disabled', true);
+                            $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', true);
                         }
 
 
@@ -780,17 +784,22 @@
                             $("#addForm input[name='pending_sub_unit']").prop('disabled', true);
                         }
 
+
+                        $("#addForm select[name='dymca_final_status']").prop('disabled', false);
+                        $("#addForm textarea[name='dymca_final_remark']").prop('disabled', false);
                         $("#addForm select[name='dymca_final_status']").val(data.auditObjection.dymca_final_status);
                         $("#addForm textarea[name='dymca_final_remark']").val(data.auditObjection.dymca_final_remark);
                         if(data.auditObjection.mca_final_status == "1" || data.auditObjection.mca_final_status == "0"){
-                            $("#addForm select[name='dymca_final_status']").prop('disabled', true)
-                            $("#addForm textarea[name='dymca_final_remark']").prop('disabled', true)
+                            $("#addForm select[name='dymca_final_status']").prop('disabled', true);
+                            $("#addForm textarea[name='dymca_final_remark']").prop('disabled', true);
                         }else if(roleName != "DY MCA"){
-                            $("#addForm select[name='dymca_final_status']").prop('disabled', true)
-                            $("#addForm textarea[name='dymca_final_remark']").prop('disabled', true)
+                            $("#addForm select[name='dymca_final_status']").prop('disabled', true);
+                            $("#addForm textarea[name='dymca_final_remark']").prop('disabled', true);
                         }
 
 
+                        $("#addForm select[name='mca_final_status']").prop('disabled', false);
+                        $("#addForm textarea[name='mca_final_remark']").prop('disabled', false);
                         $("#addForm select[name='mca_final_status']").val(data.auditObjection.mca_final_status);
                         $("#addForm textarea[name='mca_final_remark']").val(data.auditObjection.mca_final_remark);
                         if(data.auditObjection.dymca_final_status != "1"){
