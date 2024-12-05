@@ -43,8 +43,6 @@ class DepartmentAuditController extends Controller
 
         $departments = Department::select('id', 'name')->get();
 
-        $zones = Zone::select('id', 'name')->get();
-
         $fiscalYears = FiscalYear::select('id', 'name')->get();
 
         $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
@@ -56,7 +54,6 @@ class DepartmentAuditController extends Controller
         return view('program-audit.department.compliance-audits')->with([
             'audits' => $audits,
             'departments' => $departments,
-            'zones' => $zones,
             'fiscalYears' => $fiscalYears,
             'auditTypes' => $auditTypes,
             'severities' => $severities,

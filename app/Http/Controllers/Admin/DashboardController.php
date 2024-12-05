@@ -13,6 +13,7 @@ use App\Models\PendingAuditObjection;
 use App\Models\AuditObjection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use App\Models\Signature;
 use PDF;
 
 class DashboardController extends Controller
@@ -273,7 +274,9 @@ class DashboardController extends Controller
     {
         $audit = Audit::with(['from', 'to', 'department'])->find(1);
 
-        $pdf = PDF::loadView('letter.1', compact('audit'));
+        $signature = Signature::where('name', 'MCA')->value('image');
+
+        $pdf = PDF::loadView('letter.1', compact('audit', 'signature'));
 
         return $pdf->stream('document.pdf');
     }

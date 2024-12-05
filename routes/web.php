@@ -61,8 +61,7 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::post('diary-status', [App\Http\Controllers\DiaryController::class, 'diaryStatus'])->name('diary-status');
     Route::resource('diary', App\Http\Controllers\DiaryController::class);
     Route::resource('working-day', App\Http\Controllers\Master\WorkingDayController::class);
-    Route::get('signature', [App\Http\Controllers\SignatureController::class, 'edit'])->name('signature.edit');
-    Route::post('signature', [App\Http\Controllers\SignatureController::class, 'update'])->name('signature.update');
+    Route::resource('signature', App\Http\Controllers\SignatureController::class);
 
     // Clerk Routes
     Route::resource('audit', App\Http\Controllers\Admin\ClerkAuditController::class);

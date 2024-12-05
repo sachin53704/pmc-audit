@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Audit;
 use App\Models\AuditObjection;
 use App\Models\User;
+use App\Models\Signature;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -69,7 +70,13 @@ class ClerkHMMDraftController extends Controller
                     if (isset($request->id)) {
                         $auditId = AuditObjection::where('id', $request->id[0])->value('audit_id');
                         $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
-                        $name = $this->generatePdf($audit);
+
+                        $signature = Signature::where([
+                            'name' => 'MCA',
+                            'status' => 1
+                        ])->value('image');
+
+                        $name = $this->generatePdf($audit, $signature);
                         $time = time();
                         for ($i = 0; $i < count($request->id); $i++) {
                             $auditObjection = AuditObjection::find($request->id[$i]);
@@ -95,11 +102,11 @@ class ClerkHMMDraftController extends Controller
         }
     }
 
-    public function generatePdf($audit)
+    public function generatePdf($audit, $signature)
     {
-        $pdf = PDF::loadView('letter.2', compact('audit'));
+        $pdf = PDF::loadView('letter.2', compact('audit', 'signature'));
 
-        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
+        $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;
@@ -108,7 +115,7 @@ class ClerkHMMDraftController extends Controller
     public function viewObjection(Request $request)
     {
         if ($request->ajax()) {
-            $auditObjection = AuditObjection::with(['department', 'zone', 'from', 'to', 'severity', 'auditType', 'auditParaCategory'])->where('id', $request->id)->first();
+            $auditObjection = AuditObjection::with(['department', 'from', 'to', 'severity', 'auditType', 'auditParaCategory'])->where('id', $request->id)->first();
 
             return response()->json([
                 'auditObjection' => $auditObjection
@@ -155,9 +162,15 @@ class ClerkHMMDraftController extends Controller
 
                 return response()->json(['success' => 'Hmm draft approve successfully']);
             } elseif (Auth::user()->hasRole('MCA')) {
+                // dd('approve');
                 $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->value('audit_id');
                 $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
-                $name = $this->generateFinalPdf($audit);
+                $signature = Signature::where([
+                    'name' => 'MCA',
+                    'status' => 1
+                ])->value('image');
+
+                $name = $this->generateFinalPdf($audit, $signature);
 
 
                 AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)
@@ -166,6 +179,27 @@ class ClerkHMMDraftController extends Controller
                         'hmm_draft_mca_remark' => $request->hmm_draft_dymca_remark,
                         'hmm_draft_letter' => $name
                     ]);
+
+                // send mail code
+                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                    $q->where('audit_id', $request->audit_id);
+                })->pluck('email')->toArray();
+                $mca = User::whereHas('roles', function ($q) {
+                    $q->whereIn('name', ['MCA', 'DY MCA']);
+                })->pluck('email')->toArray();
+
+                $receiver_list = array_merge($userdepartment, $auditor, $mca);
+
+                Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                    $message->from('from@example.com', 'Your Name');
+                    $message->to($receiver_list);
+                    $message->subject('Hello');
+                });
+                // end of send mail code
+
                 return response()->json(['success' => 'Hmm draft approve successfully']);
             } else {
                 return response()->json(['error' => 'Something went wrong']);
@@ -173,11 +207,11 @@ class ClerkHMMDraftController extends Controller
         }
     }
 
-    public function generateFinalPdf($audit)
+    public function generateFinalPdf($audit, $signature)
     {
-        $pdf = PDF::loadView('letter.4', compact('audit'));
+        $pdf = PDF::loadView('letter.4', compact('audit', 'signature'));
 
-        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
+        $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;

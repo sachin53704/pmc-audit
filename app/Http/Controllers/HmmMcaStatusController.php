@@ -22,7 +22,8 @@ class HmmMcaStatusController extends Controller
             $q->where('status', '>=', 5);
         })->when(Auth::user()->hasRole('MCA'), function ($q) {
             $q->where('dymca_status', 1)
-                ->where('is_draft_send', 1);
+                ->where('is_draft_send', 1)
+                ->where('is_objection_send', 0);
         })->when(Auth::user()->hasRole('DY MCA'), function ($q) {
             $q->whereNull('dymca_status')
                 ->where('is_draft_send', 1);
@@ -34,8 +35,6 @@ class HmmMcaStatusController extends Controller
 
         $departments = Department::select('id', 'name')->get();
 
-        $zones = Zone::where('status', 1)->select('id', 'name')->get();
-
         $fiscalYears = FiscalYear::select('id', 'name')->get();
 
         $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
@@ -46,7 +45,6 @@ class HmmMcaStatusController extends Controller
 
         return view('program-audit.mca.hmm.status')->with([
             'audits' => $audits,
-            'zones' => $zones,
             'departments' => $departments,
             'fiscalYears' => $fiscalYears,
             'auditTypes' => $auditTypes,

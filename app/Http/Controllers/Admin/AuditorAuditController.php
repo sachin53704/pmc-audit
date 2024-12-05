@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Signature;
 use PDF;
 
 class AuditorAuditController extends Controller
@@ -94,8 +95,6 @@ class AuditorAuditController extends Controller
 
         $departments = Department::where('is_audit', 1)->select('id', 'name')->get();
 
-        $zones = Zone::where('status', 1)->select('id', 'name')->get();
-
         $fiscalYears = FiscalYear::select('id', 'name')->get();
 
         $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
@@ -106,7 +105,6 @@ class AuditorAuditController extends Controller
 
         return view('program-audit.auditor.create-objection')->with([
             'audits' => $audits,
-            'zones' => $zones,
             'departments' => $departments,
             'fiscalYears' => $fiscalYears,
             'auditTypes' => $auditTypes,
@@ -274,11 +272,11 @@ class AuditorAuditController extends Controller
         }
     }
 
-    public function generatePdf($audit)
+    public function generatePdf($audit, $signature)
     {
-        $pdf = PDF::loadView('letter.3', compact('audit'));
+        $pdf = PDF::loadView('letter.3', compact('audit', 'signature'));
 
-        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
+        $name = 'letter/' . $audit->department?->name . "_letter_" . date('d_m_Y_H_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;
@@ -347,37 +345,36 @@ class AuditorAuditController extends Controller
                             $prevStatus = 12;
                             $currentStatus = 13;
 
+                            $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
+                            // send mail code
+                            $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
 
-                            if ($request->mca_final_status == "0") {
-                                $audit = Audit::find($request->audit_id);
-                                // send mail code
-                                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                            $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                            $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                                $q->where('audit_id', $request->audit_id);
+                            })->pluck('email')->toArray();
+                            $mca = User::whereHas('roles', function ($q) {
+                                $q->whereIn('name', ['MCA', 'DY MCA']);
+                            })->pluck('email')->toArray();
 
-                                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
-                                $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
-                                    $q->where('audit_id', $request->audit_id);
-                                })->pluck('email')->toArray();
-                                $mca = User::whereHas('roles', function ($q) {
-                                    $q->whereIn('name', ['MCA', 'DY MCA']);
-                                })->pluck('email')->toArray();
+                            $receiver_list = array_merge($userdepartment, $auditor, $mca);
 
-                                $receiver_list = array_merge($userdepartment, $auditor, $mca);
+                            Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                                $message->from('from@example.com', 'Your Name');
+                                $message->to($receiver_list);
+                                $message->subject('Hello');
+                            });
+                            // end of send mail code
 
-                                Mail::send('mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
-                                    $message->from('from@example.com', 'Your Name');
-                                    $message->to($receiver_list);
-                                    $message->subject('Hello');
-                                });
-                                // end of send mail code
-                                $this->changeAuditStatus($request, $prevStatus, $currentStatus);
-                                DB::commit();
-                                return response()->json(['success' => 'Objection forward to department successfully']);
-                            }
                             $this->changeAuditStatus($request, $prevStatus, $currentStatus);
 
                             if ($auditObjection->pending_sub_unit > 0) {
-                                $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
-                                $name = $this->generatePdf($audits);
+
+                                $signature = Signature::where([
+                                    'name' => 'MCA',
+                                    'status' => 1
+                                ])->value('image');
+                                $name = $this->generatePdf($audits, $signature);
 
                                 PendingAuditObjection::create([
                                     'audit_objection_id' => $auditObjection->id,
@@ -588,8 +585,6 @@ class AuditorAuditController extends Controller
 
         $departments = Department::select('id', 'name')->get();
 
-        $zones = Zone::where('status', 1)->select('id', 'name')->get();
-
         $fiscalYears = FiscalYear::select('id', 'name')->get();
 
         $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
@@ -601,7 +596,6 @@ class AuditorAuditController extends Controller
         return view('admin.answered-questions')->with([
             'audits' => $audits,
             'departments' => $departments,
-            'zones' => $zones,
             'fiscalYears' => $fiscalYears,
             'auditTypes' => $auditTypes,
             'severities' => $severities,

@@ -89,16 +89,6 @@
                                     <span class="text-danger is-invalid department_id_err"></span>
                                 </div>
                         
-                                <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                    <label for="zone_id">Zone <span class="text-danger">*</span></label>
-                                    <select name="zone_id" id="zone_id" disabled class="form-select">
-                                        <option value="">Select zone</option>
-                                        @foreach($zones as $zone)
-                                        <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="text-danger is-invalid zone_id_err"></span>
-                                </div>
                             
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="from_year">From Year <span class="text-danger">*</span></label>
@@ -161,7 +151,7 @@
 
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="subject">Subject <span class="text-danger">*</span></label>
-                                    <input type="text" name="subject" disabled id="subject" class="form-control">
+                                    <textarea name="subject" disabled id="subject" class="form-control"></textarea>
                                     <span class="text-danger is-invalid subject_err"></span>
                                 </div>
                                 <div class="col-lg-4 col-md-6 col-12 mb-3">
@@ -553,7 +543,6 @@
                         $("#addForm input[name='objection_no']").val(data.auditObjection.objection_no);
                         $("#addForm input[name='entry_date']").val(data.auditObjection.entry_date);
                         $("#addForm select[name='department_id']").val(data.auditObjection.department_id);
-                        $("#addForm select[name='zone_id']").val(data.auditObjection.zone_id);
                         $("#addForm select[name='from_year']").val(data.auditObjection.from_year);
                         $("#addForm select[name='to_year']").val(data.auditObjection.to_year);
                         $("#addForm select[name='audit_type_id']").val(data.auditObjection.audit_type_id);
@@ -569,7 +558,7 @@
 
 
                         $("#addForm input[name='amount']").val(data.auditObjection.amount);
-                        $("#addForm input[name='subject']").val(data.auditObjection.subject);
+                        $("#addForm textarea[name='subject']").val(data.auditObjection.subject);
                         // $("#addForm input[name='work_name']").val(data.auditObjection.work_name);
                         // $("#addForm input[name='contractor_name']").val(data.auditObjection.contractor_name);
 

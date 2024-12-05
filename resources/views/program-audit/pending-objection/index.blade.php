@@ -55,7 +55,7 @@
                                         <td>{{ $pendingAuditObjection->auditObjection->objection_no }}</td>                                        
                                         <td>{{ $pendingAuditObjection->sub_unit }}</td>
                                         <td>
-                                            <a href="{{ asset('storage/'.$pendingAuditObjection->hmm_draft_letter) }}" class="btn btn-primary btn-sm">View Letter</a>
+                                            <a href="{{ asset('storage/'.$pendingAuditObjection->hmm_draft_letter) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
                                         </td>
                                         <td>
                                             <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-id="{{ $pendingAuditObjection->id }}">
@@ -118,16 +118,6 @@
                                     <span class="text-danger is-invalid department_id_err"></span>
                                 </div>
 
-                                <div class="col-lg-4 col-md-4 col-12 mb-3">
-                                    <label for="zone_id">Zone <span class="text-danger">*</span></label>
-                                    <select name="zone_id" id="zone_id" disabled class="form-select">
-                                        <option value="">Select zone</option>
-                                        @foreach($zones as $zone)
-                                        <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="text-danger is-invalid zone_id_err"></span>
-                                </div>
 
                                 <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="from_year">From Year <span class="text-danger">*</span></label>
@@ -691,7 +681,6 @@
                         $("#addForm input[name='objection_no']").val(data.audit?.audit_objection.objection_no);
                         $("#addForm input[name='entry_date']").val(data.audit?.auditObjection?.audit.entry_date);
                         $("#addForm select[name='department_id']").val(data.audit?.audit_objection.department_id);
-                        $("#addForm select[name='zone_id']").val(data.audit?.audit_objection.zone_id);
                         $("#addForm select[name='from_year']").val(data.audit?.audit_objection.from_year);
                         $("#addForm select[name='to_year']").val(data.audit?.audit_objection.to_year);
                         $("#addForm select[name='audit_type_id']").val(data.audit?.audit_objection.audit_type_id);

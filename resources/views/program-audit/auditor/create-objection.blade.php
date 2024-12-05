@@ -81,16 +81,6 @@
                                 <span class="text-danger is-invalid department_id_err"></span>
                             </div>
 
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="zone_id">Zone <span class="text-danger">*</span></label>
-                                <select name="zone_id" id="zone_id" class="form-select">
-                                    <option value="">Select zone</option>
-                                    @foreach($zones as $zone)
-                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid zone_id_err"></span>
-                            </div>
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="from_year">From Year <span class="text-danger">*</span></label>
@@ -240,16 +230,6 @@
                                 <span class="text-danger is-invalid department_id_err"></span>
                             </div>
 
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="zone_id">Zone <span class="text-danger">*</span></label>
-                                <select name="zone_id" id="zone_id" class="form-select">
-                                    <option value="">Select zone</option>
-                                    @foreach($zones as $zone)
-                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                    @endforeach
-                                </select>
-                                <span class="text-danger is-invalid zone_id_err"></span>
-                            </div>
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="from_year">From Year <span class="text-danger">*</span></label>
@@ -350,7 +330,7 @@
 
 @push('scripts')
 
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+    <script src="{{ asset('admin/ckeditor.js') }}"></script>
 
     <script>
         
@@ -360,18 +340,6 @@
             .create(document.querySelector('#description'),{
                 toolbar: {
                     shouldNotGroupWhenFull: true,
-                    items: [
-                        'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'code', '|',
-                    'fontSize', 'fontColor', 'fontBackgroundColor', '|',
-                    'alignment', '|',
-                    'fontSize',               // Font size options
-                    'fontColor',              // Text color options
-                    'fontBackgroundColor',    // Background color for text
-                    '|',
-                    'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'insertTable', '|',
-                    'undo', 'redo'
-                    ],
-                    'format_tags': 'p;h1;h2;h3;h4;h5;h6'
                 }
             })
             .then(editor => {
@@ -451,7 +419,6 @@
                     $("#updateForm input[name='audit_id']").val(data.auditObjection.audit_id);
                     $("#updateForm input[name='objection_no']").val(data.auditObjection.objection_no);
                     $("#updateForm input[name='entry_date']").val(data.auditObjection.entry_date);
-                    $("#updateForm select[name='zone_id']").val(data.auditObjection.zone_id);
                     $("#updateForm select[name='from_year']").val(data.auditObjection.from_year);
                     $("#updateForm select[name='to_year']").val(data.auditObjection.to_year);
                     $("#updateForm select[name='audit_type_id']").val(data.auditObjection.audit_type_id);

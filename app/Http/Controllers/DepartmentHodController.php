@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\Signature;
 use PDF;
 
 class DepartmentHodController extends Controller
@@ -113,7 +114,12 @@ class DepartmentHodController extends Controller
                 DB::beginTransaction();
 
                 $audit = Audit::with(['from', 'to', 'department'])->find($request->audit_id);
-                $name = $this->generateFinalPdf($audit);
+                $signature = Signature::where([
+                    'name' => 'Department HOD',
+                    'status' => 1
+                ])->value('image');
+
+                $name = $this->generateFinalPdf($audit, $signature);
 
                 $auditObjection = AuditObjection::find($request->audit_objection_id);
 
@@ -172,11 +178,11 @@ class DepartmentHodController extends Controller
     }
 
 
-    public function generateFinalPdf($audit)
+    public function generateFinalPdf($audit, $signature)
     {
-        $pdf = PDF::loadView('letter.3', compact('audit'));
+        $pdf = PDF::loadView('letter.3', compact('audit', 'signature'));
 
-        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
+        $name = 'letter/' . $audit->department?->name . "_letter_" . date('d_m_Y_H_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;

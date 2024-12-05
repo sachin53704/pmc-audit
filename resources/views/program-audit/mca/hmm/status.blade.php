@@ -100,16 +100,6 @@
                                     <input type="hidden" name="department_id" id="department_hidden_id">
                                     <input type="text" name="department_name_id" readonly id="department_name_id" class="form-control" />
                                 </div>
-                        
-                                <div class="col-lg-4 col-md-4 col-12 mb-3">
-                                    <label for="zone_id">Zone <span class="text-danger">*</span></label>
-                                    <select name="zone_id" disabled id="zone_id" class="form-select">
-                                        <option value="">Select zone</option>
-                                        @foreach($zones as $zone)
-                                        <option value="{{ $zone->id }}">{{ $zone->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             
                                 <div class="col-lg-4 col-md-4 col-12 mb-3">
                                     <label for="from_year">From Year <span class="text-danger">*</span></label>
@@ -295,8 +285,6 @@
                     $("#addForm input[name='audit_id']").val(data.auditObjection.audit_id);
                     $("#addForm input[name='objection_no']").val(data.auditObjection.objection_no);
                     $("#addForm input[name='entry_date']").val(data.auditObjection.entry_date);
-                    // $("#addForm select[name='department_id']").val(data.auditObjection.department_id);
-                    $("#addForm select[name='zone_id']").val(data.auditObjection.zone_id);
                     $("#addForm select[name='from_year']").val(data.auditObjection.from_year);
                     $("#addForm select[name='to_year']").val(data.auditObjection.to_year);
                     $("#addForm select[name='audit_type_id']").val(data.auditObjection.audit_type_id);
@@ -321,26 +309,27 @@
                     }
                     $("#addForm #documentFile").attr('href', file);
                     $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
-                    // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                     editorInstance.setData(data.auditObjection.description);
+
+                    $('#addForm #dymca_status').prop('disabled', false);
 
                     @if(Auth::user()->hasRole('MCA'))
                         $('#addForm #dymca_status').val(data.auditObjection.mca_status)
                         $('#addForm #dymca_remark').val(data.auditObjection.mca_remark)
-                        if(data.auditObjection.is_objection_send){
+                        if(data.auditObjection.is_objection_send == "1"){
                             $('#addForm #dymca_status').prop('disabled', true);
                             $('#addForm #dymca_remark').prop('disabled', true);
                         }
                     @elseif(Auth::user()->hasRole('DY MCA'))
                         $('#addForm #dymca_status').val(data.auditObjection.dymca_status)
                         $('#addForm #dymca_remark').val(data.auditObjection.dymca_remark)
-                        if(data.auditObjection.mca_status){
+                        if(data.auditObjection.mca_status == "1"){
                             $('#addForm #dymca_status').prop('disabled', true);
                             $('#addForm #dymca_remark').prop('disabled', true);
                         }
                     @else
-                        $('#addForm #is_department_hod_forward').val(data.auditObjection.is_department_hod_forward).change()
-                        $('#addForm #department_hod_remark').val(data.auditObjection.department_hod_remark)
+                        $('#addForm #is_department_hod_forward').val(data.auditObjection.is_department_hod_forward).change();
+                        $('#addForm #department_hod_remark').val(data.auditObjection.department_hod_remark);
                     @endif
 
                     $("#addObjectionModal").modal("show");

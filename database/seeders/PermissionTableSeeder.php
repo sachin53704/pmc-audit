@@ -416,22 +416,22 @@ class PermissionTableSeeder extends Seeder
             ],
             [
                 'id' => 82,
-                'name' => 'signature.edit',
-                'group' => 'Signature'
-            ],
-            [
-                'id' => 83,
                 'name' => 'send-hmm.view',
                 'group' => 'send hmm'
             ],
             [
-                'id' => 84,
+                'id' => 83,
                 'name' => 'pending-objection.view',
                 'group' => 'Pending Objection'
             ],
             [
-                'id' => 85,
+                'id' => 84,
                 'name' => 'sequence.view',
+                'group' => 'Sequence'
+            ],
+            [
+                'id' => 85,
+                'name' => 'sequence.edit',
                 'group' => 'Sequence'
             ],
             [
@@ -441,8 +441,18 @@ class PermissionTableSeeder extends Seeder
             ],
             [
                 'id' => 87,
-                'name' => 'sequence.edit',
-                'group' => 'Sequence'
+                'name' => 'signature.view',
+                'group' => 'Signature'
+            ],
+            [
+                'id' => 88,
+                'name' => 'signature.create',
+                'group' => 'Signature'
+            ],
+            [
+                'id' => 89,
+                'name' => 'signature.edit',
+                'group' => 'Signature'
             ]
         ];
 

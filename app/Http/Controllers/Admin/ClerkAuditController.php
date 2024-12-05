@@ -9,6 +9,7 @@ use App\Models\Audit;
 use App\Models\Department;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Signature;
 use App\Models\FiscalYear;
 use PDF;
 
@@ -47,7 +48,13 @@ class ClerkAuditController extends Controller
             $audit = Audit::create($request->all());
 
             $audits = Audit::with(['from', 'to', 'department'])->find($audit->id);
-            $name = $this->generatePdf($audits);
+            $signature = Signature::where([
+                'name' => 'MCA',
+                'status' => 1
+            ])->value('image');
+
+            $name = $this->generatePdf($audits, $signature);
+
             $audits->file_path = $name;
             $audits->save();
             DB::commit();
@@ -92,7 +99,11 @@ class ClerkAuditController extends Controller
                 Storage::disk('public')->delete($audits->file_path);
             }
 
-            $name = $this->generatePdf($audits);
+            $signature = Signature::where([
+                'name' => 'MCA',
+                'status' => 1
+            ])->value('image');
+            $name = $this->generatePdf($audits, $signature);
             $audits->file_path = $name;
             $audits->save();
 
@@ -115,9 +126,9 @@ class ClerkAuditController extends Controller
     }
 
 
-    public function generatePdf($audit)
+    public function generatePdf($audit, $signature)
     {
-        $pdf = PDF::loadView('letter.1', compact('audit'));
+        $pdf = PDF::loadView('letter.1', compact('audit', 'signature'));
 
         $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 

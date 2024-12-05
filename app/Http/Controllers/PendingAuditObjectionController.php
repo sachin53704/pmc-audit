@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PDF;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Signature;
 
 class PendingAuditObjectionController extends Controller
 {
@@ -47,8 +48,6 @@ class PendingAuditObjectionController extends Controller
 
         $departments = Department::select('id', 'name')->get();
 
-        $zones = Zone::where('status', 1)->select('id', 'name')->get();
-
         $fiscalYears = FiscalYear::select('id', 'name')->get();
 
         $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
@@ -60,7 +59,6 @@ class PendingAuditObjectionController extends Controller
         return view('program-audit.pending-objection.index')->with([
             'pendingAuditObjections' => $pendingAuditObjections,
             'departments' => $departments,
-            'zones' => $zones,
             'fiscalYears' => $fiscalYears,
             'auditTypes' => $auditTypes,
             'severities' => $severities,
@@ -121,7 +119,11 @@ class PendingAuditObjectionController extends Controller
 
                     $auditObjection = AuditObjection::find($pendingAuditObjection->audit_objection_id);
                     $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
-                    $name = $this->generateFinalPdf($audits);
+                    $signature = Signature::where([
+                        'name' => 'Department HOD',
+                        'status' => 1
+                    ])->value('image');
+                    $name = $this->generateFinalPdf($audits, $signature);
 
                     $pendingAuditObjection->department_draft_remark = $request->department_remark;
                     $pendingAuditObjection->department_remark = $request->department_remark;
@@ -212,7 +214,12 @@ class PendingAuditObjectionController extends Controller
                     if ($pendingAuditObjection->pending_sub_unit > 0) {
                         $auditObjection = AuditObjection::find($pendingAuditObjection->audit_objection_id);
                         $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
-                        $name = $this->generatePdf($audits);
+                        $signature = Signature::where([
+                            'name' => 'MCA',
+                            'status' => 1
+                        ])->value('image');
+
+                        $name = $this->generatePdf($audits, $signature);
 
                         PendingAuditObjection::create([
                             'audit_objection_id' => $pendingAuditObjection->audit_objection_id,
@@ -310,21 +317,21 @@ class PendingAuditObjectionController extends Controller
         }
     }
 
-    public function generatePdf($audit)
+    public function generatePdf($audit, $signature)
     {
-        $pdf = PDF::loadView('letter.4', compact('audit'));
+        $pdf = PDF::loadView('letter.4', compact('audit', 'signature'));
 
-        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
+        $name = 'letter/' . $audit->department?->name . "_letter_" . date('d_m_Y_H_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;
     }
 
-    public function generateFinalPdf($audit)
+    public function generateFinalPdf($audit, $signature)
     {
-        $pdf = PDF::loadView('letter.3', compact('audit'));
+        $pdf = PDF::loadView('letter.3', compact('audit', 'signature'));
 
-        $name = 'letter/' . $audit->department?->name . "" . now() . '.pdf';
+        $name = 'letter/' . $audit->department?->name . "_letter_" . date('d_m_Y_H_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;

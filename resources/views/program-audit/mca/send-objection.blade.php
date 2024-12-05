@@ -135,11 +135,6 @@
                             </div>
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="zone">Zone</label>
-                                <input type="text" readonly id="zone" name="zone" class="form-control" style="background: #fff;color:#000">
-                            </div>
-
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="from_year">Financial From Year</label>
                                 <input type="text" readonly id="from_year" name="from_year" class="form-control" style="background: #fff;color:#000">
                             </div>
@@ -167,7 +162,7 @@
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="subject">Subject</label>
-                                <input type="text" name="subject" readonly id="subject" class="form-control" style="background: #fff;color:#000">
+                                <textarea name="subject" readonly id="subject" class="form-control" style="background: #fff;color:#000"></textarea>
                             </div>
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <a href="#" id="documentFile" target="_blank" class="btn btn-primary mt-4">View File</a>
@@ -240,7 +235,6 @@
                 $("#viewForm input[name='objection_no']").val(data.auditObjection.objection_no);
                 $("#viewForm input[name='entry_date']").val(data.auditObjection.entry_date);
                 $("#viewForm input[name='department']").val(data.auditObjection?.department?.name);
-                $("#viewForm input[name='zone']").val(data.auditObjection?.zone?.name);
                 $("#viewForm input[name='from_year']").val(data.auditObjection?.from?.name);
                 $("#viewForm input[name='to_year']").val(data.auditObjection?.to?.name);
                 $("#viewForm input[name='audit_para_type']").val(data.auditObjection?.audit_type?.name);
@@ -252,7 +246,7 @@
                     $('.isAmountDisplayOrNot').addClass('d-none');
                 }
                 $("#viewForm input[name='amount']").val(data.auditObjection.amount);
-                $("#viewForm input[name='subject']").val(data.auditObjection.subject);
+                $("#viewForm textarea[name='subject']").val(data.auditObjection.subject);
                 if(data.auditObjection.document && data.auditObjection.document != ""){
                     var file = "{{ asset('storage') }}/"+data.auditObjection.document;
                 }else{

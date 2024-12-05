@@ -25,7 +25,6 @@ class AddObjectionRequest extends FormRequest
             // 'objection_no' => 'required',
             'entry_date' => 'required',
             'department_id' => 'required',
-            'zone_id' => 'required',
             'from_year' => 'required',
             'to_year' => 'required',
             'audit_type_id' => 'required',

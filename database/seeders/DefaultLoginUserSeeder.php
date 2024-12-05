@@ -37,14 +37,14 @@ class DefaultLoginUserSeeder extends Seeder
         ]);
         $superAdmin->assignRole([$superAdminRole->id]);
 
-        $superAdmin->syncPermissions(['dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete', 'audit-para-category.index', 'audit-para-category.create', 'audit-para-category.edit', 'audit-type.index', 'audit-type.create', 'audit-type.edit', 'severity.index', 'severity.create', 'severity.edit', 'zone.index', 'zone.create', 'zone.edit', 'signature.edit', 'sequence.view', 'sequence.create', 'sequence.edit']);
+        $superAdmin->syncPermissions(['dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete', 'audit-para-category.index', 'audit-para-category.create', 'audit-para-category.edit', 'audit-type.index', 'audit-type.create', 'audit-type.edit', 'severity.index', 'severity.create', 'severity.edit', 'zone.index', 'zone.create', 'zone.edit', 'signature.edit', 'sequence.view', 'sequence.create', 'sequence.edit', 'signature.view', 'signature.create', 'signature.edit']);
 
 
 
 
         // Admin Seeder ##
         $adminRole = Role::updateOrCreate(['name' => 'Admin']);
-        $adminRole->syncPermissions(['dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete', 'audit-para-category.index', 'audit-para-category.create', 'audit-para-category.edit', 'audit-type.index', 'audit-type.create', 'audit-type.edit', 'severity.index', 'severity.create', 'severity.edit', 'zone.index', 'zone.create', 'zone.edit', 'signature.edit', 'sequence.view', 'sequence.create', 'sequence.edit']);
+        $adminRole->syncPermissions(['dashboard.view', 'users.view', 'users.create', 'users.edit', 'users.delete', 'users.toggle_status', 'users.change_password', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'roles.assign', 'fiscal_years.view', 'fiscal_years.create', 'fiscal_years.edit', 'fiscal_years.delete', 'departments.view', 'departments.create', 'departments.edit', 'departments.delete', 'audit-para-category.index', 'audit-para-category.create', 'audit-para-category.edit', 'audit-type.index', 'audit-type.create', 'audit-type.edit', 'severity.index', 'severity.create', 'severity.edit', 'zone.index', 'zone.create', 'zone.edit', 'signature.edit', 'sequence.view', 'sequence.create', 'sequence.edit', 'signature.create', 'signature.edit']);
 
         $admin = User::updateOrCreate([
             'email' => 'admin@gmail.com'
