@@ -18,13 +18,17 @@ return new class extends Migration
             $table->integer('parent_id')->nullable();
             $table->integer('sub_unit')->nullable();
             $table->integer('completed_sub_unit')->nullable();
+            $table->string('submit_compliance')->nullable();
             $table->integer('pending_sub_unit')->nullable();
             $table->longText('pending_description')->nullable();
+            $table->text('ask_pending_auditor_remark')->nullable();
+            $table->integer('ask_pending_auditor_status')->nullable();
             $table->string('hmm_draft_letter')->nullable();
             $table->integer('status')->nullable();
             $table->longText('department_remark')->nullable();
             $table->longText('department_draft_remark')->nullable();
             $table->string('department_file')->nullable();
+            $table->string('department_letter')->nullable();
             $table->integer('department_hod_final_status')->nullable();
             $table->text('department_hod_final_remark')->nullable();
             $table->integer('department_mca_second_status')->nullable();

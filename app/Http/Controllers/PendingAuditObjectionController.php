@@ -119,10 +119,7 @@ class PendingAuditObjectionController extends Controller
 
                     $auditObjection = AuditObjection::find($pendingAuditObjection->audit_objection_id);
                     $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
-                    $signature = Signature::where([
-                        'name' => 'Department HOD',
-                        'status' => 1
-                    ])->value('image');
+                    $signature = Signature::where('department_id', $audits->department_id)->value('image');
                     $name = $this->generateFinalPdf($audits, $signature);
 
                     $pendingAuditObjection->department_draft_remark = $request->department_remark;
@@ -214,10 +211,7 @@ class PendingAuditObjectionController extends Controller
                     if ($pendingAuditObjection->pending_sub_unit > 0) {
                         $auditObjection = AuditObjection::find($pendingAuditObjection->audit_objection_id);
                         $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
-                        $signature = Signature::where([
-                            'name' => 'MCA',
-                            'status' => 1
-                        ])->value('image');
+                        $signature = Signature::whereNull('department_id')->value('image');
 
                         $name = $this->generatePdf($audits, $signature);
 
@@ -345,7 +339,7 @@ class PendingAuditObjectionController extends Controller
             $objectionNo = $data->objection_no;
             $entryDate = date('d-m-Y', strtotime($data->entry_date));
             $department = $data->department->name;
-            $zone = $data->zone->name;
+
             $from = $data->from->name;
             $to = $data->to->name;
         } else {
@@ -354,13 +348,12 @@ class PendingAuditObjectionController extends Controller
             $objectionNo = $data->auditObjection->objection_no;
             $entryDate = date('d-m-Y', strtotime($data->auditObjection->entry_date));
             $department = $data->auditObjection->department->name;
-            $zone = $data->auditObjection->zone->name;
             $from = $data->auditObjection->from->name;
             $to = $data->auditObjection->to->name;
         }
 
         $name = $name . "_auditor_status_" . date('d-m-Y');
-        $pdf = PDF::loadView('pdf.document', compact('data', 'column', 'name', 'objectionNo', 'entryDate', 'department', 'zone', 'from', 'to'));
+        $pdf = PDF::loadView('pdf.document', compact('data', 'column', 'name', 'objectionNo', 'entryDate', 'department', 'from', 'to'));
 
         return $pdf->stream($name . '.pdf');
     }

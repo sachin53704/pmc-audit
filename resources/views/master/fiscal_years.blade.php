@@ -17,19 +17,21 @@
                         <div class="card-body">
                             <div class="mb-3 row">
                                 <div class="col-md-4">
-                                    <label class="col-form-label" for="name">Financial Year Name <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="name" name="name" type="text" placeholder="Enter Financial Year Name">
-                                    <span class="text-danger is-invalid name_err"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="col-form-label" for="from_year">From Year <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="from_year" name="from_year" type="number" step="1" min="1900" max="2099" value="{{ date('Y') }}" >
+                                    <label class="col-form-label" for="from_year">Select From Year <span class="text-danger">*</span></label>
+                                    <input class="form-control fdatepicker" id="from_year" name="from_year" type="text"  autocomplete="off" readonly>
                                     <span class="text-danger is-invalid from_year_err"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="col-form-label" for="to_year">To Year <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="to_year" name="to_year" type="number" step="1" min="1900" max="2099" value="{{ date('Y', strtotime('+1 year')) }}" >
+                                    <label class="col-form-label" for="to_year">Select To Year <span class="text-danger">*</span></label>
+                                    <input class="form-control fdatepicker" id="to_year" name="to_year" type="text"  autocomplete="off" readonly >
                                     <span class="text-danger is-invalid to_year_err"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="statuss" class="col-form-label">Select Status</label>
+                                    <select name="status" id="statuss" class="form-select">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -58,19 +60,21 @@
                             <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
                             <div class="mb-3 row">
                                 <div class="col-md-4">
-                                    <label class="col-form-label" for="name">Financial Year Name <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="name" name="name" type="text" placeholder="Enter Financial Year Name">
-                                    <span class="text-danger is-invalid name_err"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="col-form-label" for="from_year">From Year <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="from_year" name="from_year" type="number" step="1" min="1900" max="2099" value="{{ date('Y') }}" >
+                                    <label class="col-form-label" for="from_year">Select From Year <span class="text-danger">*</span></label>
+                                    <input class="form-control fdatepicker" id="from_year" name="from_year" type="text"  autocomplete="off" readonly>
                                     <span class="text-danger is-invalid from_year_err"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="col-form-label" for="to_year">To Year <span class="text-danger">*</span></label>
-                                    <input class="form-control" id="to_year" name="to_year" type="number" step="1" min="1900" max="2099" value="{{ date('Y', strtotime('+1 year')) }}" >
+                                    <label class="col-form-label" for="to_year">Select To Year <span class="text-danger">*</span></label>
+                                    <input class="form-control fdatepicker" id="to_year" name="to_year" type="text"  autocomplete="off" readonly >
                                     <span class="text-danger is-invalid to_year_err"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="statuss" class="col-form-label">Select Status</label>
+                                    <select name="status" id="statuss" class="form-select">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -104,22 +108,27 @@
                                 <thead>
                                     <tr>
                                         <th>Sr No</th>
-                                        <th>Year</th>
                                         <th>From Year</th>
                                         <th>To Year</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($fiscal_years as $fiscal_year)
+                                    @foreach ($fiscalYears as $fiscalYear)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $fiscal_year->name }}</td>
-                                            <td>{{ $fiscal_year->from_year }}</td>
-                                            <td>{{ $fiscal_year->to_year }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($fiscalYear->from_year)) }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($fiscalYear->to_year)) }}</td>
                                             <td>
-                                                <button class="edit-element btn text-secondary px-2 py-1" title="Edit fiscal_year" data-id="{{ $fiscal_year->id }}"><i data-feather="edit"></i></button>
-                                                <button class="btn text-danger rem-element px-2 py-1" title="Delete fiscal_year" data-id="{{ $fiscal_year->id }}"><i data-feather="trash-2"></i> </button>
+                                                @if($fiscalYear->status)
+                                                    <div class="badge bg-success">Active</div>
+                                                @else
+                                                    <div class="badge bg-danger">Inactive</div>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <button class="edit-element btn text-secondary px-2 py-1" title="Edit financial year" data-id="{{ $fiscalYear->id }}"><i data-feather="edit"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -157,13 +166,13 @@
             success: function(data)
             {
                 $("#addSubmit").prop('disabled', false);
-                if (!data.error2)
+                if (!data.error)
                     swal("Successful!", data.success, "success")
                         .then((action) => {
                             window.location.href = '{{ route('fiscal_years.index') }}';
                         });
                 else
-                    swal("Error!", data.error2, "error");
+                    swal("Error!", data.error, "error");
             },
             statusCode: {
                 422: function(responseObject, textStatus, jqXHR) {
@@ -209,7 +218,7 @@
                 if (!data.error)
                 {
                     $("#editForm input[name='edit_model_id']").val(data.fiscal_year.id);
-                    $("#editForm input[name='name']").val(data.fiscal_year.name);
+                    $("#editForm select[name='status']").val(data.fiscal_year.status);
                     $("#editForm input[name='from_year']").val(data.fiscal_year.from_year);
                     $("#editForm input[name='to_year']").val(data.fiscal_year.to_year);
                 }
@@ -255,13 +264,13 @@
                 success: function(data)
                 {
                     $("#editSubmit").prop('disabled', false);
-                    if (!data.error2)
+                    if (!data.error)
                         swal("Successful!", data.success, "success")
                             .then((action) => {
                                 window.location.href = '{{ route('fiscal_years.index') }}';
                             });
                     else
-                        swal("Error!", data.error2, "error");
+                        swal("Error!", data.error, "error");
                 },
                 statusCode: {
                     422: function(responseObject, textStatus, jqXHR) {

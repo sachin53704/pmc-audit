@@ -9,8 +9,8 @@ use App\Models\AuditType;
 use App\Models\Severity;
 use App\Models\AuditParaCategory;
 use App\Models\FiscalYear;
-use App\Models\Zone;
 use App\Models\WorkingDay;
+use App\Models\Setting;
 
 class MastersSeeder extends Seeder
 {
@@ -24,25 +24,25 @@ class MastersSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Accounts',
-                'initial' => 'acc',
+                'initial' => 'Acc',
                 'is_audit' => '0',
             ],
             [
                 'id' => 2,
                 'name' => 'Information Technology',
-                'initial' => 'it',
+                'initial' => 'IT',
                 'is_audit' => '0',
             ],
             [
                 'id' => 3,
                 'name' => 'Audit',
-                'initial' => 'audit',
+                'initial' => 'Audit',
                 'is_audit' => '1',
             ],
             [
                 'id' => 4,
                 'name' => 'Home Audit',
-                'initial' => 'home_audit',
+                'initial' => 'Home Audit',
                 'is_audit' => '1',
             ],
         ];
@@ -55,6 +55,25 @@ class MastersSeeder extends Seeder
                 'name' => $department['name'],
                 'initial' => $department['initial'],
                 'is_audit' => $department['is_audit']
+            ]);
+        }
+
+        //Seed Department
+        $settings = [
+            [
+                'id' => 1,
+                'name' => 'outward_no',
+                'value' => '1',
+            ],
+        ];
+
+        foreach ($settings as $setting) {
+            Setting::updateOrCreate([
+                'id' => $setting['id']
+            ], [
+                'id' => $setting['id'],
+                'name' => $setting['name'],
+                'value' => $setting['value']
             ]);
         }
 
@@ -108,7 +127,7 @@ class MastersSeeder extends Seeder
         }
 
         // Audit para Category master
-        $severities = [
+        $auditParaCategory = [
             [
                 'id' => 1,
                 'name' => 'Other no',
@@ -153,14 +172,14 @@ class MastersSeeder extends Seeder
             ]
         ];
 
-        foreach ($severities as $severity) {
+        foreach ($auditParaCategory as $auditParaCat) {
             AuditParaCategory::updateOrCreate([
-                'id' => $severity['id']
+                'id' => $auditParaCat['id']
             ], [
-                'id' => $severity['id'],
-                'name' => $severity['name'],
-                'is_amount' => $severity['is_amount'],
-                'status' => $severity['status']
+                'id' => $auditParaCat['id'],
+                'name' => $auditParaCat['name'],
+                'is_amount' => $auditParaCat['is_amount'],
+                'status' => $auditParaCat['status']
             ]);
         }
 
@@ -168,9 +187,17 @@ class MastersSeeder extends Seeder
         $financialYears = [
             [
                 'id' => 1,
-                'name' => date('Y') . '-' . date('y', strtotime('+1 years')),
-                'from_year' => "2024-06-01",
-                'to_year' => "2025-06-01",
+                'name' => "202425",
+                'status' => 1,
+                'from_year' => "2024-04-01",
+                'to_year' => "2025-03-01",
+            ],
+            [
+                'id' => 2,
+                'name' => "202526",
+                'status' => 0,
+                'from_year' => "2025-04-01",
+                'to_year' => "2026-03-01",
             ]
         ];
 
@@ -180,38 +207,9 @@ class MastersSeeder extends Seeder
             ], [
                 'id' => $financialYear['id'],
                 'name' => $financialYear['name'],
+                'status' => $financialYear['status'],
                 'from_year' => $financialYear['from_year'],
                 'to_year' => $financialYear['to_year'],
-            ]);
-        }
-
-
-        // Audit type master
-        $zones = [
-            [
-                'id' => 1,
-                'name' => 'Zone 1',
-                'status' => 1
-            ],
-            [
-                'id' => 2,
-                'name' => 'Zone 2',
-                'status' => 1
-            ],
-            [
-                'id' => 3,
-                'name' => 'Zone 3',
-                'status' => 1
-            ]
-        ];
-
-        foreach ($zones as $zone) {
-            Zone::updateOrCreate([
-                'id' => $zone['id']
-            ], [
-                'id' => $zone['id'],
-                'name' => $zone['name'],
-                'status' => $zone['status']
             ]);
         }
 

@@ -3,13 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\AuditType;
-use App\Models\Zone;
 use App\Models\Severity;
-use App\Models\AuditDepartmentAnswer;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuditObjection extends BaseModel
 {
@@ -21,7 +17,7 @@ class AuditObjection extends BaseModel
     const OBJECTION_STATUS_MCA_APPROVED = 4;
     const OBJECTION_STATUS_MCA_REJECTED = 5;
 
-    protected $fillable = ['user_id', 'audit_id', 'objection_no', 'entry_date', 'department_id', 'from_year', 'to_year', 'audit_type_id', 'severity_id', 'audit_para_category_id', 'amount', 'subject', 'document', 'sub_unit', 'description', 'draft_description', 'is_draft_send', 'is_department_draft_save', 'compliance_submit_date', 'status', 'is_objection_send', 'is_department_hod_forward', 'department_hod_remark', 'is_draft_save', 'dymca_status', 'dymca_remark', 'mca_status', 'mca_remark', 'department_file', 'department_remark', 'department_draft_remark', 'department_hod_final_status', 'department_hod_final_remark', 'department_mca_second_status', 'department_mca_second_remark', 'auditor_status', 'auditor_remark', 'dymca_final_status', 'dymca_final_remark', 'mca_final_status', 'mca_final_remark', 'completed_sub_unit', 'pending_sub_unit', 'submit_compliance'];
+    protected $fillable = ['user_id', 'audit_id', 'objection_no', 'entry_date', 'department_id', 'from_year', 'to_year', 'audit_type_id', 'severity_id', 'audit_para_category_id', 'amount', 'subject', 'document', 'sub_unit', 'description', 'draft_description', 'is_draft_send', 'is_department_draft_save', 'compliance_submit_date', 'status', 'is_objection_send', 'is_department_hod_forward', 'department_hod_remark', 'is_draft_save', 'dymca_status', 'dymca_remark', 'mca_status', 'mca_remark', 'department_file', 'department_remark', 'department_draft_remark', 'department_hod_final_status', 'department_hod_final_remark', 'department_mca_second_status', 'department_mca_second_remark', 'auditor_status', 'auditor_remark', 'dymca_final_status', 'dymca_final_remark', 'mca_final_status', 'mca_final_remark', 'completed_sub_unit', 'pending_sub_unit', 'submit_compliance', 'audit_compliance_from_date', 'audit_compliance_to_date'];
 
 
     public function audit()
@@ -39,10 +35,6 @@ class AuditObjection extends BaseModel
         return $this->belongsTo(AuditParaCategory::class, 'audit_para_category_id', 'id');
     }
 
-    public function zone()
-    {
-        return $this->belongsTo(Zone::class, 'zone_id', 'id');
-    }
 
     public function severity()
     {
@@ -59,22 +51,6 @@ class AuditObjection extends BaseModel
         return $this->belongsTo(Department::class);
     }
 
-    public function answeredBy()
-    {
-        return $this->belongsTo(User::class, 'answered_by', 'id');
-    }
-
-    public function mcaApprover()
-    {
-        return $this->belongsTo(User::class, 'approved_by_mca', 'id');
-    }
-
-    public function auditorApprover()
-    {
-        return $this->belongsTo(User::class, 'approved_by_auditor', 'id');
-    }
-
-
     public function from()
     {
         return $this->belongsTo(FiscalYear::class, 'from_year', 'id');
@@ -83,10 +59,5 @@ class AuditObjection extends BaseModel
     public function to()
     {
         return $this->belongsTo(FiscalYear::class, 'to_year', 'id');
-    }
-
-    public function pendingAuditObjections()
-    {
-        return $this->hasMany(AuditObjection::class, 'audit_objection_id', 'id');
     }
 }

@@ -15,10 +15,12 @@ return new class extends Migration
         Schema::create('audits', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Department::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('from_year')->nullable()->constrained('fiscal_years')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('to_year')->nullable()->constrained('fiscal_years')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('audit_no', 50);
             $table->date('date');
-            $table->text('description');
-            $table->text('remark');
+            $table->date('audit_start_date')->nullable();
+            $table->text('description')->nullable();
             $table->string('file_path')->nullable();
             $table->integer('dymca_status')->nullable()->comment("1 => Pending,  3 => Rejected,  2 => Accepted");
             $table->text('dymca_remark')->nullable();

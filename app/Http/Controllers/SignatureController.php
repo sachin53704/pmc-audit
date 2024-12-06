@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Setting;
+use App\Models\Department;
 use App\Models\Signature;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,19 +11,24 @@ class SignatureController extends Controller
 {
     public function index()
     {
-        $signatures = Signature::all();
+        $departments = Department::where('is_audit', 0)->get();
+
+        $signatures = Signature::with('department')->get();
 
         return view('master.signature')->with([
-            'signatures' => $signatures
+            'signatures' => $signatures,
+            'departments' => $departments
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:signatures,name',
-            'images' => 'required',
-            'status' => 'required'
+            'department_id' => 'nullable|unique:signatures,department_id',
+            'images' => 'required'
+        ], [
+            'department_id.unique' => 'Signature Already present for this department',
+            'images.required' => 'Please select image'
         ]);
 
         if ($request->hasFile('images')) {
@@ -50,9 +55,11 @@ class SignatureController extends Controller
     {
         if ($request->ajax()) {
             $request->validate([
-                'name' => "required|unique:signatures,name,$id,id",
-                'images' => 'nullable',
-                'status' => 'required'
+                'department_id' => "nullable|unique:signatures,department_id,$id,id",
+                'images' => 'nullable'
+            ], [
+                'department_id.unique' => 'Signature Already present for this department',
+                'images.required' => 'Please select image'
             ]);
 
             $signature = Signature::find($id);

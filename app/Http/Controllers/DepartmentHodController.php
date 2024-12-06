@@ -87,7 +87,7 @@ class DepartmentHodController extends Controller
 
     public function viewForwardObjectionToDepartment(Request $request)
     {
-        $objections = AuditObjection::with(['department', 'from', 'to', 'zone', 'auditType', 'severity', 'auditParaCategory'])->whereIn('id', $request->id)->get();
+        $objections = AuditObjection::with(['department', 'from', 'to', 'auditType', 'severity', 'auditParaCategory'])->whereIn('id', $request->id)->get();
 
         $pdf = PDF::loadView('program-audit.department-hod.pdf', compact('objections'));
 

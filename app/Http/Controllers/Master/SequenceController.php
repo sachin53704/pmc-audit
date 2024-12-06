@@ -13,11 +13,11 @@ class SequenceController extends Controller
 {
     public function index()
     {
-        $sequences = Sequence::with(['department', 'financialYear'])->get();
+        $sequences = Sequence::with(['department', 'financialYear'])->where('status', 1)->get();
 
         $departments = Department::select('id', 'name')->where('is_audit', 0)->get();
 
-        $fiscalYears = FiscalYear::select('id', 'name')->get();
+        $fiscalYears = FiscalYear::select('id', 'name', 'from_year', 'to_year')->where('status', 1)->get();
 
         return view('master.sequence')->with([
             'sequences' => $sequences,

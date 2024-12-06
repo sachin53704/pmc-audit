@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\Masters;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateFiscalYearRequest extends FormRequest
+class SettingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,16 @@ class UpdateFiscalYearRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'from_year' => 'required',
-            'to_year' => 'required',
-            'status' => 'required',
+            'name' => 'required',
+            'value' => 'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Please enter name',
+            'value.required' => 'Please enter value'
         ];
     }
 }

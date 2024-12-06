@@ -29,6 +29,11 @@ class Department extends BaseModel
         return $this->hasMany(AuditObjection::class);
     }
 
+    public function signature()
+    {
+        return $this->hasOne(Signature::class, 'department_id', 'id');
+    }
+
 
     // public static function booted()
     // {

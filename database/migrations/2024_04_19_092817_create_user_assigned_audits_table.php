@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Audit::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->date('assign_auditor_date')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
             $table->softDeletes();

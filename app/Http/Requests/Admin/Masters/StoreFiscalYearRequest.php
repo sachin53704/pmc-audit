@@ -22,9 +22,9 @@ class StoreFiscalYearRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:50',
-            'from_year' => 'required|max:50',
-            'to_year' => 'required|max:50'
+            'status' => 'required',
+            'from_year' => 'required',
+            'to_year' => 'required'
         ];
     }
 }

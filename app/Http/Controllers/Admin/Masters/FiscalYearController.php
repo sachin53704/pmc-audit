@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
-
 class FiscalYearController extends Controller
 {
     /**
@@ -18,33 +17,41 @@ class FiscalYearController extends Controller
      */
     public function index()
     {
-        $fiscal_years = FiscalYear::latest()->get();
+        $fiscalYears = FiscalYear::latest()->get();
 
-        return view('master.fiscal_years')->with(['fiscal_years' => $fiscal_years]);
+        return view('master.fiscal_years')->with(['fiscalYears' => $fiscalYears]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreFiscalYearRequest $request)
     {
         try {
+            $fromFinancialYear = FiscalYear::whereDate('from_year', '<=', date('Y-m-d', strtotime($request->from_year)))
+                ->whereDate('to_year', '>=', date('Y-m-d', strtotime($request->from_year)))
+                ->exists();
+
+            $toFinancialYear = FiscalYear::whereDate('from_year', '<=', date('Y-m-d', strtotime($request->to_year)))
+                ->whereDate('to_year', '>=', date('Y-m-d', strtotime($request->to_year)))
+                ->exists();
+
+            if ($fromFinancialYear || $toFinancialYear) {
+                return response()->json([
+                    'error' => 'Financial year already exists'
+                ]);
+            }
+
+            if ($request->status) {
+                FiscalYear::where('status', 1)->update(['status' => 0]);
+            }
+
             DB::beginTransaction();
-            $input = $request->validated();
-            $input['from_year'] = date('Y-m-d', strtotime($request->from_year));
-            $input['to_year'] = date('Y-m-d', strtotime($request->to_year));
-            FiscalYear::create(Arr::only($input, FiscalYear::getFillables()));
+            $request['from_year'] = date('Y-m-d', strtotime($request->from_year));
+            $request['to_year'] = date('Y-m-d', strtotime($request->to_year));
+            $request['name'] = date('Y', strtotime($request->from_year)) . '' . date('y', strtotime($request->to_year));
+
+            FiscalYear::create($request->all());
             DB::commit();
 
-            return response()->json(['success' => 'Financial Year created successfully!']);
+            return response()->json(['success' => 'Financial year created successfully!']);
         } catch (\Exception $e) {
             return $this->respondWithAjax($e, 'creating', 'Financial Year');
         }
@@ -77,19 +84,47 @@ class FiscalYearController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateFiscalYearRequest $request, FiscalYear $fiscal_year)
+    public function update(UpdateFiscalYearRequest $request, $id)
     {
         try {
+            // Format dates once
+            $fromYear = date('Y-m-d', strtotime($request->from_year));
+            $toYear = date('Y-m-d', strtotime($request->to_year));
+
+            // Check for overlapping financial years
+            $isOverlap = FiscalYear::where(function ($query) use ($fromYear, $toYear) {
+                $query->whereDate('from_year', '<=', $toYear)
+                    ->whereDate('to_year', '>=', $fromYear);
+            })
+                ->where('id', '!=', $id)
+                ->exists();
+
+            if ($isOverlap) {
+                return response()->json(['error' => 'Financial year already exists'], 422);
+            }
+
+            // Handle active status toggle
+            if ($request->status) {
+                FiscalYear::where('status', 1)->update(['status' => 0]);
+            }
+
+            // Update financial year
             DB::beginTransaction();
-            $input = $request->validated();
-            $input['from_year'] = date('Y-m-d', strtotime($request->from_year));
-            $input['to_year'] = date('Y-m-d', strtotime($request->to_year));
-            $fiscal_year->update(Arr::only($input, FiscalYear::getFillables()));
+
+            $financialYear = FiscalYear::findOrFail($id);
+            $financialYear->update([
+                'from_year' => $fromYear,
+                'to_year' => $toYear,
+                'name' => date('Y', strtotime($fromYear)) . '' . date('y', strtotime($toYear)),
+                'status' => $request->status ?? $financialYear->status,
+            ]);
+
             DB::commit();
 
-            return response()->json(['success' => 'Financial Year updated successfully!']);
+            return response()->json(['success' => 'Financial Year updated successfully!'], 200);
         } catch (\Exception $e) {
-            return $this->respondWithAjax($e, 'updating', 'Financial Year');
+            DB::rollBack(); // Ensure rollback on error
+            return response()->json(['error' => 'An error occurred while updating the Financial Year', 'details' => $e->getMessage()], 500);
         }
     }
 

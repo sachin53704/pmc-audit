@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('audit_objections', function (Blueprint $table) {
-            $table->longText('draft_description')->nullable()->after('description');
-            $table->boolean('is_draft_send')->default(0)->after('draft_description');
+        Schema::create('settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('value');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('audit_objections', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('settings');
     }
 };

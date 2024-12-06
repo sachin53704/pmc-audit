@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('departments', function (Blueprint $table) {
-            $table->string('initial')->nullable()->after('name');
+        Schema::create('outward_nos', function (Blueprint $table) {
+            $table->id();
+            $table->string('table_id');
+            $table->enum('letter', ['1', '2', '3', '4']);
+            $table->string('outward_no');
+            $table->string('table');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('departments', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('outward_nos');
     }
 };

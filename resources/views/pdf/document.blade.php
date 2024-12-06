@@ -21,7 +21,6 @@
                 <th>Hmm No</th>
                 <th>Entry Date</th>
                 <th>Department</th>
-                <th>Zone</th>
                 <th>From Year</th>
                 <th>To Year</th>
             </tr>
@@ -31,7 +30,6 @@
                 <td>{{ $objectionNo }}</td>
                 <td>{{ $entryDate }}</td>
                 <td>{{ $department }}</td>
-                <td>{{ $zone }}</td>
                 <td>{{ $from }}</td>
                 <td>{{ $to }}</td>
             

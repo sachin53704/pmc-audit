@@ -14,18 +14,40 @@
             padding: 0;
             margin: 0;
         }
+
+        #customTable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #customTable td, #customTable th {
+            border: 1px solid #474646;
+            padding: 8px;
+        }
+
+        #customTable tr:nth-child(even){background-color: #f2f2f2;}
+
+        #customTable tr:hover {background-color: #ddd;}
+
+        #customTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    @foreach($objections as $objection)
-    <table border="1" style="width:100%">
-        <thead>
+    @foreach($objections as $key => $objection)
+    <table id="customTable" style="width:100%">
+        
+        <tbody>
             <tr>
-                <td><b>HMM NO.</b></td>
+                <td style="width: 30%"><b>HMM NO.</b></td>
                 <td>{{ $objection->objection_no }}</td>
             </tr>
-        </thead>
-        <tbody>
             <tr>
                 <td><b>Entry Date</b></td>
                 <td>{{ date('d-m-Y', strtotime($objection->entry_date)) }}</td>
@@ -42,11 +64,6 @@
                 <td><b>To Year</b></td>
                 <td>{{ $objection->to?->name }}</td>
             </tr>
-            
-            <tr>
-                <td><b>Zone</b></td>
-                <td>{{ $objection->zone?->name }}</td>
-            </tr>
 
             <tr>
                 <td><b>Audit Type</b></td>
@@ -60,10 +77,12 @@
                 <td><b>Audit Para Category</b></td>
                 <td>{{ $objection->auditParaCategory?->name }}</td>
             </tr>
+            @if($objection->amount)
             <tr>
                 <td><b>Amount</b></td>
                 <td>{{ $objection->amount ?? '-' }}</td>
             </tr>
+            @endif
             <tr>
                 <td><b>Subject</b></td>
                 <td>{{ $objection->subject }}</td>
@@ -71,7 +90,9 @@
         </tbody>
     </table>
     {!! $objection->description !!}
+    @if(count($objections) != $key + 1)
     <div class="page-break"></div>
+    @endif
     @endforeach
 </body>
 </html>

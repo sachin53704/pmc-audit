@@ -57,6 +57,7 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::resource('severity', App\Http\Controllers\Master\SeverityController::class);
     Route::resource('zone', App\Http\Controllers\Master\ZoneController::class);
     Route::resource('sequence', App\Http\Controllers\Master\SequenceController::class);
+    Route::resource('setting', App\Http\Controllers\Master\SettingController::class);
 
     Route::post('diary-status', [App\Http\Controllers\DiaryController::class, 'diaryStatus'])->name('diary-status');
     Route::resource('diary', App\Http\Controllers\DiaryController::class);

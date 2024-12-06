@@ -274,7 +274,7 @@ class DashboardController extends Controller
     {
         $audit = Audit::with(['from', 'to', 'department'])->find(1);
 
-        $signature = Signature::where('name', 'MCA')->value('image');
+        $signature = Signature::whereNull('department_id')->value('image');
 
         $pdf = PDF::loadView('letter.1', compact('audit', 'signature'));
 

@@ -11,7 +11,7 @@ class FiscalYear extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'from_year', 'to_year', 'created_by', 'updated_by', 'deleted_by'];
+    protected $fillable = ['name', 'status', 'from_year', 'to_year', 'created_by', 'updated_by', 'deleted_by'];
 
 
     public static function booted()

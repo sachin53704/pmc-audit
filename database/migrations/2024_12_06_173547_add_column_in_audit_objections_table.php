@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('audits', function (Blueprint $table) {
-            $table->dropColumn('remark');
+        Schema::table('audit_objections', function (Blueprint $table) {
+            $table->date('audit_compliance_from_date')->nullable()->after('hmm_draft_number');
+            $table->date('audit_compliance_to_date')->nullable()->after('audit_compliance_from_date');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('audits', function (Blueprint $table) {
-            $table->text('remark')->after('description')->nullable();
+        Schema::table('audit_objections', function (Blueprint $table) {
+            //
         });
     }
 };

@@ -68,7 +68,7 @@
         <table>
             <tr>
                 <td>
-                    पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/{{ convertToMarathiNumerals(date('Y')) }}
+                    पत्र जा. क्र. पमपा/अंतर्गत ले.प.वि./@if(isset($outwardNo) && $outwardNo != "") {{ convertToMarathiNumerals(str_pad($outwardNo,4,"0", STR_PAD_LEFT)) }} @else &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @endif/{{ convertToMarathiNumerals(date('Y')) }}
                 </td>
                 <td align="right">
                     दिनांक&nbsp;&nbsp;{{ convertToMarathiNumerals(date('d')) }}/ {{ convertToMarathiNumerals(date('m')) }}/ २०२४&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Signature;
 use App\Models\FiscalYear;
+use App\Models\Setting;
 use PDF;
 
 class ClerkAuditController extends Controller
@@ -48,12 +49,11 @@ class ClerkAuditController extends Controller
             $audit = Audit::create($request->all());
 
             $audits = Audit::with(['from', 'to', 'department'])->find($audit->id);
-            $signature = Signature::where([
-                'name' => 'MCA',
-                'status' => 1
-            ])->value('image');
+            $signature = Signature::whereNull('department_id')->value('image');
+            $outwardNo = Setting::where('name', 'outward_no')->value('value');
 
-            $name = $this->generatePdf($audits, $signature);
+            $name = $this->generatePdf($audits, $signature, $outwardNo);
+            Setting::where('name', 'outward_no')->increment('value', 1);
 
             $audits->file_path = $name;
             $audits->save();
@@ -99,11 +99,11 @@ class ClerkAuditController extends Controller
                 Storage::disk('public')->delete($audits->file_path);
             }
 
-            $signature = Signature::where([
-                'name' => 'MCA',
-                'status' => 1
-            ])->value('image');
-            $name = $this->generatePdf($audits, $signature);
+            $signature = Signature::whereNull('department_id')->value('image');
+            $outwardNo = Setting::where('name', 'outward_no')->value('value');
+
+            $name = $this->generatePdf($audits, $signature, $outwardNo);
+            Setting::where('name', 'outward_no')->increment('value', 1);
             $audits->file_path = $name;
             $audits->save();
 
@@ -126,9 +126,9 @@ class ClerkAuditController extends Controller
     }
 
 
-    public function generatePdf($audit, $signature)
+    public function generatePdf($audit, $signature, $outwardNo)
     {
-        $pdf = PDF::loadView('letter.1', compact('audit', 'signature'));
+        $pdf = PDF::loadView('letter.1', compact('audit', 'signature', 'outwardNo'));
 
         $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 

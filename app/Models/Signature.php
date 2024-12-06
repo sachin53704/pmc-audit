@@ -9,5 +9,10 @@ class Signature extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'image', 'status'];
+    protected $fillable = ['department_id', 'image'];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
 }

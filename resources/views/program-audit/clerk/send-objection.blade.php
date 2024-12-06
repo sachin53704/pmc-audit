@@ -79,6 +79,20 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if(count($audits) > 0)
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6 col-12">
+                                <label for="audit_compliance_from_date">Select Audit Compliance From Date <span class="text-danger">*</span></label>
+                                <input type="text" readonly autocomplete="off" name="audit_compliance_from_date" class="form-control fdatepicker" required>
+                                <div class="text-danger audit_compliance_from_date_err"></div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-12">
+                                <label for="audit_compliance_to_date">Select Audit Compliance To Date <span class="text-danger">*</span></label>
+                                <input type="text" readonly autocomplete="off" name="audit_compliance_to_date" class="form-control fdatepicker" required>
+                                <div class="text-danger audit_compliance_to_date_err"></div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                     @if(count($audits) > 0)
                     <div class="card-footer">

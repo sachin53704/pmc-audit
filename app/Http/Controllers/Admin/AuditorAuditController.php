@@ -254,8 +254,11 @@ class AuditorAuditController extends Controller
                     return response()->json(['success' => 'Objection updated successfully']);
                 }
             } else {
+
+                // code for hmm no
                 $hmmNo = Sequence::with(['department', 'financialYear'])->where('status', 1)->where('department_id', $request->department_id)->first();
-                $sequenceNo = $hmmNo->department->initial . "" . date('dmY') . "" . $hmmNo->serial_no;
+
+                $sequenceNo = $hmmNo->department?->initial . "" . $hmmNo->financialYear?->name . "" . $hmmNo->serial_no;
                 $arrData = array_merge($arrData, ['objection_no' => $sequenceNo]);
                 Sequence::where('id', $hmmNo->id)->increment('serial_no', 1);
 
@@ -370,10 +373,7 @@ class AuditorAuditController extends Controller
 
                             if ($auditObjection->pending_sub_unit > 0) {
 
-                                $signature = Signature::where([
-                                    'name' => 'MCA',
-                                    'status' => 1
-                                ])->value('image');
+                                $signature = Signature::whereNull('department_id')->value('image');
                                 $name = $this->generatePdf($audits, $signature);
 
                                 PendingAuditObjection::create([

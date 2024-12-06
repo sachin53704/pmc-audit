@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->date('from_year');
             $table->date('to_year');
+            $table->boolean('status')->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('updated_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('deleted_by')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();

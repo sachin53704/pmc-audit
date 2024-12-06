@@ -216,7 +216,7 @@
             changeYear: true,
             changeMonth: true,
             showButtonPanel: true,
-            maxDate: 0,
+            maxDate: 0
         });
 
         $('.fdatepicker').datepicker({
@@ -224,6 +224,7 @@
             changeYear: true,
             changeMonth: true,
             showButtonPanel: true,
+            yearRange: "-100Y:+50Y"
         });
     });
 </script>

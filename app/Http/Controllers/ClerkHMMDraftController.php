@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Setting;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\OutwardNo;
 
 class ClerkHMMDraftController extends Controller
 {
@@ -65,22 +67,40 @@ class ClerkHMMDraftController extends Controller
     {
         if ($request->ajax()) {
             if (isset($request->id)) {
+                $request->validate([
+                    'audit_compliance_from_date' => 'required',
+                    'audit_compliance_to_date' => 'required',
+                ], [
+                    'audit_compliance_from_date.required' => 'Please select audit compliance from date',
+                    'audit_compliance_to_date.required' => 'Please select audit compliance to date',
+                ]);
+
                 DB::beginTransaction();
                 try {
                     if (isset($request->id)) {
                         $auditId = AuditObjection::where('id', $request->id[0])->value('audit_id');
                         $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
 
-                        $signature = Signature::where([
-                            'name' => 'MCA',
-                            'status' => 1
-                        ])->value('image');
+                        $signature = Signature::whereNull('department_id')->value('image');
 
-                        $name = $this->generatePdf($audit, $signature);
+                        $outwardNo = Setting::where('name', 'outward_no')->value('value');
+                        $name = $this->generatePdf($audit, $signature, $outwardNo, $request->audit_compliance_from_date, $request->audit_compliance_to_date);
+                        Setting::where('name', 'outward_no')->increment('value', 1);
+
+                        OutwardNo::create([
+                            'table_id' => $request->id[0],
+                            'letter' => '2',
+                            'outward_no' => $outwardNo,
+                            'table' => 'audit_objections'
+                        ]);
+
+
                         $time = time();
                         for ($i = 0; $i < count($request->id); $i++) {
                             $auditObjection = AuditObjection::find($request->id[$i]);
                             $auditObjection->hmm_draft_number = $time;
+                            $auditObjection->audit_compliance_from_date = date('Y-m-d', strtotime($request->audit_compliance_from_date));
+                            $auditObjection->audit_compliance_to_date = date('Y-m-d', strtotime($request->audit_compliance_to_date));
                             $auditObjection->clerk_send_hmm_draft_letter = $name;
                             $auditObjection->is_objection_send = 1;
                             if ($auditObjection->status < 4) {
@@ -102,9 +122,9 @@ class ClerkHMMDraftController extends Controller
         }
     }
 
-    public function generatePdf($audit, $signature)
+    public function generatePdf($audit, $signature, $outwardNo, $from, $to)
     {
-        $pdf = PDF::loadView('letter.2', compact('audit', 'signature'));
+        $pdf = PDF::loadView('letter.2', compact('audit', 'signature', 'outwardNo', 'from', 'to'));
 
         $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 
@@ -165,10 +185,7 @@ class ClerkHMMDraftController extends Controller
                 // dd('approve');
                 $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->value('audit_id');
                 $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
-                $signature = Signature::where([
-                    'name' => 'MCA',
-                    'status' => 1
-                ])->value('image');
+                $signature = Signature::whereNull('department_id')->value('image');
 
                 $name = $this->generateFinalPdf($audit, $signature);
 
