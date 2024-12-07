@@ -158,7 +158,6 @@ class PendingAuditObjectionController extends Controller
                 $pendingAuditObjection->save();
 
                 if ($request->department_hod_final_status == "1") {
-
                     // send mail code
                     if ($pendingAuditObjection?->auditObjection->department_id) {
                         $departmentId = $pendingAuditObjection?->auditObjection->department_id;
@@ -230,7 +229,7 @@ class PendingAuditObjectionController extends Controller
 
                     return response()->json(['success' => 'Objection forwarded to auditor successfully']);
                 } else {
-                    $pendingAuditObjection = PendingAuditObjection::find($request->pending_audit_objection_id);
+                    $pendingAuditObjection = PendingAuditObjection::with(['auditObjection'])->find($request->pending_audit_objection_id);
                     $pendingAuditObjection->mca_final_status = $request->mca_final_status;
                     $pendingAuditObjection->mca_final_remark = $request->mca_final_remark;
                     $pendingAuditObjection->is_objection_completed = 1;
@@ -247,6 +246,35 @@ class PendingAuditObjectionController extends Controller
                         $signature = Signature::whereNull('department_id')->value('image');
 
                         $name = $this->generatePdf($audits, $signature);
+
+                        // send mail code
+                        if ($pendingAuditObjection?->auditObjection->department_id) {
+                            $departmentId = $pendingAuditObjection?->auditObjection->department_id;
+                            $userdepartment = User::where('department_id', $departmentId)->whereNotNull('email')->pluck('email')->toArray();
+
+                            $userdepartment = User::where('department_id', $departmentId)->whereNotNull('email')->pluck('email')->toArray();
+                            $auditor = User::whereHas('userAssignAudit', function ($q) use ($pendingAuditObjection) {
+                                $q->where('audit_id', $pendingAuditObjection?->auditObjection->audit_id);
+                            })->pluck('email')->toArray();
+                            $mca = User::whereHas('roles', function ($q) {
+                                $q->whereIn('name', ['MCA', 'DY MCA']);
+                            })->pluck('email')->toArray();
+
+                            $receiver_list = array_merge($userdepartment, $auditor, $mca);
+
+                            $pdfName = basename($pendingAuditObjection->department_letter);
+                            Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Approve Pending Compliace Objection by department HOD'], function ($message) use ($receiver_list, $pdfName) {
+                                $message->from(config('details.from'), config('details.from'));
+                                $message->to($receiver_list);
+                                $message->subject('Approve Pending Compliace Objection');
+
+                                $message->attach(storage_path('app/public/letter/' . $pdfName), [
+                                    'as' => $pdfName, // Rename the file if needed
+                                    'mime' => 'application/pdf', // Define the MIME type
+                                ]);
+                            });
+                        }
+                        // end of send mail code
 
                         PendingAuditObjection::create([
                             'audit_objection_id' => $pendingAuditObjection->audit_objection_id,

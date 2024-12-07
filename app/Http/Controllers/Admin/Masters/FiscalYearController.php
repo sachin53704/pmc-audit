@@ -96,7 +96,7 @@ class FiscalYearController extends Controller
                 $query->whereDate('from_year', '<=', $toYear)
                     ->whereDate('to_year', '>=', $fromYear);
             })
-                ->where('id', '!=', $id)
+                ->where('id', '!=', $request->edit_model_id)
                 ->exists();
 
             if ($isOverlap) {
