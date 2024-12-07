@@ -9,5 +9,5 @@ class OutwardNo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['foreign_id', 'letter', 'outward_no', 'table'];
+    protected $fillable = ['outward_no', 'department_id', 'subject'];
 }

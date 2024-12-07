@@ -258,7 +258,7 @@ class AuditorAuditController extends Controller
                 // code for hmm no
                 $hmmNo = Sequence::with(['department', 'financialYear'])->where('status', 1)->where('department_id', $request->department_id)->first();
 
-                $sequenceNo = $hmmNo->department?->initial . "" . $hmmNo->financialYear?->name . "" . $hmmNo->serial_no;
+                $sequenceNo = $hmmNo->department?->initial . "" . $hmmNo->financialYear?->name . "" . str_pad($hmmNo->serial_no, 5, "0", STR_PAD_LEFT);
                 $arrData = array_merge($arrData, ['objection_no' => $sequenceNo]);
                 Sequence::where('id', $hmmNo->id)->increment('serial_no', 1);
 

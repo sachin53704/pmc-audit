@@ -46,7 +46,7 @@ class FiscalYearController extends Controller
             DB::beginTransaction();
             $request['from_year'] = date('Y-m-d', strtotime($request->from_year));
             $request['to_year'] = date('Y-m-d', strtotime($request->to_year));
-            $request['name'] = date('Y', strtotime($request->from_year)) . '-' . date('y', strtotime($request->to_year));
+            $request['name'] = date('y', strtotime($request->from_year)) . '-' . date('y', strtotime($request->to_year));
 
             FiscalYear::create($request->all());
             DB::commit();
@@ -115,7 +115,7 @@ class FiscalYearController extends Controller
             $financialYear->update([
                 'from_year' => $fromYear,
                 'to_year' => $toYear,
-                'name' => date('Y', strtotime($fromYear)) . '-' . date('y', strtotime($toYear)),
+                'name' => date('y', strtotime($fromYear)) . '-' . date('y', strtotime($toYear)),
                 'status' => $request->status ?? $financialYear->status,
             ]);
 

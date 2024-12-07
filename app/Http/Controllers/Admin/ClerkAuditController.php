@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Signature;
 use App\Models\FiscalYear;
 use App\Models\Setting;
+use App\Models\OutwardNo;
 use PDF;
 
 class ClerkAuditController extends Controller
@@ -54,6 +55,12 @@ class ClerkAuditController extends Controller
 
             $name = $this->generatePdf($audits, $signature, $outwardNo);
             Setting::where('name', 'outward_no')->increment('value', 1);
+
+            OutwardNo::create([
+                'outward_no' => $outwardNo,
+                'department_id ' => $audit->department_id,
+                'subject' => "आपल्या विभागाचे सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण सुरू करण्याबाबत."
+            ]);
 
             $audits->file_path = $name;
             $audits->save();

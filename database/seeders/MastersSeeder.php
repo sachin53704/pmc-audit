@@ -23,25 +23,25 @@ class MastersSeeder extends Seeder
         $departments = [
             [
                 'id' => 1,
-                'name' => 'Accounts',
+                'name' => 'लेखा',
                 'initial' => 'Acc',
                 'is_audit' => '0',
             ],
             [
                 'id' => 2,
-                'name' => 'Information Technology',
+                'name' => 'माहिती तंत्रज्ञान',
                 'initial' => 'IT',
                 'is_audit' => '0',
             ],
             [
                 'id' => 3,
-                'name' => 'Audit',
+                'name' => 'लेखापरीक्षण',
                 'initial' => 'Audit',
                 'is_audit' => '1',
             ],
             [
                 'id' => 4,
-                'name' => 'Home Audit',
+                'name' => 'गृह लेखापरीक्षण',
                 'initial' => 'Home Audit',
                 'is_audit' => '1',
             ],
@@ -187,17 +187,17 @@ class MastersSeeder extends Seeder
         $financialYears = [
             [
                 'id' => 1,
-                'name' => "2024-25",
+                'name' => "24-25",
                 'status' => 1,
                 'from_year' => "2024-04-01",
-                'to_year' => "2025-03-01",
+                'to_year' => "2025-03-31",
             ],
             [
                 'id' => 2,
-                'name' => "2025-26",
+                'name' => "25-26",
                 'status' => 0,
                 'from_year' => "2025-04-01",
-                'to_year' => "2026-03-01",
+                'to_year' => "2026-03-31",
             ]
         ];
 
@@ -219,37 +219,37 @@ class MastersSeeder extends Seeder
         $workingDays = [
             [
                 'id' => 1,
-                'name' => 'Sunday',
+                'name' => 'रविवार',
                 'status' => 1
             ],
             [
                 'id' => 2,
-                'name' => 'Monday',
+                'name' => 'सोमवार',
                 'status' => 1
             ],
             [
                 'id' => 3,
-                'name' => 'Tuesday',
+                'name' => 'मंगळवार',
                 'status' => 1
             ],
             [
                 'id' => 4,
-                'name' => 'Wednesday',
+                'name' => 'बुधवार',
                 'status' => 1
             ],
             [
                 'id' => 5,
-                'name' => 'Thursday',
+                'name' => 'गुरुवार',
                 'status' => 1
             ],
             [
                 'id' => 6,
-                'name' => 'Friday',
+                'name' => 'शुक्रवार',
                 'status' => 1
             ],
             [
                 'id' => 7,
-                'name' => 'Saturday',
+                'name' => 'शनिवार',
                 'status' => 1
             ]
         ];
