@@ -91,17 +91,17 @@ class FiscalYearController extends Controller
             $fromYear = date('Y-m-d', strtotime($request->from_year));
             $toYear = date('Y-m-d', strtotime($request->to_year));
 
-            // Check for overlapping financial years
-            $isOverlap = FiscalYear::where(function ($query) use ($fromYear, $toYear) {
-                $query->whereDate('from_year', '<=', $toYear)
-                    ->whereDate('to_year', '>=', $fromYear);
-            })
-                ->where('id', '!=', $request->edit_model_id)
-                ->exists();
+            // // Check for overlapping financial years
+            // $isOverlap = FiscalYear::where(function ($query) use ($fromYear, $toYear) {
+            //     $query->whereDate('from_year', '<=', $toYear)
+            //         ->whereDate('to_year', '>=', $fromYear);
+            // })
+            //     ->where('id', '!=', (int)$request->edit_model_id)
+            //     ->exists();
 
-            if ($isOverlap) {
-                return response()->json(['error' => 'Financial year already exists'], 422);
-            }
+            // if ($isOverlap) {
+            //     return response()->json(['error' => 'Financial year already exists'], 422);
+            // }
 
             // Handle active status toggle
             if ($request->status) {
