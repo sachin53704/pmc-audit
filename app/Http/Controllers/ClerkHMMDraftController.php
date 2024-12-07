@@ -87,12 +87,12 @@ class ClerkHMMDraftController extends Controller
                         $name = $this->generatePdf($audit, $signature, $outwardNo, $request->audit_compliance_from_date, $request->audit_compliance_to_date);
                         Setting::where('name', 'outward_no')->increment('value', 1);
 
-                        OutwardNo::create([
-                            'table_id' => $request->id[0],
-                            'letter' => '2',
-                            'outward_no' => $outwardNo,
-                            'table' => 'audit_objections'
-                        ]);
+                        // OutwardNo::create([
+                        //     'table_id' => $request->id[0],
+                        //     'letter' => '2',
+                        //     'outward_no' => $outwardNo,
+                        //     'table' => 'audit_objections'
+                        // ]);
 
 
                         $time = time();

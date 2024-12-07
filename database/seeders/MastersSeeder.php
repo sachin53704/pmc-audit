@@ -187,14 +187,14 @@ class MastersSeeder extends Seeder
         $financialYears = [
             [
                 'id' => 1,
-                'name' => "202425",
+                'name' => "2024-25",
                 'status' => 1,
                 'from_year' => "2024-04-01",
                 'to_year' => "2025-03-01",
             ],
             [
                 'id' => 2,
-                'name' => "202526",
+                'name' => "2025-26",
                 'status' => 0,
                 'from_year' => "2025-04-01",
                 'to_year' => "2026-03-01",
