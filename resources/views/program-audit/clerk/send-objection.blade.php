@@ -295,6 +295,13 @@
     // Submit Objection Form
     $("#addForm").submit(function(e) {
             e.preventDefault();
+            const checkboxes = document.querySelectorAll('input[name="id[]"]:checked');
+
+            if (checkboxes.length === 0) {
+                alert("Please select at least one hmm.");
+                return false; // Prevent form submission
+            }
+
             if (confirm('Are you sure you want to send this objection?')) {
                 var formdata = new FormData(this);
 
