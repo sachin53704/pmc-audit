@@ -22,8 +22,7 @@ class HmmMcaStatusController extends Controller
             $q->where('status', '>=', 5);
         })->when(Auth::user()->hasRole('MCA'), function ($q) {
             $q->where('dymca_status', 1)
-                ->where('is_draft_send', 1)
-                ->where('mca_status', '!=', 1);
+                ->where('is_draft_send', 1);
         })->when(Auth::user()->hasRole('DY MCA'), function ($q) {
             $q->whereNull('dymca_status')
                 ->where('is_draft_send', 1);
