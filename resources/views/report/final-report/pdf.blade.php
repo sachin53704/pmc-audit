@@ -58,9 +58,8 @@
     <section id="content">
         <h6>Department : {{ $department }}</h6>
         
-        @php $count = 1; @endphp
         @foreach($reports as $report)
-        @if($report->pending_description && $report->pending_description != "")
+        @if($report->description && $report->description != "")
         <section>
             <table>
                 <thead>
@@ -73,39 +72,22 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td align="center">{{ $report->auditObjection->audit->department->name }}</td>
-                        <td align="center">{{ date('d-m-Y', strtotime($report->auditObjection->entry_date)) }}</td>
-                        <td align="center">{{ $report->auditObjection->from->name }}</td>
-                        <td align="center">{{ $report->auditObjection->to->name }}</td>
+                        <td align="center">{{ $report->audit->department->name }}</td>
+                        <td align="center">{{ date('d-m-Y', strtotime($report->audit->date)) }}</td>
+                        <td align="center">{{ $report->audit->from->name }}</td>
+                        <td align="center">{{ $report->audit->to->name }}</td>
                     </tr>
                 </tbody>
             </table>
             <br>
             <div>
-                {!! $report->pending_description !!}
+                {!! $report->description !!}
             </div>
-            <br>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Hmm No.</th>
-                        <th>Auditor No.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td align="center">{{ $report->auditObjection->objection_no }}</td>
-                        <td align="center">{{ $report->auditObjection->user->auditor_no }}</td>
-                    </tr>
-                </tbody>
-            </table>
+          
         </section>
-
-        <br><br><br><br><br><br><br><br>
+        <br><br><br><br>
         @endif
         
-
-        @php $count = $count + 1; @endphp
         @endforeach
     </section>
 </body>

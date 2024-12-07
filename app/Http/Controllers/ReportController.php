@@ -49,6 +49,37 @@ class ReportController extends Controller
 
         if (isset($request->pdf) && $request->pdf == "Yes") {
 
+            $reports = ParaAudit::whereHas('audit', function ($q) use ($request) {
+                $q->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
+                    $q->where('department_id', $request->department);
+                })->when(isset($request->from) && $request->from != "", function ($q) use ($request) {
+                    $q->where('audit_start_date', '>=', date('Y-m-d', strtotime($request->from)));
+                })->when(isset($request->to) && $request->to != "", function ($q) use ($request) {
+                    $q->where('audit_start_date', '<=', date('Y-m-d', strtotime($request->to)));
+                });
+            })->with(['audit.department', 'audit.from', 'audit.to'])->where('mca_status', 1)->get();
+
+            $department = "All";
+            if (isset($request->department) && $request->department != "") {
+                $department = Department::where('id', $request->department)->value('name');
+            }
+            $pdf = PDF::loadView('report.final-report.pdf', compact('reports', 'department'));
+
+            return $pdf->stream('final-report.pdf');
+        } else {
+            return view('report.final-report.index')->with([
+                'departments' => $departments,
+            ]);
+        }
+    }
+
+    /* public function finalReport(Request $request)
+    {
+        $departments = Department::select('id', 'name')->where('is_audit', 0)->get();
+
+
+        if (isset($request->pdf) && $request->pdf == "Yes") {
+
             $reports = PendingAuditObjection::whereHas('auditObjection.audit.department', function ($q) use ($request) {
                 $q->when(isset($request->department) && $request->department != "", function ($q) use ($request) {
                     $q->where('department_id', $request->department);
@@ -71,7 +102,7 @@ class ReportController extends Controller
                 'departments' => $departments,
             ]);
         }
-    }
+    } */
 
     public function paraCurrentStatusReport(Request $request)
     {
