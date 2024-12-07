@@ -320,7 +320,7 @@
                                                                 </div>
 
                                                                 <div class="col-3 px-3 pt-2">
-                                                                    <label for="auditor_status">Completed Objection <span class="text-danger">*</span></label>
+                                                                    <label for="auditor_status">Complied Objection <span class="text-danger">*</span></label>
                                                                     <input type="number" class="form-control" name="completed_sub_unit">
                                                                     <span class="text-danger is-invalid completed_sub_unit_err"></span>
                                                                 </div>

@@ -55,23 +55,23 @@ class DepartmentHodController extends Controller
                     }
 
                     // send mail code
-                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                    // $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
 
-                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
-                    $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
-                        $q->where('audit_id', $request->audit_id);
-                    })->pluck('email')->toArray();
-                    $mca = User::whereHas('roles', function ($q) {
-                        $q->whereIn('name', ['MCA', 'DY MCA']);
-                    })->pluck('email')->toArray();
+                    // $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                    // $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                    //     $q->where('audit_id', $request->audit_id);
+                    // })->pluck('email')->toArray();
+                    // $mca = User::whereHas('roles', function ($q) {
+                    //     $q->whereIn('name', ['MCA', 'DY MCA']);
+                    // })->pluck('email')->toArray();
 
-                    $receiver_list = array_merge($userdepartment, $auditor, $mca);
+                    // $receiver_list = array_merge($userdepartment, $auditor, $mca);
 
-                    Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
-                        $message->from('from@example.com', 'Your Name');
-                        $message->to($receiver_list);
-                        $message->subject('Hello');
-                    });
+                    // Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
+                    //     $message->from('from@example.com', 'Your Name');
+                    //     $message->to($receiver_list);
+                    //     $message->subject('Hello');
+                    // });
                     // end of send mail code
 
                     DB::commit();
@@ -89,6 +89,10 @@ class DepartmentHodController extends Controller
     {
         $objections = AuditObjection::with(['department', 'from', 'to', 'auditType', 'severity', 'auditParaCategory'])->whereIn('id', $request->id)->get();
 
+        return view('program-audit.department-hod.pdf')->with([
+            'objections' => $objections,
+            'file' => $request->file
+        ]);
         $pdf = PDF::loadView('program-audit.department-hod.pdf', compact('objections'));
 
         return $pdf->stream('para-current-status.pdf');
@@ -115,14 +119,12 @@ class DepartmentHodController extends Controller
 
                 $audit = Audit::with(['from', 'to', 'department'])->find($request->audit_id);
                 $signature = Signature::where([
-                    'name' => 'Department HOD',
-                    'status' => 1
+                    'department_id' => $audit->department_id
                 ])->value('image');
 
                 $name = $this->generateFinalPdf($audit, $signature);
 
                 $auditObjection = AuditObjection::find($request->audit_objection_id);
-
                 $auditObjection->department_draft_remark = $request->department_remark;
                 $auditObjection->submit_compliance = $request->submit_compliance;
                 if ($request->is_draft_save == 1) {
@@ -169,7 +171,7 @@ class DepartmentHodController extends Controller
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
-
+                \Log::info($e);
                 return response()->json([
                     'error' => 'Something went wrong'
                 ]);

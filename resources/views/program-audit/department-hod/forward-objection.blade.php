@@ -23,7 +23,7 @@
                             @if($count > 0)
                             <div>
                                 <a href="{{ $file }}" target="_blank" class="btn btn-primary btn-sm">Covering letter</a>
-                                <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data]) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
+                                <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data, 'file' => 'hmm_draft_letter']) }}" target="_blank" class="btn btn-primary btn-sm">View File</a>
                             </div>
                             @endif
                         </div>

@@ -349,25 +349,7 @@ class AuditorAuditController extends Controller
                             $currentStatus = 13;
 
                             $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
-                            // send mail code
-                            $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
 
-                            $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
-                            $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
-                                $q->where('audit_id', $request->audit_id);
-                            })->pluck('email')->toArray();
-                            $mca = User::whereHas('roles', function ($q) {
-                                $q->whereIn('name', ['MCA', 'DY MCA']);
-                            })->pluck('email')->toArray();
-
-                            $receiver_list = array_merge($userdepartment, $auditor, $mca);
-
-                            Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
-                                $message->from('from@example.com', 'Your Name');
-                                $message->to($receiver_list);
-                                $message->subject('Hello');
-                            });
-                            // end of send mail code
 
                             $this->changeAuditStatus($request, $prevStatus, $currentStatus);
 
@@ -375,6 +357,33 @@ class AuditorAuditController extends Controller
 
                                 $signature = Signature::whereNull('department_id')->value('image');
                                 $name = $this->generatePdf($audits, $signature);
+
+
+                                // send mail code
+                                $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                                $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                                $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                                    $q->where('audit_id', $request->audit_id);
+                                })->pluck('email')->toArray();
+                                $mca = User::whereHas('roles', function ($q) {
+                                    $q->whereIn('name', ['MCA', 'DY MCA']);
+                                })->pluck('email')->toArray();
+
+                                $receiver_list = array_merge($userdepartment, $auditor, $mca);
+                                $pdfName = basename($name);
+                                Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'MCA Approve the Auditor Compliance Objection'], function ($message) use ($receiver_list, $pdfName) {
+                                    $message->from(config('details.from'), config('details.from'));
+                                    $message->to($receiver_list);
+                                    $message->subject('MCA Approve the Auditor Compliance Objection');
+
+                                    $message->attach(storage_path('app/public/letter/' . $pdfName), [
+                                        'as' => $pdfName, // Rename the file if needed
+                                        'mime' => 'application/pdf', // Define the MIME type
+                                    ]);
+                                });
+                                // end of send mail code
+
 
                                 PendingAuditObjection::create([
                                     'audit_objection_id' => $auditObjection->id,
@@ -470,11 +479,16 @@ class AuditorAuditController extends Controller
                         })->pluck('email')->toArray();
 
                         $receiver_list = array_merge($userdepartment, $auditor, $mca);
-
-                        Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
-                            $message->from('from@example.com', 'Your Name');
+                        $name = $auditObjection->department_letter;
+                        $pdfName = basename($name);
+                        Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Department Hod Approve the department compliance'], function ($message) use ($receiver_list, $pdfName) {
+                            $message->from(config('details.from'), config('details.from'));
                             $message->to($receiver_list);
-                            $message->subject('Hello');
+                            $message->subject('Department Compliance');
+                            $message->attach(storage_path('app/public/letter/' . $pdfName), [
+                                'as' => $pdfName, // Rename the file if needed
+                                'mime' => 'application/pdf', // Define the MIME type
+                            ]);
                         });
                         // end of send mail code
 

@@ -19,6 +19,8 @@ use Illuminate\Support\Str;
 use PDF;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Signature;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class PendingAuditObjectionController extends Controller
 {
@@ -145,7 +147,7 @@ class PendingAuditObjectionController extends Controller
                     return response()->json(['errors' => $validator->errors()], 422);
                 }
 
-                $pendingAuditObjection = PendingAuditObjection::find($request->pending_audit_objection_id);
+                $pendingAuditObjection = PendingAuditObjection::with(['auditObjection'])->find($request->pending_audit_objection_id);
                 $pendingAuditObjection->department_hod_final_status = $request->department_hod_final_status;
                 $pendingAuditObjection->department_hod_final_remark = $request->department_hod_final_remark;
 
@@ -156,6 +158,37 @@ class PendingAuditObjectionController extends Controller
                 $pendingAuditObjection->save();
 
                 if ($request->department_hod_final_status == "1") {
+
+                    // send mail code
+                    if ($pendingAuditObjection?->auditObjection->department_id) {
+                        $departmentId = $pendingAuditObjection?->auditObjection->department_id;
+                        $userdepartment = User::where('department_id', $departmentId)->whereNotNull('email')->pluck('email')->toArray();
+
+                        $userdepartment = User::where('department_id', $departmentId)->whereNotNull('email')->pluck('email')->toArray();
+                        $auditor = User::whereHas('userAssignAudit', function ($q) use ($pendingAuditObjection) {
+                            $q->where('audit_id', $pendingAuditObjection?->auditObjection->audit_id);
+                        })->pluck('email')->toArray();
+                        $mca = User::whereHas('roles', function ($q) {
+                            $q->whereIn('name', ['MCA', 'DY MCA']);
+                        })->pluck('email')->toArray();
+
+                        $receiver_list = array_merge($userdepartment, $auditor, $mca);
+
+                        $pdfName = basename($pendingAuditObjection->department_letter);
+                        Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Approve Pending Compliace Objection by department HOD'], function ($message) use ($receiver_list, $pdfName) {
+                            $message->from(config('details.from'), config('details.from'));
+                            $message->to($receiver_list);
+                            $message->subject('Approve Pending Compliace Objection');
+
+                            $message->attach(storage_path('app/public/letter/' . $pdfName), [
+                                'as' => $pdfName, // Rename the file if needed
+                                'mime' => 'application/pdf', // Define the MIME type
+                            ]);
+                        });
+                    }
+                    // end of send mail code
+
+
                     return response()->json(['success' => 'Compliance approve successfully']);
                 } else {
                     return response()->json(['success' => 'Compliance rejected successfully']);
@@ -334,7 +367,7 @@ class PendingAuditObjectionController extends Controller
     public function viewObjectionPdf($type, $column, $id)
     {
         if ($type == "1") {
-            $data = AuditObjection::with(['department', 'zone', 'from', 'to'])->where('id', $id)->first();
+            $data = AuditObjection::with(['department', 'from', 'to'])->where('id', $id)->first();
             $name = $data?->department->name;
             $objectionNo = $data->objection_no;
             $entryDate = date('d-m-Y', strtotime($data->entry_date));
@@ -343,7 +376,7 @@ class PendingAuditObjectionController extends Controller
             $from = $data->from->name;
             $to = $data->to->name;
         } else {
-            $data = PendingAuditObjection::with(['auditObjection.department', 'auditObjection.zone', 'auditObjection.from', 'auditObjection.to'])->where('id', $id)->first();
+            $data = PendingAuditObjection::with(['auditObjection.department', 'auditObjection.from', 'auditObjection.to'])->where('id', $id)->first();
             $name = $data->auditObjection?->department->name;
             $objectionNo = $data->auditObjection->objection_no;
             $entryDate = date('d-m-Y', strtotime($data->auditObjection->entry_date));
@@ -351,8 +384,20 @@ class PendingAuditObjectionController extends Controller
             $from = $data->auditObjection->from->name;
             $to = $data->auditObjection->to->name;
         }
-
         $name = $name . "_auditor_status_" . date('d-m-Y');
+
+        // return $data;
+        return view('pdf.document')->with([
+            'data' => $data,
+            'column' => $column,
+            'name' => $name,
+            'objectionNo' => $objectionNo,
+            'entryDate' => $entryDate,
+            'department' => $department,
+            'from' => $from,
+            'to' => $to,
+        ]);
+
         $pdf = PDF::loadView('pdf.document', compact('data', 'column', 'name', 'objectionNo', 'entryDate', 'department', 'from', 'to'));
 
         return $pdf->stream($name . '.pdf');

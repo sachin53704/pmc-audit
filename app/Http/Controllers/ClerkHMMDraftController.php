@@ -182,42 +182,55 @@ class ClerkHMMDraftController extends Controller
 
                 return response()->json(['success' => 'Hmm draft approve successfully']);
             } elseif (Auth::user()->hasRole('MCA')) {
-                // dd('approve');
-                $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->value('audit_id');
-                $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
-                $signature = Signature::whereNull('department_id')->value('image');
+                DB::beginTransaction();
 
-                $name = $this->generateFinalPdf($audit, $signature);
+                try {
+                    $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->value('audit_id');
+                    $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
+                    $signature = Signature::whereNull('department_id')->value('image');
+
+                    $name = $this->generateFinalPdf($audit, $signature);
 
 
-                AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)
-                    ->update([
-                        'hmm_draft_mca_status' => $request->hmm_draft_dymca_status,
-                        'hmm_draft_mca_remark' => $request->hmm_draft_dymca_remark,
-                        'hmm_draft_letter' => $name
-                    ]);
+                    AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)
+                        ->update([
+                            'hmm_draft_mca_status' => $request->hmm_draft_dymca_status,
+                            'hmm_draft_mca_remark' => $request->hmm_draft_dymca_remark,
+                            'hmm_draft_letter' => $name
+                        ]);
 
-                // send mail code
-                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                    // send mail code
+                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
 
-                $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
-                $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
-                    $q->where('audit_id', $request->audit_id);
-                })->pluck('email')->toArray();
-                $mca = User::whereHas('roles', function ($q) {
-                    $q->whereIn('name', ['MCA', 'DY MCA']);
-                })->pluck('email')->toArray();
+                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                    $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                        $q->where('audit_id', $request->audit_id);
+                    })->pluck('email')->toArray();
+                    $mca = User::whereHas('roles', function ($q) {
+                        $q->whereIn('name', ['MCA', 'DY MCA']);
+                    })->pluck('email')->toArray();
 
-                $receiver_list = array_merge($userdepartment, $auditor, $mca);
+                    $receiver_list = array_merge($userdepartment, $auditor, $mca);
 
-                Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Body goes here'], function ($message) use ($receiver_list) {
-                    $message->from('from@example.com', 'Your Name');
-                    $message->to($receiver_list);
-                    $message->subject('Hello');
-                });
-                // end of send mail code
+                    $pdfName = basename($name);
+                    Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Sended HMM Draft to Department'], function ($message) use ($receiver_list, $pdfName) {
+                        $message->from(config('details.from'), config('details.from'));
+                        $message->to($receiver_list);
+                        $message->subject('HMM Draft');
 
-                return response()->json(['success' => 'Hmm draft approve successfully']);
+                        $message->attach(storage_path('app/public/letter/' . $pdfName), [
+                            'as' => $pdfName, // Rename the file if needed
+                            'mime' => 'application/pdf', // Define the MIME type
+                        ]);
+                    });
+                    // end of send mail code
+                    DB::commit();
+                    return response()->json(['success' => 'Hmm draft approve successfully']);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    Log::info($e);
+                    return response()->json(['error' => 'Something went wrong please try again']);
+                }
             } else {
                 return response()->json(['error' => 'Something went wrong']);
             }
