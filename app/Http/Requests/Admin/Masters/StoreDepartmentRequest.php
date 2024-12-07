@@ -21,10 +21,18 @@ class StoreDepartmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|max:200|unique:departments,name',
-            'initial' => 'required',
-            'is_audit' => 'required',
-        ];
+        if ($this->edit_model_id) {
+            return [
+                'name' => "required|unique:departments,name,$this->edit_model_id,id,deleted_at,NULL",
+                'initial' => 'required',
+                'is_audit' => 'required',
+            ];
+        } else {
+            return [
+                'name' => 'required|unique:departments,name,NULL,NULL,deleted_at,NULL',
+                'initial' => 'required',
+                'is_audit' => 'required',
+            ];
+        }
     }
 }

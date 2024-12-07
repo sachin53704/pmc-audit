@@ -61,17 +61,17 @@
                             <div class="mb-3 row">
                                 <div class="col-md-4">
                                     <label class="col-form-label" for="from_year">Select From Year <span class="text-danger">*</span></label>
-                                    <input class="form-control fdatepicker" id="from_year" name="from_year" type="text"  autocomplete="off" readonly>
+                                    <input class="form-control fdatepicker" name="from_year" type="text"  autocomplete="off" readonly>
                                     <span class="text-danger is-invalid from_year_err"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="col-form-label" for="to_year">Select To Year <span class="text-danger">*</span></label>
-                                    <input class="form-control fdatepicker" id="to_year" name="to_year" type="text"  autocomplete="off" readonly >
+                                    <input class="form-control fdatepicker" name="to_year" type="text"  autocomplete="off" readonly >
                                     <span class="text-danger is-invalid to_year_err"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="statuss" class="col-form-label">Select Status</label>
-                                    <select name="status" id="statuss" class="form-select">
+                                    <select name="status" class="form-select">
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
