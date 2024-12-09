@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Signature;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Setting;
+use App\Models\OutwardNo;
 
 class PendingAuditObjectionController extends Controller
 {
@@ -244,8 +246,15 @@ class PendingAuditObjectionController extends Controller
                         $auditObjection = AuditObjection::find($pendingAuditObjection->audit_objection_id);
                         $audits = Audit::with(['from', 'to', 'department'])->find($auditObjection->audit_id);
                         $signature = Signature::whereNull('department_id')->value('image');
+                        $outwardNo = Setting::where('name', 'outward_no')->value('value');
 
                         $name = $this->generatePdf($audits, $signature);
+                        Setting::where('name', 'outward_no')->increment('value', 1);
+                        OutwardNo::create([
+                            'outward_no' => $outwardNo,
+                            'department_id' => $audits->department_id,
+                            'subject' => "सन " . $audits->from->name . " ते " . $audits->from->name . " या कालावधीतील अंतर्गत लेखा परीक्षण अहवालातील आक्षेपांची पूर्तता करून अनुपालन अहवाल सादर करण्याबाबत."
+                        ]);
 
                         // send mail code
                         if ($pendingAuditObjection?->auditObjection->department_id) {

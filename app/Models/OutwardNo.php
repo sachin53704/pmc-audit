@@ -10,4 +10,9 @@ class OutwardNo extends Model
     use HasFactory;
 
     protected $fillable = ['outward_no', 'department_id', 'subject'];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
+    }
 }

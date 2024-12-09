@@ -8,6 +8,7 @@ use App\Models\Audit;
 use App\Models\AuditObjection;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
+use App\Models\OutwardNo;
 
 class ReportController extends Controller
 {
@@ -127,6 +128,15 @@ class ReportController extends Controller
 
         return view('admin.report.department-report')->with([
             'objections' => $objections
+        ]);
+    }
+
+    public function outwardNoReport(Request $request)
+    {
+        $outwardNos = OutwardNo::with('department')->get();
+
+        return view('admin.report.outward-no')->with([
+            'outwardNos' => $outwardNos
         ]);
     }
 }

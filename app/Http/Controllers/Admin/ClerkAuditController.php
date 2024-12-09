@@ -50,17 +50,9 @@ class ClerkAuditController extends Controller
             $audit = Audit::create($request->all());
 
             $audits = Audit::with(['from', 'to', 'department'])->find($audit->id);
-            $signature = Signature::whereNull('department_id')->value('image');
-            $outwardNo = Setting::where('name', 'outward_no')->value('value');
 
-            $name = $this->generatePdf($audits, $signature, $outwardNo);
-            Setting::where('name', 'outward_no')->increment('value', 1);
+            $name = $this->generatePdf($audits);
 
-            OutwardNo::create([
-                'outward_no' => $outwardNo,
-                'department_id ' => $audit->department_id,
-                'subject' => "आपल्या विभागाचे सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण सुरू करण्याबाबत."
-            ]);
 
             $audits->file_path = $name;
             $audits->save();
@@ -106,11 +98,8 @@ class ClerkAuditController extends Controller
                 Storage::disk('public')->delete($audits->file_path);
             }
 
-            $signature = Signature::whereNull('department_id')->value('image');
-            $outwardNo = Setting::where('name', 'outward_no')->value('value');
-
-            $name = $this->generatePdf($audits, $signature, $outwardNo);
-            Setting::where('name', 'outward_no')->increment('value', 1);
+            $name = $this->generatePdf($audits);
+            // Setting::where('name', 'outward_no')->increment('value', 1);
             $audits->file_path = $name;
             $audits->save();
 
@@ -133,11 +122,11 @@ class ClerkAuditController extends Controller
     }
 
 
-    public function generatePdf($audit, $signature, $outwardNo)
+    public function generatePdf($audit)
     {
-        $pdf = PDF::loadView('letter.1', compact('audit', 'signature', 'outwardNo'));
+        $pdf = PDF::loadView('letter.1_draft', compact('audit'));
 
-        $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
+        $name = 'letter/draft/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 
         Storage::put($name, $pdf->output());
         return $name;

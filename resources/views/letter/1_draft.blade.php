@@ -1,0 +1,44 @@
+@include('letter.header')
+    <section>
+        <p>
+            प्रति,<br>
+            विभाग प्रमुख,<br>
+            {{ $audit->department->name }} विभाग,<br>
+            पनवेल महानगरपालिका.
+        </p>
+    </section>
+
+    <section>
+        <table>
+            <tr>
+                <td style="width: 20%;text-align: right; vertical-align: top;">विषय -</td>
+                <td style="text-align: justify;">आपल्या विभागाचे सन {{ $audit->from->name }} ते {{ $audit->to->name }} या कालावधीतील अंतर्गत लेखा परीक्षण सुरू करण्याबाबत.</td>
+            </tr>
+            <tr>
+                <td style="width: 20%;text-align: right; vertical-align: top;">संदर्भ -</td>
+                <td style="text-align: justify;">मुंबई प्रांतिक महानगरपालिका अधिनियम 1949 मधील नियम 105 व 106 तसेच महाराष्ट्र नगरपालिका लेखा संहिता १९७१ तसेच राष्ट्रीय नगरपालिका लेखा संहिता २००५ मधील तरतुदी.</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <p style="text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;मुंबई प्रांतिक महानगरपालिका अधिनियम 1949 मधील नियम 105 व 106 तसेच महाराष्ट्र नगरपालिका लेखा संहिता १९७१ तसेच राष्ट्रीय नगरपालिका लेखा संहिता २००५ मधील तरतुदीनुसार मुख्य लेखा परीक्षक यांचेकडे महानगरपालिकेमधील सर्व विभागांचे अंतर्गत लेखा परीक्षण करण्याची जबाबदारी सोपविण्यात आली आहे. त्याअर्थी {{ $audit->department->name }} विभागाचे सन {{ $audit->from->name }} ते {{ $audit->to->name }} या कालावधीतील अंतर्गत लेखापरीक्षण दिनांक {{ convertToMarathiNumerals(date('d-m-Y', strtotime($audit->audit_start_date))) }} पासून सुरु करण्यात येणार आहे. उपरोक्त कालावधीचे अंतर्गत लेखापरीक्षण करण्यासाठी लेखापरीक्षण अधिकारी यांची नियुक्ती करण्यात आली आहे.</p>
+        <p style="text-align: justify;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;सदर लेखा परीक्षणास आवश्यक असलेले सर्व अभिलेखे / दस्तऐवज तात्काळ उपलब्ध करून देण्याची व्यवस्था करावी. व लेखापरीक्षण पथकासाठी आसन व्यवस्था उपलब्ध करून देण्यात यावी</p>
+    </section>
+
+    <section>
+        
+                    <h4 style="text-align: right">
+                        <br>
+                        (निलेश मु. नलावडे) <br> मुख्य लेखापरिक्षक <br> पनवेल महानगरपालिका
+                    </h4>
+    </section>
+
+    <section>
+        <p>प्रत - उपायुक्त, ({{ $audit->department->name }} विभाग) पनवेल महानगरपालिका यांना माहिती व आवश्यक कार्यवाहीसाठी</p>
+    </section>
+</div>
+
+    
+</body>
+</html>

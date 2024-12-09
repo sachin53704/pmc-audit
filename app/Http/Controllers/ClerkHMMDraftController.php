@@ -81,17 +81,17 @@ class ClerkHMMDraftController extends Controller
                         $auditId = AuditObjection::where('id', $request->id[0])->value('audit_id');
                         $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
 
-                        $signature = Signature::whereNull('department_id')->value('image');
+                        // $signature = Signature::whereNull('department_id')->value('image');
 
-                        $outwardNo = Setting::where('name', 'outward_no')->value('value');
-                        $name = $this->generatePdf($audit, $signature, $outwardNo, $request->audit_compliance_from_date, $request->audit_compliance_to_date);
-                        Setting::where('name', 'outward_no')->increment('value', 1);
+                        // $outwardNo = Setting::where('name', 'outward_no')->value('value');
+                        $name = $this->generatePdf($audit, $request->audit_compliance_from_date, $request->audit_compliance_to_date);
+                        // Setting::where('name', 'outward_no')->increment('value', 1);
 
-                        OutwardNo::create([
-                            'outward_no' => $outwardNo,
-                            'department_id ' => $audit->department_id,
-                            'subject' => "सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण अहवालातील आक्षेपांची पूर्तता करून अनुपालन अहवाल सादर करण्याबाबत."
-                        ]);
+                        // OutwardNo::create([
+                        //     'outward_no' => $outwardNo,
+                        //     'department_id ' => $audit->department_id,
+                        //     'subject' => "सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण अहवालातील आक्षेपांची पूर्तता करून अनुपालन अहवाल सादर करण्याबाबत."
+                        // ]);
 
 
                         $time = time();
@@ -121,9 +121,9 @@ class ClerkHMMDraftController extends Controller
         }
     }
 
-    public function generatePdf($audit, $signature, $outwardNo, $from, $to)
+    public function generatePdf($audit, $from, $to)
     {
-        $pdf = PDF::loadView('letter.2', compact('audit', 'signature', 'outwardNo', 'from', 'to'));
+        $pdf = PDF::loadView('letter.2_draft', compact('audit', 'from', 'to'));
 
         $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 
@@ -187,8 +187,15 @@ class ClerkHMMDraftController extends Controller
                     $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->value('audit_id');
                     $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
                     $signature = Signature::whereNull('department_id')->value('image');
+                    $outwardNo = Setting::where('name', 'outward_no')->value('value');
 
-                    $name = $this->generateFinalPdf($audit, $signature);
+                    $name = $this->generateFinalPdf($audit, $signature, $outwardNo);
+                    Setting::where('name', 'outward_no')->increment('value', 1);
+                    OutwardNo::create([
+                        'outward_no' => $outwardNo,
+                        'department_id' => $audit->department_id,
+                        'subject' => "सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण अहवालातील आक्षेपांची पूर्तता करून अनुपालन अहवाल सादर करण्याबाबत."
+                    ]);
 
 
                     AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)
@@ -236,9 +243,9 @@ class ClerkHMMDraftController extends Controller
         }
     }
 
-    public function generateFinalPdf($audit, $signature)
+    public function generateFinalPdf($audit, $signature, $outwardNo)
     {
-        $pdf = PDF::loadView('letter.4', compact('audit', 'signature'));
+        $pdf = PDF::loadView('letter.4', compact('audit', 'signature', 'outwardNo'));
 
         $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 

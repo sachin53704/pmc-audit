@@ -20,6 +20,12 @@ use App\Models\Zone;
 use App\Models\Department;
 use App\Models\AuditDepartmentAnswer;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Signature;
+use App\Models\OutwardNo;
+use App\Models\Setting;
+use PDF;
 
 class MCAAuditController extends Controller
 {
@@ -79,12 +85,35 @@ class MCAAuditController extends Controller
                     'mca_status' => 1
                 ]);
             } elseif (Auth::user()->hasRole('MCA')) {
-                $audit->update([
-                    'mca_status' => 2,
-                    'status' => 5,
-                    'dl_description' => $audit->description,
-                    'dl_file_path' => $audit->file_path,
-                ]);
+                DB::beginTransaction();
+                try {
+                    $audit = Audit::with(['from', 'to', 'department'])->find($audit->id);
+                    $signature = Signature::whereNull('department_id')->value('image');
+                    $outwardNo = Setting::where('name', 'outward_no')->value('value');
+
+                    $this->generatePdf($audit, $signature, $outwardNo);
+                    Setting::where('name', 'outward_no')->increment('value', 1);
+                    OutwardNo::create([
+                        'outward_no' => $outwardNo,
+                        'department_id' => $audit->department_id,
+                        'subject' => "आपल्या विभागाचे सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण सुरू करण्याबाबत.",
+                    ]);
+
+                    $audit->update([
+                        'mca_status' => 2,
+                        'status' => 5,
+                        'dl_description' => $audit->description,
+                        'dl_file_path' => $audit->file_path,
+                    ]);
+                    DB::commit();
+
+
+                    return response()->json(['success' => 'Programme audit approved successfully']);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    Log::info($e);
+                    return response()->json(['success' => 'Programme audit approved successfully']);
+                }
             }
 
             return response()->json(['success' => 'Programme audit approved successfully']);
@@ -465,5 +494,16 @@ class MCAAuditController extends Controller
             }
             return response()->json(['error' => 'Select atleast one objection']);
         }
+    }
+
+
+    public function generatePdf($audit, $signature, $outwardNo)
+    {
+        $pdf = PDF::loadView('letter.1', compact('audit', 'signature', 'outwardNo'));
+
+        $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
+
+        Storage::put($name, $pdf->output());
+        return $name;
     }
 }

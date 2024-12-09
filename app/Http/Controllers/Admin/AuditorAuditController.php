@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Signature;
 use PDF;
+use App\Models\Setting;
+use App\Models\OutwardNo;
 
 class AuditorAuditController extends Controller
 {
@@ -275,9 +277,9 @@ class AuditorAuditController extends Controller
         }
     }
 
-    public function generatePdf($audit, $signature)
+    public function generatePdf($audit, $signature, $outwardNo)
     {
-        $pdf = PDF::loadView('letter.3', compact('audit', 'signature'));
+        $pdf = PDF::loadView('letter.3', compact('audit', 'signature', 'outwardNo'));
 
         $name = 'letter/' . $audit->department?->name . "_letter_" . date('d_m_Y_H_i_s') . '.pdf';
 
@@ -356,7 +358,14 @@ class AuditorAuditController extends Controller
                             if ($auditObjection->pending_sub_unit > 0) {
 
                                 $signature = Signature::whereNull('department_id')->value('image');
-                                $name = $this->generatePdf($audits, $signature);
+                                $outwardNo = Setting::where('name', 'outward_no')->value('value');
+                                $name = $this->generatePdf($audits, $signature, $outwardNo);
+                                Setting::where('name', 'outward_no')->increment('value', 1);
+                                OutwardNo::create([
+                                    'outward_no' => $outwardNo,
+                                    'department_id' => $audits->department_id,
+                                    'subject' => "सन " . $audits->from->name . " ते " . $audits->from->name . " या कालावधीतील अंतर्गत लेखा परीक्षण अहवालातील आक्षेपांची पूर्तता करून अनुपालन अहवाल सादर करण्याबाबत."
+                                ]);
 
 
                                 // send mail code

@@ -342,6 +342,9 @@
                                         <a href="{{ route('report.para-current-status-report') }}" class="nav-link {{ request()->routeIs('report.para-current-status-report') ? 'active' : '' }}" data-key="t-horizontal">@lang('menu.para_current_status_report')</a>
                                     </li>
                                     @endcan
+                                    <li class="nav-item">
+                                        <a href="{{ route('report.outward-no-report') }}" class="nav-link {{ request()->routeIs('report.outward-no-report') ? 'active' : '' }}" data-key="t-horizontal">Outward No</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

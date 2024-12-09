@@ -94,6 +94,7 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('final-report', [App\Http\Controllers\Admin\ReportController::class, 'finalReport'])->name('final-report');
     Route::get('para-audit-report', [App\Http\Controllers\Admin\ReportController::class, 'paraAuditReport'])->name('para-audit-report');
     Route::get('complience-answer-report', [App\Http\Controllers\Admin\ReportController::class, 'complienceAnswerReport'])->name('complience-answer-report');
+    Route::get('outward-no-report', [App\Http\Controllers\Admin\ReportController::class, 'outwardNoReport'])->name('report.outward-no-report');
 
     Route::get('send-hmm', [App\Http\Controllers\Admin\MCAAuditController::class, 'sendObjection'])->name('objection.send-objection');
     Route::get('get-not-send-objection', [App\Http\Controllers\Admin\MCAAuditController::class, 'getNotSendObjection'])->name('objection.get-not-send-objection');

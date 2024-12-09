@@ -95,8 +95,9 @@
 
                         </div>
                         <div class="modal-footer">
-                            <div class="hideFormSubmit">
-                                <button class="btn btn-secondary" type="submit" value="1" id="draftSave">Draft Save</button>
+                            <div class=".">
+             .addClass('d-none');                   <button class="btn btn-secondary" type="submit" value="1" id="draftSave">Draftelse{
+                } Save</button>dClass('d-none');               remove <button class="
                                 <button class="btn btn-primary" id="addParaAuditSubmit" value="1" type="submit">Submit</button>
                             </div>
                         </div>
@@ -155,9 +156,11 @@
                             @endif
                         </div>
                         <div class="modal-footer">
-                            <div class="hideFormSubmit">
-                                @if(Auth::user()->hasRole('Auditor'))
-                                <button class="btn btn-secondary" type="submit" value="1" id="editDraftSave">Draft Save</button>
+                            <div class=".">
+             .addClass('d-none');                   @if(Auth::user()->hasRole('Auditor'))
+                                <else{
+                                                    @if(Auth::user(removehasRole('Auditor
+                                }button class="btn btn-secondary" type="submit" value="1" id="editDraftSave">Draft Save</button>
                                 @endif
                                 <button class="btn btn-primary" id="editParaAuditSubmit" value="1" type="submit">Submit</button>
                             </div>
@@ -349,16 +352,22 @@
                             $('#editForm #dymca_status').val(data.audit.dymca_status)
                             $('#editForm #dymca_remark').val(data.audit.dymca_remark)
                             if(data.audit.mca_status){
-                                $('#editForm #dymca_status').prop('disabled', true)
-                                $('#editForm #dymca_remark').prop('disabled', true)
+                                $('#editForm #dymca_status').prop('disabled', true);
+                                $('#editForm #dymca_remark').prop('disabled', true);
+                                $('.hideFormSubmit').addClass('d-none');
+                            }else{
+                                $('.hideFormSubmit').removeClass('d-none');
                             }
                         @elseif (Auth::user()->hasRole('MCA'))
                             $('#editForm #mca_status').val(data.audit.mca_status);
                             $('#editForm #mca_remark').val(data.audit.mca_remark);
 
                             if(data.audit.mca_status){
-                                $('#editForm #mca_status').prop('disabled', true)
-                                $('#editForm #mca_remark').prop('disabled', true)
+                                $('#editForm #mca_status').prop('disabled', true);
+                                $('#editForm #mca_remark').prop('disabled', true);
+                                $('.hideFormSubmit').addClass('d-none');
+                            }else{
+                                $('.hideFormSubmit').removeClass('d-none');
                             }
                         @endif
 
