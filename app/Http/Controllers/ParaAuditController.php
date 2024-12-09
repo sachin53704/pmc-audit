@@ -77,6 +77,8 @@ class ParaAuditController extends Controller
 
     public function store(Request $request)
     {
+        set_time_limit(0);
+
         if ($request->ajax()) {
             $data = [
                 'draft_description' => $request->description,
@@ -116,7 +118,7 @@ class ParaAuditController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request->all());
+        set_time_limit(0);
         if ($request->ajax()) {
             if (isset($request->statusApprove) && $request->statusApprove) {
                 if (Auth::user()->hasRole('MCA')) {

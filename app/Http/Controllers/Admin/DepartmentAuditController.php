@@ -73,6 +73,7 @@ class DepartmentAuditController extends Controller
 
     public function updateCompliance(Request $request, Audit $audit)
     {
+        set_time_limit(0);
         $fieldArray['objection_id'] = 'required';
         $fieldArray['date'] = 'required';
         $fieldArray['hmm_no'] = 'required';

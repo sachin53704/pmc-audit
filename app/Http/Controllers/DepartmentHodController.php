@@ -32,6 +32,8 @@ class DepartmentHodController extends Controller
 
     public function storeForwardObjectionToDepartment(Request $request)
     {
+        set_time_limit(0);
+
         if ($request->ajax()) {
             if (isset($request->id)) {
                 DB::beginTransaction();
@@ -101,7 +103,8 @@ class DepartmentHodController extends Controller
     // save department compliance
     public function saveDepartmentCompliance(Request $request)
     {
-        // dd($request->all());
+        set_time_limit(0);
+
         if ($request->ajax()) {
             $validatedData = $request->validate([
                 'department_files' => 'required_if:filevalue,1',

@@ -22,6 +22,8 @@ class ClerkHMMDraftController extends Controller
 {
     public function sendObjection(Request $request)
     {
+        set_time_limit(0);
+
         $departments = Department::where('is_audit', 0)->get();
 
         $audits = [];
@@ -44,6 +46,8 @@ class ClerkHMMDraftController extends Controller
 
     public function getNotSendObjection(Request $request)
     {
+        set_time_limit(0);
+
         if ($request->ajax()) {
             $auditObjections = AuditObjection::with(['audit', 'department'])
                 ->where('audit_id', $request->audit_id)
@@ -65,6 +69,8 @@ class ClerkHMMDraftController extends Controller
 
     public function storeSendObjection(Request $request)
     {
+        set_time_limit(0);
+
         if ($request->ajax()) {
             if (isset($request->id)) {
                 $request->validate([
@@ -123,6 +129,8 @@ class ClerkHMMDraftController extends Controller
 
     public function generatePdf($audit, $from, $to)
     {
+        set_time_limit(0);
+
         $pdf = PDF::loadView('letter.2_draft', compact('audit', 'from', 'to'));
 
         $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
@@ -171,6 +179,8 @@ class ClerkHMMDraftController extends Controller
 
     public function updateClerkSendHmmDraft(Request $request)
     {
+        set_time_limit(0);
+
         if ($request->ajax()) {
             if (Auth::user()->hasRole('DY MCA')) {
                 AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)

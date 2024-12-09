@@ -32,6 +32,8 @@ class DiaryController extends Controller
 
     public function store(DiaryRequest $request)
     {
+        set_time_limit(0);
+
         try {
             if ($request->ajax()) {
                 $request['user_id'] = Auth::user()->id;
@@ -57,6 +59,8 @@ class DiaryController extends Controller
 
     public function update(DiaryRequest $request, $id)
     {
+        set_time_limit(0);
+
         try {
             if ($request->ajax()) {
                 $diary = Diary::find($id);

@@ -69,6 +69,7 @@ class AuditorAuditController extends Controller
 
     public function sendLetter(SendDepartmentLetterRequest $request)
     {
+        set_time_limit(0);
         try {
             $audit = Audit::with('department')->where('id', $request->audit_id)->first();
             DB::beginTransaction();
@@ -200,6 +201,7 @@ class AuditorAuditController extends Controller
 
     public function storeObjection(AddObjectionRequest $request)
     {
+        set_time_limit(0);
         try {
             DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
@@ -289,6 +291,7 @@ class AuditorAuditController extends Controller
 
     public function changeObjectionStatus(Request $request)
     {
+        set_time_limit(0);
         if ($request->ajax()) {
             if (Auth::user()->hasRole('MCA') || Auth::user()->hasRole('DY MCA')) {
                 try {
@@ -642,6 +645,7 @@ class AuditorAuditController extends Controller
 
     public function approveAnswer(Request $request, Audit $audit)
     {
+        set_time_limit(0);
         $fieldArray['objection_id'] = 'required';
         $messageArray['objection_id.required'] = 'Objection no not found';
 

@@ -59,8 +59,9 @@ class HmmMcaStatusController extends Controller
 
     public function storeHmmMCAData(Request $request)
     {
+        set_time_limit(0);
+
         if ($request->ajax()) {
-            // dd($request->all());
             if (Auth::user()->hasRole('MCA')) {
                 try {
                     DB::beginTransaction();

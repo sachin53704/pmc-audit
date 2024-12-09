@@ -51,6 +51,7 @@ class MCAAuditController extends Controller
 
     public function auditStatusChange(Audit $audit, Request $request)
     {
+        set_time_limit(0);
         $validator = Validator::make($request->all(), [
             'reject_reason' => 'required_if:action,reject',
         ], [
@@ -348,6 +349,7 @@ class MCAAuditController extends Controller
 
     public function draftApproveAnswer(Request $request, Audit $audit)
     {
+        set_time_limit(0);
         $fieldArray['objection_id'] = 'required';
         $messageArray['objection_id.required'] = 'Objection no not found';
 
@@ -442,6 +444,7 @@ class MCAAuditController extends Controller
 
     public function storeSendObjection(Request $request)
     {
+        set_time_limit(0);
         if ($request->ajax()) {
             if (isset($request->id)) {
                 DB::beginTransaction();

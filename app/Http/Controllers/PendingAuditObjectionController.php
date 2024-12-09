@@ -84,6 +84,8 @@ class PendingAuditObjectionController extends Controller
 
     public function changePendingObjectionStatus(Request $request)
     {
+        set_time_limit(0);
+
         if ($request->ajax()) {
             if (Auth::user()->hasRole(['Department'])) {
 
