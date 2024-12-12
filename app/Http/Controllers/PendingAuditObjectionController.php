@@ -250,7 +250,7 @@ class PendingAuditObjectionController extends Controller
                         $signature = Signature::whereNull('department_id')->value('image');
                         $outwardNo = Setting::where('name', 'outward_no')->value('value');
 
-                        $name = $this->generatePdf($audits, $signature);
+                        $name = $this->generatePdf($audits, $signature, $outwardNo);
                         Setting::where('name', 'outward_no')->increment('value', 1);
                         OutwardNo::create([
                             'outward_no' => $outwardNo,
@@ -383,9 +383,9 @@ class PendingAuditObjectionController extends Controller
         }
     }
 
-    public function generatePdf($audit, $signature)
+    public function generatePdf($audit, $signature, $outwardNo)
     {
-        $pdf = PDF::loadView('letter.4', compact('audit', 'signature'));
+        $pdf = PDF::loadView('letter.4', compact('audit', 'signature', 'outwardNo'));
 
         $name = 'letter/' . $audit->department?->name . "_letter_" . date('d_m_Y_H_i_s') . '.pdf';
 

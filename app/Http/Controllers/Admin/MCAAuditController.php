@@ -92,19 +92,19 @@ class MCAAuditController extends Controller
                     $signature = Signature::whereNull('department_id')->value('image');
                     $outwardNo = Setting::where('name', 'outward_no')->value('value');
 
-                    $this->generatePdf($audit, $signature, $outwardNo);
+                    $name = $this->generatePdf($audit, $signature, $outwardNo);
                     Setting::where('name', 'outward_no')->increment('value', 1);
                     OutwardNo::create([
                         'outward_no' => $outwardNo,
                         'department_id' => $audit->department_id,
                         'subject' => "आपल्या विभागाचे सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण सुरू करण्याबाबत.",
                     ]);
-
                     $audit->update([
                         'mca_status' => 2,
                         'status' => 5,
                         'dl_description' => $audit->description,
-                        'dl_file_path' => $audit->file_path,
+                        'dl_file_path' => $name,
+                        'file_path' => $name,
                     ]);
                     DB::commit();
 

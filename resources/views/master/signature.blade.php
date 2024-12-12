@@ -22,7 +22,7 @@
                                         <option value="MCA">MCA</option>
                                         <option value="Department HOD">Department HOD</option>
                                     </select>
-                                    <span class="text-danger is-invalid name_err"></span>
+                                    <span class="text-danger is-invalid signatureMca department_id_err"></span>
                                 </div>
                                 <div class="col-md-4 d-none departmentDiv">
                                     <label class="col-form-label" for="department_id">Select Department<span class="text-danger">*</span></label>
@@ -70,6 +70,7 @@
                                         <option value="MCA">MCA</option>
                                         <option value="Department HOD">Department HOD</option>
                                     </select>
+                                    <span class="text-danger is-invalid signatureMca department_id_err"></span>
                                 </div>
                                 <div class="col-md-4 d-none departmentDiv">
                                     <label class="col-form-label" for="department_id">Select Department<span class="text-danger">*</span></label>
@@ -153,8 +154,10 @@
         let type = $(this).val();
         if(type == "MCA"){
             $('.departmentDiv').addClass('d-none');
+            $('.signatureMca').removeClass('d-none');
         }else{
             $('.departmentDiv').removeClass('d-none');
+            $('.signatureMca').addClass('d-none');
         }
     });
 

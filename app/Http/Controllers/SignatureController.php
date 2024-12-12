@@ -24,10 +24,10 @@ class SignatureController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'department_id' => 'nullable|unique:signatures,department_id',
+            'department_id' => 'unique:signatures,department_id',
             'images' => 'required'
         ], [
-            'department_id.unique' => 'Signature Already present for this department',
+            'department_id.unique' => 'Signature Already present for this department / MCA',
             'images.required' => 'Please select image'
         ]);
 
@@ -55,10 +55,10 @@ class SignatureController extends Controller
     {
         if ($request->ajax()) {
             $request->validate([
-                'department_id' => "nullable|unique:signatures,department_id,$id,id",
+                'department_id' => "unique:signatures,department_id,$id,id",
                 'images' => 'nullable'
             ], [
-                'department_id.unique' => 'Signature Already present for this department',
+                'department_id.unique' => 'Signature Already present for this department / MCA',
                 'images.required' => 'Please select image'
             ]);
 
