@@ -94,11 +94,20 @@
 
 
                         </div>
-                        <div class="modal-footer">
+                        {{-- <div class="modal-footer">
                             <div class=".">
              .addClass('d-none');                   <button class="btn btn-secondary" type="submit" value="1" id="draftSave">Draftelse{
                 } Save</button>dClass('d-none');               remove <button class="
                                 <button class="btn btn-primary" id="addParaAuditSubmit" value="1" type="submit">Submit</button>
+                            </div>
+                        </div> --}}
+
+                        <div class="modal-footer">
+                            <div class="hideFormSubmit">
+                                @if(Auth::user()->hasRole('Auditor'))
+                                <button class="btn btn-secondary" type="submit" value="1" id="editDraftSave">Draft Save</button>
+                                @endif
+                                <button class="btn btn-primary" id="editParaAuditSubmit" value="1" type="submit">Submit</button>
                             </div>
                         </div>
                     </div>
