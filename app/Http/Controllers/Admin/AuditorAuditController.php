@@ -211,10 +211,7 @@ class AuditorAuditController extends Controller
                 'obj_subject' => $request->subject,
             ]);
 
-            $document = null;
-            if ($request->hasFile('documents')) {
-                $document = $request->documents->store('auditor-program-audit');
-            }
+
 
             $arrData = [
                 'user_id' => Auth::user()->id,
@@ -232,7 +229,6 @@ class AuditorAuditController extends Controller
                 'subject' => $request->subject,
                 'work_name' => $request->work_name,
                 'contractor_name' => $request->contractor_name,
-                'document' => $document,
                 'sub_unit' => $request->sub_unit,
                 'draft_description' => $request->description,
                 'dymca_status' => null,
@@ -248,6 +244,13 @@ class AuditorAuditController extends Controller
             }
 
             if (isset($request->audit_objection_id) && $request->audit_objection_id != "" && $request->audit_objection_id) {
+
+
+                if ($request->hasFile('documents')) {
+                    $document = $request->documents->store('auditor-program-audit');
+                    $arrData = array_merge($arrData, ['document' => $document]);
+                }
+
                 AuditObjection::updateOrCreate([
                     'id' => $request->audit_objection_id
                 ], $arrData);
@@ -265,6 +268,11 @@ class AuditorAuditController extends Controller
                 $sequenceNo = $hmmNo->department?->initial . "" . $hmmNo->financialYear?->name . "" . str_pad($hmmNo->serial_no, 5, "0", STR_PAD_LEFT);
                 $arrData = array_merge($arrData, ['objection_no' => $sequenceNo]);
                 Sequence::where('id', $hmmNo->id)->increment('serial_no', 1);
+
+                if ($request->hasFile('documents')) {
+                    $document = $request->documents->store('auditor-program-audit');
+                    $arrData = array_merge($arrData, ['document' => $document]);
+                }
 
                 AuditObjection::create($arrData);
                 DB::commit();

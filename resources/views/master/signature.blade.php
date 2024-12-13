@@ -36,6 +36,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="col-form-label" for="images">Select signature <span class="text-danger">*</span></label>
+                                    <div class="signature-message text-danger">
+                                        Signature size should be 120px X 60px.
+                                    </div>
                                     <input class="form-control" id="images" name="images" accept="image/*" type="file" required placeholder="Enter Department image">
                                     <span class="text-danger is-invalid images_err"></span>
                                 </div>
@@ -84,6 +87,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="col-form-label" for="images">Select signature <span class="text-danger">*</span></label>
+                                    <div class="signature-message text-danger">
+                                        Signature size should be 120px X 60px.
+                                    </div>
                                     <input class="form-control" id="images" name="images" accept="image/*" type="file" required placeholder="Enter Department image">
                                     <span class="text-danger is-invalid images_err"></span>
                                 </div>

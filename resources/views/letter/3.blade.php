@@ -33,7 +33,7 @@
     <section>
         
         <h4 style="text-align: right">
-            <img src="{{ public_path('storage/'.$signature) }}" width="120px" alt="">
+            <img src="{{ public_path('storage/'.$signature) }}" style="width: 140px;height: 50px;" alt="">
             <br>
             उपायुक्त <br> {{ $audit->department->name }} विभाग<br> पनवेल महानगर पालिका
         </h4>
