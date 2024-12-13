@@ -138,10 +138,6 @@
                                 <input type="text" readonly id="department" name="department" class="form-control" style="background: #fff;color:#000">
                             </div>
 
-                            <div class="col-lg-4 col-md-6 col-12 mb-3">
-                                <label for="zone">Zone</label>
-                                <input type="text" readonly id="zone" name="zone" class="form-control" style="background: #fff;color:#000">
-                            </div>
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="from_year">Financial From Year</label>
@@ -247,7 +243,6 @@
                 $("#viewForm input[name='objection_no']").val(data.auditObjection.objection_no);
                 $("#viewForm input[name='entry_date']").val(data.auditObjection.entry_date);
                 $("#viewForm input[name='department']").val(data.auditObjection?.department?.name);
-                $("#viewForm input[name='zone']").val(data.auditObjection?.zone?.name);
                 $("#viewForm input[name='from_year']").val(data.auditObjection?.from?.name);
                 $("#viewForm input[name='to_year']").val(data.auditObjection?.to?.name);
                 $("#viewForm input[name='audit_para_type']").val(data.auditObjection?.audit_type?.name);
