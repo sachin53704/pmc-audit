@@ -9,16 +9,17 @@
                     
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="buttons-datatables" class="table table-bordered nowrap align-middle" style="width:100%">
+                            <table id="buttons-datatables" class="table table-bordered align-middle" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Sr No</th>
                                         <th>Department</th>
                                         <th>Date</th>
                                         <th>File Description</th>
-                                        <th>Remark</th>
                                         <th>DYMCA Status</th>
+                                        <th>DYMCA Remark</th>
                                         <th>MCA Status</th>
+                                        <th>MCA Remark</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -29,7 +30,7 @@
                                             <td>{{ $audit->department?->name }}</td>
                                             <td>{{ Carbon\Carbon::parse($audit->date)->format('d-m-Y') }}</td>
                                             <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
-                                            <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->remark, '30') }}</span></td>
+                                            
                                             <td>
                                                 
                                                 @if($audit->paraAudit && $audit->paraAudit?->dymca_status == "0")
@@ -40,6 +41,7 @@
                                                 <span class="badge bg-warning">Pending</span>
                                                 @endif
                                             </td>
+                                            <td><span style="cursor: pointer" title="{{ $audit->paraAudit?->dymca_remark }}">{{ Str::limit($audit->paraAudit?->dymca_remark, '50') }}</span></td>
                                             <td>
                                                 @if($audit->paraAudit && $audit->paraAudit?->mca_status == "0")
                                                 <span class="badge bg-danger">Rejected</span>
@@ -49,6 +51,7 @@
                                                 <span class="badge bg-warning">Pending</span>
                                                 @endif
                                             </td>
+                                            <td><span style="cursor: pointer" title="{{ $audit->paraAudit?->mca_remark }}">{{ Str::limit($audit->paraAudit?->mca_remark, '50') }}</span></td>
                                             <td>
                                                 @if(($audit->paraAudit && ($audit->paraAudit?->mca_status == 1)) && Auth::user()->hasRole('Auditor'))
                                                 @elseif(($audit->paraAudit && ($audit->paraAudit?->dymca_status == 1)) && Auth::user()->hasRole('Auditor'))

@@ -21,7 +21,7 @@ class ParaAuditController extends Controller
             ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
                 $q->whereHas('paraAudit', function ($q) {
                     $q->where('is_draft_send', 1)
-                        ->orWhere(function ($q) {
+                        ->where(function ($q) {
                             $q->where('dymca_status', 0)
                                 ->orWhereNull('dymca_status');
                         });
