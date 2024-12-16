@@ -89,15 +89,17 @@ class PendingAuditObjectionController extends Controller
         if ($request->ajax()) {
             if (Auth::user()->hasRole(['Department'])) {
 
-                $validator = Validator::make($request->all(), [
-                    'department_files' => 'required_if:departmentCompliaceFile,1',
-                    'department_remark' => 'required',
-                    'submit_compliance' => 'required',
-                ], [
-                    'department_files.required_if' => 'Please select compliance file',
-                    'department_remark.required' => 'Please enter compliance description',
-                    'submit_compliance.required' => 'Please enter submitted compliance',
-                ]);
+                if (!$request->is_draft_save) {
+                    $validator = Validator::make($request->all(), [
+                        'department_files' => 'required_if:departmentCompliaceFile,1',
+                        'department_remark' => 'required',
+                        'submit_compliance' => 'required',
+                    ], [
+                        'department_files.required_if' => 'Please select compliance file',
+                        'department_remark.required' => 'Please enter compliance description',
+                        'submit_compliance.required' => 'Please enter submitted compliance',
+                    ]);
+                }
 
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 422);
@@ -327,20 +329,21 @@ class PendingAuditObjectionController extends Controller
                 return response()->json(['success' => 'Objection approve successfully']);
             } elseif (Auth::user()->hasRole(['Auditor'])) {
 
-
-                $validator = Validator::make($request->all(), [
-                    'auditor_description' => 'required',
-                    'completed_sub_unit' => 'required',
-                    'pending_sub_unit' => 'required',
-                    'auditor_remark' => 'required',
-                    'auditor_status' => 'required',
-                ], [
-                    'auditor_description.required' => 'Please enter description',
-                    'completed_sub_unit.required' => 'Please enter completed objection',
-                    'pending_sub_unit.required' => 'Please enter pending objection',
-                    'auditor_remark.required' => 'Please enter remark',
-                    'auditor_status.required' => 'Please select status',
-                ]);
+                if (!$request->is_draft_save) {
+                    $validator = Validator::make($request->all(), [
+                        'auditor_description' => 'required',
+                        'completed_sub_unit' => 'required',
+                        'pending_sub_unit' => 'required',
+                        'auditor_remark' => 'required',
+                        'auditor_status' => 'required',
+                    ], [
+                        'auditor_description.required' => 'Please enter description',
+                        'completed_sub_unit.required' => 'Please enter completed objection',
+                        'pending_sub_unit.required' => 'Please enter pending objection',
+                        'auditor_remark.required' => 'Please enter remark',
+                        'auditor_status.required' => 'Please select status',
+                    ]);
+                }
 
                 if ($validator->fails()) {
                     return response()->json(['errors' => $validator->errors()], 422);

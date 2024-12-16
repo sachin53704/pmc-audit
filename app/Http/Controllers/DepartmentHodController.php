@@ -106,26 +106,23 @@ class DepartmentHodController extends Controller
         set_time_limit(0);
 
         if ($request->ajax()) {
-            $validatedData = $request->validate([
-                'department_files' => 'required_if:filevalue,1',
-                'department_remark' => 'required',
-                'submit_compliance' => 'required',
-            ], [
-                'department_files.required_if' => 'Please select compliance file.',
-                'department_remark.required' => 'Please enter compliance remark.',
-                'submit_compliance.required' => 'Please select submitted compliance.',
-            ]);
+            if ($request->is_draft_save == 0) {
+                $validatedData = $request->validate([
+                    'department_files' => 'required_if:filevalue,1',
+                    'department_remark' => 'required',
+                    'submit_compliance' => 'required',
+                ], [
+                    'department_files.required_if' => 'Please select compliance file.',
+                    'department_remark.required' => 'Please enter compliance remark.',
+                    'submit_compliance.required' => 'Please select submitted compliance.',
+                ]);
+            }
 
 
             try {
                 DB::beginTransaction();
 
-                $audit = Audit::with(['from', 'to', 'department'])->find($request->audit_id);
-                $signature = Signature::where([
-                    'department_id' => $audit->department_id
-                ])->value('image');
 
-                $name = $this->generateFinalPdf($audit, $signature);
 
                 $auditObjection = AuditObjection::find($request->audit_objection_id);
                 $auditObjection->department_draft_remark = $request->department_remark;
@@ -133,6 +130,13 @@ class DepartmentHodController extends Controller
                 if ($request->is_draft_save == 1) {
                     $auditObjection->is_department_draft_save = 1;
                 } else {
+                    $audit = Audit::with(['from', 'to', 'department'])->find($request->audit_id);
+                    $signature = Signature::where([
+                        'department_id' => $audit->department_id
+                    ])->value('image');
+
+                    $name = $this->generateFinalPdf($audit, $signature);
+
                     $auditObjection->is_department_draft_save = 0;
                     $auditObjection->department_letter = $name;
                     $auditObjection->compliance_submit_date = now();
