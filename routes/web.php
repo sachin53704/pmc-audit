@@ -200,6 +200,8 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
 Route::get('check/pdf', [App\Http\Controllers\Admin\DashboardController::class, 'pdf']);
 
+Route::get('send-email-testing', [App\Http\Controllers\CheckSendEmailController::class, 'test']);
+
 
 Route::get('/php', function (Request $request) {
     if (!auth()->check())
