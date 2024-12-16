@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'from' => 'from@example.com',
-    'name' => 'Your Name',
+    'from' => 'audit@pmc-audit.creatorkart.com',
+    'name' => 'PMC Audit',
 ];
