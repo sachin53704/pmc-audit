@@ -53,23 +53,12 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                {{-- <input class="form-control datepicker" name="date" type="text" placeholder="Select Date" autocomplete="off" readonly required> --}}
-
-                                <div style="position: relative;">
-                                    <input type="text" class="form-control datepicker" placeholder="Select Date" style="padding-right: 30px;" name="date" autocomplete="off" readonly required>
-                                    <span class="calendar-icon" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer;"><img src="https://cdn-icons-png.flaticon.com/512/747/747310.png" alt="Calendar Icon" width="18" height="18"></span>
-                                </div>
+                                <input class="form-control datepicker" name="date" type="text" placeholder="Select Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="audit_start_date"> Audit Start Date <span class="text-danger">*</span></label>
-                                {{-- <input class="form-control fdatepicker" name="audit_start_date" type="text" placeholder="Select Audit Start Date" autocomplete="off" readonly required> --}}
-
-                                <div style="position: relative;">
-                                    <input type="text" class="form-control fdatepicker" placeholder="Select Audit Start Date" style="padding-right: 30px;" name="audit_start_date" autocomplete="off" readonly required>
-                                    <span class="calendar-icon" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer;"><img src="https://cdn-icons-png.flaticon.com/512/747/747310.png" alt="Calendar Icon" width="18" height="18"></span>
-                                </div>
-
+                                <input class="form-control fdatepicker" name="audit_start_date" type="text" placeholder="Select Audit Start Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid audit_start_date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
@@ -141,21 +130,12 @@
 
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="date">Date <span class="text-danger">*</span></label>
-                                <div style="position: relative;">
-                                    <input type="text" class="form-control datepicker" style="padding-right: 30px;" name="date" autocomplete="off" readonly required>
-                                    <span class="calendar-icon" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer;"><img src="https://cdn-icons-png.flaticon.com/512/747/747310.png" alt="Calendar Icon" width="18" height="18"></span>
-                                </div>
+                                <input class="form-control datepicker" name="date" type="text" placeholder="Select Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid date_err"></span>
                             </div>
                             <div class="col-md-4 mt-3">
                                 <label class="col-form-label" for="audit_start_date"> Audit Start Date <span class="text-danger">*</span></label>
-                                {{-- <input class="form-control fdatepicker" name="audit_start_date" type="text" placeholder="Select Audit Start Date" autocomplete="off" readonly required> --}}
-
-                                <div style="position: relative;">
-                                    <input type="text" class="form-control fdatepicker" style="padding-right: 30px;" name="audit_start_date" autocomplete="off" readonly required>
-                                    <span class="calendar-icon" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); cursor: pointer;"><img src="https://cdn-icons-png.flaticon.com/512/747/747310.png" alt="Calendar Icon" width="18" height="18"></span>
-                                </div>
-
+                                <input class="form-control fdatepicker" name="audit_start_date" type="text" placeholder="Select Audit Start Date" autocomplete="off" readonly required>
                                 <span class="text-danger is-invalid audit_start_date_err"></span>
                             </div>
                             {{-- <div class="col-md-1 mt-3">

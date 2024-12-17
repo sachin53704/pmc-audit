@@ -29,6 +29,34 @@
             pointer-events: auto !important;
             background: #fff !important;
         }
+
+        /* input.fdatepicker {
+            text-align: center;
+            background-image: url("https://cdn-icons-png.flaticon.com/512/747/747310.png");
+            background-position: right center;
+            background-repeat: no-repeat;
+            padding-right: 18px;
+            width: 78px;
+        }
+
+        input.datepicker {
+            text-align: center;
+            background-image: url("https://cdn-icons-png.flaticon.com/512/747/747310.png");
+            background-position: right center;
+            background-repeat: no-repeat;
+            padding-right: 18px;
+            width: 78px;
+        } */
+
+        .ui-datepicker-trigger
+        {
+            vertical-align:baseline;
+            position:relative;
+            top: -27%;
+            height: 18px;
+            right: -92%;
+            cursor: pointer;
+        }
     </style>
 
     @stack('styles')
@@ -216,7 +244,10 @@
             changeYear: true,
             changeMonth: true,
             showButtonPanel: true,
-            maxDate: 0
+            maxDate: 0,
+            showOn: 'both', 
+            buttonImageOnly: true, 
+            buttonImage: 'https://cdn-icons-png.flaticon.com/512/747/747310.png'
         });
 
         $('.fdatepicker').datepicker({
@@ -224,7 +255,10 @@
             changeYear: true,
             changeMonth: true,
             showButtonPanel: true,
-            yearRange: "-100Y:+50Y"
+            yearRange: "-100Y:+50Y",
+            showOn: 'both', 
+            buttonImageOnly: true, 
+            buttonImage: 'https://cdn-icons-png.flaticon.com/512/747/747310.png'
         });
     });
 </script>
