@@ -99,6 +99,32 @@ class MCAAuditController extends Controller
                         'department_id' => $audit->department_id,
                         'subject' => "आपल्या विभागाचे सन " . $audit->from->name . " ते " . $audit->to->name . " या कालावधीतील अंतर्गत लेखा परीक्षण सुरू करण्याबाबत.",
                     ]);
+
+
+                    // send mail code
+                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                    $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                    
+                    $mca = User::whereHas('roles', function ($q) {
+                        $q->whereIn('name', ['MCA', 'DY MCA']);
+                    })->pluck('email')->toArray();
+
+                    $receiver_list = array_merge($userdepartment, $mca);
+
+                    $pdfName = basename($name);
+                    Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'Programe Audit Started Be a ready for it'], function ($message) use ($receiver_list, $pdfName) {
+                        $message->from(config('details.from'), config('details.from'));
+                        $message->to($receiver_list);
+                        $message->subject('HMM Draft');
+
+                        $message->attach(storage_path('app/public/letter/' . $pdfName), [
+                            'as' => $pdfName, // Rename the file if needed
+                            'mime' => 'application/pdf', // Define the MIME type
+                        ]);
+                    });
+                    // end of send mail code
+                    
                     $audit->update([
                         'mca_status' => 2,
                         'status' => 5,
