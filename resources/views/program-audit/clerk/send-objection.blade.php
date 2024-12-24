@@ -44,7 +44,7 @@
                             <table class="table table-bordered nowrap align-middle" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th><input type="checkbox" id="selectAllCheckbox" class="form-check-input"></th>
                                         <th>Department</th>
                                         <th>Date</th>
                                         <th>HMM No.</th>
@@ -59,7 +59,7 @@
                                         <tr>
                                             <td>
                                                 <input type="hidden" name="audit_id" value="{{ $audit->audit_id }}" >
-                                                <input type="checkbox" class="form-check-input" name="id[]" value="{{ $audit->id }}" style="font-size: 15px;">
+                                                <input type="checkbox" class="form-check-input formCheckUnCheck" name="id[]" value="{{ $audit->id }}" style="font-size: 15px;">
                                             </td>
                                             <td>{{ $audit->department?->name }}</td>
                                             <td>{{ Carbon\Carbon::parse($audit->audit?->date)->format('d-m-Y') }}</td>
@@ -338,4 +338,17 @@
             }
 
         });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('#selectAllCheckbox').change(function(){
+            
+            if($(this).is(":checked")) {
+                $('.formCheckUnCheck').attr("checked", true);
+            }else{
+                $('.formCheckUnCheck').attr("checked", false);                
+            }
+        })
+    })
 </script>

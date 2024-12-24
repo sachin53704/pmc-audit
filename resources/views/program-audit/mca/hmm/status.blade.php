@@ -183,7 +183,7 @@
                                     <select name="{{ (Auth::user()->hasRole('MCA')) ? 'mca_status' : 'dymca_status' }}" class="form-select" id="dymca_status" required>
                                         <option value="">Select</option>
                                         <option value="1">Approve</option>
-                                        <option value="2">Forward To Auditor</option>
+                                        <option value="2">@if(Auth::user()->hasRole('MCA'))Forward To Auditor @else Revert To Auditor @endif</option>
                                     </select>
                                 </div>
                                 <div class="col-6 mb-3">

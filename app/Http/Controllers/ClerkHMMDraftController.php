@@ -194,12 +194,12 @@ class ClerkHMMDraftController extends Controller
                 DB::beginTransaction();
 
                 try {
-                    $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->value('audit_id');
-                    $audit = Audit::with(['from', 'to', 'department'])->find($auditId);
+                    $auditId = AuditObjection::where('hmm_draft_number', $request->hmm_draft_number)->first();
+                    $audit = Audit::with(['from', 'to', 'department'])->find($auditId->audit_id);
                     $signature = Signature::whereNull('department_id')->value('image');
                     $outwardNo = Setting::where('name', 'outward_no')->value('value');
 
-                    $name = $this->generateFinalPdf($audit, $signature, $outwardNo);
+                    $name = $this->generateFinalPdf($audit, $signature, $outwardNo, $auditId->audit_compliance_from_date, $auditId->audit_compliance_to_date);
                     Setting::where('name', 'outward_no')->increment('value', 1);
                     OutwardNo::create([
                         'outward_no' => $outwardNo,
@@ -253,9 +253,9 @@ class ClerkHMMDraftController extends Controller
         }
     }
 
-    public function generateFinalPdf($audit, $signature, $outwardNo)
+    public function generateFinalPdf($audit, $signature, $outwardNo, $from, $to)
     {
-        $pdf = PDF::loadView('letter.4', compact('audit', 'signature', 'outwardNo'));
+        $pdf = PDF::loadView('letter.2', compact('audit', 'signature', 'outwardNo', 'from', 'to'));
 
         $name = 'letter/' . $audit->department->name . '_letter_' . date('d_m_Y_h_i_s') . '.pdf';
 

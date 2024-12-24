@@ -379,32 +379,6 @@ class AuditorAuditController extends Controller
                                 ]);
 
 
-                                // send mail code
-                                $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
-
-                                $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
-                                $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
-                                    $q->where('audit_id', $request->audit_id);
-                                })->pluck('email')->toArray();
-                                $mca = User::whereHas('roles', function ($q) {
-                                    $q->whereIn('name', ['MCA', 'DY MCA']);
-                                })->pluck('email')->toArray();
-
-                                $receiver_list = array_merge($userdepartment, $auditor, $mca);
-                                $pdfName = basename($name);
-                                Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'MCA Approve the Auditor Compliance Objection'], function ($message) use ($receiver_list, $pdfName) {
-                                    $message->from(config('details.from'), config('details.from'));
-                                    $message->to($receiver_list);
-                                    $message->subject('MCA Approve the Auditor Compliance Objection');
-
-                                    $message->attach(storage_path('app/public/letter/' . $pdfName), [
-                                        'as' => $pdfName, // Rename the file if needed
-                                        'mime' => 'application/pdf', // Define the MIME type
-                                    ]);
-                                });
-                                // end of send mail code
-
-
                                 PendingAuditObjection::create([
                                     'audit_objection_id' => $auditObjection->id,
                                     'sub_unit' => $auditObjection->pending_sub_unit,
@@ -415,6 +389,31 @@ class AuditorAuditController extends Controller
                                     'ask_pending_auditor_status' => $auditObjection->auditor_status,
                                 ]);
                             }
+
+                            // send mail code
+                            $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
+
+                            $userdepartment = User::where('department_id', $audits->department_id)->whereNotNull('email')->pluck('email')->toArray();
+                            $auditor = User::whereHas('userAssignAudit', function ($q) use ($request) {
+                                $q->where('audit_id', $request->audit_id);
+                            })->pluck('email')->toArray();
+                            $mca = User::whereHas('roles', function ($q) {
+                                $q->whereIn('name', ['MCA', 'DY MCA']);
+                            })->pluck('email')->toArray();
+
+                            $receiver_list = array_merge($userdepartment, $auditor, $mca);
+                            $pdfName = basename($name);
+                            Mail::send('program-audit.mca.hmm.send-mail', ['body' => 'MCA Approve the Auditor Compliance Objection'], function ($message) use ($receiver_list, $pdfName) {
+                                $message->from(config('details.from'), config('details.from'));
+                                $message->to($receiver_list);
+                                $message->subject('MCA Approve the Auditor Compliance Objection');
+
+                                $message->attach(storage_path('app/public/letter/' . $pdfName), [
+                                    'as' => $pdfName, // Rename the file if needed
+                                    'mime' => 'application/pdf', // Define the MIME type
+                                ]);
+                            });
+                            // end of send mail code
 
 
                             DB::commit();

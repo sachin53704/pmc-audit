@@ -10,7 +10,6 @@
                 @csrf
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h5 class="modal-title">HMM Draft </h5>
                         @php $ids = []; $hmmDraftNo = ""; $hmmDraftCurrentStatus = ""; $hmmDraftCurrentRemark = ""; @endphp
 
                         
@@ -28,9 +27,13 @@
                             }
                         @endphp
                         @endforeach
+                        <div class="d-flex">
+                            <h5 class="modal-title">HMM Draft </h5>&nbsp;&nbsp;
+                            <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $ids,  'file' => 'clerk_send_hmm_draft_letter']) }}" target="_blank" class="btn btn-primary btn-sm" style="font-size: 17px; margin-top:-4px">View Details</a>
+                        </div>
+                        
                         <div>
                             <a href="{{ asset('storage/'.$auditss[0]->clerk_send_hmm_draft_letter) }}" target="_blank" class="btn btn-primary btn-sm">View Letter</a>
-                            <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $ids,  'file' => 'clerk_send_hmm_draft_letter']) }}" target="_blank" class="btn btn-primary btn-sm">View Details</a>
                         </div>
                     </div>
                     <div class="card-body">

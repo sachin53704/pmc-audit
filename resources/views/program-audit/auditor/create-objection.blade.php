@@ -37,7 +37,7 @@
                                             <td><span style="cursor: pointer" title="{{ $audit->description }}">{{ Str::limit($audit->description, '30') }}</span></td>
                                             <td>
                                                 <button class="btn btn-primary view-objection px-2 py-1" title="View Objection" data-controls-modal="viewObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}">View Objection</button>
-                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-department-id="{{ $audit->department_id }}" data-department-name="{{ $audit->department?->name }}" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="plus-circle"></i> Add Objection</button>
+                                                <button class="btn btn-info add-objection px-2 py-1" title="Add Objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-department-id="{{ $audit->department_id }}" data-department-name="{{ $audit->department?->name }}" data-keyboard="false" data-id="{{ $audit->id }}" data-from-year="{{ $audit->from_year }}" data-to-year="{{ $audit->from_year }}"><i data-feather="plus-circle"></i> Add Objection</button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -84,7 +84,8 @@
 
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="from_year">From Year <span class="text-danger">*</span></label>
-                                <select name="from_year" id="from_year" class="form-select">
+                                <input type="hidden" name="from_year" value="">
+                                <select id="from_year" class="form-select" disabled>
                                     <option value="">Select from year</option>
                                     @foreach($fiscalYears as $fiscalYear)
                                     <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
@@ -94,7 +95,8 @@
                             </div>
                             <div class="col-lg-4 col-md-6 col-12 mb-3">
                                 <label for="to_year">To Year <span class="text-danger">*</span></label>
-                                <select name="to_year" id="to_year" class="form-select">
+                                <input type="hidden" name="to_year" value="">
+                                <select id="to_year" class="form-select" disabled>
                                     <option value="">Select to year</option>
                                     @foreach($fiscalYears as $fiscalYear)
                                     <option value="{{ $fiscalYear->id }}">{{ $fiscalYear->name }}</option>
@@ -475,9 +477,15 @@
             var model_id = $(this).attr("data-id");
             var departmentName = $(this).attr('data-department-name');
             var departmentId = $(this).attr('data-department-id');
+            var fromYear = $(this).attr('data-from-year');
+            var toYear = $(this).attr('data-to-year');
             $('#audit_id').val(model_id)
             $('#addForm input[name="department_id"]').val(departmentId);
             $('#addForm input[name="department_name_id"]').val(departmentName);
+            $('#addForm input[name="from_year"]').val(fromYear);
+            $('#addForm input[name="to_year"]').val(toYear);
+            $('#addForm select[id="from_year"]').val(fromYear);
+            $('#addForm select[id="to_year"]').val(toYear);
 
             if(departmentId != ""){
                 $("#addObjectionModal").modal("show");
