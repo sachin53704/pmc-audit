@@ -32,11 +32,14 @@ class PendingAuditObjectionController extends Controller
             ->where('is_objection_completed', 0)
             ->when(Auth::user()->hasRole(['Department', 'Department HOD']), function ($q) {
                 $q->whereHas('auditObjection', function ($q) {
-                    $q->where('department_id', Auth::user()->department_id);
+                    $q->where('status', '>=', 1)->where('department_id', Auth::user()->department_id);
                 })->when(Auth::user()->hasRole('Department HOD'), function ($q) {
-                    $q->where('status', '<=', 2);
+                    $q->where(function ($q) {
+                        $q->whereNull('department_hod_final_status')
+                            ->orWhere('department_hod_final_status', 2);
+                    });
                 })->when(Auth::user()->hasRole('Department'), function ($q) {
-                    $q->where('status', 1);
+                    $q->whereNull('department_draft_remark');
                 });
             })
             ->when(Auth::user()->hasRole(['MCA']), function ($q) {
@@ -81,11 +84,11 @@ class PendingAuditObjectionController extends Controller
             ->where('is_objection_completed', 0)
             ->when(Auth::user()->hasRole(['Department', 'Department HOD']), function ($q) {
                 $q->whereHas('auditObjection', function ($q) {
-                    $q->where('department_id', Auth::user()->department_id);
+                    $q->where('status', '>=', 1)->where('department_id', Auth::user()->department_id);
                 })->when(Auth::user()->hasRole('Department HOD'), function ($q) {
-                    $q->where('status', '>', 2);
+                    $q->where('department_hod_final_status', 1);
                 })->when(Auth::user()->hasRole('Department'), function ($q) {
-                    $q->where('status', '>', 1);
+                    $q->whereNotNull('department_draft_remark');
                 });
             })
             ->when(Auth::user()->hasRole(['MCA']), function ($q) {
@@ -143,7 +146,8 @@ class PendingAuditObjectionController extends Controller
             if (Auth::user()->hasRole(['Department'])) {
 
                 if (!$request->is_draft_save) {
-                    $validator = Validator::make($request->all(), [
+
+                    $request->validate([
                         'department_files' => 'required_if:departmentCompliaceFile,1',
                         'department_remark' => 'required',
                         'submit_compliance' => 'required',
@@ -152,10 +156,6 @@ class PendingAuditObjectionController extends Controller
                         'department_remark.required' => 'Please enter compliance description',
                         'submit_compliance.required' => 'Please enter submitted compliance',
                     ]);
-                }
-
-                if ($validator->fails()) {
-                    return response()->json(['errors' => $validator->errors()], 422);
                 }
 
                 $pendingAuditObjection = PendingAuditObjection::find($request->pending_audit_objection_id);
