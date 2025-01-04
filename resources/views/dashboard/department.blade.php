@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-3 col-lg-3 col-6">
             <div class="card card-animate card-height-100 bg-warning ">
-                 <a href="{{ route('compliance.create') }}">
+                 <a href="{{ route('compliance.create.pending') }}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
@@ -59,7 +59,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3 class="card-title">HMM Objection</h3>
-                    <a href="{{ route('compliance.create') }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{{ route('compliance.create.pending') }}" class="btn btn-primary btn-sm">View</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

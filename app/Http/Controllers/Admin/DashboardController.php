@@ -14,6 +14,7 @@ use App\Models\AuditObjection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use App\Models\Signature;
+use App\Models\ParaAudit;
 use PDF;
 
 class DashboardController extends Controller
@@ -95,6 +96,13 @@ class DashboardController extends Controller
                 })
                 ->get();
 
+            $paraAudits = ParaAudit::when(Auth::user()->hasRole(['MCA']), function ($q) {
+                $q->where('dymca_status', 1)->whereNull('mca_status');
+            })
+                ->when(Auth::user()->hasRole(['DY MCA']), function ($q) {
+                    $q->where('is_draft_send', 1)->whereNull('dymca_status');
+                })->count();
+
 
             $columnName = strtolower(str_replace(' ', '_', $userRole->name));
 
@@ -130,6 +138,7 @@ class DashboardController extends Controller
                 'pendingPaymentReceipts' => $pendingPaymentReceipts,
                 'approvedPaymentReceipts' => $approvedPaymentReceipts,
                 'rejectedPaymentReceipts' => $rejectedPaymentReceipts,
+                'paraAudits' => $paraAudits
             ]);
         } elseif ($userRole->name == "Department") {
 

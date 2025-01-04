@@ -31,13 +31,17 @@ class DepartmentAuditController extends Controller
         return view('admin.department-letters')->with(['audits' => $audits]);
     }
 
-    public function createCompliance()
+    public function pendingCreateCompliance()
     {
         $audits = AuditObjection::with(['department', 'audit'])
             ->whereHas('audit', function ($q) {
                 $q->where('status', '>=', 7)
                     ->where('department_id', Auth::user()->department_id);
             })->where('is_department_hod_forward', 1)->where('status', '>=', 5)
+            ->where(function ($q) {
+                $q->where('is_department_draft_save', 1)
+                    ->orWhereNull('is_department_draft_save');
+            })
             ->latest()
             ->get();
 
@@ -51,7 +55,40 @@ class DepartmentAuditController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('program-audit.department.compliance-audits')->with([
+        return view('program-audit.department.compliance-audits-pending')->with([
+            'audits' => $audits,
+            'departments' => $departments,
+            'fiscalYears' => $fiscalYears,
+            'auditTypes' => $auditTypes,
+            'severities' => $severities,
+            'auditParaCategory' => $auditParaCategory,
+        ]);
+    }
+
+    public function answeredCreateCompliance()
+    {
+        $audits = AuditObjection::with(['department', 'audit'])
+            ->whereHas('audit', function ($q) {
+                $q->where('status', '>=', 7)
+                    ->where('department_id', Auth::user()->department_id);
+            })->where('is_department_hod_forward', 1)->where('status', '>=', 5)
+            ->where(function ($q) {
+                $q->where('is_department_draft_save', 0);
+            })
+            ->latest('updated_at')
+            ->get();
+
+        $departments = Department::select('id', 'name')->get();
+
+        $fiscalYears = FiscalYear::select('id', 'name')->get();
+
+        $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
+
+        $severities = Severity::where('status', 1)->select('id', 'name')->get();
+
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
+
+        return view('program-audit.department.compliance-audits-answered')->with([
             'audits' => $audits,
             'departments' => $departments,
             'fiscalYears' => $fiscalYears,

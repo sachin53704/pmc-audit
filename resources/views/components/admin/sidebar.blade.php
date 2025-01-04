@@ -239,10 +239,20 @@
 
                         @can('compliance.create')
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('compliance.create') ? 'active' : '' }}" href="{{ route('compliance.create') }}" >
+                                <a class="nav-link menu-link {{ request()->routeIs('compliance.create.pending') ? 'active' : '' }} {{ request()->routeIs('compliance.create.answered') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
                                     <i class="ri-file-list-3-line"></i>
-                                    <span data-key="t-dashboards">@lang('menu.hmm_question')</span>
+                                    <span data-key="t-layouts">@lang('menu.hmm_question')</span>
                                 </a>
+                                <div class="collapse menu-dropdown {{ request()->routeIs('compliance.create.pending') ? 'show' : '' }} {{ request()->routeIs('compliance.create.answered') ? 'show' : '' }}" id="sidebarReports">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="{{ route('compliance.create.pending') }}" class="nav-link {{ request()->routeIs('compliance.create.pending') ? 'active' : '' }}" data-key="t-horizontal">Pending</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('compliance.create.answered') }}" class="nav-link {{ request()->routeIs('compliance.create.answered') ? 'active' : '' }}" data-key="t-horizontal">Answered</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         @endcan
 
@@ -276,20 +286,40 @@
 
                         @can('answered-questions.view')
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('answered-questions') ? 'active' : '' }}" href="{{ route('answered-questions') }}" >
-                                    <i class="ri-pass-valid-line"></i>
-                                    <span data-key="t-dashboards">@lang('menu.answer_question')</span>
+                                <a class="nav-link menu-link {{ request()->routeIs('answered-questions.pending') ? 'active' : '' }} {{ request()->routeIs('answered-questions.approve') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
+                                    <i class="ri-file-list-3-line"></i>
+                                    <span data-key="t-layouts">@lang('menu.answer_question')</span>
                                 </a>
+                                <div class="collapse menu-dropdown {{ request()->routeIs('answered-questions.pending') ? 'show' : '' }} {{ request()->routeIs('answered-questions.approve') ? 'show' : '' }}" id="sidebarReports">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="{{ route('answered-questions.pending') }}" class="nav-link {{ request()->routeIs('answered-questions.pending') ? 'active' : '' }}" data-key="t-horizontal">Pending</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('answered-questions.approve') }}" class="nav-link {{ request()->routeIs('answered-questions.approve') ? 'active' : '' }}" data-key="t-horizontal">Approve</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         @endcan
 
 
                         @can('draft-review.view')
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('draft-review') ? 'active' : '' }}" href="{{ route('draft-review') }}" >
-                                    <i class="ri-draft-line"></i>
-                                    <span data-key="t-dashboards">@lang('menu.draft_review')</span>
+                                <a class="nav-link menu-link {{ request()->routeIs('draft-review.pending') ? 'active' : '' }} {{ request()->routeIs('draft-review.approve') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
+                                    <i class="ri-file-list-3-line"></i>
+                                    <span data-key="t-layouts">@lang('menu.draft_review')</span>
                                 </a>
+                                <div class="collapse menu-dropdown {{ request()->routeIs('draft-review.pending') ? 'show' : '' }} {{ request()->routeIs('draft-review.approve') ? 'show' : '' }}" id="sidebarReports">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="{{ route('draft-review.pending') }}" class="nav-link {{ request()->routeIs('draft-review.pending') ? 'active' : '' }}" data-key="t-horizontal">Pending</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('draft-review.approve') }}" class="nav-link {{ request()->routeIs('draft-review.approve') ? 'active' : '' }}" data-key="t-horizontal">Approve</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         @endcan
 
@@ -297,11 +327,22 @@
                         
                         
                         @can('pending-objection.view')
+
                         <li class="nav-item">
-                            <a class="nav-link menu-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }}" href="{{ route('pending-audit-objection.index') }}" >
-                                <i class="ri-draft-line"></i>
-                                <span data-key="t-dashboards">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</span>
+                            <a class="nav-link menu-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }} {{ request()->routeIs('pending-audit-objection.approve') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
+                                <i class="ri-file-list-3-line"></i>
+                                <span data-key="t-layouts">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</span>
                             </a>
+                            <div class="collapse menu-dropdown {{ request()->routeIs('pending-audit-objection.index') ? 'show' : '' }} {{ request()->routeIs('pending-audit-objection.approve') ? 'show' : '' }}" id="sidebarReports">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="{{ route('pending-audit-objection.index') }}" class="nav-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }}" data-key="t-horizontal">Pending</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('pending-audit-objection.approve') }}" class="nav-link {{ request()->routeIs('pending-audit-objection.approve') ? 'active' : '' }}" data-key="t-horizontal">Approve</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                         @endcan
 

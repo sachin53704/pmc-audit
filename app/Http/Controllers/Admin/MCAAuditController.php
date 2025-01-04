@@ -105,7 +105,7 @@ class MCAAuditController extends Controller
                     $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
 
                     $userdepartment = User::where('department_id', $audit->department_id)->whereNotNull('email')->pluck('email')->toArray();
-                    
+
                     $mca = User::whereHas('roles', function ($q) {
                         $q->whereIn('name', ['MCA', 'DY MCA']);
                     })->pluck('email')->toArray();
@@ -124,7 +124,7 @@ class MCAAuditController extends Controller
                         ]);
                     });
                     // end of send mail code
-                    
+
                     $audit->update([
                         'mca_status' => 2,
                         'status' => 5,
@@ -207,7 +207,7 @@ class MCAAuditController extends Controller
     }
 
 
-    public function draftReview(Request $request)
+    public function pendingDraftReview(Request $request)
     {
         $status = 0;
         if (Auth::user()->hasRole('MCA')) {
@@ -223,16 +223,34 @@ class MCAAuditController extends Controller
                 $q->where('status', '>=', $status);
             })
             ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
-                $q->where('status', '>=', 9);
+                $q->where('status', '>=', 9)
+                    ->where(function ($q) {
+                        $q->whereNull('dymca_final_status')
+                            ->orWhere('dymca_final_status', 0);
+                    });
             })
             ->when(Auth::user()->hasRole('MCA'), function ($q) use ($request) {
-                $q->where('status', '>=', 7);
+                $q->where('status', '>=', 7)
+                    ->where(function ($q) {
+                        $q->where(function ($q) {
+                            $q->whereNull('department_mca_second_status')
+                                ->whereNull('auditor_status');
+                        })
+                            ->orWhere(function ($q) {
+                                $q->where('dymca_final_status', 1)
+                                    ->whereNull('mca_final_status');
+                            });
+                    });
             })
             ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
                 $q->where('is_department_draft_save', 0)
                     ->whereNotNull('department_remark')
                     ->where('status', '>=', 6)
-                    ->where('department_id', Auth::user()->department_id);
+                    ->where('department_id', Auth::user()->department_id)
+                    ->where(function ($q) {
+                        $q->where('department_hod_final_status', 0)
+                            ->orWhereNull('department_hod_final_status');
+                    });
             })
             ->latest()
             ->get();
@@ -247,7 +265,68 @@ class MCAAuditController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('admin.draft-review')->with([
+        return view('admin.pending-draft-review')->with([
+            'audits' => $audits,
+            'departments' => $departments,
+            'fiscalYears' => $fiscalYears,
+            'auditTypes' => $auditTypes,
+            'severities' => $severities,
+            'auditParaCategory' => $auditParaCategory
+        ]);
+    }
+
+    public function approveDraftReview(Request $request)
+    {
+        $status = 0;
+        if (Auth::user()->hasRole('MCA')) {
+            $status = 9;
+        } elseif (Auth::user()->hasRole('Department HOD')) {
+            $status = 8;
+        } elseif (Auth::user()->hasRole('DY MCA')) {
+            $status = 11;
+        }
+
+        $audits = AuditObjection::with(['department', 'audit'])
+            ->whereHas('audit', function ($q) use ($status) {
+                $q->where('status', '>=', $status);
+            })
+            ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+                $q->where('status', '>=', 9)
+                    ->where('dymca_final_status', 1);
+            })
+            ->when(Auth::user()->hasRole('MCA'), function ($q) use ($request) {
+                $q->where('status', '>=', 7)
+                    ->where(function ($q) {
+                        $q->where(function ($q) {
+                            $q->where('department_mca_second_status', 1)
+                                ->whereNull('dymca_final_status');
+                        })
+                            ->orWhere(function ($q) {
+                                $q->where('mca_final_status', 1);
+                            });
+                    });
+            })
+            ->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                $q->where('is_department_draft_save', 0)
+                    ->whereNotNull('department_remark')
+                    ->where('status', '>=', 6)
+                    ->where('department_id', Auth::user()->department_id)
+                    ->where('department_hod_final_status', 1);
+            })
+            ->latest('updated_at')
+            ->get();
+
+        $departments = Department::select('id', 'name')->get();
+
+        $fiscalYears = FiscalYear::select('id', 'name')->get();
+
+        $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
+
+        $severities = Severity::where('status', 1)->select('id', 'name')->get();
+
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
+
+        return view('admin.approve-draft-review')->with([
             'audits' => $audits,
             'departments' => $departments,
             'fiscalYears' => $fiscalYears,

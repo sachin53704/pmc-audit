@@ -3,7 +3,7 @@
 
     <head>
         <meta charset="utf-8" />
-        <title>{{ config('app.name') }} | "View Details"</title>
+        <title>{{ config('app.name') }} | View Details</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesbrand" name="author" />
@@ -45,64 +45,70 @@
                         @php
                             $pdfFile = "";
                         @endphp
-                        @foreach($objections as $key => $objection)
-                        <table class="table table-bordered table-striped" style="border: 1px solid #000">
+
+                        <div style="padding: 0px 3%;">
+                            @foreach($objections as $key => $objection)
+                            <table class="table table-bordered table-striped" style="border: 1px solid #000">
+                                
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 25%"><b>HMM NO.</b></td>
+                                        <td>{{ $objection->objection_no }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Entry Date</b></td>
+                                        <td>{{ date('d-m-Y', strtotime($objection->entry_date)) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Department</b></td>
+                                        <td>{{ $objection->department?->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>From Year</b></td>
+                                        <td>{{ $objection->from?->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>To Year</b></td>
+                                        <td>{{ $objection->to?->name }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><b>Audit Type</b></td>
+                                        <td>{{ $objection->auditType?->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Severity</b></td>
+                                        <td>{{ $objection->severity?->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Audit Para Category</b></td>
+                                        <td>{{ $objection->auditParaCategory?->name }}</td>
+                                    </tr>
+                                    @if($objection->amount)
+                                    <tr>
+                                        <td><b>Amount</b></td>
+                                        <td>{{ $objection->amount ?? '-' }}</td>
+                                    </tr>
+                                    @endif
+                                    <tr>
+                                        <td><b>Subject</b></td>
+                                        <td>{{ $objection->subject }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
                             
-                            <tbody>
-                                <tr>
-                                    <td style="width: 25%"><b>HMM NO.</b></td>
-                                    <td>{{ $objection->objection_no }}</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Entry Date</b></td>
-                                    <td>{{ date('d-m-Y', strtotime($objection->entry_date)) }}</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Department</b></td>
-                                    <td>{{ $objection->department?->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td><b>From Year</b></td>
-                                    <td>{{ $objection->from?->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td><b>To Year</b></td>
-                                    <td>{{ $objection->to?->name }}</td>
-                                </tr>
-
-                                <tr>
-                                    <td><b>Audit Type</b></td>
-                                    <td>{{ $objection->auditType?->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Severity</b></td>
-                                    <td>{{ $objection->severity?->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td><b>Audit Para Category</b></td>
-                                    <td>{{ $objection->auditParaCategory?->name }}</td>
-                                </tr>
-                                @if($objection->amount)
-                                <tr>
-                                    <td><b>Amount</b></td>
-                                    <td>{{ $objection->amount ?? '-' }}</td>
-                                </tr>
-                                @endif
-                                <tr>
-                                    <td><b>Subject</b></td>
-                                    <td>{{ $objection->subject }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        {!! $objection->description !!}
-                        @if(count($objections) != $key + 1)
-                        <div class="page-break"></div>
-                        @endif
-
-                        @php
-                            $pdfFile = $objection->$file;
-                        @endphp
-                        @endforeach
+                            {!! $objection->description !!}
+                            @if(count($objections) != $key + 1)
+                            <div class="page-break"></div>
+                            @endif
+                            <br>
+                            <br>
+                            @php
+                                $pdfFile = $objection->$file;
+                            @endphp
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

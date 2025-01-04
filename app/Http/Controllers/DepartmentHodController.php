@@ -23,7 +23,8 @@ class DepartmentHodController extends Controller
             ->where('is_department_hod_forward', 0)
             ->where('hmm_draft_mca_status', 1)
             ->where('department_id', Auth::user()->department_id)
-            ->latest()->get();
+            ->latest()
+            ->get();
 
         return view('program-audit.department-hod.forward-objection')->with([
             'audits' => $audits
@@ -95,9 +96,9 @@ class DepartmentHodController extends Controller
             'objections' => $objections,
             'file' => $request->file
         ]);
-        $pdf = PDF::loadView('program-audit.department-hod.pdf', compact('objections'));
+        // $pdf = PDF::loadView('program-audit.department-hod.pdf', compact('objections'));
 
-        return $pdf->stream('para-current-status.pdf');
+        // return $pdf->stream('para-current-status.pdf');
     }
 
     // save department compliance

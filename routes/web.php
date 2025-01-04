@@ -87,7 +87,9 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
     Route::get('assign-auditor', [App\Http\Controllers\Admin\MCAAuditController::class, 'assignAudiorList'])->name('assign-auditor');
     Route::get('audit/{audit}/get-auditors', [App\Http\Controllers\Admin\MCAAuditController::class, 'getAuditors'])->name('audit.get-auditors');
     Route::put('audit/{audit}/assign-auditor', [App\Http\Controllers\Admin\MCAAuditController::class, 'assignAuditor'])->name('audit.assign-auditor');
-    Route::get('draft-review', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftReview'])->name('draft-review');
+    Route::get('draft-review/pending', [App\Http\Controllers\Admin\MCAAuditController::class, 'pendingDraftReview'])->name('draft-review.pending');
+    Route::get('draft-review/approve', [App\Http\Controllers\Admin\MCAAuditController::class, 'approveDraftReview'])->name('draft-review.approve');
+
     Route::get('view-objection', [App\Http\Controllers\Admin\MCAAuditController::class, 'viewObjection'])->name('view-objection');
     Route::get('draft-answer-details/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftAnswerDetails'])->name('draft-answer-details');
     Route::put('draft-approve-answers/{audit}', [App\Http\Controllers\Admin\MCAAuditController::class, 'draftApproveAnswer'])->name('draft-approve-answers');
@@ -115,7 +117,8 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
 
     Route::post('objection-store', [App\Http\Controllers\Admin\AuditorAuditController::class, 'storeObjection'])->name('objection.store');
-    Route::get('answered-questions', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answeredQuestions'])->name('answered-questions');
+    Route::get('answered-questions/pending', [App\Http\Controllers\Admin\AuditorAuditController::class, 'pendingAnsweredQuestions'])->name('answered-questions.pending');
+    Route::get('answered-questions/approve', [App\Http\Controllers\Admin\AuditorAuditController::class, 'approveAnsweredQuestions'])->name('answered-questions.approve');
     Route::get('answer-details/{audit}', [App\Http\Controllers\Admin\AuditorAuditController::class, 'answerDetails'])->name('answer-details');
     Route::put('approve-answers/{audit}', [App\Http\Controllers\Admin\AuditorAuditController::class, 'approveAnswer'])->name('approve-answers');
 
@@ -123,7 +126,9 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
     // Department Routes
     Route::get('department_letter', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'index'])->name('department-letter.index');
-    Route::get('compliance-create', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'createCompliance'])->name('compliance.create');
+    Route::get('compliance-create/pending', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'pendingCreateCompliance'])->name('compliance.create.pending');
+    Route::get('compliance-create/answered', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'answeredCreateCompliance'])->name('compliance.create.answered');
+
     Route::get('compliance-info/{audit}', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'complianceInfo'])->name('compliance.info');
     Route::put('compliance-update/{audit}', [App\Http\Controllers\Admin\DepartmentAuditController::class, 'updateCompliance'])->name('compliance.update');
 
@@ -191,7 +196,8 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
 
     // Pending Objection
-    Route::get('pending-objection', [App\Http\Controllers\PendingAuditObjectionController::class, 'pendingAuditObjection'])->name('pending-audit-objection.index');
+    Route::get('pending-objection/pending', [App\Http\Controllers\PendingAuditObjectionController::class, 'pendingAuditObjection'])->name('pending-audit-objection.index');
+    Route::get('pending-objection/approve', [App\Http\Controllers\PendingAuditObjectionController::class, 'approvePendingAuditObjection'])->name('pending-audit-objection.approve');
     Route::get('pending-view-objection', [App\Http\Controllers\PendingAuditObjectionController::class, 'viewPendingObjection'])->name('pending-view-objection');
     Route::post('pending-change-objection-status', [App\Http\Controllers\PendingAuditObjectionController::class, 'changePendingObjectionStatus'])->name('pending-change-objection-status');
 

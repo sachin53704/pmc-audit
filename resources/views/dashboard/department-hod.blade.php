@@ -31,7 +31,7 @@
 
         <div class="col-md-3 col-lg-3 col-6">
             <div class="card card-animate card-height-100 bg-success ">
-                 <a href="{{ route('draft-review') }}">
+                 <a href="{{ route('draft-review.pending') }}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
@@ -119,7 +119,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <h3 class="card-title">Compliance</h3>
-                    <a href="{{ route('draft-review') }}" class="btn btn-primary btn-sm">View</a>
+                    <a href="{{ route('draft-review.pending') }}" class="btn btn-primary btn-sm">View</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

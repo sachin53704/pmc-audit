@@ -1,34 +1,10 @@
 <x-admin.layout>
-    <x-slot name="title">Draft Review</x-slot>
-    <x-slot name="heading">Draft Review</x-slot>
+    <x-slot name="title">Pending Compliance Objections</x-slot>
+    <x-slot name="heading">Pending Compliance Objections</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
-    <div class="row" id="editContainer" style="display:none;">
-        <div class="col">
-            <form class="form-horizontal form-bordered" method="post" id="editForm">
-                @csrf
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Draft Review</h4>
-                    </div>
-                    <div class="card-body py-2">
-                        <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
-
-                        <div class="mb-3 row">
-                            <div class="col-12" id="objectionList">
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="card-footer">
-                        <button class="btn btn-primary" id="editSubmit">Submit</button>
-                        <button type="reset" class="btn btn-warning">Reset</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+   
 
 
     <div class="row">
@@ -59,9 +35,8 @@
                                         <td>{{ $audit->subject }}</td>
                                         <td>{{ Carbon\Carbon::parse($audit->entry_date)->format('d-m-Y') }}</td>
                                         <td>@if($audit->audit?->description) <span style="cursor: pointer" title="{{ $audit->audit?->description }}">{{ Str::limit($audit->audit?->description, '30') }}</span>@else - @endif</td>
-                                        
                                         <td>
-                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
+                                            <button class="btn btn-secondary viewObjection px-2 py-1" title="View compliance objection" data-controls-modal="addObjectionModal" data-backdrop="static" data-keyboard="false" data-id="{{ $audit->id }}"><i data-feather="file-text"></i> View Compliance</button>
                                             {{-- <button class="btn text-secondary edit-element px-2 py-1" title="Add Compliance" data-id="{{ $audit->id }}"><i data-feather="file-text"></i></button> --}}
                                         </td>
                                     </tr>
@@ -86,24 +61,24 @@
                         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                       
+
                         <div>
                             <hr>
                             <input type="hidden" name="audit_objection_id" value="" id="audit_objection_id">
                             <input type="hidden" name="audit_id" value="" id="audit_id">
                             <div class="row">
-                                <div class="col-lg-4 col-md-4 col-12 mb-3">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="objection_no">HMM No. <span class="text-danger">*</span></label>
                                     <input type="text" name="objection_no" id="objection_no" class="form-control" disabled value="{{ time() }}">
                                     <span class="text-danger is-invalid objection_no_err"></span>
                                 </div>
 
-                                <div class="col-lg-4 col-md-4 col-12 mb-3">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="entry_date">Entry Date <span class="text-danger">*</span></label>
                                     <input type="date" name="entry_date" disabled id="entry_date" class="form-control">
                                     <span class="text-danger is-invalid entry_date_err"></span>
                                 </div>
-                                <div class="col-lg-4 col-md-4 col-12 mb-3">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="department_id">Department <span class="text-danger">*</span></label>
                                     <select name="department_id" disabled id="department_id" class="form-select">
                                         <option value="">Select department</option>
@@ -113,9 +88,9 @@
                                     </select>
                                     <span class="text-danger is-invalid department_id_err"></span>
                                 </div>
-
-
-                                <div class="col-lg-4 col-md-4 col-12 mb-3">
+                        
+                            
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="from_year">From Year <span class="text-danger">*</span></label>
                                     <select name="from_year" id="from_year" disabled class="form-select">
                                         <option value="">Select from year</option>
@@ -125,7 +100,7 @@
                                     </select>
                                     <span class="text-danger is-invalid from_year_err"></span>
                                 </div>
-                                <div class="col-lg-4 col-md-4 col-12 mb-3">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="to_year">To Year <span class="text-danger">*</span></label>
                                     <select name="to_year" id="to_year" disabled class="form-select">
                                         <option value="">Select to year</option>
@@ -135,8 +110,8 @@
                                     </select>
                                     <span class="text-danger is-invalid to_year_err"></span>
                                 </div>
-
-                                <div class="col-lg-4 col-md-3 col-12 mb-3">
+                            
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="audit_type_id">Audit Type <span class="text-danger">*</span></label>
                                     <select name="audit_type_id" id="audit_type_id" disabled class="form-select">
                                         <option value="">Select audit type</option>
@@ -146,7 +121,7 @@
                                     </select>
                                     <span class="text-danger is-invalid audit_type_id_err"></span>
                                 </div>
-                                <div class="col-lg-4 col-md-3 col-12 mb-3">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="severity_id">Severity <span class="text-danger">*</span></label>
                                     <select name="severity_id" disabled id="severity_id" class="form-select">
                                         <option value="">Select severity</option>
@@ -156,8 +131,8 @@
                                     </select>
                                     <span class="text-danger is-invalid severity_id_err"></span>
                                 </div>
-                                
-                                <div class="col-lg-4 col-md-3 col-12 mb-3">
+
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="audit_para_category_id">Audit Para Category <span class="text-danger">*</span></label>
                                     <input type="hidden" disabled name="audit_para_value" id="auditParaValue">
                                     <select name="audit_para_category_id" disabled id="audit_para_category_id" class="form-select">
@@ -168,40 +143,39 @@
                                     </select>
                                     <span class="text-danger is-invalid audit_para_category_id_err"></span>
                                 </div>
-                                <div class="col-lg-4 col-md-3 col-12 mb-3 d-none isAmountDisplayOrNot">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3 d-none isAmountDisplayOrNot">
                                     <label for="amount">Amount <span class="text-danger">*</span></label>
                                     <input type="text" name="amount" disabled id="amount" class="form-control">
                                     <span class="text-danger is-invalid amount_err"></span>
                                 </div>
 
-                                <div class="col-lg-4 col-md-3 col-12 mb-3">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <label for="subject">Subject <span class="text-danger">*</span></label>
-                                    <input type="text" name="subject" disabled id="subject" class="form-control">
+                                    <textarea name="subject" disabled id="subject" class="form-control"></textarea>
                                     <span class="text-danger is-invalid subject_err"></span>
                                 </div>
-
-                                <div class="col-lg-4 col-md-3 col-12 mb-3">
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
                                     <a href="#" id="documentFile" target="_blank" class="btn btn-primary mt-4">View File</a>
                                 </div>
-
-                                <div class="col-lg-4 col-md-3 col-12 mb-3">
-                                    <label for="sub_unit">No of Objection <span class="text-danger">*</span></label>
-                                    <input type="number" name="sub_unit" disabled id="sub_unit" class="form-control">
+                            
+                                <div class="col-lg-4 col-md-6 col-12 mb-3">
+                                    <label for="sub_unit">No. of Objection <span class="text-danger">*</span></label>
+                                    <input type="text" name="sub_unit" disabled id="sub_unit" class="form-control">
                                     <span class="text-danger is-invalid sub_unit_err"></span>
                                 </div>
                             </div>
 
 
+                            
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label for="description">Objection Description <span class="text-danger">*</span></label>
-                                    <textarea type="text" name="description" id="description" class="form-control" disabled></textarea>
+                                    <label for="description">Description <span class="text-danger">*</span></label>
+                                    <textarea type="text" name="description" id="description" class="form-control"></textarea>
                                 </div>
                             </div>
 
-                            
+
                             <div class="row">
-                            
                                 <div class="col-xl-12">
                                     <div class="card">
                                         <div class="card-header align-items-center d-flex">
@@ -212,11 +186,11 @@
                                                 <div class="accordion custom-accordionwithicon-plus" id="accordionWithplusicon">
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample1">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('Department'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#departmentCompliance" aria-expanded="@if(Auth::user()->hasRole('Department'))true @endif" aria-controls="departmentCompliance">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#departmentCompliance" aria-expanded="false" aria-controls="departmentCompliance">
                                                                 Department Compliance 
                                                             </button>
                                                         </h2>
-                                                        <div id="departmentCompliance" class="accordion-collapse collapse @if(Auth::user()->hasRole('Department'))show @endif" aria-labelledby="accordionwithplusExample1" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="departmentCompliance" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample1" data-bs-parent="#accordionWithplusicon">
                                                             
                                                             <div class="row px-3 py-2">
                                                                 <div class="col-6 mb-3">
@@ -225,6 +199,7 @@
                                                                     @if(Auth::user()->hasRole('Department'))
                                                                     <input type="file" name="department_files" id="department_file" class="form-control">
                                                                     @endif
+                                                                    <span class="text-danger is-invalid department_file_err"></span>
                                                                 </div>
                                                                 <div class="col-6 mb-3">
                                                                     <label for="department_file">Submitted Compliance <span class="text-danger">*</span></label>
@@ -241,24 +216,22 @@
                                                                         </div>
                                                                     </div>
                                                                     <textarea name="department_remark" id="department_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid department_remark_err"></span>
                                                                 </div>
-
-                                                                
-
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('Department HOD'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#departmentHodStatus" aria-expanded="@if(Auth::user()->hasRole('Department HOD'))true @endif" aria-controls="departmentHodStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#departmentHodStatus" aria-expanded="false" aria-controls="departmentHodStatus">
                                                                 Department HOD Status
                                                             </button>
                                                         </h2>
-                                                        <div id="departmentHodStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('Department HOD'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="departmentHodStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                     
                                                                 <div class="col-6">
-                                                                    <label for="department_hod_final_status">Department HOD Status <span class="text-danger">*</span></label>
+                                                                    <label for="department_hod_final_status">Department HOD Status</label>
                                                                     <select name="department_hod_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
@@ -269,21 +242,22 @@
                                                                 <div class="col-6">
                                                                     <label for="department_hod_final_remark">Department HOD Remark</label>
                                                                     <textarea name="department_hod_final_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid department_hod_final_remark_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample3">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('MCA'))collapsed @endif collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcaForwardToAuditor" aria-expanded="@if(Auth::user()->hasRole('MCA'))true @endif" aria-controls="mcaForwardToAuditor">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcaForwardToAuditor" aria-expanded="false" aria-controls="mcaForwardToAuditor">
                                                                 MCA Forward To Auditor
                                                             </button>
                                                         </h2>
-                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse @if(Auth::user()->hasRole('MCA'))show @endif" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="mcaForwardToAuditor" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample3" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                     
                                                                 <div class="col-6">
-                                                                    <label for="department_mca_second_status">MCA Status <span class="text-danger">*</span></label>
+                                                                    <label for="department_mca_second_status">MCA Status</label>
                                                                     <select name="department_mca_second_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Forward To Auditor</option>
@@ -293,6 +267,7 @@
                                                                 <div class="col-6">
                                                                     <label for="department_mca_second_remark">MCA Remark</label>
                                                                     <textarea  name="department_mca_second_remark" class="form-control"></textarea>
+                                                                    <span class="text-danger is-invalid department_mca_second_remark_err"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -300,14 +275,16 @@
 
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('Auditor'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#auditorStatus" aria-expanded="@if(Auth::user()->hasRole('Auditor'))true @endif" aria-controls="auditorStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#auditorStatus" aria-expanded="true" aria-controls="auditorStatus">
                                                                 Auditor Status
                                                             </button>
                                                         </h2>
-                                                        <div id="auditorStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('Auditor'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="auditorStatus" class="accordion-collapse collapse show" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
+                                                                <input type="hidden" name="is_draft_save" id="is_draft_save">
                                                                 <div class="col-12 mb-3">
+
                                                                     <div class="d-flex justify-content-between">
                                                                         <label for="department_remark">Description <span class="text-danger">*</span></label>
 
@@ -321,13 +298,13 @@
 
                                                                 <div class="col-3 px-3 pt-2">
                                                                     <label for="auditor_status">Complied Objection <span class="text-danger">*</span></label>
-                                                                    <input type="number" class="form-control" name="completed_sub_unit">
+                                                                    <input type="number" class="form-control" name="completed_sub_unit" required>
                                                                     <span class="text-danger is-invalid completed_sub_unit_err"></span>
                                                                 </div>
 
                                                                 <div class="col-3 px-3 pt-2">
                                                                     <label for="auditor_status">Pending Objection <span class="text-danger">*</span></label>
-                                                                    <input type="number" class="form-control" name="pending_sub_unit">
+                                                                    <input type="number" class="form-control" name="pending_sub_unit" required>
                                                                     <span class="text-danger is-invalid pending_sub_unit_err"></span>
                                                                 </div>
 
@@ -342,7 +319,7 @@
                                                                 </div>
                                                                 <div class="col-3">
                                                                     <label for="auditor_remark">Auditor Remark <span class="text-danger">*</span></label>
-                                                                    <textarea name="auditor_remark" class="form-control"></textarea>
+                                                                    <textarea name="auditor_remark" class="form-control" required></textarea>
                                                                     <span class="text-danger is-invalid auditor_remark_err"></span>
                                                                 </div>
                                                             </div>
@@ -352,11 +329,11 @@
 
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('DY MCA'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#dymcaStatus" aria-expanded="@if(Auth::user()->hasRole('DY MCA'))true @endif" aria-controls="dymcaStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#dymcaStatus" aria-expanded="false" aria-controls="dymcaStatus">
                                                                 DyMca Status
                                                             </button>
                                                         </h2>
-                                                        <div id="dymcaStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('DY MCA'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="dymcaStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-6">
@@ -379,11 +356,11 @@
 
                                                     <div class="accordion-item">
                                                         <h2 class="accordion-header" id="accordionwithplusExample2">
-                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button @if(!Auth::user()->hasRole('MCA'))collapsed @endif" type="button" data-bs-toggle="collapse" data-bs-target="#mcaStatus" aria-expanded="@if(Auth::user()->hasRole('MCA'))true @endif" aria-controls="mcaStatus">
+                                                            <button style="font-size: 18px;font-weight: 600;" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mcaStatus" aria-expanded="false" aria-controls="mcaStatus">
                                                                 MCA Status
                                                             </button>
                                                         </h2>
-                                                        <div id="mcaStatus" class="accordion-collapse collapse @if(Auth::user()->hasRole('MCA'))show @endif" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
+                                                        <div id="mcaStatus" class="accordion-collapse collapse" aria-labelledby="accordionwithplusExample2" data-bs-parent="#accordionWithplusicon">
                                                             <div class="row px-3 py-2">
                                                                 
                                                                 <div class="col-6">
@@ -391,6 +368,7 @@
                                                                     <select name="mca_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
+                                                                        <option value="0">Forward to department</option>
                                                                     </select>
                                                                     <span class="text-danger is-invalid mca_final_status_err"></span>
                                                                 </div>
@@ -410,15 +388,14 @@
                                     </div><!-- end card -->
                                 </div>
                                 <!--end col-->
-
                             </div>
-
                         </div>
 
 
                     </div>
                     <div class="modal-footer d-none" id="viewFooterObjectionDetails">
                         <button class="btn btn-secondary close-modal" data-bs-dismiss="modal" type="button" >Close</button>
+                        <button class="btn btn-warning" id="saveDraftObjectionStatus" type="submit">Draft Save</button>
                         <button class="btn btn-primary" id="saveObjectionStatus" type="submit">Submit</button>
                     </div>
                 </div>
@@ -429,13 +406,24 @@
 
 
     @push('scripts')
+
         <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+        
 
         <script>
+            $(document).ready(function(){
+                $('#saveObjectionStatus').click(function(){
+                    $('#is_draft_save').val(0);
+                });
+
+                $('#saveDraftObjectionStatus').click(function(){
+                    $('#is_draft_save').val(1);
+                });
+            })
             // Initialize CKEditor
             let editorInstance;
             ClassicEditor
-                .create(document.querySelector('textarea'),{
+                .create(document.querySelector('#description'),{
                     toolbar: {
                         shouldNotGroupWhenFull: true,
                         items: [
@@ -516,7 +504,6 @@
                     })
                     .then(editor => {
                         auditorDescription = editor;
-                        auditorDescription.enableReadOnlyMode('reason');
                         editor.ui.view.editable.element.style.height = '200px';  // Fixed height
 
                         // Make the editor scrollable
@@ -525,116 +512,15 @@
                     .catch(error => {
                         console.error('Error during initialization of the editor', error);
                     });
+
+                    
+
         </script>
 
 
-        <!-- Approve Reject compliance -->
+
+        <!-- Approve Reject Answers -->
         <script>
-
-            $("#addForm").submit(function(e) {
-                e.preventDefault();
-                var model_id = $('#audit_objection_id').val();
-                // $('#audit_id').val(model_id)
-                var url = "{{ route('objection.change-objection-status') }}";
-                var formdata = new FormData(this);
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formdata,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function()
-                    {
-                        $('#preloader').css('opacity', '0.5');
-                        $('#preloader').css('visibility', 'visible');
-                    },
-                    success: function(data, textStatus, jqXHR)
-                    {
-                        $("#addObjectionSubmit").prop('disabled', false);
-                        if (!data.error){
-                            swal("Successful!", data.success, "success")
-                                .then((action) => {
-                                    window.location.reload();
-                                });
-                        }
-                        else{
-                            swal("Error!", data.error, "error");
-                        }
-                    },
-                    statusCode: {
-                        422: function(responseObject, textStatus, jqXHR) {
-                            // $("#addSubmit").prop('disabled', false);
-                            resetErrors();
-                            printErrMsg(responseObject.responseJSON.errors);
-                        },
-                        500: function(responseObject, textStatus, errorThrown) {
-                            $("#addSubmit").prop('disabled', false);
-                            swal("Error occured!", "Something went wrong please try again", "error");
-                        }
-                    },
-                    complete: function() {
-                        $('#preloader').css('opacity', '0');
-                        $('#preloader').css('visibility', 'hidden');
-                    },
-                });
-
-                $('#assign-role-modal').modal('show');
-            });
-
-
-            $(document).ready(function() {
-                $("#editForm").submit(function(e) {
-                    e.preventDefault();
-                    $("#editSubmit").prop('disabled', true);
-                    var formdata = new FormData(this);
-                    formdata.append('_method', 'PUT');
-                    var model_id = $('#edit_model_id').val();
-                    var url = "{{ route('draft-approve-answers', ":model_id") }}";
-                    //
-                    $.ajax({
-                        url: url.replace(':model_id', model_id),
-                        type: 'POST',
-                        data: formdata,
-                        contentType: false,
-                        processData: false,
-                        beforeSend: function()
-                        {
-                            $('#preloader').css('opacity', '0.5');
-                            $('#preloader').css('visibility', 'visible');
-                        },
-                        success: function(data)
-                        {
-                            $("#editSubmit").prop('disabled', false);
-                            if (!data.error)
-                                swal("Successful!", data.success, "success")
-                                    .then((action) => {
-                                        window.location.reload();
-                                    });
-                            else
-                                swal("Error!", data.error, "error");
-                        },
-                        statusCode: {
-                            422: function(responseObject, textStatus, jqXHR) {
-                                $("#editSubmit").prop('disabled', false);
-                                resetErrors();
-                                printErrMsg(responseObject.responseJSON.errors);
-                            },
-                            500: function(responseObject, textStatus, errorThrown) {
-                                $("#editSubmit").prop('disabled', false);
-                                swal("Error occured!", "Something went wrong please try again", "error");
-                            }
-                        },
-                        complete: function() {
-                            $('#preloader').css('opacity', '0');
-                            $('#preloader').css('visibility', 'hidden');
-                        },
-                    });
-
-                });
-            });
-
-
             $('body').on('click', '.viewObjection', function(){
                 let id = $(this).attr('data-id');
 
@@ -672,7 +558,10 @@
 
 
                         $("#addForm input[name='amount']").val(data.auditObjection.amount);
-                        $("#addForm input[name='subject']").val(data.auditObjection.subject);
+                        $("#addForm textarea[name='subject']").val(data.auditObjection.subject);
+                        // $("#addForm input[name='work_name']").val(data.auditObjection.work_name);
+                        // $("#addForm input[name='contractor_name']").val(data.auditObjection.contractor_name);
+
                         if(data.auditObjection.document && data.auditObjection.document != ""){
                             var file = "{{ asset('storage') }}/"+data.auditObjection.document;
                         }else{
@@ -682,13 +571,13 @@
                         $("#addForm input[name='sub_unit']").val(data.auditObjection.sub_unit);
                         // $("#addForm textarea[name='description']").val(data.auditObjection.desc
                         editorInstance.setData(data.auditObjection.description);
-
+                        
 
 
                         let roleName = "{{ Auth::user()->roles[0]->name }}";
                         
-                        // department status
-                        deditorInstance.setData("");                      
+                        // department status   
+                        deditorInstance.setData("");                     
                         if(data.auditObjection.department_draft_remark){
                             deditorInstance.setData(data.auditObjection.department_draft_remark);
                         }
@@ -717,10 +606,10 @@
                         }
                         
 
-                        
                         $("#addForm select[name='department_hod_final_status']").prop('disabled', false);
-                        $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', false);
+                            $("#addForm textarea[name='department_hod_final_remark']").prop('disabled', false);
                         $("#addForm select[name='department_hod_final_status']").val(data.auditObjection.department_hod_final_status);
+
                         $("#addForm textarea[name='department_hod_final_remark']").val(data.auditObjection.department_hod_final_remark);
                         if((data.auditObjection.department_mca_second_status == "1" && data.auditObjection.department_draft_remark != "")){
                             $("#addForm select[name='department_hod_final_status']").prop('disabled', true);
@@ -733,6 +622,7 @@
 
                         $("#addForm select[name='department_mca_second_status']").prop('disabled', false);
                         $("#addForm textarea[name='department_mca_second_remark']").prop('disabled', false);
+                            
                         $("#addForm select[name='department_mca_second_status']").val(data.auditObjection.department_mca_second_status);
                         $("#addForm textarea[name='department_mca_second_remark']").val(data.auditObjection.department_mca_second_remark);
                         if((data.auditObjection.auditor_status == "1" || data.auditObjection.auditor_status == "0")){
@@ -758,24 +648,32 @@
                             $('#auditorStatusDescription').addClass('d-none');
                         }
 
+
                         $("#addForm input[name='completed_sub_unit']").val(data.auditObjection.completed_sub_unit);
                         $("#addForm input[name='pending_sub_unit']").val(data.auditObjection.pending_sub_unit);
                         auditorDescription.setData(data.auditObjection.auditor_draft_description ?? '');
-                        if(data.auditObjection.dymca_final_status == "1" && roleName != "Auditor"){
+                        if(data.auditObjection.dymca_final_status == "1"){
                             $("#addForm select[name='auditor_status']").prop('disabled', true);
                             $("#addForm textarea[name='auditor_remark']").prop('disabled', true);
                             $("#addForm input[name='completed_sub_unit']").prop('disabled', true);
                             $("#addForm input[name='pending_sub_unit']").prop('disabled', true);
+                            $('#saveDraftObjectionStatus').addClass('d-none');
+                            $('#saveObjectionStatus').addClass('d-none');
                         }else if(roleName != "Auditor"){
                             $("#addForm select[name='auditor_status']").prop('disabled', true);
                             $("#addForm textarea[name='auditor_remark']").prop('disabled', true);
                             $("#addForm input[name='completed_sub_unit']").prop('disabled', true);
                             $("#addForm input[name='pending_sub_unit']").prop('disabled', true);
+                            $('#saveDraftObjectionStatus').addClass('d-none');
+                            $('#saveObjectionStatus').addClass('d-none');
+                        }else{
+                            $('#saveDraftObjectionStatus').removeClass('d-none');
+                            $('#saveObjectionStatus').removeClass('d-none');
                         }
 
 
                         $("#addForm select[name='dymca_final_status']").prop('disabled', false);
-                        $("#addForm textarea[name='dymca_final_remark']").prop('disabled', false);
+                            $("#addForm textarea[name='dymca_final_remark']").prop('disabled', false);
                         $("#addForm select[name='dymca_final_status']").val(data.auditObjection.dymca_final_status);
                         $("#addForm textarea[name='dymca_final_remark']").val(data.auditObjection.dymca_final_remark);
                         if(data.auditObjection.mca_final_status == "1" || data.auditObjection.mca_final_status == "0"){
@@ -798,15 +696,11 @@
                             $("#addForm select[name='mca_final_status']").prop('disabled', true);
                             $("#addForm textarea[name='mca_final_remark']").prop('disabled', true);
                         }
-
-                        if(data.auditObjection.mca_final_status == "1"){
-                            $("#addForm select[name='mca_final_status']").prop('disabled', true);
-                            $("#addForm textarea[name='mca_final_remark']").prop('disabled', true);
-                            $('#saveObjectionStatus').addClass('d-none')
-                        }
-
                         // $('#mca_action_status').val(data.auditObjection.mca_action_status)
                         // $('#mca_remark').val(data.auditObjection.mca_remark)
+                        if((data.auditObjection.department_hod_final_status == "1" && data.auditObjection.mca_final_status != "0") && roleName == "Auditor"){
+                            // $('#viewFooterObjectionDetails button').addClass('d-none');
+                        }
 
                         @if(Auth::user()->hasRole('Department'))
                             if(data.auditObjection.is_department_draft_save == "0" && data.auditObjection.department_remark != null){
@@ -823,6 +717,11 @@
                                 $('#saveObjectionStatus').addClass('d-none');
                                 $('#saveDraftObjectionStatus').addClass('d-none');
                             }
+                        @elseif(Auth::user()->hasRole('Auditor'))
+                            if(data.auditObjection.department_hod_final_status != "1"){
+                                $('#saveObjectionStatus').addClass('d-none');
+                                $('#saveDraftObjectionStatus').addClass('d-none');
+                            }
                         @elseif(Auth::user()->hasRole('DY MCA'))
                             if(data.auditObjection.dymca_final_status == "1"){
                                 $('#saveObjectionStatus').addClass('d-none');
@@ -830,9 +729,8 @@
                             }
                         @else
                             $('#saveObjectionStatus').removeClass('d-none');
-                            $('#saveDraftObjectionStatus').removeClass('d-none');
+                                $('#saveDraftObjectionStatus').removeClass('d-none');
                         @endif
-
 
                         $('#viewObjectionDetails').removeClass('d-none');
                         $('#viewFooterObjectionDetails').removeClass('d-none');
@@ -841,6 +739,59 @@
                     },
                     error: function(error, jqXHR, textStatus, errorThrown) {
                         swal("Error!", "Some thing went wrong", "error");
+                    },
+                    complete: function() {
+                        $('#preloader').css('opacity', '0');
+                        $('#preloader').css('visibility', 'hidden');
+                    },
+                });
+            });
+        </script>
+
+
+        <script>
+            $("#addForm").submit(function(e) {
+                e.preventDefault();
+                var model_id = $('#audit_objection_id').val();
+                // $('#audit_id').val(model_id)
+                var url = "{{ route('objection.change-objection-status') }}";
+                var audit_id = $('#audit_id').val();
+                // let description = editordepartmentInstance.getData();
+                var formdata = new FormData(this);
+                
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function()
+                    {
+                        $('#preloader').css('opacity', '0.5');
+                        $('#preloader').css('visibility', 'visible');
+                    },
+                    success: function(data, textStatus, jqXHR)
+                    {
+                        if (!data.error){
+                            swal("Successful!", data.success, "success")
+                                .then((action) => {
+                                    window.location.reload();
+                                });
+                        }
+                        else{
+                            swal("Error!", data.error, "error");
+                        }
+                    },
+                    statusCode: {
+                        422: function(responseObject, textStatus, jqXHR) {
+                            $("#editSubmit").prop('disabled', false);
+                            resetErrors();
+                            printErrMsg(responseObject.responseJSON.errors);
+                        },
+                        500: function(responseObject, textStatus, errorThrown) {
+                            $("#editSubmit").prop('disabled', false);
+                            swal("Error occured!", "Something went wrong please try again", "error");
+                        }
                     },
                     complete: function() {
                         $('#preloader').css('opacity', '0');

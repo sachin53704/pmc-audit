@@ -3,6 +3,18 @@
     <x-slot name="heading">Assign Programme Audit List</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
+    <style>
+        .ui-datepicker-trigger
+        {
+            vertical-align:baseline;
+            position:relative;
+            top: -45%;
+            height: 18px;
+            right: -92%;
+            cursor: pointer;
+        }
+    </style>
+
 
     <div class="row">
         <div class="col-lg-12">

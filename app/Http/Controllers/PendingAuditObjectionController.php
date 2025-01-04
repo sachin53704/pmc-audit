@@ -31,8 +31,12 @@ class PendingAuditObjectionController extends Controller
         $pendingAuditObjections = PendingAuditObjection::with(['auditObjection.department'])
             ->where('is_objection_completed', 0)
             ->when(Auth::user()->hasRole(['Department', 'Department HOD']), function ($q) {
-                $q->where('status', '>=', 1)->whereHas('auditObjection', function ($q) {
+                $q->whereHas('auditObjection', function ($q) {
                     $q->where('department_id', Auth::user()->department_id);
+                })->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                    $q->where('status', '<=', 2);
+                })->when(Auth::user()->hasRole('Department'), function ($q) {
+                    $q->where('status', 1);
                 });
             })
             ->when(Auth::user()->hasRole(['MCA']), function ($q) {
@@ -61,6 +65,55 @@ class PendingAuditObjectionController extends Controller
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
         return view('program-audit.pending-objection.index')->with([
+            'pendingAuditObjections' => $pendingAuditObjections,
+            'departments' => $departments,
+            'fiscalYears' => $fiscalYears,
+            'auditTypes' => $auditTypes,
+            'severities' => $severities,
+            'auditParaCategory' => $auditParaCategory,
+        ]);
+    }
+
+
+    public function approvePendingAuditObjection()
+    {
+        $pendingAuditObjections = PendingAuditObjection::with(['auditObjection.department'])
+            ->where('is_objection_completed', 0)
+            ->when(Auth::user()->hasRole(['Department', 'Department HOD']), function ($q) {
+                $q->whereHas('auditObjection', function ($q) {
+                    $q->where('department_id', Auth::user()->department_id);
+                })->when(Auth::user()->hasRole('Department HOD'), function ($q) {
+                    $q->where('status', '>', 2);
+                })->when(Auth::user()->hasRole('Department'), function ($q) {
+                    $q->where('status', '>', 1);
+                });
+            })
+            ->when(Auth::user()->hasRole(['MCA']), function ($q) {
+                $q->where('status', '>=', 2);
+            })
+            ->when(Auth::user()->hasRole(['Auditor']), function ($q) {
+                $q->where('status', '>=', 3);
+            })
+            ->when(Auth::user()->hasRole(['DY MCA']), function ($q) {
+                $q->where('status', '>=', 4);
+            })
+            ->when(Auth::user()->hasRole(['Clerk']), function ($q) {
+                $q->where('status', '>=', 44);
+            })
+            ->latest()
+            ->get();
+
+        $departments = Department::select('id', 'name')->get();
+
+        $fiscalYears = FiscalYear::select('id', 'name')->get();
+
+        $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
+
+        $severities = Severity::where('status', 1)->select('id', 'name')->get();
+
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
+
+        return view('program-audit.pending-objection.approve')->with([
             'pendingAuditObjections' => $pendingAuditObjections,
             'departments' => $departments,
             'fiscalYears' => $fiscalYears,

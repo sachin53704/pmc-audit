@@ -601,7 +601,7 @@ class AuditorAuditController extends Controller
     }
 
 
-    public function answeredQuestions(Request $request)
+    public function pendingAnsweredQuestions(Request $request)
     {
         $audits = AuditObjection::with(['department', 'audit'])
             ->whereHas('audit', function ($q) {
@@ -611,7 +611,8 @@ class AuditorAuditController extends Controller
                     });
             })
             ->when(Auth::user()->hasRole('Auditor'), function ($q) {
-                $q->where('user_id', Auth::user()->id)->where('status', '>=', 8);
+                $q->where('user_id', Auth::user()->id)->where('status', '>=', 8)
+                    ->whereNull('auditor_status');
             })
             ->latest()
             ->get();
@@ -626,7 +627,43 @@ class AuditorAuditController extends Controller
 
         $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
 
-        return view('admin.answered-questions')->with([
+        return view('admin.pending-answered-questions')->with([
+            'audits' => $audits,
+            'departments' => $departments,
+            'fiscalYears' => $fiscalYears,
+            'auditTypes' => $auditTypes,
+            'severities' => $severities,
+            'auditParaCategory' => $auditParaCategory
+        ]);
+    }
+
+    public function approveAnsweredQuestions(Request $request)
+    {
+        $audits = AuditObjection::with(['department', 'audit'])
+            ->whereHas('audit', function ($q) {
+                $q->where('status', '>=', 9)
+                    ->whereHas('assignedAuditors', function ($q) {
+                        $q->where('user_id', Auth::user()->id);
+                    });
+            })
+            ->when(Auth::user()->hasRole('Auditor'), function ($q) {
+                $q->where('user_id', Auth::user()->id)->where('status', '>=', 8)
+                    ->whereNotNull('auditor_status');
+            })
+            ->latest()
+            ->get();
+
+        $departments = Department::select('id', 'name')->get();
+
+        $fiscalYears = FiscalYear::select('id', 'name')->get();
+
+        $auditTypes = AuditType::where('status', 1)->select('id', 'name')->get();
+
+        $severities = Severity::where('status', 1)->select('id', 'name')->get();
+
+        $auditParaCategory = AuditParaCategory::where('status', 1)->select('id', 'name', 'is_amount')->get();
+
+        return view('admin.approved-answered-questions')->with([
             'audits' => $audits,
             'departments' => $departments,
             'fiscalYears' => $fiscalYears,

@@ -9,7 +9,6 @@
                     @csrf
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
-                            <h5 class="modal-title">Forward HMM To Department</h5>
                             @php $data = []; $file = "javascript:void(0)";$count = 0; @endphp
                             @foreach($audits as $audit)
                             @php 
@@ -20,10 +19,20 @@
                                 $count = $count + 1;
                             @endphp
                             @endforeach
+
+                            <div class="d-flex">
+                                <h5 class="modal-title mt-2">Forward HMM To Department</h5>
+                                @if($count > 0)
+                                &nbsp;
+                                &nbsp;
+                                &nbsp;
+                                <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data, 'file' => 'hmm_draft_letter']) }}" target="_blank" class="btn btn-primary">View File</a>
+                                @endif
+                            </div>
+                            
                             @if($count > 0)
                             <div>
-                                <a href="{{ $file }}" target="_blank" class="btn btn-primary">Covering letter</a>
-                                <a href="{{ route('objection.view-forward-objection-to-department', ['id' => $data, 'file' => 'hmm_draft_letter']) }}" target="_blank" class="btn btn-primary">View File</a>
+                                <a href="{{ $file }}" target="_blank" class="btn btn-primary btn-sm">Covering letter</a>
                             </div>
                             @endif
                         </div>

@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Compliance Objections</x-slot>
-    <x-slot name="heading">Compliance Objections</x-slot>
+    <x-slot name="title">Approved / Para Compliance Objections</x-slot>
+    <x-slot name="heading">Approved / Para Compliance Objections</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
