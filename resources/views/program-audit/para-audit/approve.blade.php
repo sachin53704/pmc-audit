@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Pending Para Audit</x-slot>
-    <x-slot name="heading">Pending Para Audit</x-slot>
+    <x-slot name="title">Approved Para Audit</x-slot>
+    <x-slot name="heading">Approved Para Audit</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
         <div class="row">
@@ -120,14 +120,14 @@
 
 
 
-        {{-- Edit Para Audit Modal --}}
+        {{-- View Para Audit Modal --}}
         <div class="modal fade" id="editParaAuditModal" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <form action="" id="editForm" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Para Audit </h5>
+                            <h5 class="modal-title">View Para Audit </h5>
                             <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

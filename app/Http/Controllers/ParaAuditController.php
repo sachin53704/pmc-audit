@@ -30,7 +30,11 @@ class ParaAuditController extends Controller
             ->when(Auth::user()->hasRole('MCA'), function ($q) {
                 $q->whereHas('paraAudit', function ($q) {
                     $q->where('is_draft_send', 1)
-                        ->where('dymca_status', 1);
+                        ->where('dymca_status', 1)
+                        ->where(function ($q) {
+                            $q->where('mca_status', 0)
+                                ->orWhereNull('mca_status');
+                        });
                 });
             })
             ->where('status', '>=', 13)
@@ -39,6 +43,37 @@ class ParaAuditController extends Controller
             ->get();
 
         return view('program-audit.para-audit.index')->with([
+            'audits' => $audits
+        ]);
+    }
+
+
+    public function approveParaAudit()
+    {
+        $user = Auth::user();
+
+        $audits = Audit::query()
+            ->when(Auth::user()->hasRole('Auditor'), function ($q) use ($user) {
+                $q->whereHas('assignedAuditors', fn($q) => $q->where('user_id', $user->id));
+            })
+            ->when(Auth::user()->hasRole('DY MCA'), function ($q) {
+                $q->whereHas('paraAudit', function ($q) {
+                    $q->where('is_draft_send', 1)
+                        ->where('dymca_status', 1);
+                });
+            })
+            ->when(Auth::user()->hasRole('MCA'), function ($q) {
+                $q->whereHas('paraAudit', function ($q) {
+                    $q->where('is_draft_send', 1)
+                        ->where('mca_status', 1);
+                });
+            })
+            ->where('status', '>=', 13)
+            ->with(['paraAudit'])
+            ->latest()
+            ->get();
+
+        return view('program-audit.para-audit.approve')->with([
             'audits' => $audits
         ]);
     }

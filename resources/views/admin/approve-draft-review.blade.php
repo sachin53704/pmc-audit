@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">Draft Review</x-slot>
-    <x-slot name="heading">Draft Review</x-slot>
+    <x-slot name="title">Approved Compliance</x-slot>
+    <x-slot name="heading">Approved Compliance</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -10,7 +10,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Draft Review</h4>
+                        <h4 class="card-title">Approved Compliance</h4>
                     </div>
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">

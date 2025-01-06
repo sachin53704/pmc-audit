@@ -43,13 +43,25 @@ class PendingAuditObjectionController extends Controller
                 });
             })
             ->when(Auth::user()->hasRole(['MCA']), function ($q) {
-                $q->where('status', '>=', 2);
+                $q->where('status', '>=', 2)
+                    ->where(function ($q) {
+                        $q->where(function ($q) {
+                            $q->whereNull('department_mca_second_status')
+                                ->whereNull('auditor_status');
+                        })
+                            ->orWhere(function ($q) {
+                                $q->where('dymca_final_status', 1)
+                                    ->whereNull('mca_final_status');
+                            });
+                    });
             })
             ->when(Auth::user()->hasRole(['Auditor']), function ($q) {
-                $q->where('status', '>=', 3);
+                $q->where('status', '>=', 3)
+                    ->whereNull('auditor_status');
             })
             ->when(Auth::user()->hasRole(['DY MCA']), function ($q) {
-                $q->where('status', '>=', 4);
+                $q->where('status', '>=', 4)
+                    ->whereNull('dymca_final_status');
             })
             ->when(Auth::user()->hasRole(['Clerk']), function ($q) {
                 $q->where('status', '>=', 44);
@@ -92,13 +104,24 @@ class PendingAuditObjectionController extends Controller
                 });
             })
             ->when(Auth::user()->hasRole(['MCA']), function ($q) {
-                $q->where('status', '>=', 2);
+                $q->where('status', '>=', 2)
+                    ->where(function ($q) {
+                        $q->where(function ($q) {
+                            $q->where('department_mca_second_status', 1)
+                                ->whereNull('dymca_final_status');
+                        })
+                            ->orWhere(function ($q) {
+                                $q->where('mca_final_status', 1);
+                            });
+                    });
             })
             ->when(Auth::user()->hasRole(['Auditor']), function ($q) {
-                $q->where('status', '>=', 3);
+                $q->where('status', '>=', 3)
+                    ->whereNotNull('auditor_status');
             })
             ->when(Auth::user()->hasRole(['DY MCA']), function ($q) {
-                $q->where('status', '>=', 4);
+                $q->where('status', '>=', 4)
+                    ->whereNotNull('dymca_final_status');
             })
             ->when(Auth::user()->hasRole(['Clerk']), function ($q) {
                 $q->where('status', '>=', 44);

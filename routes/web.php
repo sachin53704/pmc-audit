@@ -178,6 +178,7 @@ Route::middleware(['auth', 'PreventBackHistory', 'confirm-login-type'])->group(f
 
 
     // Para Audit Menu
+    Route::get('para-audit/approve', [App\Http\Controllers\ParaAuditController::class, 'approveParaAudit'])->name('para-audit.approve');
     Route::resource('para-audit', App\Http\Controllers\ParaAuditController::class);
 
 

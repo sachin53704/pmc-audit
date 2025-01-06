@@ -157,7 +157,7 @@
         </script>
 
 
-        <!-- Approve Reject Answers -->
+        <!-- Approve Revert Answers -->
         <script>
             $(document).ready(function() {
                 $("#editForm").submit(function(e) {

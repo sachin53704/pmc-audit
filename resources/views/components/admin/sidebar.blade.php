@@ -306,11 +306,11 @@
 
                         @can('draft-review.view')
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ request()->routeIs('draft-review.pending') ? 'active' : '' }} {{ request()->routeIs('draft-review.approve') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
+                                <a class="nav-link menu-link {{ request()->routeIs('draft-review.pending') ? 'active' : '' }} {{ request()->routeIs('draft-review.approve') ? 'active' : '' }}" href="#sidebarPendingDraftReview" data-bs-toggle="collapse" role="button">
                                     <i class="ri-file-list-3-line"></i>
                                     <span data-key="t-layouts">@lang('menu.draft_review')</span>
                                 </a>
-                                <div class="collapse menu-dropdown {{ request()->routeIs('draft-review.pending') ? 'show' : '' }} {{ request()->routeIs('draft-review.approve') ? 'show' : '' }}" id="sidebarReports">
+                                <div class="collapse menu-dropdown {{ request()->routeIs('draft-review.pending') ? 'show' : '' }} {{ request()->routeIs('draft-review.approve') ? 'show' : '' }}" id="sidebarPendingDraftReview">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
                                             <a href="{{ route('draft-review.pending') }}" class="nav-link {{ request()->routeIs('draft-review.pending') ? 'active' : '' }}" data-key="t-horizontal">Pending</a>
@@ -329,11 +329,11 @@
                         @can('pending-objection.view')
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }} {{ request()->routeIs('pending-audit-objection.approve') ? 'active' : '' }}" href="#sidebarReports" data-bs-toggle="collapse" role="button">
+                            <a class="nav-link menu-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }} {{ request()->routeIs('pending-audit-objection.approve') ? 'active' : '' }}" href="#sidebarPendingObjection" data-bs-toggle="collapse" role="button">
                                 <i class="ri-file-list-3-line"></i>
                                 <span data-key="t-layouts">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</span>
                             </a>
-                            <div class="collapse menu-dropdown {{ request()->routeIs('pending-audit-objection.index') ? 'show' : '' }} {{ request()->routeIs('pending-audit-objection.approve') ? 'show' : '' }}" id="sidebarReports">
+                            <div class="collapse menu-dropdown {{ request()->routeIs('pending-audit-objection.index') ? 'show' : '' }} {{ request()->routeIs('pending-audit-objection.approve') ? 'show' : '' }}" id="sidebarPendingObjection">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
                                         <a href="{{ route('pending-audit-objection.index') }}" class="nav-link {{ request()->routeIs('pending-audit-objection.index') ? 'active' : '' }}" data-key="t-horizontal">Pending</a>
@@ -347,11 +347,28 @@
                         @endcan
 
                         @can('para-audit.index')
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link menu-link {{ request()->routeIs('para-audit.index') ? 'active' : '' }}" href="{{ route('para-audit.index') }}" >
                                     <i class="ri-draft-line"></i>
                                     <span data-key="t-dashboards">@lang('menu.para_audit')</span>
                                 </a>
+                            </li> --}}
+
+                            <li class="nav-item">
+                                <a class="nav-link menu-link {{ request()->routeIs('para-audit.index') ? 'active' : '' }} {{ request()->routeIs('para-audit.approve') ? 'active' : '' }}" href="#sidebarPendingParaAudit" data-bs-toggle="collapse" role="button">
+                                    <i class="ri-file-list-3-line"></i>
+                                    <span data-key="t-layouts">Para Audit</span>
+                                </a>
+                                <div class="collapse menu-dropdown {{ request()->routeIs('para-audit.index') ? 'show' : '' }} {{ request()->routeIs('para-audit.approve') ? 'show' : '' }}" id="sidebarPendingParaAudit">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="{{ route('para-audit.index') }}" class="nav-link {{ request()->routeIs('para-audit.index') ? 'active' : '' }}" data-key="t-horizontal">Pending</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('para-audit.approve') }}" class="nav-link {{ request()->routeIs('para-audit.approve') ? 'active' : '' }}" data-key="t-horizontal">Approve</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         @endcan
                         
@@ -370,7 +387,7 @@
                                     @endcan
                                     @can('report.final-report')
                                     <li class="nav-item">
-                                        <a href="{{ route('report.final-report') }}" class="nav-link {{ request()->routeIs('report.final-report') ? 'active' : '' }}" data-key="t-horizontal">@lang('menu.final_report')</a>
+                                        <a href="{{ route('report.final-report') }}" class="nav-link {{ request()->routeIs('report.final-report') ? 'active' : '' }}" data-key="t-horizontal">Para Audit</a>
                                     </li>
                                     @endcan
                                     @can('report.para-current-status')

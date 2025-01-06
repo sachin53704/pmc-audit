@@ -53,7 +53,7 @@
                                                 <select class="form-select w-50 changeSubReceiptStatus">
                                                     <option value="">Select</option>
                                                     <option value="1">Approve</option>
-                                                    <option value="2">Reject</option>
+                                                    <option value="2">Revert</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -170,7 +170,7 @@
         </script>
 
 
-        <!-- Approve Reject Answers -->
+        <!-- Approve Revert Answers -->
         <script>
             $(document).ready(function() {
                 $("#editForm").submit(function(e) {

@@ -235,7 +235,7 @@
                                                                     <select name="department_hod_final_status" class="form-select">
                                                                         <option value="">Select Status</option>
                                                                         <option value="1">Approve</option>
-                                                                        <option value="0">Reject</option>
+                                                                        <option value="0">Revert</option>
                                                                     </select>
                                                                     <span class="text-danger is-invalid department_hod_final_status_err"></span>
                                                                 </div>
@@ -519,7 +519,7 @@
 
 
 
-        <!-- Approve Reject Answers -->
+        <!-- Approve Revert Answers -->
         <script>
             $('body').on('click', '.viewObjection', function(){
                 let id = $(this).attr('data-id');

@@ -1,6 +1,6 @@
 <x-admin.layout>
-    <x-slot name="title">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</x-slot>
-    <x-slot name="heading">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</x-slot>
+    <x-slot name="title">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Approved Compliance @else Approved Objection @endif</x-slot>
+    <x-slot name="heading">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Approved Compliance @else Approved Objection @endif</x-slot>
     {{-- <x-slot name="subheading">Test</x-slot> --}}
 
 
@@ -10,7 +10,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Pending Compliance @else Pending Objection @endif</h4>
+                        <h4 class="card-title">@if(Auth::user()->hasRole(['Department', 'Department HOD']))Approved Compliance @else Approved Objection @endif</h4>
                     </div>
                     <div class="card-body py-2">
                         <input type="hidden" id="edit_model_id" name="edit_model_id" value="">
