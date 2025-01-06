@@ -235,11 +235,11 @@
                                                                     <div class="d-flex justify-content-between">
                                                                         <div id="departmentCoveringLetterDetails">
                                                                             <label for="department_remark">Compliance Description <span class="text-danger">*</span></label>
-                                                                            <a href="#" class="btn btn-primary btn-sm viewFile" target="_blank">View Details</a>
+                                                                            <a href="#" class="btn btn-primary viewFile" target="_blank">View Details</a>
                                                                         </div>
                                                                         
                                                                         <div id="departmentCoveringLetter">
-                                                                            <a href="#" class="btn btn-primary coveringLetter" target="_blank">Covering letter</a>
+                                                                            <a href="#" class="btn btn-primary btn-sm coveringLetter" target="_blank">Covering letter</a>
                                                                         </div>
                                                                     </div>
                                                                     <textarea name="department_remark" id="department_remark" class="form-control"></textarea>

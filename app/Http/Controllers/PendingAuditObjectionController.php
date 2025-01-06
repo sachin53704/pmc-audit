@@ -93,7 +93,7 @@ class PendingAuditObjectionController extends Controller
     public function approvePendingAuditObjection()
     {
         $pendingAuditObjections = PendingAuditObjection::with(['auditObjection.department'])
-            ->where('is_objection_completed', 0)
+            // ->where('is_objection_completed', 0)
             ->when(Auth::user()->hasRole(['Department', 'Department HOD']), function ($q) {
                 $q->whereHas('auditObjection', function ($q) {
                     $q->where('status', '>=', 1)->where('department_id', Auth::user()->department_id);

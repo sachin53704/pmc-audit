@@ -201,11 +201,13 @@
 
                                                                 <div class="col-12 mb-3">
                                                                     <div class="d-flex justify-content-between">
-                                                                        <label for="department_remark">Compliance Description <span class="text-danger">*</span></label>
+                                                                        <div id="departmentCoveringLetterDetails">
+                                                                            <label for="department_remark">Compliance Description <span class="text-danger">*</span></label>
+                                                                            <a href="#" class="btn btn-primary viewFile" target="_blank">View Details</a>
+                                                                        </div>
 
                                                                         <div id="departmentCoveringLetter">
                                                                             <a href="#" class="btn btn-primary btn-sm coveringLetter" target="_blank">Covering letter</a>
-                                                                            <a href="#" class="btn btn-primary btn-sm viewFile" target="_blank">View Details</a>
                                                                         </div>
                                                                     </div>
                                                                     <textarea @if(!Auth::user()->hasRole('Department'))disabled @endif  name="department_remark" id="department_remark" class="form-control"></textarea>
@@ -621,6 +623,7 @@
                 
                 if(data.auditObjection.department_remark != "" && data.auditObjection.department_letter){
                     $('#departmentCoveringLetter').removeClass('d-none');
+                    $('#departmentCoveringLetterDetails').removeClass('d-none');
                     $('#departmentCoveringLetter').find('.coveringLetter').attr('href', "{{ asset('storage') }}/"+data.auditObjection.department_letter);
 
                     var url = "{{ route('view-objection-pdf', [':type', ':column', ':id']) }}";
@@ -628,9 +631,10 @@
                             .replace(':column', 'department_remark')
                             .replace(':id', data.auditObjection.id);
 
-                    $('#departmentCoveringLetter').find('.viewFile').attr('href', url);
+                    $('#departmentCoveringLetterDetails').find('.viewFile').attr('href', url);
                 }else{
                     $('#departmentCoveringLetter').addClass('d-none');
+                    $('#departmentCoveringLetterDetails').addClass('d-none');
                 }
                 
                 if(data.auditObjection.department_hod_final_status == "1" && data.auditObjection.mca_final_status != "0"){
