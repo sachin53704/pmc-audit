@@ -52,7 +52,7 @@
                     </div>
                 </div>
 
-                <div class="dropdown ms-1 topbar-head-dropdown header-item">
+                {{-- <div class="dropdown ms-1 topbar-head-dropdown header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img id="header-lang-img" src="{{ asset('admin/images/flags/us.svg') }}" alt="Header Language" height="30" class="rounded">
                     </button>
@@ -70,7 +70,7 @@
                             <span class="align-middle">Marathi</span>
                         </a>
                     </div>
-                </div>
+                </div> --}}
 
 
                 <div class="ms-1 header-item d-none d-sm-flex justify-content-end">
@@ -113,9 +113,9 @@
                         <h6 class="dropdown-header">
                             Welcome {{ ucfirst(auth()->user()->first_name) }}!
                         </h6>
-                        <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
+                        {{-- <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Profile</span>
-                        </a>
+                        </a> --}}
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle" data-key="t-logout">Logout</span>
