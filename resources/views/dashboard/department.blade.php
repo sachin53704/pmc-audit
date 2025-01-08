@@ -108,7 +108,6 @@
                                 <tr>
                                     <th>Department</th>
                                     <th>HMM No.</th>
-                                    <th>Pending Objection</th>
                                     <th>Letter</th>
                                 </tr>
                             </thead>
@@ -117,7 +116,6 @@
                                 <tr>
                                     <td>{{ $pendingAuditObjection->auditObjection->department?->name }}</td>
                                     <td>{{ $pendingAuditObjection->auditObjection->objection_no }}</td>
-                                    <td>{{ $pendingAuditObjection->pending_description }}</td>
                                     <td>
                                         <a href="{{ asset('storage/'.$pendingAuditObjection->hmm_draft_letter) }}" class="btn btn-primary btn-sm">View Letter</a>
                                     </td>
