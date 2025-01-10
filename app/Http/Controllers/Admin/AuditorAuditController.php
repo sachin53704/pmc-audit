@@ -365,12 +365,12 @@ class AuditorAuditController extends Controller
 
 
                             $this->changeAuditStatus($request, $prevStatus, $currentStatus);
-
+                            $signature = Signature::whereNull('department_id')->value('image');
+                            $outwardNo = Setting::where('name', 'outward_no')->value('value');
+                            $name = $this->generatePdf($audits, $signature, $outwardNo);
                             if ($auditObjection->pending_sub_unit > 0) {
 
-                                $signature = Signature::whereNull('department_id')->value('image');
-                                $outwardNo = Setting::where('name', 'outward_no')->value('value');
-                                $name = $this->generatePdf($audits, $signature, $outwardNo);
+
                                 Setting::where('name', 'outward_no')->increment('value', 1);
                                 OutwardNo::create([
                                     'outward_no' => $outwardNo,
