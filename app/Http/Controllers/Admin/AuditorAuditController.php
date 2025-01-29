@@ -202,8 +202,8 @@ class AuditorAuditController extends Controller
     public function storeObjection(AddObjectionRequest $request)
     {
         set_time_limit(0);
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $audit = Audit::where('id', $request->audit_id)->first();
 
             $audit->update([
@@ -283,6 +283,7 @@ class AuditorAuditController extends Controller
                 }
             }
         } catch (\Exception $e) {
+            DB::rollback();
             return $this->respondWithAjax($e, 'creating', 'objection');
         }
     }
